@@ -6,20 +6,28 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -68,7 +76,7 @@ fun HomeContent(
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .padding(paddingValues),
+                .padding(paddingValues)
         ) {
             HomeSearchBar()
 
@@ -234,6 +242,145 @@ fun RecipeItem() {
             contentScale = ContentScale.FillWidth,
             modifier = Modifier
                 .clickable {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun ShoppingListContent() {
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize(),
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {}
+            ) {
+                Icon(Icons.Default.Add,
+                    contentDescription = "Add"
+                )
+            }
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+        ) {
+            Text(
+                text = "Shopping List",
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 24.sp,
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .padding(top = 8.dp)
+                    .padding(start = 16.dp)
+            )
+
+            Text(
+                text = "123 items",
+                fontWeight = FontWeight.Light,
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .padding(start = 16.dp)
+            )
+
+            LazyColumn() {
+                items(5) {
+                    ShoppingListCategoryItem()
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun ShoppingListCategoryItem() {
+    Card(
+        shape = RoundedCornerShape(10.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+        ) {
+            Text(
+                text = "Category Name",
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .padding(start = 16.dp)
+            )
+
+            Column {
+                for (i in 1..3) {
+                    ShoppingListIngredientItem()
+
+                    if (i != 3) {
+                        HorizontalDivider()
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun ShoppingListIngredientItem() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Max),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier.size(40.dp)
+        ) {
+            AsyncImage(
+                model = ImageRequest
+                    .Builder(LocalContext.current)
+                    .data(R.drawable.ic_image)
+                   .crossfade(true)
+                   .placeholder(R.drawable.ic_image)
+                  .build(),
+                contentDescription = "IMAGE",
+                fallback = painterResource(R.drawable.ic_image),
+                error = painterResource(R.drawable.ic_image),
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .clickable {}
+            )
+        }
+
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+            Row() {
+                Text(
+                    text = "Ingredient",
+                    modifier = Modifier
+                        .padding(end = 4.dp)
+                        .padding(bottom = 4.dp)
+                )
+
+                Text(
+                    text = "Quantity",
+                    fontWeight = FontWeight.Light,
+                )
+            }
+
+            Text(
+                text = "Note",
+                fontWeight = FontWeight.Light,
+            )
+        }
+        
+        Checkbox(
+            checked = false,
+            onCheckedChange = {}
         )
     }
 }
