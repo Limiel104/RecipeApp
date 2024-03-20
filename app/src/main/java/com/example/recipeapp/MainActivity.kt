@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,7 +24,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.HorizontalRule
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
@@ -620,5 +623,149 @@ fun RecipeIngredientItem() {
             modifier = Modifier
                 .padding(start = 8.dp)
         )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+fun RecipeDetailsContent() {
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                title = {},
+                navigationIcon = {
+                    IconButton(
+                        onClick = {}
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back button"
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = {}
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Bookmark,
+                            contentDescription = "Bookmark recipe button"
+                        )
+                    }
+                }
+            )
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            Text(
+                text = "Recipe name that is very long",
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 24.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+                    .padding(horizontal = 16.dp)
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(180.dp)
+                    .padding(bottom = 24.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                AsyncImage(
+                    model = ImageRequest
+                        .Builder(LocalContext.current)
+                        .data(R.drawable.ic_image)
+                        .crossfade(true)
+                        .placeholder(R.drawable.ic_image)
+                        .build(),
+                    contentDescription = "IMAGE",
+                    fallback = painterResource(R.drawable.ic_image),
+                    error = painterResource(R.drawable.ic_image),
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .clickable {}
+                )
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp),
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
+
+                Text(
+                    text = "Ingredients",
+                    fontSize = 12.sp
+                )
+
+                Text(
+                    text = "Description",
+                    fontSize = 12.sp
+                )
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(
+                    onClick = {},
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.HorizontalRule,
+                        contentDescription = "Less button",
+                        modifier = Modifier
+                            .border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(4.dp))
+                    )
+                }
+
+                Text(
+                    text = "1234 Servings",
+                    fontWeight = FontWeight.Light,
+                    fontSize = 12.sp,
+                    modifier = Modifier
+                        .padding(start = 16.dp)
+                        .padding(end = 16.dp)
+                )
+
+                IconButton(
+                    onClick = {}
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "More button",
+                        modifier = Modifier
+                            .border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(4.dp))
+                    )
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .padding(bottom = 20.dp)
+                    .padding(horizontal = 16.dp)
+            ) {
+                for (i in 1..7) {
+                    RecipeIngredientItem()
+
+                    if (i != 7) {
+                        HorizontalDivider()
+                    }
+                }
+            }
+        }
     }
 }
