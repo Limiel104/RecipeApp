@@ -39,17 +39,24 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -630,6 +637,10 @@ fun RecipeIngredientItem() {
 @Preview
 @Composable
 fun RecipeDetailsContent() {
+
+    var state by remember { mutableStateOf(0) }
+    val titles = listOf("Ingredients", "Description")
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -677,8 +688,7 @@ fun RecipeDetailsContent() {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(180.dp)
-                    .padding(bottom = 24.dp),
+                    .height(180.dp),
                 contentAlignment = Alignment.Center
             ) {
                 AsyncImage(
@@ -697,74 +707,84 @@ fun RecipeDetailsContent() {
                 )
             }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 24.dp),
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
-
-                Text(
-                    text = "Ingredients",
-                    fontSize = 12.sp
-                )
-
-                Text(
-                    text = "Description",
-                    fontSize = 12.sp
-                )
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(
-                    onClick = {},
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.HorizontalRule,
-                        contentDescription = "Less button",
-                        modifier = Modifier
-                            .border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(4.dp))
-                    )
-                }
-
-                Text(
-                    text = "1234 Servings",
-                    fontWeight = FontWeight.Light,
-                    fontSize = 12.sp,
-                    modifier = Modifier
-                        .padding(start = 16.dp)
-                        .padding(end = 16.dp)
-                )
-
-                IconButton(
-                    onClick = {}
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "More button",
-                        modifier = Modifier
-                            .border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(4.dp))
-                    )
-                }
-            }
-
-            Column(
-                modifier = Modifier
-                    .padding(bottom = 20.dp)
-                    .padding(horizontal = 16.dp)
-            ) {
-                for (i in 1..7) {
-                    RecipeIngredientItem()
-
-                    if (i != 7) {
-                        HorizontalDivider()
+            Column() {
+                SecondaryTabRow(selectedTabIndex = state) {
+                    titles.forEachIndexed { index, title ->
+                        Tab(
+                            selected = state == index,
+                            onClick = { state = index },
+                            text = {
+                                Text(
+                                    text = title,
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                        )
                     }
                 }
+            }
+
+            if (state == 0) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = {},
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.HorizontalRule,
+                            contentDescription = "Less button",
+                            modifier = Modifier
+                                .border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(4.dp))
+                        )
+                    }
+
+                    Text(
+                        text = "1234 Servings",
+                        fontWeight = FontWeight.Light,
+                        fontSize = 12.sp,
+                        modifier = Modifier
+                            .padding(start = 16.dp)
+                            .padding(end = 16.dp)
+                    )
+
+                    IconButton(
+                        onClick = {}
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "More button",
+                            modifier = Modifier
+                                .border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(4.dp))
+                        )
+                    }
+                }
+
+                Column(
+                    modifier = Modifier
+                        .padding(bottom = 20.dp)
+                        .padding(horizontal = 16.dp)
+                ) {
+                    for (i in 1..7) {
+                        RecipeIngredientItem()
+
+                        if (i != 7) {
+                            HorizontalDivider()
+                        }
+                    }
+                }
+            }
+            else {
+                Text(
+                    text = "This is a description of a recipe.\nNew line\nAnother line",
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp, 24.dp)
+                )
             }
         }
     }
