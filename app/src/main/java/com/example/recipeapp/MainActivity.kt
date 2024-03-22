@@ -93,7 +93,7 @@ fun HomeContent(
             modifier = Modifier
                 .padding(paddingValues)
         ) {
-            HomeSearchBar()
+            SearchBarItem()
 
             HomeTopCategories()
 
@@ -105,6 +105,7 @@ fun HomeContent(
                 Column(
                     modifier = Modifier
                         .padding(8.dp)
+                        .padding(top = 16.dp)
                 ) {
                     Text(
                         text = "Recipes",
@@ -132,7 +133,7 @@ fun HomeContent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun HomeSearchBar(
+fun SearchBarItem(
 ) {
     SearchBar(
         query = "searching",
@@ -172,6 +173,7 @@ fun HomeTopCategories(
         Column(
             modifier = Modifier
                 .padding(8.dp)
+                .padding(top = 16.dp)
         ) {
             Text(
                 text = "Top Categories",
@@ -241,34 +243,54 @@ fun TopCategoryItem(
 @Composable
 fun RecipeItem() {
     Card(
-
         modifier = Modifier
             .fillMaxWidth()
-            .height(80.dp),
+            .height(100.dp),
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary)
     ) {
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            contentAlignment = Alignment.TopEnd
         ) {
-            AsyncImage(
-                model = ImageRequest
-                    .Builder(LocalContext.current)
-                    .data(R.drawable.ic_image)
-                    .crossfade(true)
-                    .placeholder(R.drawable.ic_image)
-                    .build(),
-                contentDescription = "IMAGE",
-                fallback = painterResource(R.drawable.ic_image),
-                error = painterResource(R.drawable.ic_image),
-                contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .clickable {}
-            )
+            ImageItem()
+
+            IconButton(
+                onClick = {}
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Bookmark,
+                    contentDescription = "icon button"
+                )
+            }
         }
+    }
+}
+
+@Preview
+@Composable
+fun ImageItem() {
+    Box(
+        modifier = Modifier
+//            .size(width.dp, height.dp)
+            .fillMaxWidth()
+            .height(100.dp)
+            .clickable {},
+        contentAlignment = Alignment.Center
+    ) {
+        AsyncImage(
+            model = ImageRequest
+                .Builder(LocalContext.current)
+                .data("")
+                .crossfade(true)
+                .placeholder(R.drawable.ic_image)
+                .build(),
+            contentDescription = "IMAGE",
+            fallback = painterResource(R.drawable.ic_image),
+            error = painterResource(R.drawable.ic_image),
+            contentScale = ContentScale.Fit
+        )
     }
 }
 
@@ -785,6 +807,65 @@ fun RecipeDetailsContent() {
                         .fillMaxSize()
                         .padding(16.dp, 24.dp)
                 )
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun SavedRecipesContent() {
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            SearchBarItem()
+
+            Card(
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .padding(top = 16.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Recipes",
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 24.sp,
+                            modifier = Modifier
+                                .padding(bottom = 8.dp),
+                        )
+
+                        Text(
+                            text = "Newest",
+                            fontSize = 16.sp
+                        )
+                    }
+
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(10) {
+                            RecipeItem()
+                        }
+                    }
+                }
             }
         }
     }
