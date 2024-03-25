@@ -22,12 +22,9 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 @Composable
 fun ShoppingListContent() {
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {}
-            ) {
+            FloatingActionButton(onClick = {}) {
                 Icon(
                     Icons.Default.Add,
                     contentDescription = "Add"

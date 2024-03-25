@@ -61,9 +61,7 @@ fun RecipeDetailsContent() {
             TopAppBar(
                 title = {},
                 navigationIcon = {
-                    IconButton(
-                        onClick = {}
-                    ) {
+                    IconButton(onClick = {}) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back button"
@@ -71,9 +69,7 @@ fun RecipeDetailsContent() {
                     }
                 },
                 actions = {
-                    IconButton(
-                        onClick = {}
-                    ) {
+                    IconButton(onClick = {}) {
                         Icon(
                             imageVector = Icons.Outlined.Bookmark,
                             contentDescription = "Bookmark recipe button"
@@ -115,8 +111,7 @@ fun RecipeDetailsContent() {
                     fallback = painterResource(R.drawable.ic_image),
                     error = painterResource(R.drawable.ic_image),
                     contentScale = ContentScale.FillWidth,
-                    modifier = Modifier
-                        .clickable {}
+                    modifier = Modifier.clickable {}
                 )
             }
 
@@ -145,14 +140,11 @@ fun RecipeDetailsContent() {
                         .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(
-                        onClick = {},
-                    ) {
+                    IconButton(onClick = {}) {
                         Icon(
                             imageVector = Icons.Default.HorizontalRule,
                             contentDescription = "Less button",
-                            modifier = Modifier
-                                .border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(4.dp))
+                            modifier = Modifier.border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(4.dp))
                         )
                     }
 
@@ -165,14 +157,11 @@ fun RecipeDetailsContent() {
                             .padding(end = 16.dp)
                     )
 
-                    IconButton(
-                        onClick = {}
-                    ) {
+                    IconButton(onClick = {}) {
                         Icon(
                             imageVector = Icons.Default.Add,
                             contentDescription = "More button",
-                            modifier = Modifier
-                                .border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(4.dp))
+                            modifier = Modifier.border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(4.dp))
                         )
                     }
                 }

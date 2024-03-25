@@ -26,9 +26,7 @@ fun SearchBarItem(
         active = false,
         onActiveChange = {},
         trailingIcon = {
-            IconButton(
-                onClick = {}
-            ) {
+            IconButton(onClick = {}) {
                 Icon(
                     imageVector = Icons.Filled.FilterList,
                     contentDescription = "Filter"
@@ -37,11 +35,9 @@ fun SearchBarItem(
         },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 8.dp)
+            .padding(bottom = 12.dp)
             .padding(horizontal = 16.dp)
-    ) {
-
-    }
+    ) {}
 }
 
 @Preview(

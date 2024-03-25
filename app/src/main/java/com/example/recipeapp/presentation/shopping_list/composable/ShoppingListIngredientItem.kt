@@ -50,8 +50,7 @@ fun ShoppingListIngredientItem() {
                 fallback = painterResource(R.drawable.ic_image),
                 error = painterResource(R.drawable.ic_image),
                 contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .clickable {}
+                modifier = Modifier.clickable {}
             )
         }
 

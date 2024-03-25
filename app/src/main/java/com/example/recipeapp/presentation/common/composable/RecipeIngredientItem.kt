@@ -48,15 +48,13 @@ fun RecipeIngredientItem() {
                 fallback = painterResource(R.drawable.ic_image),
                 error = painterResource(R.drawable.ic_image),
                 contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .clickable {}
+                modifier = Modifier.clickable {}
             )
         }
 
         Text(
             text = "Ingredient",
-            modifier = Modifier
-                .padding(start = 8.dp)
+            modifier = Modifier.padding(start = 8.dp)
         )
     }
 }

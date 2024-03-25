@@ -36,15 +36,12 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 @Composable
 fun AddRecipeContent() {
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = { Text(text = "Add recipe") },
                 navigationIcon = {
-                    IconButton(
-                        onClick = {}
-                    ) {
+                    IconButton(onClick = {}) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back button"
@@ -52,9 +49,7 @@ fun AddRecipeContent() {
                     }
                 },
                 actions = {
-                    IconButton(
-                        onClick = {}
-                    ) {
+                    IconButton(onClick = {}) {
                         Icon(
                             imageVector = Icons.Default.Add,
                             contentDescription = "Add recipe button"
@@ -73,8 +68,7 @@ fun AddRecipeContent() {
             Text(
                 text = "Title",
                 fontWeight = FontWeight.SemiBold,
-                modifier = Modifier
-                    .padding(bottom = 4.dp)
+                modifier = Modifier.padding(bottom = 4.dp)
             )
 
             OutlinedTextField(
@@ -106,8 +100,7 @@ fun AddRecipeContent() {
                         text = "Add photo",
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 12.sp,
-                        modifier = Modifier
-                            .padding(top = 8.dp)
+                        modifier = Modifier.padding(top = 8.dp)
                     )
                 }
             }
@@ -115,8 +108,7 @@ fun AddRecipeContent() {
             Text(
                 text = "Description",
                 fontWeight = FontWeight.SemiBold,
-                modifier = Modifier
-                    .padding(bottom = 4.dp)
+                modifier = Modifier.padding(bottom = 4.dp)
             )
 
             OutlinedTextField(
@@ -150,8 +142,7 @@ fun AddRecipeContent() {
                 text = "Tap to edit, swipe to delete",
                 fontWeight = FontWeight.Light,
                 fontSize = 12.sp,
-                modifier = Modifier
-                    .padding(bottom = 20.dp)
+                modifier = Modifier.padding(bottom = 20.dp)
             )
 
             Column(
@@ -176,8 +167,7 @@ fun AddRecipeContent() {
             )
 
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -186,16 +176,13 @@ fun AddRecipeContent() {
                     fontWeight = FontWeight.SemiBold
                 )
 
-                TextButton(
-                    onClick = {}
-                ) {
+                TextButton(onClick = {}) {
                     Text(text = "Text Button")
                 }
             }
 
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -204,9 +191,7 @@ fun AddRecipeContent() {
                     fontWeight = FontWeight.SemiBold
                 )
 
-                TextButton(
-                    onClick = {}
-                ) {
+                TextButton(onClick = {}) {
                     Text(text = "Set time")
                 }
             }

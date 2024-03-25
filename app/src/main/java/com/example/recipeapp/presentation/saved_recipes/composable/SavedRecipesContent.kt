@@ -11,15 +11,14 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.recipeapp.presentation.common.composable.RecipeItem
 import com.example.recipeapp.presentation.common.composable.SearchBarItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
@@ -27,8 +26,7 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 @Composable
 fun SavedRecipesContent() {
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -39,13 +37,12 @@ fun SavedRecipesContent() {
 
             Card(
                 shape = RoundedCornerShape(10.dp),
-                modifier = Modifier
-                    .fillMaxSize()
+                modifier = Modifier.fillMaxSize()
             ) {
                 Column(
                     modifier = Modifier
-                        .padding(8.dp)
-                        .padding(top = 16.dp)
+                        .padding(16.dp)
+                        .padding(top = 8.dp)
                 ) {
                     Row(
                         modifier = Modifier
@@ -56,13 +53,12 @@ fun SavedRecipesContent() {
                     ) {
                         Text(
                             text = "Recipes",
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 24.sp,
+                            style = MaterialTheme.typography.titleMedium
                         )
 
                         Text(
                             text = "Newest",
-                            fontSize = 16.sp
+                            style = MaterialTheme.typography.labelSmall
                         )
                     }
 

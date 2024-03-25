@@ -20,13 +20,11 @@ import com.example.recipeapp.R
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
-fun ImageItem() {
+fun ImageItem(
+    modifier: Modifier = Modifier
+) {
     Box(
-        modifier = Modifier
-//            .size(width.dp, height.dp)
-            .fillMaxWidth()
-            .height(100.dp)
-            .clickable {},
+        modifier = modifier.clickable {},
         contentAlignment = Alignment.Center
     ) {
         AsyncImage(
@@ -56,7 +54,11 @@ fun ImageItem() {
 fun ImageItemPreview() {
     RecipeAppTheme {
         Surface {
-            ImageItem()
+            ImageItem(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+            )
         }
     }
 }

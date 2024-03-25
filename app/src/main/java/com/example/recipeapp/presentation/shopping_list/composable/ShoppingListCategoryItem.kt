@@ -24,8 +24,7 @@ fun ShoppingListCategoryItem() {
             .padding(bottom = 8.dp)
     ) {
         Column(
-            modifier = Modifier
-                .padding(8.dp)
+            modifier = Modifier.padding(8.dp)
         ) {
             Text(
                 text = "Category Name",

@@ -21,40 +21,32 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.recipeapp.presentation.common.composable.RecipeItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountContent(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    scrollBehavior: TopAppBarScrollBehavior
 ) {
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-
     Scaffold(
-        modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
-                title = {
-                    Text(text = "User Name")
-                },
+                title = { Text(text = "User Name") },
                 navigationIcon = {
-                    IconButton(
-                        onClick = {}
-                    ) {
+                    IconButton(onClick = {}) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back button"
@@ -62,9 +54,7 @@ fun AccountContent(
                     }
                 },
                 actions = {
-                    IconButton(
-                        onClick = {}
-                    ) {
+                    IconButton(onClick = {}) {
                         Icon(
                             imageVector = Icons.Outlined.Edit,
                             contentDescription = "Edit button"
@@ -75,9 +65,7 @@ fun AccountContent(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {}
-            ) {
+            FloatingActionButton(onClick = {}) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Add recipe"
@@ -95,19 +83,18 @@ fun AccountContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 24.dp),
+                    .padding(bottom = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "Recipes",
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 24.sp
+                    style = MaterialTheme.typography.titleMedium
                 )
 
                 Text(
                     text = "Newest",
-                    fontSize = 16.sp
+                    style = MaterialTheme.typography.labelSmall
                 )
             }
 
@@ -124,6 +111,7 @@ fun AccountContent(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(
     name = "Light Mode",
     uiMode = UI_MODE_NIGHT_NO
@@ -135,6 +123,8 @@ fun AccountContent(
 @Composable
 fun AccountContentPreview() {
     RecipeAppTheme {
-        AccountContent()
+        AccountContent(
+            scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+        )
     }
 }
