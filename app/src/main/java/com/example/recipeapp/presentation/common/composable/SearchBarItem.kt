@@ -18,6 +18,7 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBarItem(
+    modifier: Modifier = Modifier
 ) {
     SearchBar(
         query = "searching",
@@ -33,7 +34,7 @@ fun SearchBarItem(
                 )
             }
         },
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(bottom = 12.dp)
             .padding(horizontal = 16.dp)

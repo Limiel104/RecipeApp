@@ -24,12 +24,14 @@ import com.example.recipeapp.presentation.common.composable.SearchBarItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
-fun SavedRecipesContent() {
+fun SavedRecipesContent(
+    modifier: Modifier = Modifier
+) {
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) { paddingValues ->
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
@@ -37,15 +39,15 @@ fun SavedRecipesContent() {
 
             Card(
                 shape = RoundedCornerShape(10.dp),
-                modifier = Modifier.fillMaxSize()
+                modifier = modifier.fillMaxSize()
             ) {
                 Column(
-                    modifier = Modifier
+                    modifier = modifier
                         .padding(16.dp)
                         .padding(top = 8.dp)
                 ) {
                     Row(
-                        modifier = Modifier
+                        modifier = modifier
                             .fillMaxWidth()
                             .padding(bottom = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,

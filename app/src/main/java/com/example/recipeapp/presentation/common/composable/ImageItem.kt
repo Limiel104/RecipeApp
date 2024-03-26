@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,7 +25,7 @@ fun ImageItem(
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = modifier.clickable {},
+        modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         AsyncImage(
@@ -43,21 +44,41 @@ fun ImageItem(
 }
 
 @Preview(
-    name = "Light Mode",
+    name = "Light Mode - 100.dp",
     uiMode = Configuration.UI_MODE_NIGHT_NO
 )
 @Preview(
-    name = "Dark Mode",
+    name = "Dark Mode - 100.dp",
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
-fun ImageItemPreview() {
+fun ImageItemPreview100dp() {
     RecipeAppTheme {
         Surface {
             ImageItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp)
+                    .clickable {}
+            )
+        }
+    }
+}
+
+@Preview(
+    name = "Light Mode - 40.dp",
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark Mode - 40.dp",
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun ImageItemPreview40dp() {
+    RecipeAppTheme {
+        Surface {
+            ImageItem(
+                modifier = Modifier.size(40.dp)
             )
         }
     }

@@ -18,27 +18,27 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
 fun TopCategoriesSection(
+    modifier: Modifier = Modifier
 ) {
     Card(
         shape = RoundedCornerShape(10.dp),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(bottom = 12.dp)
     ) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .padding(16.dp)
                 .padding(top = 8.dp)
         ) {
             Text(
                 text = "Top Categories",
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                modifier = modifier.padding(bottom = 8.dp)
             )
 
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 HomeCategoryItem()

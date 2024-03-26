@@ -41,7 +41,9 @@ fun AccountContent(
     scrollBehavior: TopAppBarScrollBehavior
 ) {
     Scaffold(
-        modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier
+//            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
                 title = { Text(text = "User Name") },
