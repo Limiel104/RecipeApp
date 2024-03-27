@@ -5,6 +5,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
+import com.example.recipeapp.presentation.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -14,6 +15,8 @@ fun AccountScreen(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
     AccountContent (
-        scrollBehavior = scrollBehavior
+        scrollBehavior = scrollBehavior,
+        onAddRecipe = { navController.navigate(Screen.AddRecipeScreen.route) },
+        onRecipeSelected = { navController.navigate(Screen.RecipeDetailsScreen.route) }
     )
 }

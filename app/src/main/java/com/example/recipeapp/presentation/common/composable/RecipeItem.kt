@@ -2,6 +2,7 @@ package com.example.recipeapp.presentation.common.composable
 
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,12 +27,14 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 @Composable
 fun RecipeItem(
     modifier: Modifier = Modifier,
-    title: String = "Title of the recipe"
+    title: String = "Title of the recipe",
+    onClick: () -> Unit
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(100.dp),
+            .height(100.dp)
+            .clickable { onClick() },
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary)
     ) {
@@ -73,7 +76,9 @@ fun RecipeItem(
 @Composable
 fun RecipeItemPreview() {
     RecipeAppTheme {
-        RecipeItem()
+        RecipeItem(
+            onClick = {}
+        )
     }
 }
 
@@ -89,7 +94,8 @@ fun RecipeItemPreview() {
 fun RecipeItemPreviewLongTitle() {
     RecipeAppTheme {
         RecipeItem(
-            title = "Very very long title of the recipe for this composable. This is another line in the title. Let's make it even longer so it overflows"
+            title = "Very very long title of the recipe for this composable. This is another line in the title. Let's make it even longer so it overflows",
+            onClick = {}
         )
     }
 }

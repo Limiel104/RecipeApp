@@ -70,7 +70,7 @@ fun SavedRecipesContent(
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         items(10) {
-                            RecipeItem()
+                            RecipeItem( onClick = {} )
                         }
                     }
                 }

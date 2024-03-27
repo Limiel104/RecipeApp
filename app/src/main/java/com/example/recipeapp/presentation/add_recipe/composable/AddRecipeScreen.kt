@@ -1,5 +1,6 @@
 package com.example.recipeapp.presentation.add_recipe.composable
 
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 
@@ -7,5 +8,9 @@ import androidx.navigation.NavController
 fun AddRecipeScreen(
     navController: NavController
 ) {
-    AddRecipeContent()
+    val scrollState = rememberScrollState()
+
+    AddRecipeContent(
+        scrollState = scrollState
+    )
 }

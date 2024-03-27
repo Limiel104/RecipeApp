@@ -38,7 +38,9 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 @Composable
 fun AccountContent(
     modifier: Modifier = Modifier,
-    scrollBehavior: TopAppBarScrollBehavior
+    scrollBehavior: TopAppBarScrollBehavior,
+    onAddRecipe: () -> Unit,
+    onRecipeSelected: () -> Unit
 ) {
     Scaffold(
         modifier
@@ -67,7 +69,7 @@ fun AccountContent(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = {}) {
+            FloatingActionButton(onClick = { onAddRecipe() }) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Add recipe"
@@ -106,7 +108,9 @@ fun AccountContent(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(18) {
-                    RecipeItem()
+                    RecipeItem(
+                        onClick = { onRecipeSelected() }
+                    )
                 }
             }
         }
@@ -126,7 +130,9 @@ fun AccountContent(
 fun AccountContentPreview() {
     RecipeAppTheme {
         AccountContent(
-            scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+            scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState()),
+            onAddRecipe = {},
+            onRecipeSelected = {}
         )
     }
 }
