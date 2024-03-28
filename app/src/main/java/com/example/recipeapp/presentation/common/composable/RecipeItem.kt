@@ -15,12 +15,14 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
@@ -28,13 +30,17 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 fun RecipeItem(
     modifier: Modifier = Modifier,
     title: String = "Title of the recipe",
+    cardHorizontalPadding: Dp = 0.dp,
+    cardBottomPadding: Dp = 0.dp,
     onClick: () -> Unit
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
             .height(100.dp)
-            .clickable { onClick() },
+            .clickable { onClick() }
+            .padding(horizontal = cardHorizontalPadding)
+            .padding(bottom = cardBottomPadding),
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary)
     ) {
@@ -76,9 +82,7 @@ fun RecipeItem(
 @Composable
 fun RecipeItemPreview() {
     RecipeAppTheme {
-        RecipeItem(
-            onClick = {}
-        )
+        RecipeItem {}
     }
 }
 
@@ -97,5 +101,26 @@ fun RecipeItemPreviewLongTitle() {
             title = "Very very long title of the recipe for this composable. This is another line in the title. Let's make it even longer so it overflows",
             onClick = {}
         )
+    }
+}
+
+@Preview(
+    name = "Light Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun TopCategoriesSectionPreviewWithCardPadding() {
+    RecipeAppTheme {
+        Surface {
+            RecipeItem(
+                cardHorizontalPadding = 16.dp,
+                cardBottomPadding = 16.dp,
+                onClick = {}
+            )
+        }
     }
 }

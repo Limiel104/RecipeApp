@@ -1,14 +1,9 @@
 package com.example.recipeapp.presentation.home.composable
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -27,38 +22,33 @@ fun HomeContent(
     Scaffold(
         modifier = modifier.fillMaxSize()
     ) { paddingValues ->
-        Column(
-            modifier = modifier.padding(paddingValues)
+        LazyColumn(
+            modifier = modifier
+                .padding(paddingValues)
         ) {
-            SearchBarItem()
+            item {
+                SearchBarItem()
+            }
 
-            TopCategoriesSection()
+            item {
+                TopCategoriesSection()
+            }
 
-            Card(
-                shape = RoundedCornerShape(10.dp),
-                modifier = modifier.fillMaxSize()
-            ) {
-                Column(
+            item {
+                Text(
+                    text = "Recipes",
+                    style = MaterialTheme.typography.titleMedium,
                     modifier = modifier
-                        .padding(16.dp)
-                        .padding(top = 8.dp)
-                ) {
-                    Text(
-                        text = "Recipes",
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = modifier.padding(bottom = 8.dp)
-                    )
+                        .padding(16.dp,8.dp)
+                )
+            }
 
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        items(10) {
-                            RecipeItem( onClick = {} )
-                        }
-                    }
-                }
+            items(11) {
+                RecipeItem(
+                    cardHorizontalPadding = 16.dp,
+                    cardBottomPadding = 16.dp,
+                    onClick = {}
+                )
             }
         }
     }

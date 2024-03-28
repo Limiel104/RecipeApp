@@ -3,9 +3,9 @@ package com.example.recipeapp.presentation.home.composable
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -37,14 +37,14 @@ fun TopCategoriesSection(
                 modifier = modifier.padding(bottom = 8.dp)
             )
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                HomeCategoryItem()
-                HomeCategoryItem()
-                HomeCategoryItem()
-                HomeCategoryItem()
+                items(6) {
+                    HomeCategoryItem()
+                }
             }
         }
     }
@@ -59,7 +59,7 @@ fun TopCategoriesSection(
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
-fun HomeTopCategoriesSectionPreview() {
+fun TopCategoriesSectionPreview() {
     RecipeAppTheme {
         TopCategoriesSection()
     }
