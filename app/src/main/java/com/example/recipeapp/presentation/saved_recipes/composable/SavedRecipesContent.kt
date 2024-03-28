@@ -2,15 +2,11 @@ package com.example.recipeapp.presentation.saved_recipes.composable
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,50 +26,41 @@ fun SavedRecipesContent(
     Scaffold(
         modifier = modifier.fillMaxSize()
     ) { paddingValues ->
-        Column(
+        LazyColumn(
             modifier = modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            SearchBarItem()
+            item {
+                SearchBarItem()
+            }
 
-            Card(
-                shape = RoundedCornerShape(10.dp),
-                modifier = modifier.fillMaxSize()
-            ) {
-                Column(
+            item {
+                Row(
                     modifier = modifier
-                        .padding(16.dp)
-                        .padding(top = 8.dp)
+                        .fillMaxWidth()
+                        .padding(16.dp,8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Recipes",
-                            style = MaterialTheme.typography.titleMedium
-                        )
+                    Text(
+                        text = "Recipes",
+                        style = MaterialTheme.typography.titleMedium
+                    )
 
-                        Text(
-                            text = "Newest",
-                            style = MaterialTheme.typography.labelSmall
-                        )
-                    }
-
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        items(10) {
-                            RecipeItem( onClick = {} )
-                        }
-                    }
+                    Text(
+                        text = "Newest",
+                        style = MaterialTheme.typography.labelSmall
+                    )
                 }
+            }
+
+            items(11) {
+                RecipeItem(
+                    cardHorizontalPadding = 16.dp,
+                    cardBottomPadding = 16.dp,
+                    onClick = {}
+                )
             }
         }
     }
