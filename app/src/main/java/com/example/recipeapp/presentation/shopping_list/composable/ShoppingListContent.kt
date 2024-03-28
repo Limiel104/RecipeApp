@@ -1,7 +1,6 @@
 package com.example.recipeapp.presentation.shopping_list.composable
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -60,23 +59,23 @@ fun ShoppingListContent(
             }
         }
     ) { paddingValues ->
-        Column(
+        LazyColumn(
             modifier = modifier
                 .padding(paddingValues)
         ) {
-            Text(
-                text = "123 items",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Light,
-                modifier = modifier
-                    .padding(bottom = 8.dp)
-                    .padding(start = 16.dp)
-            )
+            item {
+                Text(
+                    text = "123 items",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Light,
+                    modifier = modifier
+                        .padding(bottom = 8.dp)
+                        .padding(start = 16.dp)
+                )
+            }
 
-            LazyColumn() {
-                items(5) {
-                    ShoppingListCategoryItem()
-                }
+            items(5) {
+                ShoppingListCategoryItem()
             }
         }
     }
