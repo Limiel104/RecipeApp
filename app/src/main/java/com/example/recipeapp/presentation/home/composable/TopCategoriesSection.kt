@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -28,22 +29,43 @@ fun TopCategoriesSection(
     ) {
         Column(
             modifier = modifier
-                .padding(16.dp)
+                .padding(vertical = 16.dp)
                 .padding(top = 8.dp)
         ) {
             Text(
                 text = "Top Categories",
                 style = MaterialTheme.typography.titleMedium,
-                modifier = modifier.padding(bottom = 8.dp)
+                modifier = modifier
+                    .padding(bottom = 8.dp)
+                    .padding(start = 16.dp)
             )
 
             LazyRow(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(6) {
-                    HomeCategoryItem()
+                val tempCategoryArray = listOf("Category 1","Category 2","Category 3","Category 4","Category 5","Category 6")
+
+                itemsIndexed(tempCategoryArray) { index, item ->
+                    when (index) {
+                        0 -> {
+                            HomeCategoryItem(
+                                modifier = Modifier.padding(start = 16.dp),
+                                categoryName = tempCategoryArray[index]
+                            )
+                        }
+                        5 -> {
+                            HomeCategoryItem(
+                                modifier = Modifier.padding(end = 16.dp),
+                                categoryName = tempCategoryArray[index]
+                            )
+                        }
+                        else -> {
+                            HomeCategoryItem(
+                                categoryName = tempCategoryArray[index]
+                            )
+                        }
+                    }
                 }
             }
         }

@@ -38,9 +38,9 @@ fun RecipeItem(
         modifier = modifier
             .fillMaxWidth()
             .height(100.dp)
-            .clickable { onClick() }
             .padding(horizontal = cardHorizontalPadding)
-            .padding(bottom = cardBottomPadding),
+            .padding(bottom = cardBottomPadding)
+            .clickable { onClick() },
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary)
     ) {
