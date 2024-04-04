@@ -11,6 +11,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.SearchBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.ui.theme.RecipeAppTheme
@@ -38,6 +39,7 @@ fun SearchBarItem(
             .fillMaxWidth()
             .padding(bottom = 12.dp)
             .padding(horizontal = 16.dp)
+            .testTag("Search Bar")
     ) {}
 }
 

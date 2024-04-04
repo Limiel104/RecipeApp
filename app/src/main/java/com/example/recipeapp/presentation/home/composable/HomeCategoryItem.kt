@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.presentation.common.composable.ImageItem
@@ -27,7 +28,8 @@ fun HomeCategoryItem(
     Card(
         modifier = modifier
             .size(90.dp)
-            .clickable {},
+            .clickable {}
+            .testTag("TCS $categoryName"),
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary)
     ) {

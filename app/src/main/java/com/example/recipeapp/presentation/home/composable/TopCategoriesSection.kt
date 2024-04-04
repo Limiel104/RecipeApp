@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.ui.theme.RecipeAppTheme
@@ -26,6 +27,7 @@ fun TopCategoriesSection(
         modifier = modifier
             .fillMaxWidth()
             .padding(bottom = 12.dp)
+            .testTag("Top Categories Section")
     ) {
         Column(
             modifier = modifier
@@ -44,7 +46,7 @@ fun TopCategoriesSection(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                val tempCategoryArray = listOf("Category 1","Category 2","Category 3","Category 4","Category 5","Category 6")
+                val tempCategoryArray = listOf("Category 1","Category 2","Category 3","Category 4","Category 5","Category 6","Category 7","Category 8")
 
                 itemsIndexed(tempCategoryArray) { index, item ->
                     when (index) {
@@ -54,7 +56,7 @@ fun TopCategoriesSection(
                                 categoryName = tempCategoryArray[index]
                             )
                         }
-                        5 -> {
+                        tempCategoryArray.lastIndex -> {
                             HomeCategoryItem(
                                 modifier = Modifier.padding(end = 16.dp),
                                 categoryName = tempCategoryArray[index]
