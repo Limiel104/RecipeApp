@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -68,6 +69,7 @@ fun RecipeDetailsContent(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .verticalScroll(scrollState)
+                .testTag("Recipe Details Content")
         ) {
             Text(
                 text = "Recipe name that is very long long long long",
@@ -92,11 +94,12 @@ fun RecipeDetailsContent(
                         Tab(
                             selected = secondaryTabState == index,
                             onClick = { onTabChanged() },
+                            modifier = Modifier.testTag("$title Tab Title"),
                             text = {
                                 Text(
                                     text = title,
-                                    maxLines = 2,
-                                    overflow = TextOverflow.Ellipsis
+                                    style = MaterialTheme.typography.titleMedium,
+                                    maxLines = 1
                                 )
                             }
                         )

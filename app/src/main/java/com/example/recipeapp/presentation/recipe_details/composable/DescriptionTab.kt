@@ -8,6 +8,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.ui.theme.RecipeAppTheme
@@ -22,6 +23,7 @@ fun DescriptionTab(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp, 24.dp)
+            .testTag("Description Tab Content")
     )
 }
 
