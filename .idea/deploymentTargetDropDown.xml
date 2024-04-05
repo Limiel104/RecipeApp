@@ -14,10 +14,10 @@
       <entry key="accountScreen()">
         <State />
       </entry>
-      <entry key="app">
+      <entry key="addRecipeScreen_wholeLayoutSwipesVertically()">
         <State />
       </entry>
-      <entry key="topBar_accountScreen_hasCorrectNumberOfItems()">
+      <entry key="app">
         <State />
       </entry>
     </value>
