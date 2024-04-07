@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -87,6 +88,7 @@ dependencies {
 
     //Dagger Hilt
     implementation("com.google.dagger:hilt-android:2.51.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     kapt("com.google.dagger:hilt-compiler:2.51.1")
 
     //Dagger Hilt for instrumentation tests
@@ -96,6 +98,12 @@ dependencies {
     //Dagger Hilt for local unit tests
     testImplementation("com.google.dagger:hilt-android-testing:2.51.1")
     kaptTest("com.google.dagger:hilt-compiler:2.51.1")
+
+    //Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
+
+    //Firebase Firestore
+    implementation("com.google.firebase:firebase-firestore:24.11.0")
 }
 
 // Allow references to generated code
