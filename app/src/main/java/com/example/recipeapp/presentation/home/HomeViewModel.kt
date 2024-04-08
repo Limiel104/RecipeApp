@@ -15,12 +15,12 @@ class HomeViewModel @Inject constructor(
 ): ViewModel() {
 
     init {
-        getIngredient("1")
+        getIngredients()
     }
 
-    private fun getIngredient(ingredientId: String) {
+    private fun getIngredients() {
         viewModelScope.launch {
-            ingredientRepository.getIngredient(ingredientId).collect { response ->
+            ingredientRepository.getIngredients().collect { response ->
                 when(response) {
                     is Resource.Error -> {}
                     is Resource.Loading -> {}
