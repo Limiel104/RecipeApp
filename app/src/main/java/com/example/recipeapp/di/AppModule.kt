@@ -4,7 +4,9 @@ import android.app.Application
 import androidx.room.Room
 import com.example.recipeapp.data.local.RecipeDatabase
 import com.example.recipeapp.data.repository.IngredientRepositoryImpl
+import com.example.recipeapp.data.repository.RecipeRepositoryImpl
 import com.example.recipeapp.domain.repository.IngredientRepository
+import com.example.recipeapp.domain.repository.RecipeRepository
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import dagger.Module
@@ -31,6 +33,13 @@ object AppModule {
     @Singleton
     fun provideIngredientRepository(db: RecipeDatabase): IngredientRepository {
         val ingredientsRef = Firebase.firestore.collection("ingredients")
-        return IngredientRepositoryImpl(ingredientsRef, db.ingredientDao)
+        return IngredientRepositoryImpl(ingredientsRef, db.recipeDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRecipeRepository(db: RecipeDatabase): RecipeRepository {
+        val recipesRef = Firebase.firestore.collection("recipes")
+        return RecipeRepositoryImpl(recipesRef, db.recipeDao)
     }
 }

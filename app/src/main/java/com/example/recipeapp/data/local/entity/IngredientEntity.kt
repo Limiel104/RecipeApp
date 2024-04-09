@@ -1,4 +1,4 @@
-package com.example.recipeapp.data.local
+package com.example.recipeapp.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class IngredientEntity(
     @PrimaryKey
-    val id: String,
+    val ingredientId: String,
     val name: String,
     val imageUrl: String,
     val category: String

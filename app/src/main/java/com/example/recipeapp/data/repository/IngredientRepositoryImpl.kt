@@ -1,7 +1,7 @@
 package com.example.recipeapp.data.repository
 
 import android.util.Log
-import com.example.recipeapp.data.local.IngredientDao
+import com.example.recipeapp.data.local.RecipeDao
 import com.example.recipeapp.data.mapper.toIngredient
 import com.example.recipeapp.data.mapper.toIngredientEntity
 import com.example.recipeapp.domain.model.Ingredient
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 class IngredientRepositoryImpl @Inject constructor(
     private val ingredientsRef: CollectionReference,
-    private val dao: IngredientDao
+    private val dao: RecipeDao
 ): IngredientRepository {
     override suspend fun getIngredient(ingredientId: String) {
         TODO("Not yet implemented")
