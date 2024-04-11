@@ -1,9 +1,11 @@
-package com.example.recipeapp.domain.model
+package com.example.recipeapp.data.remote
 
-data class Recipe(
+typealias IngredientId = String
+typealias Quantity = String
+data class RecipeDto(
     val recipeId: String = "",
     val name: String = "",
-    val ingredientList: List<IngredientQuantity> = emptyList(),
+    val ingredientsQuantityMap: Map<IngredientId,Quantity> = emptyMap(),
     val prepTime: String = "",
     val servings: Int = 0,
     val description: String = "",

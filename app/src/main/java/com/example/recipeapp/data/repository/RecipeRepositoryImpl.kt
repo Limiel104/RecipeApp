@@ -2,9 +2,10 @@ package com.example.recipeapp.data.repository
 
 import android.util.Log
 import com.example.recipeapp.data.local.RecipeDao
-import com.example.recipeapp.data.mapper.getIngredientEntityList
+import com.example.recipeapp.data.mapper.getIngredientsQuantityList
 import com.example.recipeapp.data.mapper.toRecipe
 import com.example.recipeapp.data.mapper.toRecipeEntity
+import com.example.recipeapp.data.remote.RecipeDto
 import com.example.recipeapp.domain.model.Recipe
 import com.example.recipeapp.domain.repository.RecipeRepository
 import com.example.recipeapp.domain.util.Resource
@@ -27,7 +28,7 @@ class RecipeRepositoryImpl @Inject constructor(
     override suspend fun getRecipes() = flow<Resource<List<Recipe>>> {
         emit(Resource.Loading(true))
 
-        val recipes = dao.getRecipes()
+        val recipes = dao.getRecipesWithIngredientsQuantity()
         val loadFromCache = recipes.isNotEmpty()
 
         if(loadFromCache) {
@@ -38,19 +39,19 @@ class RecipeRepositoryImpl @Inject constructor(
         }
 
         val snapshot = recipesRef.get().await()
-        val recipesFromRemote = snapshot.toObjects(Recipe::class.java)
+        val recipesFromRemote = snapshot.toObjects(RecipeDto::class.java)
 
         recipesFromRemote.let { recipeList ->
             dao.deleteRecipes()
             for(recipe in recipeList) {
-                dao.insertRecipeWithIngredients(
+                dao.insertRecipeWithIngredientsQuantity(
                     recipe.toRecipeEntity(),
-                    recipe.getIngredientEntityList()
+                    recipe.getIngredientsQuantityList()
                 )
             }
         }
 
-        emit(Resource.Success(dao.getRecipes().map { it.toRecipe() }))
+        emit(Resource.Success(dao.getRecipesWithIngredientsQuantity().map { it.toRecipe() }))
         Log.i("TAG","Recipes from remote")
         emit(Resource.Loading(false))
 

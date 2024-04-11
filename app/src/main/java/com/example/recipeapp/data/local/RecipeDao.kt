@@ -6,8 +6,10 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.example.recipeapp.data.local.entity.IngredientEntity
+import com.example.recipeapp.data.local.entity.IngredientQuantityEntity
 import com.example.recipeapp.data.local.entity.RecipeEntity
 import com.example.recipeapp.data.local.relation.RecipeWithIngredients
+import com.example.recipeapp.data.local.relation.RecipeWithIngredientsQuantity
 
 @Dao
 interface RecipeDao {
@@ -17,10 +19,20 @@ interface RecipeDao {
 
     @Insert
     suspend fun insertIngredients(ingredients: List<IngredientEntity>)
+
+    @Insert
+    suspend fun ingredientsQuantity(ingredientsQuantity: List<IngredientQuantityEntity>)
+
     @Transaction
     suspend fun insertRecipeWithIngredients(recipe: RecipeEntity,ingredients: List<IngredientEntity>) {
         insertRecipe(recipe)
         insertIngredients(ingredients)
+    }
+
+    @Transaction
+    suspend fun insertRecipeWithIngredientsQuantity(recipe: RecipeEntity, ingredientsQuantity: List<IngredientQuantityEntity>) {
+        insertRecipe(recipe)
+        ingredientsQuantity(ingredientsQuantity)
     }
 
     @Transaction
@@ -35,7 +47,11 @@ interface RecipeDao {
 
     @Transaction
     @Query("SELECT * FROM recipeentity")
-    suspend fun getRecipes(): List<RecipeWithIngredients>
+    suspend fun getRecipesWithIngredients(): List<RecipeWithIngredients>
+
+    @Transaction
+    @Query("SELECT * FROM recipeentity")
+    suspend fun getRecipesWithIngredientsQuantity(): List<RecipeWithIngredientsQuantity>
 
     @Query(
         """
@@ -48,6 +64,7 @@ interface RecipeDao {
 
     @Query("SELECT * FROM ingrediententity")
     suspend fun getIngredients(): List<IngredientEntity>
+
     @Query("DELETE FROM recipeentity")
     suspend fun deleteRecipes()
 
