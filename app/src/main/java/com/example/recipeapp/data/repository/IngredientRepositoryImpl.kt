@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.recipeapp.data.local.RecipeDao
 import com.example.recipeapp.data.mapper.toIngredient
 import com.example.recipeapp.data.mapper.toIngredientEntity
+import com.example.recipeapp.data.remote.IngredientDto
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.repository.IngredientRepository
 import com.example.recipeapp.domain.util.Resource
@@ -19,9 +20,16 @@ class IngredientRepositoryImpl @Inject constructor(
     private val ingredientsRef: CollectionReference,
     private val dao: RecipeDao
 ): IngredientRepository {
-    override suspend fun getIngredient(ingredientId: String) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun getIngredient(ingredientId: String) = flow<Resource<Ingredient>> {
+        emit(Resource.Loading(true))
+
+        val ingredient = dao.getIngredient(ingredientId)
+        emit(Resource.Success(ingredient.toIngredient()))
+
+        emit(Resource.Loading(false))
+    }.catch {
+        emit(Resource.Error(it.localizedMessage as String))
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun getIngredients() = flow<Resource<List<Ingredient>>> {
         emit(Resource.Loading(true))
@@ -37,14 +45,14 @@ class IngredientRepositoryImpl @Inject constructor(
         }
 
         val snapshot = ingredientsRef.get().await()
-        val ingredientsFromRemote = snapshot.toObjects(Ingredient::class.java)
+        val ingredientsFromRemote = snapshot.toObjects(IngredientDto::class.java)
 
         ingredientsFromRemote.let { ingredientList ->
             dao.deleteIngredients()
             dao.insertIngredients(ingredientList.map { it.toIngredientEntity() })
         }
 
-        emit(Resource.Success(ingredientsFromRemote))
+        emit(Resource.Success(ingredientsFromRemote.map { it.toIngredient() }))
         Log.i("TAG","Ingredients from remote")
         emit(Resource.Loading(false))
 

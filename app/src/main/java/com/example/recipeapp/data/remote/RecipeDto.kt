@@ -2,6 +2,7 @@ package com.example.recipeapp.data.remote
 
 typealias IngredientId = String
 typealias Quantity = String
+
 data class RecipeDto(
     val recipeId: String = "",
     val name: String = "",

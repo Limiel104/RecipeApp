@@ -19,6 +19,7 @@ class HomeViewModel @Inject constructor(
     init {
         getIngredients()
         getRecipes()
+        getRecipeWithIngredients()
     }
 
     private fun getIngredients() {
@@ -43,6 +44,20 @@ class HomeViewModel @Inject constructor(
                     is Resource.Loading -> {}
                     is Resource.Success -> {
                         Log.i("TAG2",response.data.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getRecipeWithIngredients() {
+        viewModelScope.launch {
+            recipeRepository.getRecipe("1").collect { response ->
+                when(response) {
+                    is Resource.Error -> {}
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {
+                        Log.i("TAG3",response.data.toString())
                     }
                 }
             }

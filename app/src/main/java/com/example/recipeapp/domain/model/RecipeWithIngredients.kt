@@ -1,9 +1,11 @@
 package com.example.recipeapp.domain.model
 
-data class Recipe(
+typealias Quantity = String
+
+data class RecipeWithIngredients(
     val recipeId: String,
     val name: String,
-    val ingredientList: List<IngredientQuantity>,
+    val ingredients: Map<Ingredient,Quantity>,
     val prepTime: String,
     val servings: Int,
     val description: String,

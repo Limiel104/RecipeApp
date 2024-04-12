@@ -8,7 +8,6 @@ import androidx.room.Transaction
 import com.example.recipeapp.data.local.entity.IngredientEntity
 import com.example.recipeapp.data.local.entity.IngredientQuantityEntity
 import com.example.recipeapp.data.local.entity.RecipeEntity
-import com.example.recipeapp.data.local.relation.RecipeWithIngredients
 import com.example.recipeapp.data.local.relation.RecipeWithIngredientsQuantity
 
 @Dao
@@ -43,11 +42,7 @@ interface RecipeDao {
             WHERE recipeId = :recipeId
         """
     )
-    suspend fun getRecipe(recipeId: String): RecipeWithIngredients?
-
-    @Transaction
-    @Query("SELECT * FROM recipeentity")
-    suspend fun getRecipesWithIngredients(): List<RecipeWithIngredients>
+    suspend fun getRecipeWithIngredientsQuantity(recipeId: String): RecipeWithIngredientsQuantity
 
     @Transaction
     @Query("SELECT * FROM recipeentity")
@@ -64,6 +59,16 @@ interface RecipeDao {
 
     @Query("SELECT * FROM ingrediententity")
     suspend fun getIngredients(): List<IngredientEntity>
+
+    @Query(
+        """
+            SELECT ingrediententity.ingredientId, ingrediententity.category, ingrediententity.name, ingrediententity.imageUrl
+            FROM ingrediententity
+            JOIN ingredientquantityentity ON ingredientquantityentity.ingredientId = ingrediententity.ingredientId
+            WHERE ingredientquantityentity.recipeId = :recipeId
+        """
+    )
+    suspend fun getIngredientsFromRecipe(recipeId: String): List<IngredientEntity>
 
     @Query("DELETE FROM recipeentity")
     suspend fun deleteRecipes()

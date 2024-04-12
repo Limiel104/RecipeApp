@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface IngredientRepository {
 
-    suspend fun getIngredient(ingredientId: String)
+    suspend fun getIngredient(ingredientId: String): Flow<Resource<Ingredient>>
     suspend fun getIngredients(): Flow<Resource<List<Ingredient>>>
 }

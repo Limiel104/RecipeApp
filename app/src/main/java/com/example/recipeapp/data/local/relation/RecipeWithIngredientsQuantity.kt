@@ -10,7 +10,7 @@ data class RecipeWithIngredientsQuantity(
     val recipe: RecipeEntity,
     @Relation(
         parentColumn = "recipeId",
-        entityColumn = "ingredientQuantityId",
+        entityColumn = "recipeId",
     )
     val ingredientsQuantity: List<IngredientQuantityEntity>
 )
