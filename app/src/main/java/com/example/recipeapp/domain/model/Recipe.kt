@@ -1,5 +1,7 @@
 package com.example.recipeapp.domain.model
 
+typealias UserId = String
+
 data class Recipe(
     val recipeId: String,
     val name: String,
@@ -10,5 +12,5 @@ data class Recipe(
     val isVegetarian: Boolean,
     val isVegan: Boolean,
     val imageUrl: String,
-    val createdBy: String
+    val createdBy: UserId
 )

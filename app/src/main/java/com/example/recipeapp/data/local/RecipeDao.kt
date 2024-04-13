@@ -2,25 +2,33 @@ package com.example.recipeapp.data.local
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.example.recipeapp.data.local.entity.IngredientEntity
 import com.example.recipeapp.data.local.entity.IngredientQuantityEntity
 import com.example.recipeapp.data.local.entity.RecipeEntity
+import com.example.recipeapp.data.local.entity.ShoppingListEntity
+import com.example.recipeapp.data.local.entity.ShoppingListIngredientEntity
 import com.example.recipeapp.data.local.relation.RecipeWithIngredientsQuantity
+import com.example.recipeapp.data.local.relation.ShoppingListWithIngredient
 
 @Dao
 interface RecipeDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     suspend fun insertRecipe(recipe: RecipeEntity)
 
     @Insert
     suspend fun insertIngredients(ingredients: List<IngredientEntity>)
 
     @Insert
+    suspend fun insertShoppingList(shoppingList: ShoppingListEntity)
+
+    @Insert
     suspend fun insertIngredientsQuantity(ingredientsQuantity: List<IngredientQuantityEntity>)
+
+    @Insert
+    suspend fun insertShoppingListIngredients(shoppingListIngredients: List<ShoppingListIngredientEntity>)
 
     @Transaction
     suspend fun insertRecipeWithIngredients(recipe: RecipeEntity,ingredients: List<IngredientEntity>) {
@@ -32,6 +40,12 @@ interface RecipeDao {
     suspend fun insertRecipeWithIngredientsQuantity(recipe: RecipeEntity, ingredientsQuantity: List<IngredientQuantityEntity>) {
         insertRecipe(recipe)
         insertIngredientsQuantity(ingredientsQuantity)
+    }
+
+    @Transaction
+    suspend fun insertShoppingListWithIngredients(shoppingList: ShoppingListEntity, shoppingListIngredients: List<ShoppingListIngredientEntity>) {
+        insertShoppingList(shoppingList)
+        insertShoppingListIngredients(shoppingListIngredients)
     }
 
     @Transaction
@@ -79,9 +93,35 @@ interface RecipeDao {
     )
     suspend fun getIngredientsFromRecipe(recipeId: String): List<IngredientEntity>
 
+    @Query("SELECT * FROM shoppinglistentity")
+    suspend fun getShoppingLists(): List<ShoppingListEntity>
+
+    @Transaction
+    @Query(
+        """
+            SELECT *
+            FROM shoppinglistentity
+            WHERE shoppingListId = :shoppingListId
+        """
+    )
+    suspend fun getShoppingListWithIngredientsQuantity(shoppingListId: String): ShoppingListWithIngredient
+
+    @Query(
+        """
+            SELECT ingrediententity.ingredientId, ingrediententity.category, ingrediententity.name, ingrediententity.imageUrl
+            FROM ingrediententity
+            JOIN shoppinglistingrediententity ON shoppinglistingrediententity.ingredientId = ingrediententity.ingredientId
+            WHERE shoppinglistingrediententity.shoppingListId = :shoppingListId
+        """
+    )
+    suspend fun getIngredientsFromShoppingList(shoppingListId: String): List<IngredientEntity>
+
     @Query("DELETE FROM recipeentity")
     suspend fun deleteRecipes()
 
     @Query("DELETE FROM ingrediententity")
     suspend fun deleteIngredients()
+
+    @Query("DELETE FROM shoppinglistentity")
+    suspend fun deleteShoppingLists()
 }
