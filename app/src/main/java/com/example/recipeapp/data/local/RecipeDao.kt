@@ -48,6 +48,9 @@ interface RecipeDao {
         insertShoppingListIngredients(shoppingListIngredients)
     }
 
+    @Query("SELECT * FROM recipeentity")
+    suspend fun getRecipes(): List<RecipeEntity>
+
     @Transaction
     @Query(
         """
@@ -57,10 +60,6 @@ interface RecipeDao {
         """
     )
     suspend fun getRecipeWithIngredientsQuantity(recipeId: String): RecipeWithIngredientsQuantity
-
-    @Transaction
-    @Query("SELECT * FROM recipeentity")
-    suspend fun getRecipesWithIngredientsQuantity(): List<RecipeWithIngredientsQuantity>
 
     @Query(
         """

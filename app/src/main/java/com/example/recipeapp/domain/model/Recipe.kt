@@ -5,7 +5,6 @@ typealias UserId = String
 data class Recipe(
     val recipeId: String,
     val name: String,
-    val ingredientList: List<IngredientQuantity>,
     val prepTime: String,
     val servings: Int,
     val description: String,

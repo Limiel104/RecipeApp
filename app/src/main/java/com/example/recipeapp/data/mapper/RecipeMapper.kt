@@ -8,6 +8,20 @@ import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Recipe
 import com.example.recipeapp.domain.model.RecipeWithIngredients
 
+fun RecipeEntity.toRecipe(): Recipe {
+    return Recipe(
+        recipeId = recipeId,
+        name = name,
+        prepTime = prepTime,
+        servings = servings,
+        description = description,
+        isVegetarian = isVegetarian,
+        isVegan = isVegan,
+        imageUrl = imageUrl,
+        createdBy = createdBy
+    )
+}
+
 fun RecipeDto.toRecipeEntity(): RecipeEntity {
     return RecipeEntity(
         recipeId = recipeId,
@@ -36,21 +50,6 @@ fun RecipeDto.getIngredientsQuantityList(): List<IngredientQuantityEntity> {
     }
 
     return ingredientsQuantityEntityList
-}
-
-fun RecipeWithIngredientsQuantity.toRecipe(): Recipe {
-    return Recipe(
-        recipeId = recipe.recipeId,
-        name = recipe.name,
-        ingredientList = ingredientsQuantity.map { it.toIngredientQuantity(recipe.recipeId) },
-        prepTime = recipe.prepTime,
-        servings = recipe.servings,
-        description = recipe.description,
-        isVegetarian = recipe.isVegetarian,
-        isVegan = recipe.isVegan,
-        imageUrl = recipe.imageUrl,
-        createdBy = recipe.createdBy
-    )
 }
 
 fun RecipeWithIngredientsQuantity.toRecipeWithIngredients(ingredientList: List<Ingredient>): RecipeWithIngredients {

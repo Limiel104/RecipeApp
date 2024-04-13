@@ -41,7 +41,7 @@ class RecipeRepositoryImpl @Inject constructor(
     override suspend fun getRecipes() = flow<Resource<List<Recipe>>> {
         emit(Resource.Loading(true))
 
-        val recipes = dao.getRecipesWithIngredientsQuantity()
+        val recipes = dao.getRecipes()
         val loadFromCache = recipes.isNotEmpty()
 
         if(loadFromCache) {
@@ -64,7 +64,7 @@ class RecipeRepositoryImpl @Inject constructor(
             }
         }
 
-        emit(Resource.Success(dao.getRecipesWithIngredientsQuantity().map { it.toRecipe() }))
+        emit(Resource.Success(dao.getRecipes().map { it.toRecipe() }))
         Log.i("TAG","Recipes from remote")
         emit(Resource.Loading(false))
 
