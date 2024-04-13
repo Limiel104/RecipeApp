@@ -3,7 +3,7 @@ package com.example.recipeapp.data.local
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.recipeapp.data.local.entity.IngredientEntity
-import com.example.recipeapp.data.local.entity.IngredientQuantityEntity
+import com.example.recipeapp.data.local.entity.RecipeIngredientEntity
 import com.example.recipeapp.data.local.entity.RecipeEntity
 import com.example.recipeapp.data.local.entity.ShoppingListEntity
 import com.example.recipeapp.data.local.entity.ShoppingListIngredientEntity
@@ -12,7 +12,7 @@ import com.example.recipeapp.data.local.entity.ShoppingListIngredientEntity
     entities = [
         IngredientEntity::class,
         RecipeEntity::class,
-        IngredientQuantityEntity::class,
+        RecipeIngredientEntity::class,
         ShoppingListEntity::class,
         ShoppingListIngredientEntity::class],
     version = 1
@@ -20,6 +20,8 @@ import com.example.recipeapp.data.local.entity.ShoppingListIngredientEntity
 abstract class RecipeDatabase: RoomDatabase() {
 
     abstract val recipeDao: RecipeDao
+    abstract val ingredientDao: IngredientDao
+    abstract val shoppingListDao: ShoppingListDao
 
     companion object {
         const val DATABASE_NAME = "recipes.db"

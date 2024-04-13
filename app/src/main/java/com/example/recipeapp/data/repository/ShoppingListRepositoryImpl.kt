@@ -1,7 +1,7 @@
 package com.example.recipeapp.data.repository
 
 import android.util.Log
-import com.example.recipeapp.data.local.RecipeDao
+import com.example.recipeapp.data.local.ShoppingListDao
 import com.example.recipeapp.data.mapper.getShoppingListIngredientsList
 import com.example.recipeapp.data.mapper.toIngredient
 import com.example.recipeapp.data.mapper.toShoppingList
@@ -22,12 +22,12 @@ import javax.inject.Inject
 
 class ShoppingListRepositoryImpl @Inject constructor(
     private val shoppingListsRef: CollectionReference,
-    private val dao: RecipeDao
+    private val dao: ShoppingListDao
 ): ShoppingListRepository {
     override suspend fun getShoppingList(shoppingListId: String) = flow<Resource<ShoppingListWithIngredients>> {
         emit(Resource.Loading(true))
 
-        val shoppingListWithIngredient = dao.getShoppingListWithIngredientsQuantity(shoppingListId)
+        val shoppingListWithIngredient = dao.getShoppingListWithIngredients(shoppingListId)
         val ingredients = dao.getIngredientsFromShoppingList(shoppingListId).map { it.toIngredient() }
         val shoppingListWithIngredients = shoppingListWithIngredient.toShoppingListWithIngredients(ingredients)
         emit(Resource.Success(shoppingListWithIngredients))

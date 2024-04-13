@@ -42,13 +42,13 @@ object AppModule {
     @Singleton
     fun provideIngredientRepository(db: RecipeDatabase): IngredientRepository {
         val ingredientsRef = Firebase.firestore.collection("ingredients")
-        return IngredientRepositoryImpl(ingredientsRef, db.recipeDao)
+        return IngredientRepositoryImpl(ingredientsRef, db.ingredientDao)
     }
 
     @Provides
     @Singleton
     fun provideShoppingListRepository(db: RecipeDatabase): ShoppingListRepository {
         val shoppingListsRef = Firebase.firestore.collection("shoppingLists")
-        return ShoppingListRepositoryImpl(shoppingListsRef, db.recipeDao)
+        return ShoppingListRepositoryImpl(shoppingListsRef, db.shoppingListDao)
     }
 }

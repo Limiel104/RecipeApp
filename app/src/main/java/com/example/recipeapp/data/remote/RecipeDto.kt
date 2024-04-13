@@ -6,7 +6,7 @@ typealias Quantity = String
 data class RecipeDto(
     val recipeId: String = "",
     val name: String = "",
-    val ingredientsQuantityMap: Map<IngredientId,Quantity> = emptyMap(),
+    val ingredientMap: Map<IngredientId,Quantity> = emptyMap(),
     val prepTime: String = "",
     val servings: Int = 0,
     val description: String = "",

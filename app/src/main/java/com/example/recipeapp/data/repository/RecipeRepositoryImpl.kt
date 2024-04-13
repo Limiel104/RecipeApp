@@ -2,7 +2,7 @@ package com.example.recipeapp.data.repository
 
 import android.util.Log
 import com.example.recipeapp.data.local.RecipeDao
-import com.example.recipeapp.data.mapper.getIngredientsQuantityList
+import com.example.recipeapp.data.mapper.getRecipeIngredientsList
 import com.example.recipeapp.data.mapper.toIngredient
 import com.example.recipeapp.data.mapper.toRecipe
 import com.example.recipeapp.data.mapper.toRecipeEntity
@@ -27,9 +27,9 @@ class RecipeRepositoryImpl @Inject constructor(
     override suspend fun getRecipe(recipeId: String) = flow<Resource<RecipeWithIngredients>> {
         emit(Resource.Loading(true))
 
-        val recipeWithIngredientsQuantity = dao.getRecipeWithIngredientsQuantity(recipeId)
-        val ingredients = dao.getIngredientsFromRecipe(recipeWithIngredientsQuantity.recipe.recipeId).map { it.toIngredient() }
-        val recipeWithIngredients = recipeWithIngredientsQuantity.toRecipeWithIngredients(ingredients)
+        val recipeWithIngredient = dao.getRecipeWithIngredients(recipeId)
+        val ingredients = dao.getIngredientsFromRecipe(recipeId).map { it.toIngredient() }
+        val recipeWithIngredients = recipeWithIngredient.toRecipeWithIngredients(ingredients)
         emit(Resource.Success(recipeWithIngredients))
 
         emit(Resource.Loading(false))
@@ -57,9 +57,9 @@ class RecipeRepositoryImpl @Inject constructor(
         recipesFromRemote.let { recipeList ->
             dao.deleteRecipes()
             for(recipe in recipeList) {
-                dao.insertRecipeWithIngredientsQuantity(
+                dao.insertRecipeWithIngredients(
                     recipe.toRecipeEntity(),
-                    recipe.getIngredientsQuantityList()
+                    recipe.getRecipeIngredientsList()
                 )
             }
         }

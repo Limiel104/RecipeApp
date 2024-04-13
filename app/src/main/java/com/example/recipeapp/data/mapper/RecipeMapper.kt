@@ -1,8 +1,8 @@
 package com.example.recipeapp.data.mapper
 
-import com.example.recipeapp.data.local.entity.IngredientQuantityEntity
+import com.example.recipeapp.data.local.entity.RecipeIngredientEntity
 import com.example.recipeapp.data.local.entity.RecipeEntity
-import com.example.recipeapp.data.local.relation.RecipeWithIngredientsQuantity
+import com.example.recipeapp.data.local.relation.RecipeWithIngredient
 import com.example.recipeapp.data.remote.RecipeDto
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Recipe
@@ -36,24 +36,24 @@ fun RecipeDto.toRecipeEntity(): RecipeEntity {
     )
 }
 
-fun RecipeDto.getIngredientsQuantityList(): List<IngredientQuantityEntity> {
-    val ingredientsQuantityEntityList = mutableListOf<IngredientQuantityEntity>()
+fun RecipeDto.getRecipeIngredientsList(): List<RecipeIngredientEntity> {
+    val recipeIngredientsEntityList = mutableListOf<RecipeIngredientEntity>()
 
-    for(ingredient in ingredientsQuantityMap) {
-        val newEntity = IngredientQuantityEntity(
-            ingredientQuantityId = 0,
+    for(ingredient in ingredientMap) {
+        val newEntity = RecipeIngredientEntity(
+            recipeIngredientId = 0,
             ingredientId = ingredient.key,
             recipeId = recipeId,
             quantity = ingredient.value
         )
-        ingredientsQuantityEntityList.add(newEntity)
+        recipeIngredientsEntityList.add(newEntity)
     }
 
-    return ingredientsQuantityEntityList
+    return recipeIngredientsEntityList
 }
 
-fun RecipeWithIngredientsQuantity.toRecipeWithIngredients(ingredientList: List<Ingredient>): RecipeWithIngredients {
-    val quantityList = ingredientsQuantity.map { it.quantity }
+fun RecipeWithIngredient.toRecipeWithIngredients(ingredientList: List<Ingredient>): RecipeWithIngredients {
+    val quantityList = recipeIngredients.map { it.quantity }
     val ingredients: Map<Ingredient,String> = ingredientList.zip(quantityList).toMap()
 
     return RecipeWithIngredients(

@@ -1,7 +1,7 @@
 package com.example.recipeapp.data.repository
 
 import android.util.Log
-import com.example.recipeapp.data.local.RecipeDao
+import com.example.recipeapp.data.local.IngredientDao
 import com.example.recipeapp.data.mapper.toIngredient
 import com.example.recipeapp.data.mapper.toIngredientEntity
 import com.example.recipeapp.data.remote.IngredientDto
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 class IngredientRepositoryImpl @Inject constructor(
     private val ingredientsRef: CollectionReference,
-    private val dao: RecipeDao
+    private val dao: IngredientDao
 ): IngredientRepository {
     override suspend fun getIngredient(ingredientId: String) = flow<Resource<Ingredient>> {
         emit(Resource.Loading(true))
@@ -27,6 +27,7 @@ class IngredientRepositoryImpl @Inject constructor(
         emit(Resource.Success(ingredient.toIngredient()))
 
         emit(Resource.Loading(false))
+
     }.catch {
         emit(Resource.Error(it.localizedMessage as String))
     }.flowOn(Dispatchers.IO)
