@@ -17,7 +17,8 @@ fun RecipeDto.toRecipeEntity(): RecipeEntity {
         description = description,
         isVegetarian = isVegetarian,
         isVegan = isVegan,
-        imageUrl = imageUrl
+        imageUrl = imageUrl,
+        createdBy = createdBy
     )
 }
 
@@ -47,7 +48,8 @@ fun RecipeWithIngredientsQuantity.toRecipe(): Recipe {
         description = recipe.description,
         isVegetarian = recipe.isVegetarian,
         isVegan = recipe.isVegan,
-        imageUrl = recipe.imageUrl
+        imageUrl = recipe.imageUrl,
+        createdBy = recipe.createdBy
     )
 }
 
@@ -64,6 +66,7 @@ fun RecipeWithIngredientsQuantity.toRecipeWithIngredients(ingredientList: List<I
         description = recipe.description,
         isVegetarian = recipe.isVegetarian,
         isVegan = recipe.isVegan,
-        imageUrl = recipe.imageUrl
+        imageUrl = recipe.imageUrl,
+        createdBy = recipe.createdBy
     )
 }

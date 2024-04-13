@@ -20,7 +20,7 @@ interface RecipeDao {
     suspend fun insertIngredients(ingredients: List<IngredientEntity>)
 
     @Insert
-    suspend fun ingredientsQuantity(ingredientsQuantity: List<IngredientQuantityEntity>)
+    suspend fun insertIngredientsQuantity(ingredientsQuantity: List<IngredientQuantityEntity>)
 
     @Transaction
     suspend fun insertRecipeWithIngredients(recipe: RecipeEntity,ingredients: List<IngredientEntity>) {
@@ -31,7 +31,7 @@ interface RecipeDao {
     @Transaction
     suspend fun insertRecipeWithIngredientsQuantity(recipe: RecipeEntity, ingredientsQuantity: List<IngredientQuantityEntity>) {
         insertRecipe(recipe)
-        ingredientsQuantity(ingredientsQuantity)
+        insertIngredientsQuantity(ingredientsQuantity)
     }
 
     @Transaction
@@ -47,6 +47,15 @@ interface RecipeDao {
     @Transaction
     @Query("SELECT * FROM recipeentity")
     suspend fun getRecipesWithIngredientsQuantity(): List<RecipeWithIngredientsQuantity>
+
+    @Query(
+        """
+            SELECT * 
+            FROM recipeentity 
+            WHERE createdBy = :userId
+        """
+    )
+    fun getUserRecipes(userId: String): List<RecipeEntity>
 
     @Query(
         """

@@ -11,5 +11,6 @@ data class RecipeWithIngredients(
     val description: String,
     val isVegetarian: Boolean,
     val isVegan: Boolean,
-    val imageUrl: String
+    val imageUrl: String,
+    val createdBy: String
 )

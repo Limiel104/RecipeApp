@@ -12,5 +12,6 @@ data class RecipeDto(
     val description: String = "",
     val isVegetarian: Boolean = false,
     val isVegan: Boolean = false,
-    val imageUrl: String = ""
+    val imageUrl: String = "",
+    val createdBy: String = ""
 )
