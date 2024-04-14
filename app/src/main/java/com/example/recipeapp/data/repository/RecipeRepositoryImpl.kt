@@ -5,6 +5,7 @@ import com.example.recipeapp.data.local.RecipeDao
 import com.example.recipeapp.data.mapper.getRecipeIngredientsList
 import com.example.recipeapp.data.mapper.toIngredient
 import com.example.recipeapp.data.mapper.toRecipe
+import com.example.recipeapp.data.mapper.toRecipeDto
 import com.example.recipeapp.data.mapper.toRecipeEntity
 import com.example.recipeapp.data.mapper.toRecipeWithIngredients
 import com.example.recipeapp.data.remote.RecipeDto
@@ -24,6 +25,19 @@ class RecipeRepositoryImpl @Inject constructor(
     private val recipesRef: CollectionReference,
     private val dao: RecipeDao
 ): RecipeRepository {
+    override suspend fun addRecipe(recipeWithIngredients: RecipeWithIngredients) = flow<Resource<Boolean>> {
+        emit(Resource.Loading(true))
+
+        val documentId = recipesRef.document().id
+        recipesRef.document(documentId).set(recipeWithIngredients.toRecipeDto(documentId)).await()
+        emit(Resource.Success(true))
+
+        emit(Resource.Loading(false))
+
+    }.catch {
+        emit(Resource.Error(it.localizedMessage as String))
+    }.flowOn(Dispatchers.IO)
+
     override suspend fun getRecipe(recipeId: String) = flow<Resource<RecipeWithIngredients>> {
         emit(Resource.Loading(true))
 
@@ -38,11 +52,11 @@ class RecipeRepositoryImpl @Inject constructor(
         emit(Resource.Error(it.localizedMessage as String))
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun getRecipes() = flow<Resource<List<Recipe>>> {
+    override suspend fun getRecipes(getRecipesFromRemote: Boolean) = flow<Resource<List<Recipe>>> {
         emit(Resource.Loading(true))
 
         val recipes = dao.getRecipes()
-        val loadFromCache = recipes.isNotEmpty()
+        val loadFromCache = recipes.isNotEmpty() && !getRecipesFromRemote
 
         if(loadFromCache) {
             emit(Resource.Success(recipes.map { it.toRecipe() }))
@@ -66,6 +80,18 @@ class RecipeRepositoryImpl @Inject constructor(
 
         emit(Resource.Success(dao.getRecipes().map { it.toRecipe() }))
         Log.i("TAG","Recipes from remote")
+        emit(Resource.Loading(false))
+
+    }.catch {
+        emit(Resource.Error(it.localizedMessage as String))
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun deleteRecipe(recipeId: String) = flow<Resource<Boolean>> {
+        emit(Resource.Loading(true))
+
+        recipesRef.document(recipeId).delete().await()
+        emit(Resource.Success(true))
+
         emit(Resource.Loading(false))
 
     }.catch {

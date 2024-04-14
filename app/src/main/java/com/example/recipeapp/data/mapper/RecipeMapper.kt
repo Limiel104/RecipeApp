@@ -69,3 +69,22 @@ fun RecipeWithIngredient.toRecipeWithIngredients(ingredientList: List<Ingredient
         createdBy = recipe.createdBy
     )
 }
+
+fun RecipeWithIngredients.toRecipeDto(documentId: String): RecipeDto {
+    val keys = ingredients.keys.map { it.ingredientId }
+    val values = ingredients.values
+    val ingredientMap: Map<String,String> = keys.zip(values).toMap()
+
+    return RecipeDto(
+        recipeId = documentId,
+        name = name,
+        ingredientMap = ingredientMap,
+        prepTime = prepTime,
+        servings = servings,
+        description = description,
+        isVegetarian = isVegetarian,
+        isVegan = isVegan,
+        imageUrl = imageUrl,
+        createdBy = createdBy
+    )
+}
