@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface ShoppingListRepository {
 
+    suspend fun addShoppingList(shoppingListWithIngredients: ShoppingListWithIngredients): Flow<Resource<Boolean>>
     suspend fun getShoppingList(shoppingListId: String): Flow<Resource<ShoppingListWithIngredients>>
-    suspend fun getUserShoppingLists(userId: String): Flow<Resource<List<ShoppingList>>>
+    suspend fun getUserShoppingLists(userId: String, getShoppingListFromRepository: Boolean): Flow<Resource<List<ShoppingList>>>
+    suspend fun deleteShoppingList(shoppingListId: String): Flow<Resource<Boolean>>
 }

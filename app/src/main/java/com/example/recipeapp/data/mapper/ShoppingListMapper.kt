@@ -51,3 +51,16 @@ fun ShoppingListWithIngredient.toShoppingListWithIngredients(ingredientList: Lis
         ingredients = ingredients
     )
 }
+
+fun ShoppingListWithIngredients.toShoppingListDto(documentId: String): ShoppingListDto {
+    val keys = ingredients.keys.map { it.ingredientId }
+    val values = ingredients.values
+    val ingredientMap: Map<String,String> = keys.zip(values).toMap()
+
+    return ShoppingListDto(
+        shoppingListId = documentId,
+        name = name,
+        createdBy = createdBy,
+        ingredientMap = ingredientMap
+    )
+}

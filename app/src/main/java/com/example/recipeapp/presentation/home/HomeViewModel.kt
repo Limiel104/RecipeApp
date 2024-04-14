@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.RecipeWithIngredients
+import com.example.recipeapp.domain.model.ShoppingListWithIngredients
 import com.example.recipeapp.domain.repository.IngredientRepository
 import com.example.recipeapp.domain.repository.RecipeRepository
 import com.example.recipeapp.domain.repository.ShoppingListRepository
@@ -20,14 +21,38 @@ class HomeViewModel @Inject constructor(
     private val shoppingListRepository: ShoppingListRepository
 ): ViewModel() {
 
+    val ingredient = Ingredient(
+        ingredientId = "ingr2",
+        name = "nowy",
+        imageUrl = "url",
+        category = "catcat"
+    )
+
+    val ingredient2 = Ingredient(
+        ingredientId = "ingr3",
+        name = "nowy2",
+        imageUrl = "url",
+        category = "catcat"
+    )
+
+    val ingredient3 = Ingredient(
+        ingredientId = "ingr4",
+        name = "nowy3",
+        imageUrl = "url",
+        category = "catcat"
+    )
+
     init {
 //        getIngredients()
 //        getRecipeWithIngredients()
-//        getShoppingLists()
+
 //        getShoppingListWithIngredients()
-        addRecipe()
-        getRecipes(true)
+//        addRecipe()
+//        getRecipes(true)
+        getShoppingLists(true)
 //        deleteRecipe()
+        addShoppingList()
+        deleteShoppingList()
     }
 
     private fun getIngredients() {
@@ -74,9 +99,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun getShoppingLists() {
+    private fun getShoppingLists(getShoppingListsFromRemote: Boolean) {
         viewModelScope.launch {
-            shoppingListRepository.getUserShoppingLists("user1").collect { response ->
+            shoppingListRepository.getUserShoppingLists("user1", getShoppingListsFromRemote).collect { response ->
                 when(response) {
                     is Resource.Error -> {}
                     is Resource.Loading -> {}
@@ -103,27 +128,6 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun addRecipe() {
-        val ingredient = Ingredient(
-            ingredientId = "ingr2",
-            name = "nowy",
-            imageUrl = "url",
-            category = "catcat"
-        )
-
-        val ingredient2 = Ingredient(
-            ingredientId = "ingr3",
-            name = "nowy2",
-            imageUrl = "url",
-            category = "catcat"
-        )
-
-        val ingredient3 = Ingredient(
-            ingredientId = "ingr4",
-            name = "nowy3",
-            imageUrl = "url",
-            category = "catcat"
-        )
-
         val recipe = RecipeWithIngredients(
             recipeId = "0",
             name = "nowy przepis lalaldbd",
@@ -162,6 +166,45 @@ class HomeViewModel @Inject constructor(
                     is Resource.Loading -> {}
                     is Resource.Success -> {
                         Log.i("TAG7",response.data.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun addShoppingList() {
+        val shoppingList = ShoppingListWithIngredients(
+            shoppingListId = "0",
+            name = "shopping list name",
+            createdBy = "user1",
+            ingredients = mapOf(
+                ingredient to "4 g",
+                ingredient3 to "7 kg"
+            )
+        )
+
+        viewModelScope.launch {
+            shoppingListRepository.addShoppingList(shoppingList).collect {
+                    response ->
+                when(response) {
+                    is Resource.Error -> {}
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {
+                        Log.i("TAG8",response.data.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun deleteShoppingList() {
+        viewModelScope.launch {
+            shoppingListRepository.deleteShoppingList("OxJu1QACWN2cG7QHttSE").collect { response ->
+                when(response) {
+                    is Resource.Error -> {}
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {
+                        Log.i("TAG9",response.data.toString())
                     }
                 }
             }

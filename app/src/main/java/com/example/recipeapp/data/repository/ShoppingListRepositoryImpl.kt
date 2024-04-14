@@ -5,6 +5,7 @@ import com.example.recipeapp.data.local.ShoppingListDao
 import com.example.recipeapp.data.mapper.getShoppingListIngredientsList
 import com.example.recipeapp.data.mapper.toIngredient
 import com.example.recipeapp.data.mapper.toShoppingList
+import com.example.recipeapp.data.mapper.toShoppingListDto
 import com.example.recipeapp.data.mapper.toShoppingListEntity
 import com.example.recipeapp.data.mapper.toShoppingListWithIngredients
 import com.example.recipeapp.data.remote.ShoppingListDto
@@ -24,6 +25,19 @@ class ShoppingListRepositoryImpl @Inject constructor(
     private val shoppingListsRef: CollectionReference,
     private val dao: ShoppingListDao
 ): ShoppingListRepository {
+    override suspend fun addShoppingList(shoppingListWithIngredients: ShoppingListWithIngredients) = flow<Resource<Boolean>> {
+        emit(Resource.Loading(true))
+
+        val documentId = shoppingListsRef.document().id
+        shoppingListsRef.document(documentId).set(shoppingListWithIngredients.toShoppingListDto(documentId)).await()
+        emit(Resource.Success(true))
+
+        emit(Resource.Loading(false))
+
+    }.catch {
+        emit(Resource.Error(it.localizedMessage as String))
+    }.flowOn(Dispatchers.IO)
+
     override suspend fun getShoppingList(shoppingListId: String) = flow<Resource<ShoppingListWithIngredients>> {
         emit(Resource.Loading(true))
 
@@ -38,11 +52,11 @@ class ShoppingListRepositoryImpl @Inject constructor(
         emit(Resource.Error(it.localizedMessage as String))
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun getUserShoppingLists(userId: String) = flow<Resource<List<ShoppingList>>> {
+    override suspend fun getUserShoppingLists(userId: String, getShoppingListFromRepository: Boolean) = flow<Resource<List<ShoppingList>>> {
         emit(Resource.Loading(true))
 
         val shoppingLists = dao.getShoppingLists()
-        val loadFromCache = shoppingLists.isNotEmpty()
+        val loadFromCache = shoppingLists.isNotEmpty() && !getShoppingListFromRepository
 
         if(loadFromCache) {
             emit(Resource.Success(shoppingLists.map { it.toShoppingList() }))
@@ -51,7 +65,7 @@ class ShoppingListRepositoryImpl @Inject constructor(
             return@flow
         }
 
-        val snapshot = shoppingListsRef.whereEqualTo("createdBy",userId).get().await()
+        val snapshot = shoppingListsRef.whereEqualTo("createdBy", userId).get().await()
         val shoppingListsFromRemote = snapshot.toObjects(ShoppingListDto::class.java)
 
         shoppingListsFromRemote.let { shoppingListsList ->
@@ -66,6 +80,18 @@ class ShoppingListRepositoryImpl @Inject constructor(
 
         emit(Resource.Success(dao.getShoppingLists().map { it.toShoppingList() }))
         Log.i("TAG","Shopping Lists from remote")
+        emit(Resource.Loading(false))
+
+    }.catch {
+        emit(Resource.Error(it.localizedMessage as String))
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun deleteShoppingList(shoppingListId: String) = flow<Resource<Boolean>> {
+        emit(Resource.Loading(true))
+
+        shoppingListsRef.document(shoppingListId).delete().await()
+        emit(Resource.Success(true))
+
         emit(Resource.Loading(false))
 
     }.catch {
