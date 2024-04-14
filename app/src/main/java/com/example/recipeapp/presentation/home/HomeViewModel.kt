@@ -8,6 +8,7 @@ import com.example.recipeapp.domain.model.RecipeWithIngredients
 import com.example.recipeapp.domain.model.ShoppingListWithIngredients
 import com.example.recipeapp.domain.repository.IngredientRepository
 import com.example.recipeapp.domain.repository.RecipeRepository
+import com.example.recipeapp.domain.repository.SavedRecipeRepository
 import com.example.recipeapp.domain.repository.ShoppingListRepository
 import com.example.recipeapp.domain.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,8 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val ingredientRepository: IngredientRepository,
     private val recipeRepository: RecipeRepository,
-    private val shoppingListRepository: ShoppingListRepository
+    private val shoppingListRepository: ShoppingListRepository,
+    private val savedRecipeRepository: SavedRecipeRepository
 ): ViewModel() {
 
     val ingredient = Ingredient(
@@ -48,11 +50,14 @@ class HomeViewModel @Inject constructor(
 
 //        getShoppingListWithIngredients()
 //        addRecipe()
-//        getRecipes(true)
-        getShoppingLists(true)
+        getRecipes(false)
+//        getShoppingLists(true)
 //        deleteRecipe()
-        addShoppingList()
-        deleteShoppingList()
+//        addShoppingList()
+//        deleteShoppingList()
+//        addSavedRecipe()
+//        deleteSavedRecipe()
+        getSavedRecipes(true)
     }
 
     private fun getIngredients() {
@@ -205,6 +210,54 @@ class HomeViewModel @Inject constructor(
                     is Resource.Loading -> {}
                     is Resource.Success -> {
                         Log.i("TAG9",response.data.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun addSavedRecipe() {
+        viewModelScope.launch {
+            savedRecipeRepository.addSavedRecipe("user1","dsasd").collect { response ->
+                when(response) {
+                    is Resource.Error -> {}
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {
+                        Log.i("TAG10",response.data.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun deleteSavedRecipe() {
+        viewModelScope.launch {
+            savedRecipeRepository.deleteSavedRecipe("5BtTUrCcRlPxCR1INE4z").collect { response ->
+                when(response) {
+                    is Resource.Error -> {}
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {
+                        Log.i("TAG11",response.data.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getSavedRecipes(getSavedRecipesFromRemote: Boolean) {
+        viewModelScope.launch {
+            savedRecipeRepository.getUserSavedRecipes("user1", getSavedRecipesFromRemote).collect { response ->
+                when(response) {
+                    is Resource.Error -> {
+                        Log.i("TAG EE 12",response.message.toString())
+
+                    }
+                    is Resource.Loading -> {
+                        Log.i("TAG FF 12",response.isLoading.toString())
+
+                    }
+                    is Resource.Success -> {
+                        Log.i("TAG12",response.data.toString())
                     }
                 }
             }

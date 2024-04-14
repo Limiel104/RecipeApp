@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase
 import com.example.recipeapp.data.local.entity.IngredientEntity
 import com.example.recipeapp.data.local.entity.RecipeIngredientEntity
 import com.example.recipeapp.data.local.entity.RecipeEntity
+import com.example.recipeapp.data.local.entity.SavedRecipeEntity
 import com.example.recipeapp.data.local.entity.ShoppingListEntity
 import com.example.recipeapp.data.local.entity.ShoppingListIngredientEntity
 
@@ -14,7 +15,8 @@ import com.example.recipeapp.data.local.entity.ShoppingListIngredientEntity
         RecipeEntity::class,
         RecipeIngredientEntity::class,
         ShoppingListEntity::class,
-        ShoppingListIngredientEntity::class],
+        ShoppingListIngredientEntity::class,
+        SavedRecipeEntity::class],
     version = 1
 )
 abstract class RecipeDatabase: RoomDatabase() {
@@ -22,6 +24,7 @@ abstract class RecipeDatabase: RoomDatabase() {
     abstract val recipeDao: RecipeDao
     abstract val ingredientDao: IngredientDao
     abstract val shoppingListDao: ShoppingListDao
+    abstract val savedRecipeDao: SavedRecipeDao
 
     companion object {
         const val DATABASE_NAME = "recipes.db"
