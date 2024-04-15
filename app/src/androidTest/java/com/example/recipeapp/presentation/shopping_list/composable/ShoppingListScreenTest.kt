@@ -11,20 +11,30 @@ import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
 import androidx.navigation.compose.rememberNavController
+import com.example.recipeapp.di.AppModule
 import com.example.recipeapp.presentation.MainActivity
 import com.example.recipeapp.ui.theme.RecipeAppTheme
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@HiltAndroidTest
+@UninstallModules(AppModule::class)
 class ShoppingListScreenTest {
 
-    @get:Rule
+    @get:Rule(order = 0)
+    val hiltRule = HiltAndroidRule(this)
+
+    @get:Rule(order = 1)
     val composeRule = createAndroidComposeRule<MainActivity>()
 
     @Before
     fun setUp() {
+        hiltRule.inject()
         composeRule.activity.setContent {
             val navController = rememberNavController()
             RecipeAppTheme() {
