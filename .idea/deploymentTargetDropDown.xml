@@ -8,6 +8,9 @@
       <entry key="RecipeDaoTest">
         <State />
       </entry>
+      <entry key="SavedRecipeDaoTest">
+        <State />
+      </entry>
       <entry key="Tests in 'com'">
         <State />
       </entry>
@@ -15,9 +18,6 @@
         <State />
       </entry>
       <entry key="recipeDao_getIngredientsFromRecipe_returnsOnlyIngredientOfTheRecipe()">
-        <State />
-      </entry>
-      <entry key="recipeDao_insertOneRecipe()">
         <State />
       </entry>
     </value>
