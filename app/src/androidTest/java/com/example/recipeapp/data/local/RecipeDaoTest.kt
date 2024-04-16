@@ -206,6 +206,16 @@ class RecipeDaoTest {
     }
 
     @Test
+    fun recipeDao_getRecipes_emptyDb() {
+        runBlocking {
+            val result = dao.getRecipes()
+
+            assertThat(result).isEmpty()
+            assertThat(result).isInstanceOf(List::class.java)
+        }
+    }
+
+    @Test
     fun recipeDao_getRecipeWithIngredients_correctReturnType() {
         runBlocking {
             val recipeIngredients = listOf(recipeIngredient, recipeIngredient2)
@@ -216,6 +226,15 @@ class RecipeDaoTest {
             assertThat(result.recipeIngredients).hasSize(2)
             assertThat(result.recipeIngredients).containsExactlyElementsIn(recipeIngredients)
             assertThat(result).isInstanceOf(RecipeWithIngredient::class.java)
+        }
+    }
+
+    @Test
+    fun recipeDao_getRecipeWithIngredients_emptyDb() {
+        runBlocking {
+            val result = dao.getRecipeWithIngredients("recipeId")
+
+            assertThat(result).isNull()
         }
     }
 
@@ -235,6 +254,19 @@ class RecipeDaoTest {
     }
 
     @Test
+    fun recipeDao_getUserRecipes_userHasNoCreatedRecipes() {
+        runBlocking {
+            dao.insertRecipe(recipe)
+            dao.insertRecipe(recipe2)
+            dao.insertRecipe(recipe3)
+            val result = dao.getUserRecipes("user3Id")
+
+            assertThat(result).isEmpty()
+            assertThat(result).isInstanceOf(List::class.java)
+        }
+    }
+
+    @Test
     fun recipeDao_getIngredientsFromRecipe_returnsOnlyIngredientOfTheRecipe() {
         runBlocking {
             dao.insertRecipe(recipe)
@@ -246,6 +278,29 @@ class RecipeDaoTest {
             assertThat(result).containsExactlyElementsIn(listOf(ingredient, ingredient2, ingredient3))
             assertThat(result).isInstanceOf(List::class.java)
             assertThat(result[0]).isInstanceOf(IngredientEntity::class.java)
+        }
+    }
+
+    @Test
+    fun recipeDao_getIngredientsFromRecipe_recipeHasNoIngredients() {
+        runBlocking {
+            dao.insertRecipe(recipe3)
+            dao.insertRecipeIngredients(listOf(recipeIngredient, recipeIngredient4, recipeIngredient2, recipeIngredient3))
+            ingredientDao.insertIngredients(listOf(ingredient, ingredient2, ingredient3, ingredient4))
+            val result = dao.getIngredientsFromRecipe("recipe3Id")
+
+            assertThat(result).isEmpty()
+            assertThat(result).isInstanceOf(List::class.java)
+        }
+    }
+
+    @Test
+    fun recipeDao_getIngredientsFromRecipe_emptyDb() {
+        runBlocking {
+            val result = dao.getIngredientsFromRecipe("recipe3Id")
+
+            assertThat(result).isEmpty()
+            assertThat(result).isInstanceOf(List::class.java)
         }
     }
 
