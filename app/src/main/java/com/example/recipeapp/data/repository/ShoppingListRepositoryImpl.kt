@@ -69,7 +69,7 @@ class ShoppingListRepositoryImpl @Inject constructor(
         val shoppingListsFromRemote = snapshot.toObjects(ShoppingListDto::class.java)
 
         shoppingListsFromRemote.let { shoppingListsList ->
-            dao.deleteShoppingLists()
+            dao.deleteShoppingListsWithIngredients()
             for(shoppingList in shoppingListsList) {
                 dao.insertShoppingListWithIngredients(
                     shoppingList.toShoppingListEntity(),

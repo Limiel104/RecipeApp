@@ -271,4 +271,38 @@ class ShoppingListDaoTest {
         assertThat(initialState).hasSize(3)
         assertThat(result).isEmpty()
     }
+
+    @Test
+    fun shoppingListDao_deleteShoppingListWithIngredients() {
+        runBlocking {
+            ingredientDao.insertIngredients(listOf(ingredient, ingredient2, ingredient4))
+            dao.insertShoppingListIngredients(listOf(shoppingListIngredient, shoppingListIngredient2, shoppingListIngredient4))
+            val initialState = dao.getIngredientsFromShoppingList("shoppingListId")
+
+            dao.deleteShoppingListIngredients()
+            val result = dao.getIngredientsFromShoppingList("shoppingListId")
+
+            assertThat(initialState).containsExactlyElementsIn(listOf(ingredient, ingredient2, ingredient4))
+            assertThat(result).isEmpty()
+        }
+    }
+
+    @Test
+    fun shoppingListDao_deleteShoppingListsWithIngredients_deleteShoppingListsAndItsIngredients() {
+        runBlocking {
+            ingredientDao.insertIngredients(listOf(ingredient, ingredient2, ingredient4))
+            dao.insertShoppingListWithIngredients(shoppingList, listOf(shoppingListIngredient, shoppingListIngredient2, shoppingListIngredient4))
+            val shoppingListInitialState = dao.getShoppingLists()
+            val shoppingListIngredientInitialState = dao.getIngredientsFromShoppingList("shoppingListId")
+
+            dao.deleteShoppingListsWithIngredients()
+            val recipeResult = dao.getShoppingLists()
+            val recipeIngredientsResult = dao.getIngredientsFromShoppingList("shoppingListId")
+
+            assertThat(shoppingListInitialState).isEqualTo(listOf(shoppingList))
+            assertThat(shoppingListIngredientInitialState).containsExactlyElementsIn(listOf(ingredient, ingredient2, ingredient4))
+            assertThat(recipeResult).isEmpty()
+            assertThat(recipeIngredientsResult).isEmpty()
+        }
+    }
 }

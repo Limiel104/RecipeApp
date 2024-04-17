@@ -49,4 +49,13 @@ interface ShoppingListDao {
 
     @Query("DELETE FROM shoppinglistentity")
     suspend fun deleteShoppingLists()
+
+    @Query("DELETE FROM shoppinglistingrediententity")
+    suspend fun deleteShoppingListIngredients()
+
+    @Transaction
+    suspend fun deleteShoppingListsWithIngredients() {
+        deleteShoppingLists()
+        deleteShoppingListIngredients()
+    }
 }
