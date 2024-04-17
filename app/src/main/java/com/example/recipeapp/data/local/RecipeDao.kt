@@ -58,4 +58,13 @@ interface RecipeDao {
 
     @Query("DELETE FROM recipeentity")
     suspend fun deleteRecipes()
+
+    @Query("DELETE FROM recipeingrediententity")
+    suspend fun deleteRecipeWithIngredients()
+
+    @Transaction
+    suspend fun deleteRecipesWithIngredients() {
+        deleteRecipes()
+        deleteRecipeWithIngredients()
+    }
 }

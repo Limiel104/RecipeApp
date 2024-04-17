@@ -69,7 +69,7 @@ class RecipeRepositoryImpl @Inject constructor(
         val recipesFromRemote = snapshot.toObjects(RecipeDto::class.java)
 
         recipesFromRemote.let { recipeList ->
-            dao.deleteRecipes()
+            dao.deleteRecipesWithIngredients()
             for(recipe in recipeList) {
                 dao.insertRecipeWithIngredients(
                     recipe.toRecipeEntity(),

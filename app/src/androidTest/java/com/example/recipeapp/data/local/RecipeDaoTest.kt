@@ -317,4 +317,38 @@ class RecipeDaoTest {
         assertThat(initialState).hasSize(3)
         assertThat(result).isEmpty()
     }
+
+    @Test
+    fun recipeDao_deleteRecipeWithIngredients() {
+        runBlocking {
+            ingredientDao.insertIngredients(listOf(ingredient, ingredient2, ingredient3))
+            dao.insertRecipeIngredients(listOf(recipeIngredient, recipeIngredient2, recipeIngredient3))
+            val initialState = dao.getIngredientsFromRecipe("recipeId")
+
+            dao.deleteRecipesWithIngredients()
+            val result = dao.getIngredientsFromRecipe("recipeId")
+
+            assertThat(initialState).containsExactlyElementsIn(listOf(ingredient, ingredient2, ingredient3))
+            assertThat(result).isEmpty()
+        }
+    }
+
+    @Test
+    fun recipeDao_deleteRecipesWithIngredients_deleteRecipesAndItsIngredients() {
+        runBlocking {
+            ingredientDao.insertIngredients(listOf(ingredient, ingredient2, ingredient3))
+            dao.insertRecipeWithIngredients(recipe, listOf(recipeIngredient, recipeIngredient2, recipeIngredient3))
+            val recipeInitialState = dao.getRecipes()
+            val recipeIngredientInitialState = dao.getIngredientsFromRecipe("recipeId")
+
+            dao.deleteRecipesWithIngredients()
+            val recipeResult = dao.getRecipes()
+            val recipeIngredientsResult = dao.getIngredientsFromRecipe("recipeId")
+
+            assertThat(recipeInitialState).isEqualTo(listOf(recipe))
+            assertThat(recipeIngredientInitialState).containsExactlyElementsIn(listOf(ingredient, ingredient2, ingredient3))
+            assertThat(recipeResult).isEmpty()
+            assertThat(recipeIngredientsResult).isEmpty()
+        }
+    }
 }
