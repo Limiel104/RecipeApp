@@ -1,0 +1,14 @@
+package com.example.recipeapp.domain.repository
+
+import com.example.recipeapp.domain.model.Recipe
+import com.example.recipeapp.domain.model.RecipeWithIngredients
+import com.example.recipeapp.domain.util.Resource
+import kotlinx.coroutines.flow.Flow
+
+interface RecipeRepository {
+
+    suspend fun addRecipe(recipeWithIngredients: RecipeWithIngredients): Flow<Resource<Boolean>>
+    suspend fun getRecipe(recipeId: String): Flow<Resource<RecipeWithIngredients>>
+    suspend fun getRecipes(getRecipesFromRemote: Boolean): Flow<Resource<List<Recipe>>>
+    suspend fun deleteRecipe(recipeId: String): Flow<Resource<Boolean>>
+}

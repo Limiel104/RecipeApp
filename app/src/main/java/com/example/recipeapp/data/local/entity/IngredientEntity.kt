@@ -1,0 +1,13 @@
+package com.example.recipeapp.data.local.entity
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
+data class IngredientEntity(
+    @PrimaryKey
+    val ingredientId: String,
+    val name: String,
+    val imageUrl: String,
+    val category: String
+)
