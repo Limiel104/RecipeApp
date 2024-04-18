@@ -22,7 +22,8 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
 fun ImageItem(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    imageUrl: String
 ) {
     Box(
         modifier = modifier,
@@ -31,14 +32,14 @@ fun ImageItem(
         AsyncImage(
             model = ImageRequest
                 .Builder(LocalContext.current)
-                .data("")
+                .data(imageUrl)
                 .crossfade(true)
                 .placeholder(R.drawable.ic_image)
                 .build(),
             contentDescription = "IMAGE",
             fallback = painterResource(R.drawable.ic_image),
             error = painterResource(R.drawable.ic_image),
-            contentScale = ContentScale.Fit
+            contentScale = ContentScale.FillWidth
         )
     }
 }
@@ -59,7 +60,8 @@ fun ImageItemPreview100dp() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp)
-                    .clickable {}
+                    .clickable {},
+                imageUrl = ""
             )
         }
     }
@@ -78,7 +80,8 @@ fun ImageItemPreview40dp() {
     RecipeAppTheme {
         Surface {
             ImageItem(
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier.size(40.dp),
+                imageUrl = ""
             )
         }
     }

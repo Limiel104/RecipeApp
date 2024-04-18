@@ -30,7 +30,10 @@ fun RecipeIngredientItem(
             .height(IntrinsicSize.Max),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ImageItem(modifier = modifier.size(40.dp))
+        ImageItem(
+            modifier = modifier.size(40.dp),
+            imageUrl = ""
+        )
 
         Text(
             text = "Ingredient",

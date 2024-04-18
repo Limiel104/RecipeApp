@@ -11,6 +11,9 @@ import com.example.recipeapp.domain.repository.IngredientRepository
 import com.example.recipeapp.domain.repository.RecipeRepository
 import com.example.recipeapp.domain.repository.SavedRecipeRepository
 import com.example.recipeapp.domain.repository.ShoppingListRepository
+import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
+import com.example.recipeapp.domain.use_case.GetRecipesUseCase
+import com.example.recipeapp.domain.use_case.GetUserShoppingListsUseCase
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import dagger.Module
@@ -59,5 +62,22 @@ object AppModule {
     fun provideSavedRecipeRepository(db: RecipeDatabase): SavedRecipeRepository {
         val savedRecipesRef = Firebase.firestore.collection("savedRecipes")
         return SavedRecipeRepositoryImpl(savedRecipesRef, db.savedRecipeDao)
+    }
+    @Provides
+    @Singleton
+    fun provideGetIngredientsUseCase(ingredientRepository: IngredientRepository): GetIngredientsUseCase {
+        return GetIngredientsUseCase(ingredientRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetRecipesUseCase(recipeRepository: RecipeRepository): GetRecipesUseCase {
+        return GetRecipesUseCase(recipeRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetUserShoppingListsUseCase(shoppingListRepository: ShoppingListRepository): GetUserShoppingListsUseCase {
+        return GetUserShoppingListsUseCase(shoppingListRepository)
     }
 }

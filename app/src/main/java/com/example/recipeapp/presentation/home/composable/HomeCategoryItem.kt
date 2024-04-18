@@ -37,7 +37,8 @@ fun HomeCategoryItem(
             modifier = Modifier.fillMaxSize()
         ) {
             ImageItem(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                imageUrl = ""
             )
 
             Text(

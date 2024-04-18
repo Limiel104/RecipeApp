@@ -20,17 +20,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.recipeapp.domain.model.Recipe
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
 fun RecipeItem(
     modifier: Modifier = Modifier,
-    title: String = "Title of the recipe",
+    recipe: Recipe,
     cardHorizontalPadding: Dp = 0.dp,
     cardBottomPadding: Dp = 0.dp,
     onClick: () -> Unit
@@ -42,7 +44,7 @@ fun RecipeItem(
             .padding(horizontal = cardHorizontalPadding)
             .padding(bottom = cardBottomPadding)
             .clickable { onClick() }
-            .testTag("Recipe $title"),
+            .testTag("Recipe ${recipe.name}"),
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary)
     ) {
@@ -50,7 +52,10 @@ fun RecipeItem(
             modifier = modifier.fillMaxSize(),
             contentAlignment = Alignment.TopEnd
         ) {
-            ImageItem(modifier = modifier.fillMaxSize())
+            ImageItem(
+                modifier = modifier.fillMaxSize(),
+                imageUrl = recipe.imageUrl
+            )
 
             IconButton(onClick = {}) {
                 Icon(
@@ -60,10 +65,11 @@ fun RecipeItem(
             }
 
             Text(
-                text = title,
+                text = recipe.name,
                 style = MaterialTheme.typography.labelLarge,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
+                color = Color.White,
                 modifier = modifier
                     .fillMaxWidth()
                     .align(Alignment.BottomStart)
@@ -71,6 +77,20 @@ fun RecipeItem(
             )
         }
     }
+}
+
+private fun getRecipe(name: String = "Recipe Name"): Recipe {
+    return Recipe(
+        recipeId = "recipeId",
+        name = name,
+        prepTime = "40 min",
+        servings = 4,
+        description = "Recipe description",
+        isVegetarian = true,
+        isVegan = false,
+        imageUrl = "imageUrl",
+        createdBy = "userId"
+    )
 }
 
 @Preview(
@@ -84,7 +104,10 @@ fun RecipeItem(
 @Composable
 fun RecipeItemPreview() {
     RecipeAppTheme {
-        RecipeItem {}
+        RecipeItem(
+            recipe = getRecipe(),
+            onClick = {}
+        )
     }
 }
 
@@ -100,7 +123,7 @@ fun RecipeItemPreview() {
 fun RecipeItemPreviewLongTitle() {
     RecipeAppTheme {
         RecipeItem(
-            title = "Very very long title of the recipe for this composable. This is another line in the title. Let's make it even longer so it overflows",
+            recipe = getRecipe("Very very long title of the recipe for this composable. This is another line in the title. Let's make it even longer so it overflows"),
             onClick = {}
         )
     }
@@ -119,6 +142,7 @@ fun TopCategoriesSectionPreviewWithCardPadding() {
     RecipeAppTheme {
         Surface {
             RecipeItem(
+                recipe = getRecipe(),
                 cardHorizontalPadding = 16.dp,
                 cardBottomPadding = 16.dp,
                 onClick = {}

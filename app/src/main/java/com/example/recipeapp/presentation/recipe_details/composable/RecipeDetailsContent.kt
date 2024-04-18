@@ -86,6 +86,7 @@ fun RecipeDetailsContent(
                 modifier = modifier
                     .fillMaxWidth()
                     .height(180.dp),
+                imageUrl = ""
             )
 
             Column() {
