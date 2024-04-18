@@ -7,6 +7,6 @@ fun SavedRecipeDto.toSavedRecipeEntity(): SavedRecipeEntity {
     return SavedRecipeEntity(
         savedRecipeId = savedRecipeId,
         recipeId = recipeId,
-        userId = recipeId
+        userId = userId
     )
 }
