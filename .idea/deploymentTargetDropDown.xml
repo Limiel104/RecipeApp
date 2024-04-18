@@ -5,9 +5,6 @@
       <entry key="RecipeDaoTest">
         <State />
       </entry>
-      <entry key="SavedRecipeDaoTest">
-        <State />
-      </entry>
       <entry key="ShoppingListDaoTest">
         <State />
       </entry>
@@ -15,9 +12,6 @@
         <State />
       </entry>
       <entry key="app">
-        <State />
-      </entry>
-      <entry key="recipeDao_deleteRecipe_recipeIngredientsAreDeletedToo()">
         <State />
       </entry>
     </value>
