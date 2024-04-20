@@ -24,8 +24,15 @@ interface RecipeDao {
         insertRecipeIngredients(recipeIngredients)
     }
 
-    @Query("SELECT * FROM recipeentity")
-    suspend fun getRecipes(): List<RecipeEntity>
+    @Query(
+        """
+            SELECT *
+            FROM recipeentity
+            WHERE LOWER(name) 
+            LIKE '%' || LOWER(:query) || '%'
+        """
+    )
+    suspend fun getRecipes(query: String): List<RecipeEntity>
 
     @Transaction
     @Query(

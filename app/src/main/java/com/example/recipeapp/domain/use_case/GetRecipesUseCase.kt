@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 class GetRecipesUseCase(
     private val recipeRepository: RecipeRepository
 ) {
-    suspend operator fun invoke(getRecipesFromRemote: Boolean): Flow<Resource<List<Recipe>>> {
-        return recipeRepository.getRecipes(getRecipesFromRemote)
+    suspend operator fun invoke(getRecipesFromRemote: Boolean, query: String): Flow<Resource<List<Recipe>>> {
+        return recipeRepository.getRecipes(getRecipesFromRemote, query)
     }
 }

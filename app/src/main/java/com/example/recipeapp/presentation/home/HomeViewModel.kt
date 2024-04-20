@@ -42,12 +42,52 @@ class HomeViewModel @Inject constructor(
                     _homeUiEventChannel.send(HomeUiEvent.NavigateToRecipeDetails(event.recipeId))
                 }
             }
+
+            is HomeEvent.OnQueryChange -> {
+                Log.i("TAG","New query: ${event.query}")
+                _homeState.value = homeState.value.copy(
+                    query = event.query
+                )
+            }
+
+            HomeEvent.OnActiveChange -> {
+                _homeState.value = homeState.value.copy(
+                    isSearchActive = !_homeState.value.isSearchActive
+                )
+                Log.i("TAG","Active state: ${_homeState.value.isSearchActive}")
+
+            }
+
+            HomeEvent.OnSearchClicked -> {
+                _homeState.value = homeState.value.copy(
+                    isSearchActive = false
+                )
+                getRecipes(false)
+                Log.i("TAG","Active state: ${_homeState.value.isSearchActive}")
+            }
+
+            HomeEvent.OnClearClicked -> {
+                val query = _homeState.value.query
+                if(query.isNotEmpty()) {
+                    _homeState.value = homeState.value.copy(
+                        query = ""
+                    )
+                }
+                else {
+                    _homeState.value = homeState.value.copy(
+                        isSearchActive = false
+                    )
+                }
+            }
         }
     }
 
-    private fun getRecipes(getRecipesFromRemote: Boolean) {
+    private fun getRecipes(
+        getRecipesFromRemote: Boolean,
+        query: String = _homeState.value.query
+    ) {
         viewModelScope.launch {
-            getRecipesUseCase(getRecipesFromRemote).collect { response ->
+            getRecipesUseCase(getRecipesFromRemote, query).collect { response ->
                 when(response) {
                     is Resource.Error -> {}
                     is Resource.Loading -> {

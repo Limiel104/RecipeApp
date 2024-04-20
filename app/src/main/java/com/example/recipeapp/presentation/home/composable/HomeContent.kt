@@ -1,6 +1,8 @@
 package com.example.recipeapp.presentation.home.composable
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,41 +24,58 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 fun HomeContent(
     modifier: Modifier = Modifier,
     recipes: List<Recipe>,
+    query: String,
+    isSearchActive: Boolean,
     isLoading: Boolean,
-    onRecipeSelected: (String) -> Unit
-) {
+    onRecipeSelected: (String) -> Unit,
+    onQueryChange: (String) -> Unit,
+    onActiveChange: () -> Unit,
+    onSearchClicked: () -> Unit,
+    onClearClicked: () -> Unit
+    ) {
     Scaffold(
         modifier = modifier.fillMaxSize()
     ) { paddingValues ->
-        LazyColumn(
+        Column(
             modifier = modifier
                 .padding(paddingValues)
                 .testTag("Home Content")
         ) {
-            item {
-                SearchBarItem()
+            SearchBarItem(
+                query = query,
+                isSearchActive = isSearchActive,
+                onQueryChange = { onQueryChange(it) },
+                onActiveChange = { onActiveChange() },
+                onSearchClicked = { onSearchClicked() },
+                onClear = { onClearClicked() }
+            )
+
+            if(!isSearchActive) {
+                Spacer(modifier = modifier.padding(bottom = 12.dp))
             }
 
-            item {
-                TopCategoriesSection()
-            }
+            LazyColumn {
+                item {
+                    TopCategoriesSection()
+                }
 
-            item {
-                Text(
-                    text = "Recipes",
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = modifier
-                        .padding(16.dp,8.dp)
-                )
-            }
+                item {
+                    Text(
+                        text = "Recipes",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = modifier
+                            .padding(16.dp,8.dp)
+                    )
+                }
 
-            itemsIndexed(recipes) { _, recipe ->
-                RecipeItem(
-                    recipe = recipe,
-                    cardHorizontalPadding = 16.dp,
-                    cardBottomPadding = 16.dp,
-                    onClick = { onRecipeSelected(recipe.recipeId) }
-                )
+                itemsIndexed(recipes) { _, recipe ->
+                    RecipeItem(
+                        recipe = recipe,
+                        cardHorizontalPadding = 16.dp,
+                        cardBottomPadding = 16.dp,
+                        onClick = { onRecipeSelected(recipe.recipeId) }
+                    )
+                }
             }
         }
     }
@@ -87,8 +106,51 @@ fun HomeContentPreview() {
 
         HomeContent(
             recipes = listOf(recipe, recipe, recipe, recipe, recipe, recipe),
+            query = "",
+            isSearchActive = false,
             isLoading = false,
-            onRecipeSelected = {}
+            onRecipeSelected = {},
+            onQueryChange = {},
+            onActiveChange = {},
+            onSearchClicked = {},
+            onClearClicked = {}
+        )
+    }
+}
+
+@Preview(
+    name = "Light Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun HomeContentPreviewSearchIsActive() {
+    RecipeAppTheme {
+        val recipe = Recipe(
+            recipeId = "recipeId",
+            name = "Recipe Name",
+            prepTime = "40 min",
+            servings = 4,
+            description = "Recipe description",
+            isVegetarian = true,
+            isVegan = false,
+            imageUrl = "imageUrl",
+            createdBy = "userId"
+        )
+
+        HomeContent(
+            recipes = listOf(recipe, recipe, recipe, recipe, recipe, recipe),
+            query = "Search query",
+            isSearchActive = true,
+            isLoading = false,
+            onRecipeSelected = {},
+            onQueryChange = {},
+            onActiveChange = {},
+            onSearchClicked = {},
+            onClearClicked = {}
         )
     }
 }

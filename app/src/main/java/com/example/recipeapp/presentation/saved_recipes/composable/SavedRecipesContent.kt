@@ -33,7 +33,14 @@ fun SavedRecipesContent(
                 .testTag("Saved Recipes Content")
         ) {
             item {
-                SearchBarItem()
+                SearchBarItem(
+                    query = "",
+                    isSearchActive = false,
+                    onQueryChange = {},
+                    onActiveChange = {},
+                    onSearchClicked = {},
+                    onClear = {}
+                )
             }
 
             item {

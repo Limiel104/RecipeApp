@@ -20,6 +20,8 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val recipes = viewModel.homeState.value.recipes
+    val query = viewModel.homeState.value.query
+    val isSearchActive = viewModel.homeState.value.isSearchActive
     val isLoading = viewModel.homeState.value.isLoading
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -38,7 +40,13 @@ fun HomeScreen(
 
     HomeContent(
         recipes = recipes,
+        query = query,
+        isSearchActive = isSearchActive,
         isLoading = isLoading,
-        onRecipeSelected = { viewModel.onEvent(HomeEvent.OnRecipeSelected(it)) }
+        onRecipeSelected = { viewModel.onEvent(HomeEvent.OnRecipeSelected(it)) },
+        onQueryChange = { viewModel.onEvent(HomeEvent.OnQueryChange(it)) },
+        onActiveChange = { viewModel.onEvent(HomeEvent.OnActiveChange) },
+        onSearchClicked = { viewModel.onEvent(HomeEvent.OnSearchClicked) },
+        onClearClicked = { viewModel.onEvent(HomeEvent.OnClearClicked) }
     )
 }
