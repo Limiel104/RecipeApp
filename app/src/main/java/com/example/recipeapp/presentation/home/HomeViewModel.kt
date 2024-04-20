@@ -5,7 +5,10 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipeapp.domain.model.SearchQuery
+import com.example.recipeapp.domain.use_case.AddSearchQueryUseCase
 import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
+import com.example.recipeapp.domain.use_case.GetRecentSearchQueriesUseCase
 import com.example.recipeapp.domain.use_case.GetRecipesUseCase
 import com.example.recipeapp.domain.use_case.GetUserShoppingListsUseCase
 import com.example.recipeapp.domain.util.Resource
@@ -19,7 +22,9 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getIngredientsUseCase: GetIngredientsUseCase,
     private val getRecipesUseCase: GetRecipesUseCase,
-    private val getUserShoppingListsUseCase: GetUserShoppingListsUseCase
+    private val getUserShoppingListsUseCase: GetUserShoppingListsUseCase,
+    private val addSearchQueryUseCase: AddSearchQueryUseCase,
+    private val getRecentSearchQueriesUseCase: GetRecentSearchQueriesUseCase
 ): ViewModel() {
 
     private val _homeState = mutableStateOf(HomeState())
@@ -29,7 +34,7 @@ class HomeViewModel @Inject constructor(
     val homeUiEventChannelFlow = _homeUiEventChannel.receiveAsFlow()
 
     init {
-        getRecipes(false)
+        getRecipes(true)
         getIngredients()
         getShoppingLists(false)
     }
@@ -51,23 +56,29 @@ class HomeViewModel @Inject constructor(
             }
 
             HomeEvent.OnActiveChange -> {
-                _homeState.value = homeState.value.copy(
-                    isSearchActive = !_homeState.value.isSearchActive
-                )
-                Log.i("TAG","Active state: ${_homeState.value.isSearchActive}")
+                val isSearchActive = !_homeState.value.isSearchActive
 
+                _homeState.value = homeState.value.copy(
+                    isSearchActive = isSearchActive
+                )
+
+                if(isSearchActive) {
+                    getRecentSearchQueries()
+                }
             }
 
             HomeEvent.OnSearchClicked -> {
                 _homeState.value = homeState.value.copy(
                     isSearchActive = false
                 )
+
+                addSearchQuery(_homeState.value.query)
                 getRecipes(false)
-                Log.i("TAG","Active state: ${_homeState.value.isSearchActive}")
             }
 
             HomeEvent.OnClearClicked -> {
                 val query = _homeState.value.query
+
                 if(query.isNotEmpty()) {
                     _homeState.value = homeState.value.copy(
                         query = ""
@@ -78,6 +89,12 @@ class HomeViewModel @Inject constructor(
                         isSearchActive = false
                     )
                 }
+            }
+
+            is HomeEvent.OnRecentQuerySearchClicked -> {
+                _homeState.value = homeState.value.copy(
+                    query = event.query
+                )
             }
         }
     }
@@ -137,6 +154,49 @@ class HomeViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         Log.i("TAG4",response.data.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun addSearchQuery(query: String) {
+        val searchQuery = SearchQuery(
+            searchQueryId = 0,
+            query = query
+        )
+
+        viewModelScope.launch {
+            addSearchQueryUseCase(searchQuery).collect { response ->
+                when(response) {
+                    is Resource.Error -> {}
+                    is Resource.Loading -> {
+                        Log.i("TAG","Loading add search query: ${response.isLoading}")
+                    }
+                    is Resource.Success -> {
+                        Log.i("TAG4","Search query added")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getRecentSearchQueries() {
+        viewModelScope.launch {
+            getRecentSearchQueriesUseCase().collect { response ->
+                when(response) {
+                    is Resource.Error -> {}
+                    is Resource.Loading -> {
+                        Log.i("TAG","Loading search queries: ${response.isLoading}")
+                    }
+                    is Resource.Success -> {
+                        response.data?.let {
+                            _homeState.value = homeState.value.copy(
+                                recentSearchQueries = response.data
+                            )
+                        }
+
+                        Log.i("TAG4",_homeState.value.recentSearchQueries.toString())
                     }
                 }
             }

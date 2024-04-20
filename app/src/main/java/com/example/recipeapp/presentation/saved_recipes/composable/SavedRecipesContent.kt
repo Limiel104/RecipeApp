@@ -35,11 +35,13 @@ fun SavedRecipesContent(
             item {
                 SearchBarItem(
                     query = "",
+                    recentSearchQueries = emptyList(),
                     isSearchActive = false,
                     onQueryChange = {},
                     onActiveChange = {},
                     onSearchClicked = {},
-                    onClear = {}
+                    onClear = {},
+                    onRecentQuerySearchClicked = {}
                 )
             }
 

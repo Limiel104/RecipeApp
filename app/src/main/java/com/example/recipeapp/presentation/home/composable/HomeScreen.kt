@@ -21,6 +21,7 @@ fun HomeScreen(
 ) {
     val recipes = viewModel.homeState.value.recipes
     val query = viewModel.homeState.value.query
+    val recentSearchQueries = viewModel.homeState.value.recentSearchQueries
     val isSearchActive = viewModel.homeState.value.isSearchActive
     val isLoading = viewModel.homeState.value.isLoading
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -41,12 +42,14 @@ fun HomeScreen(
     HomeContent(
         recipes = recipes,
         query = query,
+        recentSearchQueries = recentSearchQueries,
         isSearchActive = isSearchActive,
         isLoading = isLoading,
         onRecipeSelected = { viewModel.onEvent(HomeEvent.OnRecipeSelected(it)) },
         onQueryChange = { viewModel.onEvent(HomeEvent.OnQueryChange(it)) },
         onActiveChange = { viewModel.onEvent(HomeEvent.OnActiveChange) },
         onSearchClicked = { viewModel.onEvent(HomeEvent.OnSearchClicked) },
-        onClearClicked = { viewModel.onEvent(HomeEvent.OnClearClicked) }
+        onClearClicked = { viewModel.onEvent(HomeEvent.OnClearClicked) },
+        onRecentQuerySearchClicked = { viewModel.onEvent(HomeEvent.OnRecentQuerySearchClicked(it)) }
     )
 }

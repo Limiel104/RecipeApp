@@ -6,12 +6,16 @@ import com.example.recipeapp.data.local.RecipeDatabase
 import com.example.recipeapp.data.repository.IngredientRepositoryImpl
 import com.example.recipeapp.data.repository.RecipeRepositoryImpl
 import com.example.recipeapp.data.repository.SavedRecipeRepositoryImpl
+import com.example.recipeapp.data.repository.SearchQueryRepositoryImpl
 import com.example.recipeapp.data.repository.ShoppingListRepositoryImpl
 import com.example.recipeapp.domain.repository.IngredientRepository
 import com.example.recipeapp.domain.repository.RecipeRepository
 import com.example.recipeapp.domain.repository.SavedRecipeRepository
+import com.example.recipeapp.domain.repository.SearchQueryRepository
 import com.example.recipeapp.domain.repository.ShoppingListRepository
+import com.example.recipeapp.domain.use_case.AddSearchQueryUseCase
 import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
+import com.example.recipeapp.domain.use_case.GetRecentSearchQueriesUseCase
 import com.example.recipeapp.domain.use_case.GetRecipesUseCase
 import com.example.recipeapp.domain.use_case.GetUserShoppingListsUseCase
 import com.google.firebase.Firebase
@@ -63,6 +67,13 @@ object AppModule {
         val savedRecipesRef = Firebase.firestore.collection("savedRecipes")
         return SavedRecipeRepositoryImpl(savedRecipesRef, db.savedRecipeDao)
     }
+
+    @Provides
+    @Singleton
+    fun provideSearchQueryRepository(db: RecipeDatabase): SearchQueryRepository {
+        return SearchQueryRepositoryImpl(db.searchQueryDao)
+    }
+
     @Provides
     @Singleton
     fun provideGetIngredientsUseCase(ingredientRepository: IngredientRepository): GetIngredientsUseCase {
@@ -79,5 +90,17 @@ object AppModule {
     @Singleton
     fun provideGetUserShoppingListsUseCase(shoppingListRepository: ShoppingListRepository): GetUserShoppingListsUseCase {
         return GetUserShoppingListsUseCase(shoppingListRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAddSearchQueryUseCase(searchQueryRepository: SearchQueryRepository): AddSearchQueryUseCase {
+        return AddSearchQueryUseCase(searchQueryRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetRecentSearchQueriesUseCase(searchQueryRepository: SearchQueryRepository): GetRecentSearchQueriesUseCase {
+        return GetRecentSearchQueriesUseCase(searchQueryRepository)
     }
 }
