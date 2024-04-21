@@ -4,8 +4,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class SearchQueryEntity(
+data class SearchSuggestionEntity(
     @PrimaryKey(autoGenerate = true)
-    val searchQueryId: Int,
-    val query: String
+    val searchSuggestionId: Int,
+    val text: String
 )

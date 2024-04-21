@@ -16,7 +16,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.domain.model.Recipe
-import com.example.recipeapp.domain.model.SearchQuery
+import com.example.recipeapp.domain.model.SearchSuggestion
 import com.example.recipeapp.presentation.common.composable.RecipeItem
 import com.example.recipeapp.presentation.common.composable.SearchBarItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
@@ -26,7 +26,7 @@ fun HomeContent(
     modifier: Modifier = Modifier,
     recipes: List<Recipe>,
     query: String,
-    recentSearchQueries: List<SearchQuery>,
+    searchSuggestions: List<SearchSuggestion>,
     isSearchActive: Boolean,
     isLoading: Boolean,
     onRecipeSelected: (String) -> Unit,
@@ -34,7 +34,7 @@ fun HomeContent(
     onActiveChange: () -> Unit,
     onSearchClicked: () -> Unit,
     onClearClicked: () -> Unit,
-    onRecentQuerySearchClicked: (String) -> Unit
+    onSearchSuggestionClicked: (String) -> Unit
     ) {
     Scaffold(
         modifier = modifier.fillMaxSize()
@@ -46,13 +46,13 @@ fun HomeContent(
         ) {
             SearchBarItem(
                 query = query,
-                recentSearchQueries = recentSearchQueries,
+                searchSuggestions = searchSuggestions,
                 isSearchActive = isSearchActive,
                 onQueryChange = { onQueryChange(it) },
                 onActiveChange = { onActiveChange() },
                 onSearchClicked = { onSearchClicked() },
                 onClear = { onClearClicked() },
-                onRecentQuerySearchClicked = { onRecentQuerySearchClicked(it) }
+                onSearchSuggestionClicked = { onSearchSuggestionClicked(it) }
             )
 
             if(!isSearchActive) {
@@ -112,7 +112,7 @@ fun HomeContentPreview() {
         HomeContent(
             recipes = listOf(recipe, recipe, recipe, recipe, recipe, recipe),
             query = "",
-            recentSearchQueries = emptyList(),
+            searchSuggestions = emptyList(),
             isSearchActive = false,
             isLoading = false,
             onRecipeSelected = {},
@@ -120,7 +120,7 @@ fun HomeContentPreview() {
             onActiveChange = {},
             onSearchClicked = {},
             onClearClicked = {},
-            onRecentQuerySearchClicked = {}
+            onSearchSuggestionClicked = {}
         )
     }
 }
@@ -151,7 +151,7 @@ fun HomeContentPreviewSearchIsActive() {
         HomeContent(
             recipes = listOf(recipe, recipe, recipe, recipe, recipe, recipe),
             query = "Search query",
-            recentSearchQueries = emptyList(),
+            searchSuggestions = emptyList(),
             isSearchActive = true,
             isLoading = false,
             onRecipeSelected = {},
@@ -159,7 +159,7 @@ fun HomeContentPreviewSearchIsActive() {
             onActiveChange = {},
             onSearchClicked = {},
             onClearClicked = {},
-            onRecentQuerySearchClicked = {}
+            onSearchSuggestionClicked = {}
         )
     }
 }

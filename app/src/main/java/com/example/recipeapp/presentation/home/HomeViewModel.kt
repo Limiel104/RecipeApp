@@ -5,10 +5,10 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipeapp.domain.model.SearchQuery
-import com.example.recipeapp.domain.use_case.AddSearchQueryUseCase
+import com.example.recipeapp.domain.model.SearchSuggestion
+import com.example.recipeapp.domain.use_case.AddSearchSuggestionUseCase
 import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
-import com.example.recipeapp.domain.use_case.GetRecentSearchQueriesUseCase
+import com.example.recipeapp.domain.use_case.GetSearchSuggestionsUseCase
 import com.example.recipeapp.domain.use_case.GetRecipesUseCase
 import com.example.recipeapp.domain.use_case.GetUserShoppingListsUseCase
 import com.example.recipeapp.domain.util.Resource
@@ -23,8 +23,8 @@ class HomeViewModel @Inject constructor(
     private val getIngredientsUseCase: GetIngredientsUseCase,
     private val getRecipesUseCase: GetRecipesUseCase,
     private val getUserShoppingListsUseCase: GetUserShoppingListsUseCase,
-    private val addSearchQueryUseCase: AddSearchQueryUseCase,
-    private val getRecentSearchQueriesUseCase: GetRecentSearchQueriesUseCase
+    private val addSearchSuggestionUseCase: AddSearchSuggestionUseCase,
+    private val getSearchSuggestionsUseCase: GetSearchSuggestionsUseCase
 ): ViewModel() {
 
     private val _homeState = mutableStateOf(HomeState())
@@ -63,7 +63,7 @@ class HomeViewModel @Inject constructor(
                 )
 
                 if(isSearchActive) {
-                    getRecentSearchQueries()
+                    getSearchSuggestions()
                 }
             }
 
@@ -72,7 +72,7 @@ class HomeViewModel @Inject constructor(
                     isSearchActive = false
                 )
 
-                addSearchQuery(_homeState.value.query)
+                addSearchSuggestion(_homeState.value.query)
                 getRecipes(false)
             }
 
@@ -91,9 +91,9 @@ class HomeViewModel @Inject constructor(
                 }
             }
 
-            is HomeEvent.OnRecentQuerySearchClicked -> {
+            is HomeEvent.OnSearchSuggestionClicked -> {
                 _homeState.value = homeState.value.copy(
-                    query = event.query
+                    query = event.suggestionText
                 )
             }
         }
@@ -160,43 +160,43 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun addSearchQuery(query: String) {
-        val searchQuery = SearchQuery(
-            searchQueryId = 0,
-            query = query
+    private fun addSearchSuggestion(query: String) {
+        val searchSuggestion = SearchSuggestion(
+            searchSuggestionId = 0,
+            text = query
         )
 
         viewModelScope.launch {
-            addSearchQueryUseCase(searchQuery).collect { response ->
+            addSearchSuggestionUseCase(searchSuggestion).collect { response ->
                 when(response) {
                     is Resource.Error -> {}
                     is Resource.Loading -> {
-                        Log.i("TAG","Loading add search query: ${response.isLoading}")
+                        Log.i("TAG","Loading add search suggestion: ${response.isLoading}")
                     }
                     is Resource.Success -> {
-                        Log.i("TAG4","Search query added")
+                        Log.i("TAG4","Search suggestion added")
                     }
                 }
             }
         }
     }
 
-    private fun getRecentSearchQueries() {
+    private fun getSearchSuggestions() {
         viewModelScope.launch {
-            getRecentSearchQueriesUseCase().collect { response ->
+            getSearchSuggestionsUseCase().collect { response ->
                 when(response) {
                     is Resource.Error -> {}
                     is Resource.Loading -> {
-                        Log.i("TAG","Loading search queries: ${response.isLoading}")
+                        Log.i("TAG","Loading search suggestions: ${response.isLoading}")
                     }
                     is Resource.Success -> {
                         response.data?.let {
                             _homeState.value = homeState.value.copy(
-                                recentSearchQueries = response.data
+                                searchSuggestions = response.data
                             )
                         }
 
-                        Log.i("TAG4",_homeState.value.recentSearchQueries.toString())
+                        Log.i("TAG4",_homeState.value.searchSuggestions.toString())
                     }
                 }
             }

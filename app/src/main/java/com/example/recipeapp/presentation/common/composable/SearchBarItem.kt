@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.recipeapp.domain.model.SearchQuery
+import com.example.recipeapp.domain.model.SearchSuggestion
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -22,13 +22,13 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 fun SearchBarItem(
     modifier: Modifier = Modifier,
     query: String,
-    recentSearchQueries: List<SearchQuery>,
+    searchSuggestions: List<SearchSuggestion>,
     isSearchActive: Boolean,
     onQueryChange: (String) -> Unit,
     onActiveChange: () -> Unit,
     onSearchClicked: () -> Unit,
     onClear: () -> Unit,
-    onRecentQuerySearchClicked: (String) -> Unit
+    onSearchSuggestionClicked: (String) -> Unit
 ) {
     SearchBar(
         query = query,
@@ -59,10 +59,10 @@ fun SearchBarItem(
             .fillMaxWidth()
             .testTag("Search Bar")
     ) {
-        recentSearchQueries.forEach { recentSearchQuery ->
-            SearchQueryItem(
-                query = recentSearchQuery.query,
-                onClick = { onRecentQuerySearchClicked(recentSearchQuery.query) }
+        searchSuggestions.forEach { searchSuggestion ->
+            SearchSuggestionItem(
+                text = searchSuggestion.text,
+                onClick = { onSearchSuggestionClicked(searchSuggestion.text) }
             )
         }
     }
@@ -81,13 +81,13 @@ fun SearchBarItemPreviewSearchIsNotActive() {
     RecipeAppTheme {
         SearchBarItem(
             query = "",
-            recentSearchQueries = emptyList(),
+            searchSuggestions = emptyList(),
             isSearchActive = false,
             onQueryChange = {},
             onActiveChange = {},
             onSearchClicked = {},
             onClear = {},
-            onRecentQuerySearchClicked = {}
+            onSearchSuggestionClicked = {}
         )
     }
 }
@@ -104,24 +104,24 @@ fun SearchBarItemPreviewSearchIsNotActive() {
 fun SearchBarItemPreviewSearchIsActive() {
     RecipeAppTheme {
         val queryList = listOf(
-            SearchQuery(1,"Query 1"),
-            SearchQuery(2,"Query 2"),
-            SearchQuery(3,"Query 3"),
-            SearchQuery(4,"Query 4"),
-            SearchQuery(5,"Query 5"),
-            SearchQuery(6,"Query 6"),
-            SearchQuery(7,"Query 7"),
+            SearchSuggestion(1,"Query 1"),
+            SearchSuggestion(2,"Query 2"),
+            SearchSuggestion(3,"Query 3"),
+            SearchSuggestion(4,"Query 4"),
+            SearchSuggestion(5,"Query 5"),
+            SearchSuggestion(6,"Query 6"),
+            SearchSuggestion(7,"Query 7"),
         )
 
         SearchBarItem(
             query = "Search query",
-            recentSearchQueries = queryList,
+            searchSuggestions = queryList,
             isSearchActive = true,
             onQueryChange = {},
             onActiveChange = {},
             onSearchClicked = {},
             onClear = {},
-            onRecentQuerySearchClicked = {}
+            onSearchSuggestionClicked = {}
         )
     }
 }

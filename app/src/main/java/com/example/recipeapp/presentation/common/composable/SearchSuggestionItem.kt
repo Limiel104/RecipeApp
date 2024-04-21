@@ -20,9 +20,9 @@ import androidx.compose.ui.unit.dp
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
-fun SearchQueryItem(
+fun SearchSuggestionItem(
     modifier: Modifier = Modifier,
-    query: String,
+    text: String,
     onClick: () -> Unit
 ) {
     Row(
@@ -38,7 +38,7 @@ fun SearchQueryItem(
         )
 
         Text(
-            text = query,
+            text = text,
             style = MaterialTheme.typography.bodyMedium,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
@@ -57,11 +57,11 @@ fun SearchQueryItem(
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
-fun SearchQueryItemPreview() {
+fun SearchSuggestionItemPreview() {
     RecipeAppTheme {
         Surface {
-            SearchQueryItem(
-                query = "Search query",
+            SearchSuggestionItem(
+                text = "Search Suggestion",
                 onClick = {}
             )
         }
