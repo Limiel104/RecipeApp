@@ -44,7 +44,8 @@ class RecipeRepositoryImpl @Inject constructor(
 
         val recipeWithIngredient = dao.getRecipeWithIngredients(recipeId)
         val ingredients = dao.getIngredientsFromRecipe(recipeId).map { it.toIngredient() }
-        val recipeWithIngredients = recipeWithIngredient.toRecipeWithIngredients(ingredients)
+        val categories = dao.getCategoriesFromRecipe(recipeId)
+        val recipeWithIngredients = recipeWithIngredient.toRecipeWithIngredients(ingredients, categories)
         emit(Resource.Success(recipeWithIngredients))
 
         emit(Resource.Loading(false))

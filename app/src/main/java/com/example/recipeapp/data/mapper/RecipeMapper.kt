@@ -40,7 +40,7 @@ fun RecipeDto.getRecipeIngredientsList(): List<RecipeIngredientEntity> {
     return recipeIngredientsEntityList
 }
 
-fun RecipeWithIngredient.toRecipeWithIngredients(ingredientList: List<Ingredient>): RecipeWithIngredients {
+fun RecipeWithIngredient.toRecipeWithIngredients(ingredientList: List<Ingredient>, categoryList: List<String>): RecipeWithIngredients {
     val quantityList = recipeIngredients.map { it.quantity }
     val ingredients: Map<Ingredient,String> = ingredientList.zip(quantityList).toMap()
 
@@ -55,7 +55,7 @@ fun RecipeWithIngredient.toRecipeWithIngredients(ingredientList: List<Ingredient
         isVegan = recipe.isVegan,
         imageUrl = recipe.imageUrl,
         createdBy = recipe.createdBy,
-        categories = emptyList()
+        categories = categoryList
     )
 }
 

@@ -70,6 +70,15 @@ interface RecipeDao {
     )
     suspend fun getIngredientsFromRecipe(recipeId: String): List<IngredientEntity>
 
+    @Query(
+        """
+            SELECT categoryName
+            FROM recipecategoryentity
+            WHERE recipeId = :recipeId
+        """
+    )
+    suspend fun getCategoriesFromRecipe(recipeId: String): List<String>
+
     @Query("DELETE FROM recipeentity")
     suspend fun deleteRecipes()
 

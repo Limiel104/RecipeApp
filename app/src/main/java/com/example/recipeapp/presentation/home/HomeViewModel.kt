@@ -108,13 +108,13 @@ class HomeViewModel @Inject constructor(
                 when(response) {
                     is Resource.Error -> {}
                     is Resource.Loading -> {
-                        Log.i("TAG","Loading recipes: ${response.isLoading}")
+//                        Log.i("TAG","Loading recipes: ${response.isLoading}")
                         _homeState.value = homeState.value.copy(
                             isLoading = response.isLoading
                         )
                     }
                     is Resource.Success -> {
-                        Log.i("TAG2",response.data.toString())
+//                        Log.i("TAG2",response.data.toString())
                         response.data?.let {
                             _homeState.value = homeState.value.copy(
                                 recipes = response.data
@@ -132,10 +132,10 @@ class HomeViewModel @Inject constructor(
                 when(response) {
                     is Resource.Error -> {}
                     is Resource.Loading -> {
-                        Log.i("TAG","Loading ingredients: ${response.isLoading}")
+//                        Log.i("TAG","Loading ingredients: ${response.isLoading}")
                     }
                     is Resource.Success -> {
-                        Log.i("TAG1",response.data.toString())
+//                        Log.i("TAG1",response.data.toString())
                     }
                 }
             }
@@ -150,10 +150,10 @@ class HomeViewModel @Inject constructor(
                 when(response) {
                     is Resource.Error -> {}
                     is Resource.Loading -> {
-                        Log.i("TAG","Loading shopping lists: ${response.isLoading}")
+//                        Log.i("TAG","Loading shopping lists: ${response.isLoading}")
                     }
                     is Resource.Success -> {
-                        Log.i("TAG4",response.data.toString())
+//                        Log.i("TAG4",response.data.toString())
                     }
                 }
             }
@@ -171,10 +171,10 @@ class HomeViewModel @Inject constructor(
                 when(response) {
                     is Resource.Error -> {}
                     is Resource.Loading -> {
-                        Log.i("TAG","Loading add search suggestion: ${response.isLoading}")
+//                        Log.i("TAG","Loading add search suggestion: ${response.isLoading}")
                     }
                     is Resource.Success -> {
-                        Log.i("TAG4","Search suggestion added")
+//                        Log.i("TAG4","Search suggestion added")
                     }
                 }
             }
@@ -187,7 +187,7 @@ class HomeViewModel @Inject constructor(
                 when(response) {
                     is Resource.Error -> {}
                     is Resource.Loading -> {
-                        Log.i("TAG","Loading search suggestions: ${response.isLoading}")
+//                        Log.i("TAG","Loading search suggestions: ${response.isLoading}")
                     }
                     is Resource.Success -> {
                         response.data?.let {
@@ -195,8 +195,7 @@ class HomeViewModel @Inject constructor(
                                 searchSuggestions = response.data
                             )
                         }
-
-                        Log.i("TAG4",_homeState.value.searchSuggestions.toString())
+//                        Log.i("TAG4",_homeState.value.searchSuggestions.toString())
                     }
                 }
             }
