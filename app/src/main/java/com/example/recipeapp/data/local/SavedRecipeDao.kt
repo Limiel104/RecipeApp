@@ -3,8 +3,9 @@ package com.example.recipeapp.data.local
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.example.recipeapp.data.local.entity.RecipeEntity
+import androidx.room.Transaction
 import com.example.recipeapp.data.local.entity.SavedRecipeEntity
+import com.example.recipeapp.data.local.relation.RecipeWithCategory
 
 @Dao
 interface SavedRecipeDao {
@@ -12,6 +13,7 @@ interface SavedRecipeDao {
     @Insert
     suspend fun insertSavedRecipes(savedRecipes: List<SavedRecipeEntity>)
 
+    @Transaction
     @Query(
         """
             SELECT * 
@@ -19,7 +21,7 @@ interface SavedRecipeDao {
             JOIN savedrecipeentity ON recipeentity.recipeId = savedrecipeentity.recipeId
         """
     )
-    suspend fun getSavedRecipes(): List<RecipeEntity>
+    suspend fun getSavedRecipes(): List<RecipeWithCategory>
 
     @Query("DELETE FROM savedrecipeentity")
     suspend fun deleteSavedRecipes()

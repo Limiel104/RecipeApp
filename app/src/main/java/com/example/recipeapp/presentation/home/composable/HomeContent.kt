@@ -106,7 +106,8 @@ fun HomeContentPreview() {
             isVegetarian = true,
             isVegan = false,
             imageUrl = "imageUrl",
-            createdBy = "userId"
+            createdBy = "userId",
+            categories = emptyList()
         )
 
         HomeContent(
@@ -145,7 +146,8 @@ fun HomeContentPreviewSearchIsActive() {
             isVegetarian = true,
             isVegan = false,
             imageUrl = "imageUrl",
-            createdBy = "userId"
+            createdBy = "userId",
+            categories = emptyList()
         )
 
         HomeContent(

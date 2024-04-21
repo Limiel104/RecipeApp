@@ -2,6 +2,7 @@ package com.example.recipeapp.data.repository
 
 import android.util.Log
 import com.example.recipeapp.data.local.RecipeDao
+import com.example.recipeapp.data.mapper.getRecipeCategoryList
 import com.example.recipeapp.data.mapper.getRecipeIngredientsList
 import com.example.recipeapp.data.mapper.toIngredient
 import com.example.recipeapp.data.mapper.toRecipe
@@ -69,11 +70,12 @@ class RecipeRepositoryImpl @Inject constructor(
         val recipesFromRemote = snapshot.toObjects(RecipeDto::class.java)
 
         recipesFromRemote.let { recipeList ->
-            dao.deleteRecipesWithIngredients()
+            dao.deleteAllRecipes()
             for(recipe in recipeList) {
                 dao.insertRecipeWithIngredients(
                     recipe.toRecipeEntity(),
-                    recipe.getRecipeIngredientsList()
+                    recipe.getRecipeIngredientsList(),
+                    recipe.getRecipeCategoryList()
                 )
             }
         }

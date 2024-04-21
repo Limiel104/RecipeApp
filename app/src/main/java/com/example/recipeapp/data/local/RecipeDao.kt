@@ -4,9 +4,11 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import com.example.recipeapp.data.local.entity.RecipeCategoryEntity
 import com.example.recipeapp.data.local.entity.IngredientEntity
 import com.example.recipeapp.data.local.entity.RecipeIngredientEntity
 import com.example.recipeapp.data.local.entity.RecipeEntity
+import com.example.recipeapp.data.local.relation.RecipeWithCategory
 import com.example.recipeapp.data.local.relation.RecipeWithIngredient
 
 @Dao
@@ -18,12 +20,17 @@ interface RecipeDao {
     @Insert
     suspend fun insertRecipeIngredients(recipeIngredients: List<RecipeIngredientEntity>)
 
+    @Insert
+    suspend fun insertRecipeCategories(recipeCategories: List<RecipeCategoryEntity>)
+
     @Transaction
-    suspend fun insertRecipeWithIngredients(recipe: RecipeEntity, recipeIngredients: List<RecipeIngredientEntity>) {
+    suspend fun insertRecipeWithIngredients(recipe: RecipeEntity, recipeIngredients: List<RecipeIngredientEntity>, recipeCategories: List<RecipeCategoryEntity>) {
         insertRecipe(recipe)
         insertRecipeIngredients(recipeIngredients)
+        insertRecipeCategories(recipeCategories)
     }
 
+    @Transaction
     @Query(
         """
             SELECT *
@@ -32,7 +39,7 @@ interface RecipeDao {
             LIKE '%' || LOWER(:query) || '%'
         """
     )
-    suspend fun getRecipes(query: String): List<RecipeEntity>
+    suspend fun getRecipes(query: String): List<RecipeWithCategory>
 
     @Transaction
     @Query(
@@ -67,11 +74,15 @@ interface RecipeDao {
     suspend fun deleteRecipes()
 
     @Query("DELETE FROM recipeingrediententity")
-    suspend fun deleteRecipeWithIngredients()
+    suspend fun deleteRecipesIngredients()
+
+    @Query("DELETE FROM recipecategoryentity")
+    suspend fun deleteRecipesCategories()
 
     @Transaction
-    suspend fun deleteRecipesWithIngredients() {
+    suspend fun deleteAllRecipes() {
         deleteRecipes()
-        deleteRecipeWithIngredients()
+        deleteRecipesIngredients()
+        deleteRecipesCategories()
     }
 }
