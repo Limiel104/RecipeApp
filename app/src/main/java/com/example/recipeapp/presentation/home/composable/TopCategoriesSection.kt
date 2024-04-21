@@ -3,6 +3,7 @@ package com.example.recipeapp.presentation.home.composable
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
@@ -12,15 +13,18 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.recipeapp.domain.util.getCategoryNames
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
 fun TopCategoriesSection(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    categoryNames: List<String>
 ) {
     Card(
         shape = RoundedCornerShape(10.dp),
@@ -34,37 +38,47 @@ fun TopCategoriesSection(
                 .padding(vertical = 16.dp)
                 .padding(top = 8.dp)
         ) {
-            Text(
-                text = "Top Categories",
-                style = MaterialTheme.typography.titleMedium,
+            Row(
                 modifier = modifier
+                    .fillMaxWidth()
                     .padding(bottom = 8.dp)
-                    .padding(start = 16.dp)
-            )
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Top Categories",
+                    style = MaterialTheme.typography.titleMedium
+
+                )
+
+                Text(
+                    text = "See All",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
 
             LazyRow(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                val tempCategoryArray = listOf("Category 1","Category 2","Category 3","Category 4","Category 5","Category 6","Category 7","Category 8")
-
-                itemsIndexed(tempCategoryArray) { index, item ->
+                itemsIndexed(categoryNames) { index, item ->
                     when (index) {
                         0 -> {
                             HomeCategoryItem(
                                 modifier = Modifier.padding(start = 16.dp),
-                                categoryName = tempCategoryArray[index]
+                                categoryName = categoryNames[index]
                             )
                         }
-                        tempCategoryArray.lastIndex -> {
+                        categoryNames.lastIndex -> {
                             HomeCategoryItem(
                                 modifier = Modifier.padding(end = 16.dp),
-                                categoryName = tempCategoryArray[index]
+                                categoryName = categoryNames[index]
                             )
                         }
                         else -> {
                             HomeCategoryItem(
-                                categoryName = tempCategoryArray[index]
+                                categoryName = categoryNames[index]
                             )
                         }
                     }
@@ -85,6 +99,8 @@ fun TopCategoriesSection(
 @Composable
 fun TopCategoriesSectionPreview() {
     RecipeAppTheme {
-        TopCategoriesSection()
+        TopCategoriesSection(
+            categoryNames = getCategoryNames()
+        )
     }
 }

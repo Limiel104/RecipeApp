@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.domain.model.Recipe
 import com.example.recipeapp.domain.model.SearchSuggestion
+import com.example.recipeapp.domain.util.getCategoryNames
 import com.example.recipeapp.presentation.common.composable.RecipeItem
 import com.example.recipeapp.presentation.common.composable.SearchBarItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
@@ -61,7 +62,7 @@ fun HomeContent(
 
             LazyColumn {
                 item {
-                    TopCategoriesSection()
+                    TopCategoriesSection( categoryNames = getCategoryNames() )
                 }
 
                 item {
