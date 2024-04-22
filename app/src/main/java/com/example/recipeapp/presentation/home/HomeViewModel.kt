@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipeapp.domain.model.SearchSuggestion
 import com.example.recipeapp.domain.use_case.AddSearchSuggestionUseCase
+import com.example.recipeapp.domain.use_case.GetCategoriesUseCase
 import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
 import com.example.recipeapp.domain.use_case.GetSearchSuggestionsUseCase
 import com.example.recipeapp.domain.use_case.GetRecipesUseCase
@@ -24,7 +25,8 @@ class HomeViewModel @Inject constructor(
     private val getRecipesUseCase: GetRecipesUseCase,
     private val getUserShoppingListsUseCase: GetUserShoppingListsUseCase,
     private val addSearchSuggestionUseCase: AddSearchSuggestionUseCase,
-    private val getSearchSuggestionsUseCase: GetSearchSuggestionsUseCase
+    private val getSearchSuggestionsUseCase: GetSearchSuggestionsUseCase,
+    private val getCategoriesUseCase: GetCategoriesUseCase
 ): ViewModel() {
 
     private val _homeState = mutableStateOf(HomeState())
@@ -34,6 +36,7 @@ class HomeViewModel @Inject constructor(
     val homeUiEventChannelFlow = _homeUiEventChannel.receiveAsFlow()
 
     init {
+        getCategories()
         getRecipes(true)
         getIngredients()
         getShoppingLists(false)
@@ -196,6 +199,26 @@ class HomeViewModel @Inject constructor(
                             )
                         }
 //                        Log.i("TAG4",_homeState.value.searchSuggestions.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getCategories() {
+        viewModelScope.launch {
+            getCategoriesUseCase().collect { response ->
+                when(response) {
+                    is Resource.Error -> {}
+                    is Resource.Loading -> {
+//                        Log.i("TAG","Loading categories: ${response.isLoading}")
+                    }
+                    is Resource.Success -> {
+                        response.data?.let {
+                            _homeState.value = homeState.value.copy(
+                                categories = response.data
+                            )
+                        }
                     }
                 }
             }

@@ -15,9 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.domain.model.Recipe
 import com.example.recipeapp.domain.model.SearchSuggestion
-import com.example.recipeapp.domain.util.getCategoryNames
 import com.example.recipeapp.presentation.common.composable.RecipeItem
 import com.example.recipeapp.presentation.common.composable.SearchBarItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
@@ -28,6 +28,7 @@ fun HomeContent(
     recipes: List<Recipe>,
     query: String,
     searchSuggestions: List<SearchSuggestion>,
+    categories: List<Category>,
     isSearchActive: Boolean,
     isLoading: Boolean,
     onRecipeSelected: (String) -> Unit,
@@ -62,7 +63,7 @@ fun HomeContent(
 
             LazyColumn {
                 item {
-                    TopCategoriesSection( categoryNames = getCategoryNames() )
+                    TopCategoriesSection( categories = categories )
                 }
 
                 item {
@@ -115,6 +116,7 @@ fun HomeContentPreview() {
             recipes = listOf(recipe, recipe, recipe, recipe, recipe, recipe),
             query = "",
             searchSuggestions = emptyList(),
+            categories = emptyList(),
             isSearchActive = false,
             isLoading = false,
             onRecipeSelected = {},
@@ -155,6 +157,7 @@ fun HomeContentPreviewSearchIsActive() {
             recipes = listOf(recipe, recipe, recipe, recipe, recipe, recipe),
             query = "Search query",
             searchSuggestions = emptyList(),
+            categories = emptyList(),
             isSearchActive = true,
             isLoading = false,
             onRecipeSelected = {},

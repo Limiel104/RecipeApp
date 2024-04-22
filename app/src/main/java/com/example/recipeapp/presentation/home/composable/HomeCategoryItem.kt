@@ -14,22 +14,25 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.presentation.common.composable.ImageItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
 fun HomeCategoryItem(
     modifier: Modifier = Modifier,
-    categoryName: String
+    category: Category
 ) {
     Card(
         modifier = modifier
             .size(90.dp)
             .clickable {}
-            .testTag("TCS $categoryName"),
+            .testTag("TCS ${category.categoryId}"),
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary)
     ) {
@@ -38,11 +41,13 @@ fun HomeCategoryItem(
         ) {
             ImageItem(
                 modifier = Modifier.fillMaxSize(),
-                imageUrl = ""
+                imageUrl = category.imageUrl,
+                contentScale = ContentScale.Crop
             )
 
             Text(
-                text = categoryName,
+                text = category.categoryId,
+                color = Color.White,
                 style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -63,9 +68,7 @@ fun HomeCategoryItem(
 @Composable
 fun HomeCategoryItemPreview() {
     RecipeAppTheme {
-        HomeCategoryItem(
-            categoryName = "Category 1"
-        )
+        HomeCategoryItem(category = Category("Appetizer",""))
     }
 }
 
@@ -82,7 +85,7 @@ fun HomeCategoryItemPreviewStartPadding() {
     RecipeAppTheme {
         HomeCategoryItem(
             modifier = Modifier.padding(start = 16.dp),
-            categoryName = "Category 1"
+            category = Category("Appetizer","")
         )
     }
 }
@@ -100,7 +103,7 @@ fun HomeCategoryItemPreviewEndPadding() {
     RecipeAppTheme {
         HomeCategoryItem(
             modifier = Modifier.padding(start = 16.dp),
-            categoryName = "Category 1"
+            category = Category("Appetizer","")
         )
     }
 }

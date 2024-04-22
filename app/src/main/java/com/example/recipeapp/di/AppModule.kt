@@ -3,17 +3,20 @@ package com.example.recipeapp.di
 import android.app.Application
 import androidx.room.Room
 import com.example.recipeapp.data.local.RecipeDatabase
+import com.example.recipeapp.data.repository.CategoryRepositoryImpl
 import com.example.recipeapp.data.repository.IngredientRepositoryImpl
 import com.example.recipeapp.data.repository.RecipeRepositoryImpl
 import com.example.recipeapp.data.repository.SavedRecipeRepositoryImpl
 import com.example.recipeapp.data.repository.SearchSuggestionRepositoryImpl
 import com.example.recipeapp.data.repository.ShoppingListRepositoryImpl
+import com.example.recipeapp.domain.repository.CategoryRepository
 import com.example.recipeapp.domain.repository.IngredientRepository
 import com.example.recipeapp.domain.repository.RecipeRepository
 import com.example.recipeapp.domain.repository.SavedRecipeRepository
 import com.example.recipeapp.domain.repository.SearchSuggestionRepository
 import com.example.recipeapp.domain.repository.ShoppingListRepository
 import com.example.recipeapp.domain.use_case.AddSearchSuggestionUseCase
+import com.example.recipeapp.domain.use_case.GetCategoriesUseCase
 import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
 import com.example.recipeapp.domain.use_case.GetSearchSuggestionsUseCase
 import com.example.recipeapp.domain.use_case.GetRecipesUseCase
@@ -37,7 +40,7 @@ object AppModule {
             application,
             RecipeDatabase::class.java,
             RecipeDatabase.DATABASE_NAME
-        ).build()
+        ).createFromAsset("database/recipes.db").build()
     }
 
     @Provides
@@ -76,6 +79,12 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideCategoryRepository(db: RecipeDatabase): CategoryRepository {
+        return CategoryRepositoryImpl(db.categoryDao)
+    }
+
+    @Provides
+    @Singleton
     fun provideGetIngredientsUseCase(ingredientRepository: IngredientRepository): GetIngredientsUseCase {
         return GetIngredientsUseCase(ingredientRepository)
     }
@@ -102,5 +111,11 @@ object AppModule {
     @Singleton
     fun provideGetSearchSuggestionsUseCase(searchSuggestionRepository: SearchSuggestionRepository): GetSearchSuggestionsUseCase {
         return GetSearchSuggestionsUseCase(searchSuggestionRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetCategoriesUseCase(categoryRepository: CategoryRepository): GetCategoriesUseCase {
+        return GetCategoriesUseCase(categoryRepository)
     }
 }

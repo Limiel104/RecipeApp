@@ -23,7 +23,8 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 @Composable
 fun ImageItem(
     modifier: Modifier = Modifier,
-    imageUrl: String
+    imageUrl: String,
+    contentScale: ContentScale = ContentScale.FillWidth
 ) {
     Box(
         modifier = modifier,
@@ -39,7 +40,7 @@ fun ImageItem(
             contentDescription = "IMAGE",
             fallback = painterResource(R.drawable.ic_image),
             error = painterResource(R.drawable.ic_image),
-            contentScale = ContentScale.FillWidth
+            contentScale = contentScale
         )
     }
 }

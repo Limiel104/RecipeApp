@@ -18,13 +18,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.recipeapp.domain.util.getCategoryNames
+import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
 fun TopCategoriesSection(
     modifier: Modifier = Modifier,
-    categoryNames: List<String>
+    categories: List<Category>
 ) {
     Card(
         shape = RoundedCornerShape(10.dp),
@@ -62,23 +62,23 @@ fun TopCategoriesSection(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                itemsIndexed(categoryNames) { index, item ->
+                itemsIndexed(categories) { index, item ->
                     when (index) {
                         0 -> {
                             HomeCategoryItem(
                                 modifier = Modifier.padding(start = 16.dp),
-                                categoryName = categoryNames[index]
+                                category = categories[index]
                             )
                         }
-                        categoryNames.lastIndex -> {
+                        categories.lastIndex -> {
                             HomeCategoryItem(
                                 modifier = Modifier.padding(end = 16.dp),
-                                categoryName = categoryNames[index]
+                                category = categories[index]
                             )
                         }
                         else -> {
                             HomeCategoryItem(
-                                categoryName = categoryNames[index]
+                                category = categories[index]
                             )
                         }
                     }
@@ -99,8 +99,16 @@ fun TopCategoriesSection(
 @Composable
 fun TopCategoriesSectionPreview() {
     RecipeAppTheme {
+        val categories = listOf(
+            Category("Appetizer",""),
+            Category("Chicken",""),
+            Category("Dinner",""),
+            Category("Soup",""),
+            Category("Stew","")
+        )
+
         TopCategoriesSection(
-            categoryNames = getCategoryNames()
+            categories = categories
         )
     }
 }
