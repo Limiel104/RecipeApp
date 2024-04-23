@@ -54,10 +54,13 @@ class RecipeRepositoryImpl @Inject constructor(
         emit(Resource.Error(it.localizedMessage as String))
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun getRecipes(getRecipesFromRemote: Boolean, query: String) = flow<Resource<List<Recipe>>> {
+    override suspend fun getRecipes(getRecipesFromRemote: Boolean, query: String, category: String) = flow<Resource<List<Recipe>>> {
         emit(Resource.Loading(true))
 
-        val recipes = dao.getRecipes(query)
+        val recipes = if(category.isEmpty())
+            dao.getRecipes(query)
+        else
+            dao.getRecipesFromCategory(query, category)
         val loadFromCache = recipes.isNotEmpty() && !getRecipesFromRemote
 
         if(loadFromCache) {
@@ -81,7 +84,10 @@ class RecipeRepositoryImpl @Inject constructor(
             }
         }
 
-        emit(Resource.Success(dao.getRecipes(query).map { it.toRecipe() }))
+        if(category.isEmpty())
+            emit(Resource.Success(dao.getRecipes(query).map { it.toRecipe() }))
+        else
+            emit(Resource.Success(dao.getRecipesFromCategory(query, category).map { it.toRecipe() }))
         Log.i("TAG","Recipes from remote")
         emit(Resource.Loading(false))
 

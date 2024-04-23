@@ -3,7 +3,6 @@ package com.example.recipeapp.presentation.home.composable
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
@@ -13,7 +12,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,41 +20,32 @@ import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
-fun TopCategoriesSection(
+fun CategoriesSection(
     modifier: Modifier = Modifier,
-    categories: List<Category>
+    categories: List<Category>,
+    selectedCategory: String,
+    onClick: (String) -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(10.dp),
         modifier = modifier
             .fillMaxWidth()
             .padding(bottom = 12.dp)
-            .testTag("Top Categories Section")
+            .testTag("Categories Section")
     ) {
         Column(
             modifier = modifier
                 .padding(vertical = 16.dp)
                 .padding(top = 8.dp)
         ) {
-            Row(
+            Text(
+                text = "Categories",
+                style = MaterialTheme.typography.titleMedium,
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Top Categories",
-                    style = MaterialTheme.typography.titleMedium
-
-                )
-
-                Text(
-                    text = "See All",
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
+                    .padding(horizontal = 16.dp)
+            )
 
             LazyRow(
                 modifier = Modifier.fillMaxWidth(),
@@ -67,18 +56,24 @@ fun TopCategoriesSection(
                         0 -> {
                             HomeCategoryItem(
                                 modifier = Modifier.padding(start = 16.dp),
-                                category = categories[index]
+                                category = categories[index],
+                                onClick = { onClick(it) },
+                                isSelected = selectedCategory == categories[index].categoryId
                             )
                         }
                         categories.lastIndex -> {
                             HomeCategoryItem(
                                 modifier = Modifier.padding(end = 16.dp),
-                                category = categories[index]
+                                category = categories[index],
+                                onClick = { onClick(it) },
+                                isSelected = selectedCategory == categories[index].categoryId
                             )
                         }
                         else -> {
                             HomeCategoryItem(
-                                category = categories[index]
+                                category = categories[index],
+                                onClick = { onClick(it) },
+                                isSelected = selectedCategory == categories[index].categoryId
                             )
                         }
                     }
@@ -97,7 +92,7 @@ fun TopCategoriesSection(
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
-fun TopCategoriesSectionPreview() {
+fun CategoriesSectionPreview() {
     RecipeAppTheme {
         val categories = listOf(
             Category("Appetizer",""),
@@ -107,8 +102,10 @@ fun TopCategoriesSectionPreview() {
             Category("Stew","")
         )
 
-        TopCategoriesSection(
-            categories = categories
+        CategoriesSection(
+            categories = categories,
+            selectedCategory = "",
+            onClick = {}
         )
     }
 }

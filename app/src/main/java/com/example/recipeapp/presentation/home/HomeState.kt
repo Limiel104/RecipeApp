@@ -9,6 +9,7 @@ data class HomeState(
     val query: String = "",
     val searchSuggestions: List<SearchSuggestion> = emptyList(),
     val categories: List<Category> = emptyList(),
+    val selectedCategory: String = "",
     val isSearchActive: Boolean = false,
     val isLoading: Boolean = false
 )

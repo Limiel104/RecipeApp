@@ -26,12 +26,14 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 @Composable
 fun HomeCategoryItem(
     modifier: Modifier = Modifier,
-    category: Category
+    category: Category,
+    isSelected: Boolean,
+    onClick: (String) -> Unit
 ) {
     Card(
         modifier = modifier
             .size(90.dp)
-            .clickable {}
+            .clickable { onClick(category.categoryId) }
             .testTag("TCS ${category.categoryId}"),
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary)
@@ -42,7 +44,8 @@ fun HomeCategoryItem(
             ImageItem(
                 modifier = Modifier.fillMaxSize(),
                 imageUrl = category.imageUrl,
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                isGrayScale = isSelected
             )
 
             Text(
@@ -68,7 +71,11 @@ fun HomeCategoryItem(
 @Composable
 fun HomeCategoryItemPreview() {
     RecipeAppTheme {
-        HomeCategoryItem(category = Category("Appetizer",""))
+        HomeCategoryItem(
+            category = Category("Appetizer",""),
+            isSelected = false,
+            onClick = {}
+        )
     }
 }
 
@@ -85,7 +92,9 @@ fun HomeCategoryItemPreviewStartPadding() {
     RecipeAppTheme {
         HomeCategoryItem(
             modifier = Modifier.padding(start = 16.dp),
-            category = Category("Appetizer","")
+            category = Category("Appetizer",""),
+            isSelected = false,
+            onClick = {}
         )
     }
 }
@@ -103,7 +112,9 @@ fun HomeCategoryItemPreviewEndPadding() {
     RecipeAppTheme {
         HomeCategoryItem(
             modifier = Modifier.padding(start = 16.dp),
-            category = Category("Appetizer","")
+            category = Category("Appetizer",""),
+            isSelected = false,
+            onClick = {}
         )
     }
 }

@@ -46,6 +46,19 @@ interface RecipeDao {
         """
             SELECT *
             FROM recipeentity
+            JOIN recipecategoryentity ON recipeentity.recipeId = recipecategoryentity.recipeId
+            WHERE LOWER(name) 
+            LIKE '%' || LOWER(:query) || '%'
+            AND categoryName = :category
+        """
+    )
+    suspend fun getRecipesFromCategory(query: String, category: String): List<RecipeWithCategory>
+
+    @Transaction
+    @Query(
+        """
+            SELECT *
+            FROM recipeentity
             WHERE recipeId = :recipeId
         """
     )

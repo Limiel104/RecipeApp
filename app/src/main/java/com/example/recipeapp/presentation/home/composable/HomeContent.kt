@@ -29,6 +29,7 @@ fun HomeContent(
     query: String,
     searchSuggestions: List<SearchSuggestion>,
     categories: List<Category>,
+    selectedCategory: String,
     isSearchActive: Boolean,
     isLoading: Boolean,
     onRecipeSelected: (String) -> Unit,
@@ -36,7 +37,8 @@ fun HomeContent(
     onActiveChange: () -> Unit,
     onSearchClicked: () -> Unit,
     onClearClicked: () -> Unit,
-    onSearchSuggestionClicked: (String) -> Unit
+    onSearchSuggestionClicked: (String) -> Unit,
+    onSelectedCategory: (String) -> Unit
     ) {
     Scaffold(
         modifier = modifier.fillMaxSize()
@@ -63,7 +65,11 @@ fun HomeContent(
 
             LazyColumn {
                 item {
-                    TopCategoriesSection( categories = categories )
+                    CategoriesSection(
+                        categories = categories,
+                        selectedCategory = selectedCategory,
+                        onClick = { onSelectedCategory(it) }
+                    )
                 }
 
                 item {
@@ -88,6 +94,33 @@ fun HomeContent(
     }
 }
 
+private fun getRecipes(): List<Recipe> {
+    val recipe = Recipe(
+        recipeId = "recipeId",
+        name = "Recipe Name",
+        prepTime = "40 min",
+        servings = 4,
+        description = "Recipe description",
+        isVegetarian = true,
+        isVegan = false,
+        imageUrl = "imageUrl",
+        createdBy = "userId",
+        categories = emptyList()
+    )
+
+    return listOf(recipe, recipe, recipe, recipe, recipe, recipe)
+}
+
+private fun getCategories(): List<Category> {
+    return listOf(
+        Category("Appetizer",""),
+        Category("Chicken",""),
+        Category("Dinner",""),
+        Category("Soup",""),
+        Category("Stew","")
+    )
+}
+
 @Preview(
     name = "Light Mode",
     uiMode = Configuration.UI_MODE_NIGHT_NO
@@ -99,24 +132,12 @@ fun HomeContent(
 @Composable
 fun HomeContentPreview() {
     RecipeAppTheme {
-        val recipe = Recipe(
-            recipeId = "recipeId",
-            name = "Recipe Name",
-            prepTime = "40 min",
-            servings = 4,
-            description = "Recipe description",
-            isVegetarian = true,
-            isVegan = false,
-            imageUrl = "imageUrl",
-            createdBy = "userId",
-            categories = emptyList()
-        )
-
-        HomeContent(
-            recipes = listOf(recipe, recipe, recipe, recipe, recipe, recipe),
+       HomeContent(
+            recipes = getRecipes(),
             query = "",
             searchSuggestions = emptyList(),
-            categories = emptyList(),
+            categories = getCategories(),
+            selectedCategory = "",
             isSearchActive = false,
             isLoading = false,
             onRecipeSelected = {},
@@ -124,7 +145,8 @@ fun HomeContentPreview() {
             onActiveChange = {},
             onSearchClicked = {},
             onClearClicked = {},
-            onSearchSuggestionClicked = {}
+            onSearchSuggestionClicked = {},
+            onSelectedCategory = {}
         )
     }
 }
@@ -140,24 +162,12 @@ fun HomeContentPreview() {
 @Composable
 fun HomeContentPreviewSearchIsActive() {
     RecipeAppTheme {
-        val recipe = Recipe(
-            recipeId = "recipeId",
-            name = "Recipe Name",
-            prepTime = "40 min",
-            servings = 4,
-            description = "Recipe description",
-            isVegetarian = true,
-            isVegan = false,
-            imageUrl = "imageUrl",
-            createdBy = "userId",
-            categories = emptyList()
-        )
-
         HomeContent(
-            recipes = listOf(recipe, recipe, recipe, recipe, recipe, recipe),
+            recipes = getRecipes(),
             query = "Search query",
             searchSuggestions = emptyList(),
-            categories = emptyList(),
+            categories = getCategories(),
+            selectedCategory = "",
             isSearchActive = true,
             isLoading = false,
             onRecipeSelected = {},
@@ -165,7 +175,8 @@ fun HomeContentPreviewSearchIsActive() {
             onActiveChange = {},
             onSearchClicked = {},
             onClearClicked = {},
-            onSearchSuggestionClicked = {}
+            onSearchSuggestionClicked = {},
+            onSelectedCategory = {}
         )
     }
 }

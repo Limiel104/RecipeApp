@@ -91,6 +91,7 @@ class HomeViewModel @Inject constructor(
                     _homeState.value = homeState.value.copy(
                         isSearchActive = false
                     )
+                    getRecipes(false)
                 }
             }
 
@@ -99,25 +100,43 @@ class HomeViewModel @Inject constructor(
                     query = event.suggestionText
                 )
             }
+
+            is HomeEvent.OnCategoryClicked -> {
+                if(_homeState.value.selectedCategory == event.categoryId) {
+                    _homeState.value = homeState.value.copy(
+                        selectedCategory = ""
+                    )
+                    getRecipes(false)
+                }
+                else {
+                    _homeState.value = homeState.value.copy(
+                        selectedCategory = event.categoryId
+                    )
+                    getRecipes(false)
+                }
+                Log.i("TAG",_homeState.value.selectedCategory)
+
+            }
         }
     }
 
     private fun getRecipes(
         getRecipesFromRemote: Boolean,
-        query: String = _homeState.value.query
+        query: String = _homeState.value.query,
+        category: String = _homeState.value.selectedCategory
     ) {
         viewModelScope.launch {
-            getRecipesUseCase(getRecipesFromRemote, query).collect { response ->
+            getRecipesUseCase(getRecipesFromRemote, query, category).collect { response ->
                 when(response) {
                     is Resource.Error -> {}
                     is Resource.Loading -> {
-//                        Log.i("TAG","Loading recipes: ${response.isLoading}")
+                        Log.i("TAG","Loading recipes: ${response.isLoading}")
                         _homeState.value = homeState.value.copy(
                             isLoading = response.isLoading
                         )
                     }
                     is Resource.Success -> {
-//                        Log.i("TAG2",response.data.toString())
+                        Log.i("TAG2",response.data.toString())
                         response.data?.let {
                             _homeState.value = homeState.value.copy(
                                 recipes = response.data
