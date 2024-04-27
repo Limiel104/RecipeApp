@@ -1,8 +1,10 @@
 package com.example.recipeapp.data.mapper
 
 import com.example.recipeapp.data.local.entity.IngredientEntity
+import com.example.recipeapp.data.local.entity.RecipeCategoryEntity
 import com.example.recipeapp.data.local.entity.RecipeEntity
 import com.example.recipeapp.data.local.entity.RecipeIngredientEntity
+import com.example.recipeapp.data.local.relation.RecipeWithCategory
 import com.example.recipeapp.data.local.relation.RecipeWithIngredient
 import com.example.recipeapp.data.remote.RecipeDto
 import com.example.recipeapp.domain.model.Ingredient
@@ -14,6 +16,10 @@ import org.junit.Test
 
 class RecipeMapperTest {
 
+    private lateinit var recipeCategoryEntity: RecipeCategoryEntity
+    private lateinit var recipeCategoryEntity2: RecipeCategoryEntity
+    private lateinit var recipeCategoryEntity3: RecipeCategoryEntity
+    private lateinit var recipeWithCategory: RecipeWithCategory
     private lateinit var recipe: Recipe
     private lateinit var recipeEntity: RecipeEntity
     private lateinit var recipeDto: RecipeDto
@@ -28,6 +34,39 @@ class RecipeMapperTest {
 
     @Before
     fun setUp() {
+        recipeCategoryEntity = RecipeCategoryEntity(
+            categoryId = 1,
+            categoryName = "Category",
+            recipeId = "recipeId"
+        )
+
+        recipeCategoryEntity2 = RecipeCategoryEntity(
+            categoryId = 1,
+            categoryName = "Category2",
+            recipeId = "recipeId"
+        )
+
+        recipeCategoryEntity3 = RecipeCategoryEntity(
+            categoryId = 1,
+            categoryName = "Category3",
+            recipeId = "recipeId"
+        )
+
+        recipeWithCategory = RecipeWithCategory(
+            recipe = RecipeEntity(
+                recipeId = "recipeId",
+                name = "Recipe Name",
+                prepTime = "40 min",
+                servings = 4,
+                description = "Recipe description",
+                isVegetarian = true,
+                isVegan = false,
+                imageUrl = "imageUrl",
+                createdBy = "userId"
+            ),
+            categories = listOf(recipeCategoryEntity, recipeCategoryEntity2, recipeCategoryEntity3)
+        )
+
         recipe = Recipe(
             recipeId = "recipeId",
             name = "Recipe Name",
@@ -37,7 +76,8 @@ class RecipeMapperTest {
             isVegetarian = true,
             isVegan = false,
             imageUrl = "imageUrl",
-            createdBy = "userId"
+            createdBy = "userId",
+            categories = listOf("Category", "Category2", "Category3")
         )
 
         recipeEntity = RecipeEntity(
@@ -65,7 +105,8 @@ class RecipeMapperTest {
             isVegetarian = true,
             isVegan = false,
             imageUrl = "imageUrl",
-            createdBy = "userId"
+            createdBy = "userId",
+            categoryList = listOf("Category", "Category2", "Category3")
         )
 
         recipeIngredientEntity = RecipeIngredientEntity(
@@ -128,13 +169,14 @@ class RecipeMapperTest {
             isVegetarian = true,
             isVegan = false,
             imageUrl = "imageUrl",
-            createdBy = "userId"
+            createdBy = "userId",
+            categories = listOf("Category", "Category2", "Category3")
         )
     }
 
     @Test
     fun `RecipeEntity can be mapped to Recipe`() {
-        val mappedRecipe = recipeEntity.toRecipe()
+        val mappedRecipe = recipeWithCategory.toRecipe()
 
         assertThat(mappedRecipe).isEqualTo(recipe)
     }
@@ -156,7 +198,8 @@ class RecipeMapperTest {
     @Test
     fun `RecipeWithIngredient can be mapped to RecipeWithIngredients (relation to model)`() {
         val ingredients = listOf(ingredient, ingredient2)
-        val mappedRecipeWithIngredients = recipeWithIngredient.toRecipeWithIngredients(ingredients)
+        val categories = listOf("Category", "Category2", "Category3")
+        val mappedRecipeWithIngredients = recipeWithIngredient.toRecipeWithIngredients(ingredients,categories)
 
         assertThat(mappedRecipeWithIngredients).isEqualTo(recipeWithIngredients)
     }

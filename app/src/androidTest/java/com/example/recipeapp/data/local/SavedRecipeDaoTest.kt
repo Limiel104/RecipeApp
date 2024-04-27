@@ -2,6 +2,7 @@ package com.example.recipeapp.data.local
 
 import com.example.recipeapp.data.local.entity.RecipeEntity
 import com.example.recipeapp.data.local.entity.SavedRecipeEntity
+import com.example.recipeapp.data.local.relation.RecipeWithCategory
 import com.example.recipeapp.di.AppModule
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -127,7 +128,7 @@ class SavedRecipeDaoTest {
 
         assertThat(result).hasSize(3)
         assertThat(result).isInstanceOf(List::class.java)
-        assertThat(result[0]).isInstanceOf(RecipeEntity::class.java)
+        assertThat(result[0]).isInstanceOf(RecipeWithCategory::class.java)
     }
 
     @Test

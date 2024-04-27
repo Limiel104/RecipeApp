@@ -1,8 +1,10 @@
 package com.example.recipeapp.data.local
 
 import com.example.recipeapp.data.local.entity.IngredientEntity
+import com.example.recipeapp.data.local.entity.RecipeCategoryEntity
 import com.example.recipeapp.data.local.entity.RecipeEntity
 import com.example.recipeapp.data.local.entity.RecipeIngredientEntity
+import com.example.recipeapp.data.local.relation.RecipeWithCategory
 import com.example.recipeapp.data.local.relation.RecipeWithIngredient
 import com.example.recipeapp.di.AppModule
 import com.google.common.truth.Truth.assertThat
@@ -62,6 +64,54 @@ class RecipeDaoTest {
         isVegan = true,
         imageUrl = "imageUrl",
         createdBy = "userId"
+    )
+
+    private val recipeCategoryEntity = RecipeCategoryEntity(
+        recipeId = "recipeId",
+        categoryId = 1,
+        categoryName = "category1"
+    )
+
+    private val recipeCategoryEntity2 = RecipeCategoryEntity(
+        recipeId = "recipeId",
+        categoryId = 2,
+        categoryName = "category2"
+    )
+
+    private val recipeCategoryEntity3 = RecipeCategoryEntity(
+        recipeId = "recipe2Id",
+        categoryId = 3,
+        categoryName = "category3"
+    )
+
+        private val recipeWithCategory = RecipeWithCategory(
+        recipe = RecipeEntity(
+            recipeId = "recipeId",
+            name = "Recipe Name",
+            prepTime = "40 min",
+            servings = 4,
+            description = "Recipe description",
+            isVegetarian = true,
+            isVegan = false,
+            imageUrl = "imageUrl",
+            createdBy = "userId"
+        ),
+        categories = listOf(recipeCategoryEntity, recipeCategoryEntity2)
+    )
+
+    private val recipeWithCategory2 = RecipeWithCategory(
+        recipe = RecipeEntity(
+            recipeId = "recipe2Id",
+            name = "Recipe 2 Name",
+            prepTime = "1 h",
+            servings = 2,
+            description = "Recipe 2 description",
+            isVegetarian = false,
+            isVegan = false,
+            imageUrl = "imageUrl",
+            createdBy = "user2Id"
+        ),
+        categories = listOf(recipeCategoryEntity3)
     )
 
     private val recipeIngredient = RecipeIngredientEntity(
@@ -134,12 +184,11 @@ class RecipeDaoTest {
 
     @Test
     fun recipeDao_insertOneRecipe() = runBlocking {
-        val recipes = listOf(recipe)
         dao.insertRecipe(recipe)
-        val result = dao.getRecipes()
+        val result = dao.getRecipes("")
 
         assertThat(result.size).isEqualTo(1)
-        assertThat(result).isEqualTo(recipes)
+        assertThat(result[0].recipe).isEqualTo(recipe)
     }
 
     @Test
@@ -170,7 +219,8 @@ class RecipeDaoTest {
     fun recipeDao_insertRecipeWithIngredients_oneIngredient() {
         runBlocking {
             val recipeIngredients = listOf(recipeIngredient)
-            dao.insertRecipeWithIngredients(recipe,recipeIngredients)
+            val recipeCategories = listOf(recipeCategoryEntity, recipeCategoryEntity2)
+            dao.insertRecipeWithIngredients(recipe,recipeIngredients, recipeCategories)
             val result = dao.getRecipeWithIngredients("recipeId")
 
             assertThat(result.recipe).isEqualTo(recipe)
@@ -183,7 +233,8 @@ class RecipeDaoTest {
     fun recipeDao_insertRecipeWithIngredients_threeIngredients() {
         runBlocking {
             val recipeIngredients = listOf(recipeIngredient, recipeIngredient2, recipeIngredient3)
-            dao.insertRecipeWithIngredients(recipe,recipeIngredients)
+            val recipeCategories = listOf(recipeCategoryEntity, recipeCategoryEntity2)
+            dao.insertRecipeWithIngredients(recipe,recipeIngredients, recipeCategories)
             val result = dao.getRecipeWithIngredients("recipeId")
 
             assertThat(result.recipe).isEqualTo(recipe)
@@ -195,20 +246,20 @@ class RecipeDaoTest {
     @Test
     fun recipeDao_getRecipes_correctReturnType() {
         runBlocking {
-            dao.insertRecipe(recipe)
-            val result = dao.getRecipes()
+            dao.insertRecipeWithIngredients(recipe, emptyList(), listOf(recipeCategoryEntity, recipeCategoryEntity2))
+            val result = dao.getRecipes("")
 
             assertThat(result).hasSize(1)
-            assertThat(result).containsExactly(recipe)
+            assertThat(result).containsExactly(recipeWithCategory)
             assertThat(result).isInstanceOf(List::class.java)
-            assertThat(result[0]).isInstanceOf(RecipeEntity::class.java)
+            assertThat(result[0]).isInstanceOf(RecipeWithCategory::class.java)
         }
     }
 
     @Test
     fun recipeDao_getRecipes_emptyDb() {
         runBlocking {
-            val result = dao.getRecipes()
+            val result = dao.getRecipes("")
 
             assertThat(result).isEmpty()
             assertThat(result).isInstanceOf(List::class.java)
@@ -219,7 +270,8 @@ class RecipeDaoTest {
     fun recipeDao_getRecipeWithIngredients_correctReturnType() {
         runBlocking {
             val recipeIngredients = listOf(recipeIngredient, recipeIngredient2)
-            dao.insertRecipeWithIngredients(recipe, recipeIngredients)
+            val recipeCategories = listOf(recipeCategoryEntity, recipeCategoryEntity2)
+            dao.insertRecipeWithIngredients(recipe, recipeIngredients, recipeCategories)
             val result = dao.getRecipeWithIngredients("recipeId")
 
             assertThat(result.recipe).isEqualTo(recipe)
@@ -310,9 +362,9 @@ class RecipeDaoTest {
         dao.insertRecipe(recipe2)
         dao.insertRecipe(recipe3)
 
-        val initialState = dao.getRecipes()
+        val initialState = dao.getRecipes("")
         dao.deleteRecipes()
-        val result = dao.getRecipes()
+        val result = dao.getRecipes("")
 
         assertThat(initialState).hasSize(3)
         assertThat(result).isEmpty()
@@ -337,15 +389,17 @@ class RecipeDaoTest {
     fun recipeDao_deleteRecipesWithIngredients_deleteRecipesAndItsIngredients() {
         runBlocking {
             ingredientDao.insertIngredients(listOf(ingredient, ingredient2, ingredient3))
-            dao.insertRecipeWithIngredients(recipe, listOf(recipeIngredient, recipeIngredient2, recipeIngredient3))
-            val recipeInitialState = dao.getRecipes()
+            val recipeIngredients = listOf(recipeIngredient, recipeIngredient2, recipeIngredient3)
+            val recipeCategories = listOf(recipeCategoryEntity, recipeCategoryEntity2)
+            dao.insertRecipeWithIngredients(recipe, recipeIngredients, recipeCategories)
+            val recipeInitialState = dao.getRecipes("")
             val recipeIngredientInitialState = dao.getIngredientsFromRecipe("recipeId")
 
             dao.deleteRecipesWithIngredients()
             val recipeResult = dao.getRecipes()
             val recipeIngredientsResult = dao.getIngredientsFromRecipe("recipeId")
 
-            assertThat(recipeInitialState).isEqualTo(listOf(recipe))
+            assertThat(recipeInitialState).isEqualTo(listOf(recipeWithCategory))
             assertThat(recipeIngredientInitialState).containsExactlyElementsIn(listOf(ingredient, ingredient2, ingredient3))
             assertThat(recipeResult).isEmpty()
             assertThat(recipeIngredientsResult).isEmpty()

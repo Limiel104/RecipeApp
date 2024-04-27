@@ -34,7 +34,7 @@ fun HomeCategoryItem(
         modifier = modifier
             .size(90.dp)
             .clickable { onClick(category.categoryId) }
-            .testTag("TCS ${category.categoryId}"),
+            .testTag("${category.categoryId} category"),
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary)
     ) {

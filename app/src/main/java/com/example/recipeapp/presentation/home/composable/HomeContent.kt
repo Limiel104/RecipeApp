@@ -63,7 +63,9 @@ fun HomeContent(
                 Spacer(modifier = modifier.padding(bottom = 12.dp))
             }
 
-            LazyColumn {
+            LazyColumn(
+                modifier = modifier.testTag("Home Lazy Column")
+            ) {
                 item {
                     CategoriesSection(
                         categories = categories,

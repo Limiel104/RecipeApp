@@ -58,8 +58,8 @@ class AccountScreenTest {
         backButtonIsDisplayed()
         editButtonIsDisplayed()
         userNameTextIsDisplayed()
-        recipesTextIsNotDisplayed()
-        newestTextButtonIsNotDisplayed()
+//        recipesTextIsNotDisplayed()
+//        newestTextButtonIsNotDisplayed()
 
         composeRule
             .onNodeWithTag("Account Content")

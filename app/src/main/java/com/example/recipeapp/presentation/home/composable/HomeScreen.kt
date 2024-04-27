@@ -23,8 +23,8 @@ fun HomeScreen(
     val query = viewModel.homeState.value.query
     val searchSuggestions = viewModel.homeState.value.searchSuggestions
     val categories = viewModel.homeState.value.categories
-    val isSearchActive = viewModel.homeState.value.isSearchActive
     val selectedCategory = viewModel.homeState.value.selectedCategory
+    val isSearchActive = viewModel.homeState.value.isSearchActive
     val isLoading = viewModel.homeState.value.isLoading
     val lifecycleOwner = LocalLifecycleOwner.current
 
