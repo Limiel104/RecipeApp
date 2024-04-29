@@ -2,19 +2,19 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="RecipeDaoTest">
+      <entry key="CategoryDaoTest">
+        <State />
+      </entry>
+      <entry key="IngredientDaoTest">
+        <State />
+      </entry>
+      <entry key="SearchSuggestionDaoTest">
+        <State />
+      </entry>
+      <entry key="Tests in 'com'">
         <State />
       </entry>
       <entry key="app">
-        <State />
-      </entry>
-      <entry key="recipeDao_deleteRecipeCategories()">
-        <State />
-      </entry>
-      <entry key="recipeDao_getRecipesFromCategory_noRecipesMatchingQuery()">
-        <State />
-      </entry>
-      <entry key="recipeDao_getRecipes_returnOnlyRecipesMatchingQuery()">
         <State />
       </entry>
     </value>
