@@ -7,7 +7,7 @@ import com.example.recipeapp.data.mapper.toIngredientEntity
 import com.example.recipeapp.data.remote.IngredientDto
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.repository.IngredientRepository
-import com.example.recipeapp.domain.util.Resource
+import com.example.recipeapp.domain.model.Resource
 import com.google.firebase.firestore.CollectionReference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch

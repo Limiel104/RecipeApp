@@ -1,7 +1,7 @@
 package com.example.recipeapp.domain.repository
 
 import com.example.recipeapp.domain.model.Recipe
-import com.example.recipeapp.domain.util.Resource
+import com.example.recipeapp.domain.model.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface SavedRecipeRepository {

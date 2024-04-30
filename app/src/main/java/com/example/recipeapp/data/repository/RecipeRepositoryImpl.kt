@@ -13,7 +13,7 @@ import com.example.recipeapp.data.remote.RecipeDto
 import com.example.recipeapp.domain.model.Recipe
 import com.example.recipeapp.domain.model.RecipeWithIngredients
 import com.example.recipeapp.domain.repository.RecipeRepository
-import com.example.recipeapp.domain.util.Resource
+import com.example.recipeapp.domain.model.Resource
 import com.google.firebase.firestore.CollectionReference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch

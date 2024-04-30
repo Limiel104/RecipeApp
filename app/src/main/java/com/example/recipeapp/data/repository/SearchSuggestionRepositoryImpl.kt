@@ -5,7 +5,7 @@ import com.example.recipeapp.data.mapper.toSearchSuggestion
 import com.example.recipeapp.data.mapper.toSearchSuggestionEntity
 import com.example.recipeapp.domain.model.SearchSuggestion
 import com.example.recipeapp.domain.repository.SearchSuggestionRepository
-import com.example.recipeapp.domain.util.Resource
+import com.example.recipeapp.domain.model.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow

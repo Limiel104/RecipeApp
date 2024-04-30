@@ -4,7 +4,7 @@ import com.example.recipeapp.data.local.CategoryDao
 import com.example.recipeapp.data.mapper.toCategory
 import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.domain.repository.CategoryRepository
-import com.example.recipeapp.domain.util.Resource
+import com.example.recipeapp.domain.model.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow

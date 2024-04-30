@@ -2,7 +2,7 @@ package com.example.recipeapp.domain.use_case
 
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.repository.IngredientRepository
-import com.example.recipeapp.domain.util.Resource
+import com.example.recipeapp.domain.model.Resource
 import kotlinx.coroutines.flow.Flow
 
 class GetIngredientsUseCase(

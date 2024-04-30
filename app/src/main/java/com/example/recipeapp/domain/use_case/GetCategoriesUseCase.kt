@@ -2,7 +2,7 @@ package com.example.recipeapp.domain.use_case
 
 import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.domain.repository.CategoryRepository
-import com.example.recipeapp.domain.util.Resource
+import com.example.recipeapp.domain.model.Resource
 import kotlinx.coroutines.flow.Flow
 
 class GetCategoriesUseCase(
