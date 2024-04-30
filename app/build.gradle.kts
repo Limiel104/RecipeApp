@@ -111,6 +111,12 @@ dependencies {
 
     //Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:2.6.1")
+
+    //MockK
+    testImplementation("io.mockk:mockk-android:1.13.10")
+    testImplementation("io.mockk:mockk-agent:1.13.10")
+    androidTestImplementation("io.mockk:mockk-android:1.13.10")
+    androidTestImplementation("io.mockk:mockk-agent:1.13.10")
 }
 
 // Allow references to generated code
