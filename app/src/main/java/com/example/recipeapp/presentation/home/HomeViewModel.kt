@@ -128,7 +128,9 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             getRecipesUseCase(getRecipesFromRemote, query, category).collect { response ->
                 when(response) {
-                    is Resource.Error -> {}
+                    is Resource.Error -> {
+                        Log.i("TAG","Error message from getRecipes: ${response.message}")
+                    }
                     is Resource.Loading -> {
                         Log.i("TAG","Loading recipes: ${response.isLoading}")
                         _homeState.value = homeState.value.copy(
@@ -152,12 +154,17 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             getIngredientsUseCase().collect { response ->
                 when(response) {
-                    is Resource.Error -> {}
+                    is Resource.Error -> {
+                        Log.i("TAG","Error message from getIngredients: ${response.message}")
+                    }
                     is Resource.Loading -> {
-//                        Log.i("TAG","Loading ingredients: ${response.isLoading}")
+                        Log.i("TAG","Loading ingredients: ${response.isLoading}")
+                        _homeState.value = homeState.value.copy(
+                            isLoading = response.isLoading
+                        )
                     }
                     is Resource.Success -> {
-//                        Log.i("TAG1",response.data.toString())
+                        Log.i("TAG1",response.data.toString())
                     }
                 }
             }
@@ -168,14 +175,19 @@ class HomeViewModel @Inject constructor(
 
     private fun getShoppingLists(getShoppingListsFromRemote: Boolean) {
         viewModelScope.launch {
-            getUserShoppingListsUseCase("user1", getShoppingListsFromRemote).collect { response ->
+            getUserShoppingListsUseCase("userId", getShoppingListsFromRemote).collect { response ->
                 when(response) {
-                    is Resource.Error -> {}
+                    is Resource.Error -> {
+                        Log.i("TAG","Error message from getShoppingLists: ${response.message}")
+                    }
                     is Resource.Loading -> {
-//                        Log.i("TAG","Loading shopping lists: ${response.isLoading}")
+                        Log.i("TAG","Loading shopping lists: ${response.isLoading}")
+                        _homeState.value = homeState.value.copy(
+                            isLoading = response.isLoading
+                        )
                     }
                     is Resource.Success -> {
-//                        Log.i("TAG4",response.data.toString())
+                        Log.i("TAG4",response.data.toString())
                     }
                 }
             }
@@ -191,12 +203,17 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             addSearchSuggestionUseCase(searchSuggestion).collect { response ->
                 when(response) {
-                    is Resource.Error -> {}
+                    is Resource.Error -> {
+                        Log.i("TAG","Error message from addSearchSuggestion: ${response.message}")
+                    }
                     is Resource.Loading -> {
-//                        Log.i("TAG","Loading add search suggestion: ${response.isLoading}")
+                        Log.i("TAG","Loading add search suggestion: ${response.isLoading}")
+                        _homeState.value = homeState.value.copy(
+                            isLoading = response.isLoading
+                        )
                     }
                     is Resource.Success -> {
-//                        Log.i("TAG4","Search suggestion added")
+                        Log.i("TAG4","Search suggestion added")
                     }
                 }
             }
@@ -207,9 +224,14 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             getSearchSuggestionsUseCase().collect { response ->
                 when(response) {
-                    is Resource.Error -> {}
+                    is Resource.Error -> {
+                        Log.i("TAG","Error message from getSearchSuggestions: ${response.message}")
+                    }
                     is Resource.Loading -> {
-//                        Log.i("TAG","Loading search suggestions: ${response.isLoading}")
+                        Log.i("TAG","Loading search suggestions: ${response.isLoading}")
+                        _homeState.value = homeState.value.copy(
+                            isLoading = response.isLoading
+                        )
                     }
                     is Resource.Success -> {
                         response.data?.let {
@@ -217,7 +239,7 @@ class HomeViewModel @Inject constructor(
                                 searchSuggestions = response.data
                             )
                         }
-//                        Log.i("TAG4",_homeState.value.searchSuggestions.toString())
+                        Log.i("TAG4",_homeState.value.searchSuggestions.toString())
                     }
                 }
             }
@@ -228,9 +250,14 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             getCategoriesUseCase().collect { response ->
                 when(response) {
-                    is Resource.Error -> {}
+                    is Resource.Error -> {
+                        Log.i("TAG","Error message from getCategories: ${response.message}")
+                    }
                     is Resource.Loading -> {
-//                        Log.i("TAG","Loading categories: ${response.isLoading}")
+                        Log.i("TAG","Loading categories: ${response.isLoading}")
+                        _homeState.value = homeState.value.copy(
+                            isLoading = response.isLoading
+                        )
                     }
                     is Resource.Success -> {
                         response.data?.let {
