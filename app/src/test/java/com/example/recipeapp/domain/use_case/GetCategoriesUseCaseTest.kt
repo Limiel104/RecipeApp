@@ -8,6 +8,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.confirmVerified
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -49,6 +50,7 @@ class GetCategoriesUseCaseTest {
 
     @After
     fun tearDown() {
+        confirmVerified(categoryRepository)
         clearAllMocks()
     }
 
@@ -60,7 +62,7 @@ class GetCategoriesUseCaseTest {
 
         val response = runBlocking { getCategoriesUseCase().first() }
 
-        coVerify(exactly = 1) { getCategoriesUseCase() }
+        coVerify(exactly = 1) { categoryRepository.getCategories() }
         assertThat(response).isEqualTo(result)
         assertThat(response).isInstanceOf(Resource.Success::class.java)
         assertThat(response.data).isInstanceOf(List::class.java)
@@ -76,7 +78,7 @@ class GetCategoriesUseCaseTest {
 
         val response = runBlocking { getCategoriesUseCase().first() }
 
-        coVerify(exactly = 1) { getCategoriesUseCase() }
+        coVerify(exactly = 1) { categoryRepository.getCategories() }
         assertThat(response).isEqualTo(result)
         assertThat(response).isInstanceOf(Resource.Success::class.java)
         assertThat(response.data).isInstanceOf(List::class.java)
@@ -92,7 +94,7 @@ class GetCategoriesUseCaseTest {
 
         val response = runBlocking { getCategoriesUseCase().first() }
 
-        coVerify(exactly = 1) { getCategoriesUseCase() }
+        coVerify(exactly = 1) { categoryRepository.getCategories() }
         assertThat(response).isEqualTo(result)
         assertThat(response).isInstanceOf(Resource.Success::class.java)
         assertThat(response.data).isInstanceOf(List::class.java)
@@ -108,7 +110,7 @@ class GetCategoriesUseCaseTest {
 
         val response = runBlocking { getCategoriesUseCase().first() }
 
-        coVerify(exactly = 1) { getCategoriesUseCase() }
+        coVerify(exactly = 1) { categoryRepository.getCategories() }
         assertThat(response).isInstanceOf(Resource.Error::class.java)
         assertThat(response.data).isNull()
         assertThat(response.message).isEqualTo("Error message")
@@ -122,7 +124,7 @@ class GetCategoriesUseCaseTest {
 
         val response = runBlocking { getCategoriesUseCase().first() }
 
-        coVerify(exactly = 1) { getCategoriesUseCase() }
+        coVerify(exactly = 1) { categoryRepository.getCategories() }
         assertThat(response).isInstanceOf(Resource.Loading::class.java)
         assertThat(response.data).isNull()
         assertThat(response.message).isNull()
