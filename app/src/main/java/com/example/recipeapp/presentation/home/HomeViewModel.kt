@@ -115,7 +115,6 @@ class HomeViewModel @Inject constructor(
                     getRecipes(false)
                 }
                 Log.i("TAG",_homeState.value.selectedCategory)
-
             }
         }
     }

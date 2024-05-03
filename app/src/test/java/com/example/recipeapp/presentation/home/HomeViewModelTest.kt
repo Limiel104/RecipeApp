@@ -17,6 +17,7 @@ import com.google.common.truth.Truth.assertThat
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.coVerifyOrder
 import io.mockk.confirmVerified
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
@@ -336,5 +337,228 @@ class HomeViewModelTest {
         assertThat(result).isEmpty()
         assertThat(isLoading).isTrue()
         confirmVerified(getCategoriesUseCase)
+    }
+
+    @Test
+    fun `onQueryChanged - initial query empty`() {
+        homeViewModel = setViewModel()
+        val initialQueryState = getCurrentHomeState().query
+
+        homeViewModel.onEvent(HomeEvent.OnQueryChange("New Query"))
+        val resultQueryState = getCurrentHomeState().query
+
+        assertThat(initialQueryState).isEmpty()
+        assertThat(resultQueryState).isEqualTo("New Query")
+    }
+
+    @Test
+    fun `onQueryChanged - initial query not empty`() {
+        homeViewModel = setViewModel()
+        homeViewModel.onEvent(HomeEvent.OnQueryChange("Old Query"))
+        val initialQueryState = getCurrentHomeState().query
+
+        homeViewModel.onEvent(HomeEvent.OnQueryChange("New Query"))
+        val resultQueryState = getCurrentHomeState().query
+
+        assertThat(initialQueryState).isEqualTo("Old Query")
+        assertThat(resultQueryState).isEqualTo("New Query")
+    }
+
+    @Test
+    fun `onActiveChange - initialy false`() {
+        coEvery { getSearchSuggestionsUseCase() } returns flowOf(Resource.Success(searchSuggestions))
+
+        homeViewModel = setViewModel()
+        val initialActiveState = getCurrentHomeState().isSearchActive
+        val initialSearchSuggestions = getCurrentHomeState().searchSuggestions
+
+        homeViewModel.onEvent(HomeEvent.OnActiveChange)
+        val resultActiveState = getCurrentHomeState().isSearchActive
+        val resultSearchSuggestions = getCurrentHomeState().searchSuggestions
+
+        coVerify { getSearchSuggestionsUseCase() }
+        assertThat(initialActiveState).isFalse()
+        assertThat(initialSearchSuggestions).isEmpty()
+        assertThat(resultActiveState).isTrue()
+        assertThat(resultSearchSuggestions).isEqualTo(searchSuggestions)
+        confirmVerified(getSearchSuggestionsUseCase)
+    }
+
+    @Test
+    fun `onActiveChange - initially true`() {
+        homeViewModel = setViewModel()
+        homeViewModel.onEvent(HomeEvent.OnActiveChange)
+        val initialActiveState = getCurrentHomeState().isSearchActive
+
+        homeViewModel.onEvent(HomeEvent.OnActiveChange)
+        val resultActiveState = getCurrentHomeState().isSearchActive
+
+        assertThat(initialActiveState).isTrue()
+        assertThat(resultActiveState).isFalse()
+    }
+
+    @Test
+    fun `onSearchClicked - isActive false`() {
+        coEvery { addSearchSuggestionUseCase(any()) } returns flowOf(Resource.Success(true))
+        coEvery {
+            getRecipesUseCase(any(), any(), any())
+        } returns flowOf(Resource.Success(recipes))
+
+        homeViewModel = setViewModel()
+        val initialActiveState = getCurrentHomeState().isSearchActive
+
+        homeViewModel.onEvent(HomeEvent.OnSearchClicked)
+        val resultActiveState = getCurrentHomeState().isSearchActive
+
+        coVerifyOrder {
+            getRecipesUseCase(true,"","") //init
+            addSearchSuggestionUseCase(any())
+            getRecipesUseCase(false,"","")
+        }
+        assertThat(initialActiveState).isFalse()
+        assertThat(resultActiveState).isFalse()
+        confirmVerified(
+            addSearchSuggestionUseCase,
+            getRecipesUseCase
+        )
+    }
+
+    @Test
+    fun `onSearchClicked - isActive true`() {
+        coEvery { addSearchSuggestionUseCase(any()) } returns flowOf(Resource.Success(true))
+        coEvery {
+            getRecipesUseCase(any(), any(), any())
+        } returns flowOf(Resource.Success(recipes))
+
+        homeViewModel = setViewModel()
+        homeViewModel.onEvent(HomeEvent.OnActiveChange)
+        val initialActiveState = getCurrentHomeState().isSearchActive
+
+        homeViewModel.onEvent(HomeEvent.OnSearchClicked)
+        val resultActiveState = getCurrentHomeState().isSearchActive
+
+        coVerifyOrder {
+            getRecipesUseCase(true,"","") //init
+            addSearchSuggestionUseCase(any())
+            getRecipesUseCase(false,"","")
+        }
+        assertThat(initialActiveState).isTrue()
+        assertThat(resultActiveState).isFalse()
+        confirmVerified(
+            addSearchSuggestionUseCase,
+            getRecipesUseCase
+        )
+    }
+
+    @Test
+    fun `OnClearClicked - query empty and search is active`() {
+        coEvery {
+            getRecipesUseCase(any(), any(), any())
+        } returns flowOf(Resource.Success(recipes))
+
+        homeViewModel = setViewModel()
+        homeViewModel.onEvent(HomeEvent.OnActiveChange)
+        val initialQueryState = getCurrentHomeState().query
+        val initialActiveState = getCurrentHomeState().isSearchActive
+
+        homeViewModel.onEvent(HomeEvent.OnClearClicked)
+        val resultQueryState = getCurrentHomeState().query
+        val resultActiveState = getCurrentHomeState().isSearchActive
+
+        coVerifyOrder {
+            getRecipesUseCase(true,"","") //init
+            getRecipesUseCase(false,"","")
+        }
+        assertThat(initialQueryState).isEmpty()
+        assertThat(initialActiveState).isTrue()
+        assertThat(resultQueryState).isEmpty()
+        assertThat(resultActiveState).isFalse()
+        confirmVerified(getRecipesUseCase)
+    }
+
+    @Test
+    fun `OnClearClicked - query not empty`() {
+        homeViewModel = setViewModel()
+        homeViewModel.onEvent(HomeEvent.OnQueryChange("Initial query"))
+        val initialQueryState = getCurrentHomeState().query
+        val initialActiveState = getCurrentHomeState().isSearchActive
+
+        homeViewModel.onEvent(HomeEvent.OnClearClicked)
+        val resultQueryState = getCurrentHomeState().query
+        val resultActiveState = getCurrentHomeState().isSearchActive
+
+        assertThat(initialQueryState).isEqualTo("Initial query")
+        assertThat(initialActiveState).isFalse()
+        assertThat(resultQueryState).isEmpty()
+        assertThat(resultActiveState).isFalse()
+    }
+
+    @Test
+    fun `OnSearchSuggestionClicked - initial query is empty`() {
+        homeViewModel = setViewModel()
+        val initialQueryState = getCurrentHomeState().query
+
+        homeViewModel.onEvent(HomeEvent.OnSearchSuggestionClicked("Suggestion Text"))
+        val resultQueryState = getCurrentHomeState().query
+
+        assertThat(initialQueryState).isEmpty()
+        assertThat(resultQueryState).isEqualTo("Suggestion Text")
+    }
+
+    @Test
+    fun `OnSearchSuggestionClicked - initial query is not empty`() {
+        homeViewModel = setViewModel()
+        homeViewModel.onEvent(HomeEvent.OnQueryChange("Initial query"))
+        val initialQueryState = getCurrentHomeState().query
+
+        homeViewModel.onEvent(HomeEvent.OnSearchSuggestionClicked("Suggestion Text"))
+        val resultQueryState = getCurrentHomeState().query
+
+        assertThat(initialQueryState).isEqualTo("Initial query")
+        assertThat(resultQueryState).isEqualTo("Suggestion Text")
+    }
+
+    @Test
+    fun `OnCategoryClicked - category not selected initially`() {
+        coEvery {
+            getRecipesUseCase(any(), any(), any())
+        } returns flowOf(Resource.Success(recipes))
+
+        homeViewModel = setViewModel()
+        val initialCategoryState = getCurrentHomeState().selectedCategory
+
+        homeViewModel.onEvent(HomeEvent.OnCategoryClicked("CategoryId"))
+        val resultCategoryState = getCurrentHomeState().selectedCategory
+
+        coVerifyOrder {
+            getRecipesUseCase(true,"","") //init
+            getRecipesUseCase(false,"","CategoryId")
+        }
+        assertThat(initialCategoryState).isEmpty()
+        assertThat(resultCategoryState).isEqualTo("CategoryId")
+        confirmVerified(getRecipesUseCase)
+    }
+
+    @Test
+    fun `OnCategoryClicked - category selected initially`() {
+        coEvery {
+            getRecipesUseCase(any(), any(), any())
+        } returns flowOf(Resource.Success(recipes))
+
+        homeViewModel = setViewModel()
+        homeViewModel.onEvent(HomeEvent.OnCategoryClicked("OldCategoryId"))
+        val initialCategoryState = getCurrentHomeState().selectedCategory
+
+        homeViewModel.onEvent(HomeEvent.OnCategoryClicked("NewCategoryId"))
+        val resultCategoryState = getCurrentHomeState().selectedCategory
+
+        coVerifyOrder {
+            getRecipesUseCase(true,"","") //init
+            getRecipesUseCase(false,"","OldCategoryId")
+            getRecipesUseCase(false,"","NewCategoryId")
+        }
+        assertThat(initialCategoryState).isEqualTo("OldCategoryId")
+        assertThat(resultCategoryState).isEqualTo("NewCategoryId")
+        confirmVerified(getRecipesUseCase)
     }
 }
