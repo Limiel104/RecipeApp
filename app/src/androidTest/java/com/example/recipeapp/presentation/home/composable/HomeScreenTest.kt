@@ -182,7 +182,8 @@ class HomeScreenTest {
         categories: List<Category> = listOf(category, category2, category3, category4, category5, category6),
         selectedCategory: String = "",
         isSearchActive: Boolean = false,
-        isLoading: Boolean = false
+        isLoading: Boolean = false,
+        onQueryChange: (String) -> Unit = {}
     ) {
         composeRule.activity.setContent {
             RecipeAppTheme() {
@@ -195,7 +196,7 @@ class HomeScreenTest {
                     isSearchActive = isSearchActive,
                     isLoading = isLoading,
                     onRecipeSelected = {},
-                    onQueryChange = {},
+                    onQueryChange = onQueryChange,
                     onActiveChange = {},
                     onSearchClicked = {},
                     onClearClicked = {},
@@ -204,6 +205,11 @@ class HomeScreenTest {
                 )
             }
         }
+    }
+
+    @Test
+    fun homeScreen_displayedOnLaunch() {
+        composeRule.onNodeWithTag("Home Content").assertIsDisplayed()
     }
 
     @Test
@@ -265,10 +271,6 @@ class HomeScreenTest {
     private fun searchBarIsDisplayed() = composeRule
         .onNodeWithTag("Search Bar")
         .assertIsDisplayed()
-
-    private fun searchBarIsNotDisplayed() = composeRule
-        .onNodeWithTag("Search Bar")
-        .assertIsNotDisplayed()
 
     private fun categoriesSectionIsDisplayed() = composeRule
         .onNodeWithTag("Categories Section")
