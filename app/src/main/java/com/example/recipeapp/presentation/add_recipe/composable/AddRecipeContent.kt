@@ -26,9 +26,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.recipeapp.R
 import com.example.recipeapp.presentation.common.composable.RecipeIngredientItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
@@ -42,7 +44,7 @@ fun AddRecipeContent(
         modifier = modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                title = { Text(text = "Add recipe") },
+                title = { Text(text = stringResource(id = R.string.add_recipe)) },
                 navigationIcon = {
                     IconButton(onClick = {}) {
                         Icon(
@@ -71,7 +73,7 @@ fun AddRecipeContent(
                 .testTag("Add Recipe Content")
         ) {
             Text(
-                text = "Title",
+                text = stringResource(id = R.string.title),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = modifier.padding(bottom = 8.dp)
             )
@@ -87,7 +89,7 @@ fun AddRecipeContent(
             AddPhotoCard()
 
             Text(
-                text = "Description",
+                text = stringResource(id = R.string.description),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = modifier.padding(bottom = 8.dp)
             )
@@ -108,20 +110,20 @@ fun AddRecipeContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Ingredients",
+                    text = stringResource(id = R.string.ingredients),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
 
                 Text(
-                    text = "Reorder",
+                    text = stringResource(id = R.string.reorder),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Light
                 )
             }
 
             Text(
-                text = "Tap to edit, swipe to delete",
+                text = stringResource(id = R.string.tap_or_swipe),
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Light,
                 modifier = modifier.padding(bottom = 20.dp)
@@ -142,7 +144,7 @@ fun AddRecipeContent(
 
             OutlinedTextField(
                 value = "",
-                label = { Text(text = "Type ingredient name") },
+                label = { Text(text = stringResource(id = R.string.type_ingr_name)) },
                 onValueChange = {},
                 modifier = modifier
                     .fillMaxWidth()
@@ -150,13 +152,13 @@ fun AddRecipeContent(
             )
 
             RowWithTextButton(
-                sectionName = "Servings",
-                buttonText = "Set servings"
+                sectionName = stringResource(id = R.string.servings),
+                buttonText = stringResource(id = R.string.set_servings)
             )
 
             RowWithTextButton(
-                sectionName = "Prep time",
-                buttonText = "Set time"
+                sectionName = stringResource(id = R.string.prep_time),
+                buttonText = stringResource(id = R.string.set_time)
             )
         }
     }

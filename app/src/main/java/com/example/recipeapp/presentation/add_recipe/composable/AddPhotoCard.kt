@@ -14,8 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.recipeapp.R
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
@@ -40,7 +42,7 @@ fun AddPhotoCard(
             )
 
             Text(
-                text = "Add photo",
+                text = stringResource(id = R.string.add_photo),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(top = 8.dp)
             )

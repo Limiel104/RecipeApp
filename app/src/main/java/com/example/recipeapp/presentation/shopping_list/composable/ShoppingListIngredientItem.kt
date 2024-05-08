@@ -15,10 +15,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.recipeapp.R
 import com.example.recipeapp.presentation.common.composable.ImageItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
@@ -51,7 +53,7 @@ fun ShoppingListIngredientItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Ingredient",
+                    text = stringResource(id = R.string.ingredient),
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -59,7 +61,7 @@ fun ShoppingListIngredientItem(
                 )
 
                 Text(
-                    text = "Quantity",
+                    text = stringResource(id = R.string.quantity),
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Light,
                     maxLines = 1

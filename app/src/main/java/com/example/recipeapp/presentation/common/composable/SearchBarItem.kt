@@ -13,8 +13,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.recipeapp.R
 import com.example.recipeapp.domain.model.SearchSuggestion
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
@@ -37,7 +39,7 @@ fun SearchBarItem(
         onSearch = { onSearchClicked() },
         active = isSearchActive,
         onActiveChange = { onActiveChange() },
-        placeholder = { Text(text = "Search") },
+        placeholder = { Text(text = stringResource(id = R.string.search)) },
         trailingIcon = {
             if(isSearchActive) {
                 IconButton(onClick = { onClear() }) {
@@ -50,7 +52,7 @@ fun SearchBarItem(
         },
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = if(!isSearchActive) 16.dp else 0.dp)
+            .padding(horizontal = if (!isSearchActive) 16.dp else 0.dp)
             .testTag("Search Bar")
     ) {
         searchSuggestions.forEach { searchSuggestion ->

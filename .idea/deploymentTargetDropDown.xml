@@ -2,6 +2,9 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="HomeScreenTest">
+        <State />
+      </entry>
       <entry key="app">
         <State />
       </entry>
@@ -11,13 +14,10 @@
       <entry key="dsdd()">
         <State />
       </entry>
-      <entry key="searchBar_homeScreen_hintIsDisplayedCorrectly()">
+      <entry key="dsdsd()">
         <State />
       </entry>
-      <entry key="searchBar_homeScreen_isClickableggg()">
-        <State />
-      </entry>
-      <entry key="searchBar_homeScreen_performTextInput()">
+      <entry key="homeScreen_displayedOnLaunch()">
         <State />
       </entry>
     </value>

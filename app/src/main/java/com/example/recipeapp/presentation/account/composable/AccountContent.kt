@@ -41,9 +41,7 @@ fun AccountContent(
     onRecipeSelected: () -> Unit
 ) {
     Scaffold(
-        modifier
-//            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
                 title = { Text(text = "User Name") },
