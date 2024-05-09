@@ -10,6 +10,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -22,7 +24,10 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
 fun ImageItem(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    imageUrl: String,
+    contentScale: ContentScale = ContentScale.FillWidth,
+    isGrayScale: Boolean = false,
 ) {
     Box(
         modifier = modifier,
@@ -31,14 +36,18 @@ fun ImageItem(
         AsyncImage(
             model = ImageRequest
                 .Builder(LocalContext.current)
-                .data("")
-                .crossfade(true)
+                .data(imageUrl)
                 .placeholder(R.drawable.ic_image)
-                .build(),
+                .crossfade(true).build(),
             contentDescription = "IMAGE",
             fallback = painterResource(R.drawable.ic_image),
             error = painterResource(R.drawable.ic_image),
-            contentScale = ContentScale.Fit
+            contentScale = contentScale,
+            colorFilter =
+                if(isGrayScale)
+                    ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0f) })
+                else
+                    ColorFilter.colorMatrix(ColorMatrix().apply {})
         )
     }
 }
@@ -59,7 +68,8 @@ fun ImageItemPreview100dp() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp)
-                    .clickable {}
+                    .clickable {},
+                imageUrl = ""
             )
         }
     }
@@ -78,7 +88,8 @@ fun ImageItemPreview40dp() {
     RecipeAppTheme {
         Surface {
             ImageItem(
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier.size(40.dp),
+                imageUrl = ""
             )
         }
     }

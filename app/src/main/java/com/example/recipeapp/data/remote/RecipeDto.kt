@@ -13,5 +13,6 @@ data class RecipeDto(
     val isVegetarian: Boolean = false,
     val isVegan: Boolean = false,
     val imageUrl: String = "",
-    val createdBy: String = ""
+    val createdBy: String = "",
+    val categoryList: List<String> = emptyList()
 )

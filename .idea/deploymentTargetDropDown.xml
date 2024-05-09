@@ -2,10 +2,22 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="Tests in 'com'">
+      <entry key="HomeScreenTest">
         <State />
       </entry>
       <entry key="app">
+        <State />
+      </entry>
+      <entry key="dfffsdd()">
+        <State />
+      </entry>
+      <entry key="dsdd()">
+        <State />
+      </entry>
+      <entry key="dsdsd()">
+        <State />
+      </entry>
+      <entry key="homeScreen_displayedOnLaunch()">
         <State />
       </entry>
     </value>

@@ -14,9 +14,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.recipeapp.R
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
@@ -30,10 +32,13 @@ fun RecipeIngredientItem(
             .height(IntrinsicSize.Max),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ImageItem(modifier = modifier.size(40.dp))
+        ImageItem(
+            modifier = modifier.size(40.dp),
+            imageUrl = ""
+        )
 
         Text(
-            text = "Ingredient",
+            text = stringResource(id = R.string.ingredient),
             style = MaterialTheme.typography.bodyMedium,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier

@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">RecipeApp</string>
+    <string name="categories">Categories</string>
+    <string name="add_photo">Add photo</string>
+    <string name="add_recipe">Add recipe</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="reorder">Reorder</string>
+    <string name="tap_or_swipe">Tap to edit, swipe to delete</string>
+    <string name="type_ingr_name">Type ingredient name</string>
+    <string name="servings">Servings</string>
+    <string name="set_servings">Set servings</string>
+    <string name="prep_time">Prep time</string>
+    <string name="set_time">Set time</string>
+    <string name="ingredient">Ingredient</string>
+    <string name="search">Search</string>
+    <string name="recipes">Recipes</string>
+    <string name="home">Home</string>
+    <string name="saved">Saved</string>
+    <string name="list">List</string>
+    <string name="account">Account</string>
+    <string name="newest">Newest</string>
+    <string name="shopping_list">Shopping List</string>
+    <string name="quantity">Quantity</string>
 </resources>

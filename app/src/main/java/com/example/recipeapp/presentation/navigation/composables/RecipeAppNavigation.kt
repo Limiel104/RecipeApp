@@ -18,9 +18,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.recipeapp.R
 import com.example.recipeapp.domain.model.BottomNavigationItem
 import com.example.recipeapp.presentation.navigation.Screen
 import com.example.recipeapp.ui.theme.RecipeAppTheme
@@ -33,28 +35,28 @@ fun RecipeAppNavigation() {
 
     val items = listOf(
         BottomNavigationItem(
-            label = "Home",
+            label = stringResource(id = R.string.home),
             route = Screen.HomeScreen.route,
             selectedIcon = Icons.Filled.Home,
             unselectedIcon = Icons.Outlined.Home
         ),
 
         BottomNavigationItem(
-            label = "Saved",
+            label = stringResource(id = R.string.saved),
             route = Screen.SavedRecipesScreen.route,
             selectedIcon = Icons.Filled.Bookmark,
             unselectedIcon = Icons.Outlined.Bookmark
         ),
 
         BottomNavigationItem(
-            label = "List",
+            label = stringResource(id = R.string.list),
             route = Screen.ShoppingListScreen.route,
             selectedIcon = Icons.AutoMirrored.Rounded.List,
             unselectedIcon = Icons.AutoMirrored.Rounded.List
         ),
 
         BottomNavigationItem(
-            label = "Account",
+            label = stringResource(id = R.string.account),
             route = Screen.AccountScreen.route,
             selectedIcon = Icons.Filled.Person,
             unselectedIcon = Icons.Outlined.Person

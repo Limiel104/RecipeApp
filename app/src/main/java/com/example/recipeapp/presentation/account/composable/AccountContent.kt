@@ -30,7 +30,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.recipeapp.presentation.common.composable.RecipeItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,9 +41,7 @@ fun AccountContent(
     onRecipeSelected: () -> Unit
 ) {
     Scaffold(
-        modifier
-//            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
                 title = { Text(text = "User Name") },
@@ -104,11 +101,11 @@ fun AccountContent(
             }
 
             items(11) {
-                RecipeItem(
-                    cardHorizontalPadding = 16.dp,
-                    cardBottomPadding = 16.dp,
-                    onClick = { onRecipeSelected() }
-                )
+//                RecipeItem(
+//                    cardHorizontalPadding = 16.dp,
+//                    cardBottomPadding = 16.dp,
+//                    onClick = { onRecipeSelected() }
+//                )
             }
         }
     }

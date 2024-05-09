@@ -12,7 +12,7 @@ import com.example.recipeapp.data.remote.ShoppingListDto
 import com.example.recipeapp.domain.model.ShoppingList
 import com.example.recipeapp.domain.model.ShoppingListWithIngredients
 import com.example.recipeapp.domain.repository.ShoppingListRepository
-import com.example.recipeapp.domain.util.Resource
+import com.example.recipeapp.domain.model.Resource
 import com.google.firebase.firestore.CollectionReference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch

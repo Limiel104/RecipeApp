@@ -17,6 +17,11 @@ import javax.inject.Inject
 @UninstallModules(AppModule::class)
 class IngredientDaoTest {
 
+    private lateinit var ingredient: IngredientEntity
+    private lateinit var ingredient2: IngredientEntity
+    private lateinit var ingredient3: IngredientEntity
+    private lateinit var ingredient4: IngredientEntity
+
     @get:Rule
     val hiltRule = HiltAndroidRule(this)
 
@@ -24,38 +29,38 @@ class IngredientDaoTest {
     lateinit var db: RecipeDatabase
     private lateinit var dao: IngredientDao
 
-    private val ingredient = IngredientEntity(
-        ingredientId = "ingredientId",
-        name = "Ingredient Name",
-        imageUrl = "imageUrl",
-        category = "category"
-    )
-
-    private val ingredient2 = IngredientEntity(
-        ingredientId = "ingredient2Id",
-        name = "Ingredient 2 Name",
-        imageUrl = "imageUrl",
-        category = "category"
-    )
-
-    private val ingredient3 = IngredientEntity(
-        ingredientId = "ingredient3Id",
-        name = "Ingredient 3 Name",
-        imageUrl = "imageUrl",
-        category = "category"
-    )
-
-    private val ingredient4 = IngredientEntity(
-        ingredientId = "ingredient4Id",
-        name = "Ingredient 4 Name",
-        imageUrl = "imageUrl",
-        category = "category"
-    )
-
     @Before
     fun setUp() {
         hiltRule.inject()
         dao = db.ingredientDao
+
+        ingredient = IngredientEntity(
+            ingredientId = "ingredientId",
+            name = "Ingredient Name",
+            imageUrl = "imageUrl",
+            category = "category"
+        )
+
+        ingredient2 = IngredientEntity(
+            ingredientId = "ingredient2Id",
+            name = "Ingredient 2 Name",
+            imageUrl = "imageUrl",
+            category = "category"
+        )
+
+        ingredient3 = IngredientEntity(
+            ingredientId = "ingredient3Id",
+            name = "Ingredient 3 Name",
+            imageUrl = "imageUrl",
+            category = "category"
+        )
+
+        ingredient4 = IngredientEntity(
+            ingredientId = "ingredient4Id",
+            name = "Ingredient 4 Name",
+            imageUrl = "imageUrl",
+            category = "category"
+        )
     }
 
     @After
