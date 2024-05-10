@@ -30,4 +30,6 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="name">Name</string>
     <string name="no_account_text">Don\'t have an account?</string>
+    <string name="not_logged_in">You are not logged in</string>
+    <string name="login_or_signup">Login or Signup</string>
 </resources>
