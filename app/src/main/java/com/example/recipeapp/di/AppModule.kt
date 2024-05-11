@@ -32,8 +32,11 @@ import com.example.recipeapp.domain.use_case.LoginUseCase
 import com.example.recipeapp.domain.use_case.LogoutUseCase
 import com.example.recipeapp.domain.use_case.SignupUseCase
 import com.example.recipeapp.domain.use_case.UpdateUserUseCase
+import com.example.recipeapp.domain.use_case.ValidateConfirmPasswordUseCase
 import com.example.recipeapp.domain.use_case.ValidateEmailUseCase
 import com.example.recipeapp.domain.use_case.ValidateLoginPasswordUseCase
+import com.example.recipeapp.domain.use_case.ValidateNameUseCase
+import com.example.recipeapp.domain.use_case.ValidateSignupPasswordUseCase
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
@@ -204,5 +207,23 @@ object AppModule {
     @Singleton
     fun provideValidateLoginPasswordUseCase(): ValidateLoginPasswordUseCase {
         return ValidateLoginPasswordUseCase()
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidateSignupPasswordUseCase(): ValidateSignupPasswordUseCase {
+        return ValidateSignupPasswordUseCase()
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidateConfirmPasswordUseCase(): ValidateConfirmPasswordUseCase {
+        return ValidateConfirmPasswordUseCase()
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidateNameUseCase(): ValidateNameUseCase {
+        return ValidateNameUseCase()
     }
 }
