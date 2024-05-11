@@ -3,12 +3,14 @@ package com.example.recipeapp.di
 import android.app.Application
 import androidx.room.Room
 import com.example.recipeapp.data.local.RecipeDatabase
+import com.example.recipeapp.data.repository.AuthRepositoryImpl
 import com.example.recipeapp.data.repository.CategoryRepositoryImpl
 import com.example.recipeapp.data.repository.IngredientRepositoryImpl
 import com.example.recipeapp.data.repository.RecipeRepositoryImpl
 import com.example.recipeapp.data.repository.SavedRecipeRepositoryImpl
 import com.example.recipeapp.data.repository.SearchSuggestionRepositoryImpl
 import com.example.recipeapp.data.repository.ShoppingListRepositoryImpl
+import com.example.recipeapp.domain.repository.AuthRepository
 import com.example.recipeapp.domain.repository.CategoryRepository
 import com.example.recipeapp.domain.repository.IngredientRepository
 import com.example.recipeapp.domain.repository.RecipeRepository
@@ -22,6 +24,7 @@ import com.example.recipeapp.domain.use_case.GetSearchSuggestionsUseCase
 import com.example.recipeapp.domain.use_case.GetRecipesUseCase
 import com.example.recipeapp.domain.use_case.GetUserShoppingListsUseCase
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 import dagger.Module
 import dagger.Provides
@@ -81,6 +84,17 @@ object AppModule {
     @Singleton
     fun provideCategoryRepository(db: RecipeDatabase): CategoryRepository {
         return CategoryRepositoryImpl(db.categoryDao)
+    }
+
+    @Provides
+    fun provideFirebaseAuth(): FirebaseAuth {
+        return FirebaseAuth.getInstance()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthRepository(firebaseAuth: FirebaseAuth): AuthRepository {
+        return AuthRepositoryImpl(firebaseAuth)
     }
 
     @Provides
