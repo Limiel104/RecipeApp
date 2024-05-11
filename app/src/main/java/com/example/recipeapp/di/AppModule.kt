@@ -20,11 +20,18 @@ import com.example.recipeapp.domain.repository.SearchSuggestionRepository
 import com.example.recipeapp.domain.repository.ShoppingListRepository
 import com.example.recipeapp.domain.repository.UserRepository
 import com.example.recipeapp.domain.use_case.AddSearchSuggestionUseCase
+import com.example.recipeapp.domain.use_case.AddUserUseCase
 import com.example.recipeapp.domain.use_case.GetCategoriesUseCase
+import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
 import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
 import com.example.recipeapp.domain.use_case.GetSearchSuggestionsUseCase
 import com.example.recipeapp.domain.use_case.GetRecipesUseCase
 import com.example.recipeapp.domain.use_case.GetUserShoppingListsUseCase
+import com.example.recipeapp.domain.use_case.GetUserUseCase
+import com.example.recipeapp.domain.use_case.LoginUseCase
+import com.example.recipeapp.domain.use_case.LogoutUseCase
+import com.example.recipeapp.domain.use_case.SignupUseCase
+import com.example.recipeapp.domain.use_case.UpdateUserUseCase
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
@@ -140,5 +147,46 @@ object AppModule {
     @Singleton
     fun provideGetCategoriesUseCase(categoryRepository: CategoryRepository): GetCategoriesUseCase {
         return GetCategoriesUseCase(categoryRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAddUserUseCase(userRepository: UserRepository): AddUserUseCase {
+        return AddUserUseCase(userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetUserUseCase(userRepository: UserRepository): GetUserUseCase {
+        return GetUserUseCase(userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUpdateUserUseCase(userRepository: UserRepository): UpdateUserUseCase {
+        return UpdateUserUseCase(userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetCurrentUserUseCase(authRepository: AuthRepository): GetCurrentUserUseCase {
+        return GetCurrentUserUseCase(authRepository)
+    }
+    @Provides
+    @Singleton
+    fun provideLoginUseCase(authRepository: AuthRepository): LoginUseCase {
+        return LoginUseCase(authRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSignupUseCase(authRepository: AuthRepository): SignupUseCase {
+        return SignupUseCase(authRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLogoutUseCase(authRepository: AuthRepository): LogoutUseCase {
+        return LogoutUseCase(authRepository)
     }
 }
