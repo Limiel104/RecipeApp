@@ -10,6 +10,7 @@ import com.example.recipeapp.data.repository.RecipeRepositoryImpl
 import com.example.recipeapp.data.repository.SavedRecipeRepositoryImpl
 import com.example.recipeapp.data.repository.SearchSuggestionRepositoryImpl
 import com.example.recipeapp.data.repository.ShoppingListRepositoryImpl
+import com.example.recipeapp.data.repository.UserRepositoryImpl
 import com.example.recipeapp.domain.repository.AuthRepository
 import com.example.recipeapp.domain.repository.CategoryRepository
 import com.example.recipeapp.domain.repository.IngredientRepository
@@ -17,6 +18,7 @@ import com.example.recipeapp.domain.repository.RecipeRepository
 import com.example.recipeapp.domain.repository.SavedRecipeRepository
 import com.example.recipeapp.domain.repository.SearchSuggestionRepository
 import com.example.recipeapp.domain.repository.ShoppingListRepository
+import com.example.recipeapp.domain.repository.UserRepository
 import com.example.recipeapp.domain.use_case.AddSearchSuggestionUseCase
 import com.example.recipeapp.domain.use_case.GetCategoriesUseCase
 import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
@@ -95,6 +97,13 @@ object AppModule {
     @Singleton
     fun provideAuthRepository(firebaseAuth: FirebaseAuth): AuthRepository {
         return AuthRepositoryImpl(firebaseAuth)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(): UserRepository {
+        val usersRef = Firebase.firestore.collection("users")
+        return UserRepositoryImpl(usersRef)
     }
 
     @Provides
