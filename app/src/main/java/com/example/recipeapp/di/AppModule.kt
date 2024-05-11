@@ -32,6 +32,8 @@ import com.example.recipeapp.domain.use_case.LoginUseCase
 import com.example.recipeapp.domain.use_case.LogoutUseCase
 import com.example.recipeapp.domain.use_case.SignupUseCase
 import com.example.recipeapp.domain.use_case.UpdateUserUseCase
+import com.example.recipeapp.domain.use_case.ValidateEmailUseCase
+import com.example.recipeapp.domain.use_case.ValidateLoginPasswordUseCase
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
@@ -96,6 +98,7 @@ object AppModule {
     }
 
     @Provides
+    @Singleton
     fun provideFirebaseAuth(): FirebaseAuth {
         return FirebaseAuth.getInstance()
     }
@@ -172,6 +175,7 @@ object AppModule {
     fun provideGetCurrentUserUseCase(authRepository: AuthRepository): GetCurrentUserUseCase {
         return GetCurrentUserUseCase(authRepository)
     }
+
     @Provides
     @Singleton
     fun provideLoginUseCase(authRepository: AuthRepository): LoginUseCase {
@@ -188,5 +192,17 @@ object AppModule {
     @Singleton
     fun provideLogoutUseCase(authRepository: AuthRepository): LogoutUseCase {
         return LogoutUseCase(authRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidateEmailUseCase(): ValidateEmailUseCase {
+        return ValidateEmailUseCase()
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidateLoginPasswordUseCase(): ValidateLoginPasswordUseCase {
+        return ValidateLoginPasswordUseCase()
     }
 }

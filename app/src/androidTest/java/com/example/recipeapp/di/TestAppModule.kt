@@ -3,25 +3,39 @@ package com.example.recipeapp.di
 import android.app.Application
 import androidx.room.Room
 import com.example.recipeapp.data.local.RecipeDatabase
+import com.example.recipeapp.data.repository.AuthRepositoryImpl
 import com.example.recipeapp.data.repository.CategoryRepositoryImpl
 import com.example.recipeapp.data.repository.IngredientRepositoryImpl
 import com.example.recipeapp.data.repository.RecipeRepositoryImpl
 import com.example.recipeapp.data.repository.SavedRecipeRepositoryImpl
 import com.example.recipeapp.data.repository.SearchSuggestionRepositoryImpl
 import com.example.recipeapp.data.repository.ShoppingListRepositoryImpl
+import com.example.recipeapp.data.repository.UserRepositoryImpl
+import com.example.recipeapp.domain.repository.AuthRepository
 import com.example.recipeapp.domain.repository.CategoryRepository
 import com.example.recipeapp.domain.repository.IngredientRepository
 import com.example.recipeapp.domain.repository.RecipeRepository
 import com.example.recipeapp.domain.repository.SavedRecipeRepository
 import com.example.recipeapp.domain.repository.SearchSuggestionRepository
 import com.example.recipeapp.domain.repository.ShoppingListRepository
+import com.example.recipeapp.domain.repository.UserRepository
 import com.example.recipeapp.domain.use_case.AddSearchSuggestionUseCase
+import com.example.recipeapp.domain.use_case.AddUserUseCase
 import com.example.recipeapp.domain.use_case.GetCategoriesUseCase
+import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
 import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
 import com.example.recipeapp.domain.use_case.GetRecipesUseCase
 import com.example.recipeapp.domain.use_case.GetSearchSuggestionsUseCase
 import com.example.recipeapp.domain.use_case.GetUserShoppingListsUseCase
+import com.example.recipeapp.domain.use_case.GetUserUseCase
+import com.example.recipeapp.domain.use_case.LoginUseCase
+import com.example.recipeapp.domain.use_case.LogoutUseCase
+import com.example.recipeapp.domain.use_case.SignupUseCase
+import com.example.recipeapp.domain.use_case.UpdateUserUseCase
+import com.example.recipeapp.domain.use_case.ValidateEmailUseCase
+import com.example.recipeapp.domain.use_case.ValidateLoginPasswordUseCase
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 import dagger.Module
 import dagger.Provides
@@ -79,6 +93,25 @@ object TestAppModule {
 
     @Provides
     @Singleton
+    fun provideFirebaseAuth(): FirebaseAuth {
+        return FirebaseAuth.getInstance()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthRepository(firebaseAuth: FirebaseAuth): AuthRepository {
+        return AuthRepositoryImpl(firebaseAuth)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(): UserRepository {
+        val usersRef = Firebase.firestore.collection("users")
+        return UserRepositoryImpl(usersRef)
+    }
+
+    @Provides
+    @Singleton
     fun provideGetIngredientsUseCase(ingredientRepository: IngredientRepository): GetIngredientsUseCase {
         return GetIngredientsUseCase(ingredientRepository)
     }
@@ -111,5 +144,59 @@ object TestAppModule {
     @Singleton
     fun provideGetCategoriesUseCase(categoryRepository: CategoryRepository): GetCategoriesUseCase {
         return GetCategoriesUseCase(categoryRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAddUserUseCase(userRepository: UserRepository): AddUserUseCase {
+        return AddUserUseCase(userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetUserUseCase(userRepository: UserRepository): GetUserUseCase {
+        return GetUserUseCase(userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUpdateUserUseCase(userRepository: UserRepository): UpdateUserUseCase {
+        return UpdateUserUseCase(userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetCurrentUserUseCase(authRepository: AuthRepository): GetCurrentUserUseCase {
+        return GetCurrentUserUseCase(authRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLoginUseCase(authRepository: AuthRepository): LoginUseCase {
+        return LoginUseCase(authRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSignupUseCase(authRepository: AuthRepository): SignupUseCase {
+        return SignupUseCase(authRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLogoutUseCase(authRepository: AuthRepository): LogoutUseCase {
+        return LogoutUseCase(authRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidateEmailUseCase(): ValidateEmailUseCase {
+        return ValidateEmailUseCase()
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidateLoginPasswordUseCase(): ValidateLoginPasswordUseCase {
+        return ValidateLoginPasswordUseCase()
     }
 }
