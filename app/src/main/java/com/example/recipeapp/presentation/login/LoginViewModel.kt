@@ -3,6 +3,7 @@ package com.example.recipeapp.presentation.login
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipeapp.domain.model.Resource
@@ -17,6 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val loginUseCase: LoginUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validateLoginPasswordUseCase: ValidateLoginPasswordUseCase
@@ -30,6 +32,12 @@ class LoginViewModel @Inject constructor(
 
     init {
         Log.i("TAG","Login ViewModel")
+
+        savedStateHandle.get<String>("lastDestination")?.let { lastDestination ->
+            _loginState.value = loginState.value.copy(
+                lastDestination = lastDestination
+            )
+        }
     }
 
     fun onEvent(event: LoginEvent) {
@@ -44,7 +52,7 @@ class LoginViewModel @Inject constructor(
                     password = event.password
                 )
             }
-            LoginEvent.Login -> {
+            LoginEvent.OnLogin -> {
                 val email = _loginState.value.email
                 val password = _loginState.value.password
 
@@ -82,6 +90,11 @@ class LoginViewModel @Inject constructor(
             )
             return false
         }
+
+        _loginState.value = loginState.value.copy(
+            emailError = null,
+            passwordError = null
+        )
         return true
     }
 
@@ -90,11 +103,6 @@ class LoginViewModel @Inject constructor(
             loginUseCase(email,password).collect { response ->
                 when(response) {
                     is Resource.Error -> {
-                        _loginState.value = loginState.value.copy(
-                            emailError = null,
-                            passwordError = null
-                        )
-
                         response.message?.let { message ->
                             Log.i("TAG","Error message from login: $message")
                             _loginUiEventChannel.send(LoginUiEvent.ShowErrorMessage(message))

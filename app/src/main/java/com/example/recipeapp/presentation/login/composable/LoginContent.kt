@@ -118,8 +118,7 @@ fun LoginContent(
                 )
 
                 Button(
-                    modifier = modifier
-                        .testTag("Login button"),
+                    modifier = modifier.testTag("Login button"),
                     onClick = { onLogin() }
                 ) {
                     Text(text = stringResource(id = R.string.login))

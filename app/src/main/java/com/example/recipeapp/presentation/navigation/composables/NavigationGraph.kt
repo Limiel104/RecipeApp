@@ -61,7 +61,14 @@ fun NavigationGraph(
         }
 
         composable(
-            route = Screen.LoginScreen.route
+            route = Screen.LoginScreen.route + "lastDestination={lastDestination}",
+            arguments = listOf(
+                navArgument(
+                    name = "lastDestination"
+                ) {
+                    type = NavType.StringType
+                }
+            )
         ) {
             LoginScreen(navController = navController)
         }

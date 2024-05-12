@@ -34,7 +34,7 @@ fun AccountScreen(
                 Log.i("TAG", "Account Screen LE")
                 when (event) {
                     AccountUiEvent.NavigateToLogin -> {
-                        navController.navigate(Screen.LoginScreen.route)
+                        navController.navigate(Screen.LoginScreen.route + "lastDestination=" + Screen.AccountScreen.route)
                     }
                     AccountUiEvent.NavigateToSignup -> {
                         navController.navigate(Screen.SignupScreen.route + "lastDestination=" + Screen.AccountScreen.route)

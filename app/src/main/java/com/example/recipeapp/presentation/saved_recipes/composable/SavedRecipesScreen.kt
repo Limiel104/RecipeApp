@@ -29,7 +29,7 @@ fun SavedRecipesScreen(
                 Log.i("TAG", "Saved Recipes Screen LE")
                 when (event) {
                     SavedRecipesUiEvent.NavigateToLogin -> {
-                        navController.navigate(Screen.LoginScreen.route)
+                        navController.navigate(Screen.LoginScreen.route + "lastDestination=" + Screen.SavedRecipesScreen.route)
                     }
                     SavedRecipesUiEvent.NavigateToSignup -> {
                         navController.navigate(Screen.SignupScreen.route + "lastDestination=" + Screen.SavedRecipesScreen.route)

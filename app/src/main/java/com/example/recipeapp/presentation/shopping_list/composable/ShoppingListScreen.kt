@@ -34,7 +34,7 @@ fun ShoppingListScreen(
                 Log.i("TAG", "ShoppingList Screen LE")
                 when (event) {
                     ShoppingListUiEvent.NavigateToLogin -> {
-                        navController.navigate(Screen.LoginScreen.route)
+                        navController.navigate(Screen.LoginScreen.route + "lastDestination=" + Screen.ShoppingListScreen.route)
                     }
                     ShoppingListUiEvent.NavigateToSignup -> {
                         navController.navigate(Screen.SignupScreen.route + "lastDestination=" + Screen.ShoppingListScreen.route)
