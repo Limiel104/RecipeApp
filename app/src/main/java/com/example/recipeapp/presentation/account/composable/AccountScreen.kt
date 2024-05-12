@@ -37,7 +37,7 @@ fun AccountScreen(
                         navController.navigate(Screen.LoginScreen.route)
                     }
                     AccountUiEvent.NavigateToSignup -> {
-                        navController.navigate(Screen.SignupScreen.route)
+                        navController.navigate(Screen.SignupScreen.route + "lastDestination=" + Screen.AccountScreen.route)
                     }
                 }
             }
@@ -48,7 +48,8 @@ fun AccountScreen(
         AccountContent(
             scrollBehavior = scrollBehavior,
             onAddRecipe = { navController.navigate(Screen.AddRecipeScreen.route) },
-            onRecipeSelected = { navController.navigate(Screen.RecipeDetailsScreen.route) }
+            onRecipeSelected = { navController.navigate(Screen.RecipeDetailsScreen.route) },
+            onLogout = { viewModel.onEvent(AccountEvent.OnLogout) }
         )
     }
     else {

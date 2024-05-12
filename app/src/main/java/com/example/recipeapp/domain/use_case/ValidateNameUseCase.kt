@@ -10,11 +10,13 @@ class ValidateNameUseCase {
                 errorMessage = "Name can't be empty"
             )
         }
-        val containsSpecialChar = name.let {
-            val namePattern = "^(?=.*[@#!*$%^&+=])(?=\\S+$)$"
-            val nameMatcher = Regex(namePattern)
-            nameMatcher.find(name) != null
+        if(name.length < 8) {
+            return ValidationResult(
+                isSuccessful = false,
+                errorMessage = "Name is too short"
+            )
         }
+        val containsSpecialChar = name.any { it in "@#!*$%^&_+=-{}[]:;<>,.?/" }
         if (containsSpecialChar) {
             return ValidationResult(
                 isSuccessful = false,

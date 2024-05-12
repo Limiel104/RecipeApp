@@ -32,7 +32,7 @@ fun SavedRecipesScreen(
                         navController.navigate(Screen.LoginScreen.route)
                     }
                     SavedRecipesUiEvent.NavigateToSignup -> {
-                        navController.navigate(Screen.SignupScreen.route)
+                        navController.navigate(Screen.SignupScreen.route + "lastDestination=" + Screen.SavedRecipesScreen.route)
                     }
                 }
             }

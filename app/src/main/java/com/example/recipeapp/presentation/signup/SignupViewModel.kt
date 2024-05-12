@@ -3,6 +3,7 @@ package com.example.recipeapp.presentation.signup
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipeapp.domain.model.Resource
@@ -14,12 +15,15 @@ import com.example.recipeapp.domain.use_case.ValidateConfirmPasswordUseCase
 import com.example.recipeapp.domain.use_case.ValidateEmailUseCase
 import com.example.recipeapp.domain.use_case.ValidateNameUseCase
 import com.example.recipeapp.domain.use_case.ValidateSignupPasswordUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class SignupViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val signupUseCase: SignupUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validateSignupPasswordUseCase: ValidateSignupPasswordUseCase,
@@ -37,6 +41,12 @@ class SignupViewModel @Inject constructor(
 
     init {
         Log.i("TAG","Signup ViewModel")
+
+        savedStateHandle.get<String>("lastDestination")?.let { lastDestination ->
+            _signupState.value = signupState.value.copy(
+                lastDestination = lastDestination
+            )
+        }
     }
 
     fun onEvent(event: SignupEvent) {
@@ -61,7 +71,7 @@ class SignupViewModel @Inject constructor(
                     name = event.name
                 )
             }
-            SignupEvent.Signup -> {
+            SignupEvent.OnSignup -> {
                 val email = _signupState.value.email
                 val password = _signupState.value.password
                 val confirmPassword = _signupState.value.confirmPassword
@@ -100,13 +110,20 @@ class SignupViewModel @Inject constructor(
 
         if(hasError) {
             _signupState.value = signupState.value.copy(
-                emailError =  emailValidationResult.errorMessage,
+                emailError = emailValidationResult.errorMessage,
                 passwordError = passwordValidationResult.errorMessage,
                 confirmPasswordError = confirmPasswordValidationResult.errorMessage,
                 nameError = nameValidationResult.errorMessage,
             )
             return false
         }
+
+        _signupState.value = signupState.value.copy(
+            emailError = null,
+            passwordError = null,
+            confirmPasswordError = null,
+            nameError = null,
+        )
         return true
     }
 
@@ -115,13 +132,6 @@ class SignupViewModel @Inject constructor(
             signupUseCase(email,password).collect { response ->
                 when(response) {
                     is Resource.Error -> {
-                        _signupState.value = signupState.value.copy(
-                            emailError =  null,
-                            passwordError = null,
-                            confirmPasswordError = null,
-                            nameError = null
-                        )
-
                         response.message?.let { message ->
                             Log.i("TAG","Error message from signup: $message")
                             _signupUiEventChannel.send(SignupUiEvent.ShowErrorMessage(message))

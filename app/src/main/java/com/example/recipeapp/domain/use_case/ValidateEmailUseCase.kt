@@ -10,6 +10,13 @@ class ValidateEmailUseCase {
                 errorMessage = "Email can't be empty"
             )
         }
+        val containsSpecialCharacters = email.any { it in "#!*$%^&_+=-_{}[]:;<>,?/" }
+        if(containsSpecialCharacters) {
+            return ValidationResult(
+                isSuccessful = false,
+                errorMessage = "Email in wrong format"
+            )
+        }
         return ValidationResult(
             isSuccessful = true
         )

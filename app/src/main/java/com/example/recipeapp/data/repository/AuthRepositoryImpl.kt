@@ -28,6 +28,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     }.catch {
         emit(Resource.Error(it.localizedMessage as String))
+        emit(Resource.Loading(false))
     }.flowOn(Dispatchers.IO)
 
     override suspend fun signup(email: String, password: String) = flow<Resource<FirebaseUser>> {
@@ -41,6 +42,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     }.catch {
         emit(Resource.Error(it.localizedMessage as String))
+        emit(Resource.Loading(false))
     }.flowOn(Dispatchers.IO)
 
     override fun logout() {

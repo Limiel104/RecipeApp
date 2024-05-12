@@ -37,7 +37,7 @@ fun ShoppingListScreen(
                         navController.navigate(Screen.LoginScreen.route)
                     }
                     ShoppingListUiEvent.NavigateToSignup -> {
-                        navController.navigate(Screen.SignupScreen.route)
+                        navController.navigate(Screen.SignupScreen.route + "lastDestination=" + Screen.ShoppingListScreen.route)
                     }
                 }
             }

@@ -9,5 +9,6 @@ data class SignupState(
     val confirmPasswordError: String? = null,
     val name: String = "",
     val nameError: String? = null,
+    val lastDestination: String = "",
     val isLoading: Boolean = false
 )

@@ -2,8 +2,10 @@ package com.example.recipeapp.presentation.navigation.composables
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.recipeapp.presentation.account.composable.AccountScreen
 import com.example.recipeapp.presentation.add_recipe.composable.AddRecipeScreen
 import com.example.recipeapp.presentation.home.composable.HomeScreen
@@ -65,7 +67,14 @@ fun NavigationGraph(
         }
 
         composable(
-            route = Screen.SignupScreen.route
+            route = Screen.SignupScreen.route + "lastDestination={lastDestination}",
+            arguments = listOf(
+                navArgument(
+                    name = "lastDestination"
+                ) {
+                    type = NavType.StringType
+                }
+            )
         ) {
             SignupScreen(navController = navController)
         }

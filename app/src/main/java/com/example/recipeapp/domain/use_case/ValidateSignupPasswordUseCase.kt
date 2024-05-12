@@ -30,11 +30,7 @@ class ValidateSignupPasswordUseCase {
                 errorMessage = "Password should have at least one capital letter"
             )
         }
-        val containsAtLeastOneSpecialChar = password.let {
-            val passwordPattern = "^(?=.*[@#!*$%^&_+=])(?=\\S+$)$"
-            val passwordMatcher = Regex(passwordPattern)
-            passwordMatcher.find(password) != null
-        }
+        val containsAtLeastOneSpecialChar = password.any { it in "@#!*$%^&_+=-_{}[]:;<>,.?/" }
         if(!containsAtLeastOneSpecialChar) {
             return ValidationResult(
                 isSuccessful = false,

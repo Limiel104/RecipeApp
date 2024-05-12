@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
+import com.example.recipeapp.domain.use_case.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
-    private val getCurrentUserUseCase: GetCurrentUserUseCase
+    private val getCurrentUserUseCase: GetCurrentUserUseCase,
+    private val logoutUseCase: LogoutUseCase
 ): ViewModel() {
 
     private val _accountState = mutableStateOf(AccountState())
@@ -40,6 +42,11 @@ class AccountViewModel @Inject constructor(
                     _accountUiEventChannel.send(AccountUiEvent.NavigateToSignup)
                 }
             }
+            is AccountEvent.OnLogout -> {
+                viewModelScope.launch {
+                    logout()
+                }
+            }
         }
     }
 
@@ -50,5 +57,12 @@ class AccountViewModel @Inject constructor(
                 isUserLoggedIn = currentUser != null
             )
         }
+    }
+
+    private fun logout() {
+        logoutUseCase()
+        _accountState.value = accountState.value.copy(
+            isUserLoggedIn = false
+        )
     }
 }
