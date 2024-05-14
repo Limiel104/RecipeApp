@@ -51,6 +51,7 @@ class LoginViewModelTest {
     fun tearDown() {
         confirmVerified(savedStateHandle)
         confirmVerified(loginUseCase)
+        confirmVerified(firebaseUser)
         clearAllMocks()
     }
 
@@ -224,8 +225,8 @@ class LoginViewModelTest {
             loginUseCase("john.smith@email.com","Qwerty1+")
         }
         assertThat(initialEmailErrorState).isNull()
-        assertThat(resultEmailErrorState).isNull()
         assertThat(initialPasswordErrorState).isNull()
+        assertThat(resultEmailErrorState).isNull()
         assertThat(resultPasswordErrorState).isNull()
     }
 
