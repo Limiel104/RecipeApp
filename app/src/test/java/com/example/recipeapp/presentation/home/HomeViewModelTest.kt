@@ -365,7 +365,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `onActiveChange - initialy false`() {
+    fun `onActiveChange - initially false`() {
         coEvery { getSearchSuggestionsUseCase() } returns flowOf(Resource.Success(searchSuggestions))
 
         homeViewModel = setViewModel()
