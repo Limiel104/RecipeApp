@@ -141,10 +141,7 @@ fun LoginContent(
                     TextButton(
                         onClick = { onSignup() }
                     ) {
-                        Text(
-                            text = stringResource(id = R.string.signup),
-                            modifier = modifier.testTag("Login signup button")
-                        )
+                        Text(text = stringResource(id = R.string.signup),)
                     }
                 }
             }
