@@ -79,7 +79,7 @@ class LoginScreenTest {
         composeRule.onNodeWithContentDescription("Back button").isDisplayed()
 
         composeRule.onNodeWithTag("Login email TF").isDisplayed()
-        composeRule.onNodeWithTag("Password email TF").isDisplayed()
+        composeRule.onNodeWithTag("Login password TF").isDisplayed()
 
         composeRule.onNodeWithTag("Login button").isDisplayed()
         composeRule.onNodeWithTag("Login button").assertHasClickAction()
@@ -142,64 +142,55 @@ class LoginScreenTest {
     }
 
     @Test
-    fun emailErrorTextField_performClickOnButtonWileEmailTextFieldIsEmpty_errorDisplayedCorrectly() {
+    fun emailErrorTextField_performClickOnButtonWhileEmailTextFieldIsEmpty_errorDisplayedCorrectly() {
         val password = "Qwerty1+"
         setScreen()
 
         val initialEmailNode = composeRule.onNodeWithTag("Login email TF").fetchSemanticsNode()
-        val initialErrorState = initialEmailNode.config.getOrNull(SemanticsProperties.Error)
+        val initialErrorValue = initialEmailNode.config.getOrNull(SemanticsProperties.Error)
 
         composeRule.onNodeWithTag("Login password TF").performTextInput(password)
 
-        composeRule.onNodeWithTag("Login button").assertIsDisplayed()
-        composeRule.onNodeWithTag("Login button").assertIsEnabled()
-        composeRule.onNodeWithTag("Login button").performClick()
-
+        checkLoginButton()
         val resultEmailNode = composeRule.onNodeWithTag("Login email TF").fetchSemanticsNode()
         val errorLabel = resultEmailNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
         val resultErrorValue = resultEmailNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
 
-        assertThat(initialErrorState).isNull()
+        assertThat(initialErrorValue).isNull()
         assertThat(errorLabel).isEqualTo("Email")
         assertThat(resultErrorValue).isEqualTo("Email can't be empty")
     }
 
     @Test
-    fun passwordErrorTextField_performClickOnButtonWilePasswordTextFieldIsEmpty_errorDisplayedCorrectly() {
+    fun passwordErrorTextField_performClickOnButtonWhilePasswordTextFieldIsEmpty_errorDisplayedCorrectly() {
         val email = "email@email.com"
         setScreen()
 
         val initialPasswordNode = composeRule.onNodeWithTag("Login password TF").fetchSemanticsNode()
-        val initialErrorState = initialPasswordNode.config.getOrNull(SemanticsProperties.Error)
+        val initialErrorValue = initialPasswordNode.config.getOrNull(SemanticsProperties.Error)
 
         composeRule.onNodeWithTag("Login email TF").performTextInput(email)
 
-        composeRule.onNodeWithTag("Login button").assertIsDisplayed()
-        composeRule.onNodeWithTag("Login button").assertIsEnabled()
-        composeRule.onNodeWithTag("Login button").performClick()
-
+        checkLoginButton()
         val resultPasswordNode = composeRule.onNodeWithTag("Login password TF").fetchSemanticsNode()
         val errorLabel = resultPasswordNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
         val resultErrorValue = resultPasswordNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
 
-        assertThat(initialErrorState).isNull()
+        assertThat(initialErrorValue).isNull()
         assertThat(errorLabel).isEqualTo("Password")
         assertThat(resultErrorValue).isEqualTo("Password can't be empty")
     }
 
     @Test
-    fun errorTextFields_performClickOnButtonWileAllTextFieldsAreEmpty_errorsDisplayedCorrectly() {
+    fun errorTextFields_performClickOnButtonWhileAllTextFieldsAreEmpty_errorsDisplayedCorrectly() {
         setScreen()
 
         val emailNode = composeRule.onNodeWithTag("Login email TF").fetchSemanticsNode()
         val passwordNode = composeRule.onNodeWithTag("Login password TF").fetchSemanticsNode()
-        val initialEmailErrorState = emailNode.config.getOrNull(SemanticsProperties.Error)
-        val initialPasswordErrorState = passwordNode.config.getOrNull(SemanticsProperties.Error)
+        val initialEmailErrorValue = emailNode.config.getOrNull(SemanticsProperties.Error)
+        val initialPasswordErrorValue = passwordNode.config.getOrNull(SemanticsProperties.Error)
 
-        composeRule.onNodeWithTag("Login button").assertIsDisplayed()
-        composeRule.onNodeWithTag("Login button").assertIsEnabled()
-        composeRule.onNodeWithTag("Login button").performClick()
-
+        checkLoginButton()
         val resultEmailNode = composeRule.onNodeWithTag("Login email TF").fetchSemanticsNode()
         val errorEmailLabel = resultEmailNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
         val resultEmailErrorValue = resultEmailNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
@@ -208,9 +199,8 @@ class LoginScreenTest {
         val errorPasswordLabel = resultPasswordNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
         val resultPasswordErrorValue = resultPasswordNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
 
-
-        assertThat(initialEmailErrorState).isNull()
-        assertThat(initialPasswordErrorState).isNull()
+        assertThat(initialEmailErrorValue).isNull()
+        assertThat(initialPasswordErrorValue).isNull()
         assertThat(errorEmailLabel).isEqualTo("Email")
         assertThat(errorPasswordLabel).isEqualTo("Password")
         assertThat(resultEmailErrorValue).isEqualTo("Email can't be empty")
@@ -218,32 +208,29 @@ class LoginScreenTest {
     }
 
     @Test
-    fun loginScreenErrorTextFields_noErrorsAfterClickingOnTheButton() {
+    fun errorTextFields_noErrorsAfterClickingOnTheButton() {
         val email = "email@email.com"
         val password = "Qwerty1+"
         setScreen()
 
         val emailNode = composeRule.onNodeWithTag("Login email TF").fetchSemanticsNode()
         val passwordNode = composeRule.onNodeWithTag("Login password TF").fetchSemanticsNode()
-        val initialEmailErrorState = emailNode.config.getOrNull(SemanticsProperties.Error)
-        val initialPasswordErrorState = passwordNode.config.getOrNull(SemanticsProperties.Error)
+        val initialEmailErrorValue = emailNode.config.getOrNull(SemanticsProperties.Error)
+        val initialPasswordErrorValue = passwordNode.config.getOrNull(SemanticsProperties.Error)
 
         composeRule.onNodeWithTag("Login email TF").performTextInput(email)
         composeRule.onNodeWithTag("Login password TF").performTextInput(password)
 
-        composeRule.onNodeWithTag("Login button").assertIsDisplayed()
-        composeRule.onNodeWithTag("Login button").assertIsEnabled()
-        composeRule.onNodeWithTag("Login button").performClick()
-
+        checkLoginButton()
         val resultEmailNode = composeRule.onNodeWithTag("Login email TF").fetchSemanticsNode()
         val resultPasswordNode = composeRule.onNodeWithTag("Login password TF").fetchSemanticsNode()
-        val resultEmailErrorState = resultEmailNode.config.getOrNull(SemanticsProperties.Error)
-        val resultPasswordErrorState = resultPasswordNode.config.getOrNull(SemanticsProperties.Error)
+        val resultEmailErrorValue = resultEmailNode.config.getOrNull(SemanticsProperties.Error)
+        val resultPasswordErrorValue = resultPasswordNode.config.getOrNull(SemanticsProperties.Error)
 
-        assertThat(initialEmailErrorState).isNull()
-        assertThat(initialPasswordErrorState).isNull()
-        assertThat(resultEmailErrorState).isNull()
-        assertThat(resultPasswordErrorState).isNull()
+        assertThat(initialEmailErrorValue).isNull()
+        assertThat(initialPasswordErrorValue).isNull()
+        assertThat(resultEmailErrorValue).isNull()
+        assertThat(resultPasswordErrorValue).isNull()
     }
 
     @Test
@@ -259,5 +246,11 @@ class LoginScreenTest {
         composeRule.onNodeWithTag("Login button").performClick()
 
         composeRule.onNodeWithTag("Login CPI").assertExists()
+    }
+
+    private fun checkLoginButton() {
+        composeRule.onNodeWithTag("Login button").assertIsDisplayed()
+        composeRule.onNodeWithTag("Login button").assertIsEnabled()
+        composeRule.onNodeWithTag("Login button").performClick()
     }
 }

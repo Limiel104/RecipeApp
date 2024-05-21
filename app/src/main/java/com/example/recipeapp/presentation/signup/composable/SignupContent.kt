@@ -162,7 +162,7 @@ fun SignupContent(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .testTag("Login CPI"),
+                .testTag("Signup CPI"),
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()
