@@ -296,6 +296,369 @@ class SignupScreenTest {
     }
 
     @Test
+    fun emailErrorTextFields_performClickOnButtonWhileEmailTextFieldHasSpecialCharacters_errorsDisplayedCorrectly() {
+        val email = "e!mail@email.com"
+        val password = "Qwerty1+"
+        val name = "John Smith"
+        setScreen()
+
+        val emailNode = composeRule.onNodeWithTag("Signup email TF").fetchSemanticsNode()
+        val passwordNode = composeRule.onNodeWithTag("Signup password TF").fetchSemanticsNode()
+        val confirmPasswordNode =
+            composeRule.onNodeWithTag("Signup confirm password TF").fetchSemanticsNode()
+        val nameNode = composeRule.onNodeWithTag("Signup name TF").fetchSemanticsNode()
+        val initialEmailErrorValue = emailNode.config.getOrNull(SemanticsProperties.Error)
+        val initialPasswordErrorValue = passwordNode.config.getOrNull(SemanticsProperties.Error)
+        val initialConfirmPasswordErrorValue =
+            confirmPasswordNode.config.getOrNull(SemanticsProperties.Error)
+        val initialNameErrorValue = nameNode.config.getOrNull(SemanticsProperties.Error)
+
+        composeRule.onNodeWithTag("Signup email TF").performTextInput(email)
+        composeRule.onNodeWithTag("Signup password TF").performTextInput(password)
+        composeRule.onNodeWithTag("Signup confirm password TF").performTextInput(password)
+        composeRule.onNodeWithTag("Signup name TF").performTextInput(name)
+
+        checkSignupButton()
+
+        val resultEmailNode = composeRule.onNodeWithTag("Signup email TF").fetchSemanticsNode()
+        val errorEmailLabel = resultEmailNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultEmailErrorValue = resultEmailNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        val resultPasswordNode = composeRule.onNodeWithTag("Signup password TF").fetchSemanticsNode()
+        val resultConfirmPasswordNode = composeRule.onNodeWithTag("Signup confirm password TF").fetchSemanticsNode()
+        val resultNameNode = composeRule.onNodeWithTag("Signup name TF").fetchSemanticsNode()
+        val resultPasswordErrorValue = resultPasswordNode.config.getOrNull(SemanticsProperties.Error)
+        val resultConfirmPasswordErrorValue = resultConfirmPasswordNode.config.getOrNull(SemanticsProperties.Error)
+        val resultNameErrorValue = resultNameNode.config.getOrNull(SemanticsProperties.Error)
+
+        assertThat(initialEmailErrorValue).isNull()
+        assertThat(initialPasswordErrorValue).isNull()
+        assertThat(initialConfirmPasswordErrorValue).isNull()
+        assertThat(initialNameErrorValue).isNull()
+        assertThat(errorEmailLabel).isEqualTo("Email")
+        assertThat(resultEmailErrorValue).isEqualTo("Email in wrong format")
+        assertThat(resultPasswordErrorValue).isNull()
+        assertThat(resultConfirmPasswordErrorValue).isNull()
+        assertThat(resultNameErrorValue).isNull()
+    }
+
+    @Test
+    fun passwordErrorTextFields_performClickOnButtonWhilePasswordTextFieldIsTooShort_errorsDisplayedCorrectly() {
+        val email = "email@email.com"
+        val password = "Qwer"
+        val name = "John Smith"
+        setScreen()
+
+        val emailNode = composeRule.onNodeWithTag("Signup email TF").fetchSemanticsNode()
+        val passwordNode = composeRule.onNodeWithTag("Signup password TF").fetchSemanticsNode()
+        val confirmPasswordNode = composeRule.onNodeWithTag("Signup confirm password TF").fetchSemanticsNode()
+        val nameNode = composeRule.onNodeWithTag("Signup name TF").fetchSemanticsNode()
+        val initialEmailErrorValue = emailNode.config.getOrNull(SemanticsProperties.Error)
+        val initialPasswordErrorValue = passwordNode.config.getOrNull(SemanticsProperties.Error)
+        val initialConfirmPasswordErrorValue = confirmPasswordNode.config.getOrNull(SemanticsProperties.Error)
+        val initialNameErrorValue = nameNode.config.getOrNull(SemanticsProperties.Error)
+
+        composeRule.onNodeWithTag("Signup email TF").performTextInput(email)
+        composeRule.onNodeWithTag("Signup password TF").performTextInput(password)
+        composeRule.onNodeWithTag("Signup confirm password TF").performTextInput(password)
+        composeRule.onNodeWithTag("Signup name TF").performTextInput(name)
+
+        checkSignupButton()
+
+        val resultPasswordNode = composeRule.onNodeWithTag("Signup password TF").fetchSemanticsNode()
+        val errorPasswordLabel = resultPasswordNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultPasswordErrorValue = resultPasswordNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        val resultEmailNode = composeRule.onNodeWithTag("Signup email TF").fetchSemanticsNode()
+        val resultConfirmPasswordNode = composeRule.onNodeWithTag("Signup confirm password TF").fetchSemanticsNode()
+        val resultNameNode = composeRule.onNodeWithTag("Signup name TF").fetchSemanticsNode()
+        val resultEmailErrorValue = resultEmailNode.config.getOrNull(SemanticsProperties.Error)
+        val resultConfirmPasswordErrorValue = resultConfirmPasswordNode.config.getOrNull(SemanticsProperties.Error)
+        val resultNameErrorValue = resultNameNode.config.getOrNull(SemanticsProperties.Error)
+
+        assertThat(initialEmailErrorValue).isNull()
+        assertThat(initialPasswordErrorValue).isNull()
+        assertThat(initialConfirmPasswordErrorValue).isNull()
+        assertThat(initialNameErrorValue).isNull()
+        assertThat(errorPasswordLabel).isEqualTo("Password")
+        assertThat(resultEmailErrorValue).isNull()
+        assertThat(resultPasswordErrorValue).isEqualTo("Password is too short")
+        assertThat(resultConfirmPasswordErrorValue).isNull()
+        assertThat(resultNameErrorValue).isNull()
+    }
+
+    @Test
+    fun passwordErrorTextFields_performClickOnButtonWhilePasswordTextFieldDoesNotHaveAtLeastOneDigit_errorsDisplayedCorrectly() {
+        val email = "email@email.com"
+        val password = "Qwerty++"
+        val name = "John Smith"
+        setScreen()
+
+        val emailNode = composeRule.onNodeWithTag("Signup email TF").fetchSemanticsNode()
+        val passwordNode = composeRule.onNodeWithTag("Signup password TF").fetchSemanticsNode()
+        val confirmPasswordNode = composeRule.onNodeWithTag("Signup confirm password TF").fetchSemanticsNode()
+        val nameNode = composeRule.onNodeWithTag("Signup name TF").fetchSemanticsNode()
+        val initialEmailErrorValue = emailNode.config.getOrNull(SemanticsProperties.Error)
+        val initialPasswordErrorValue = passwordNode.config.getOrNull(SemanticsProperties.Error)
+        val initialConfirmPasswordErrorValue = confirmPasswordNode.config.getOrNull(SemanticsProperties.Error)
+        val initialNameErrorValue = nameNode.config.getOrNull(SemanticsProperties.Error)
+
+        composeRule.onNodeWithTag("Signup email TF").performTextInput(email)
+        composeRule.onNodeWithTag("Signup password TF").performTextInput(password)
+        composeRule.onNodeWithTag("Signup confirm password TF").performTextInput(password)
+        composeRule.onNodeWithTag("Signup name TF").performTextInput(name)
+
+        checkSignupButton()
+
+        val resultPasswordNode = composeRule.onNodeWithTag("Signup password TF").fetchSemanticsNode()
+        val errorPasswordLabel = resultPasswordNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultPasswordErrorValue = resultPasswordNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        val resultEmailNode = composeRule.onNodeWithTag("Signup email TF").fetchSemanticsNode()
+        val resultConfirmPasswordNode = composeRule.onNodeWithTag("Signup confirm password TF").fetchSemanticsNode()
+        val resultNameNode = composeRule.onNodeWithTag("Signup name TF").fetchSemanticsNode()
+        val resultEmailErrorValue = resultEmailNode.config.getOrNull(SemanticsProperties.Error)
+        val resultConfirmPasswordErrorValue = resultConfirmPasswordNode.config.getOrNull(SemanticsProperties.Error)
+        val resultNameErrorValue = resultNameNode.config.getOrNull(SemanticsProperties.Error)
+
+        assertThat(initialEmailErrorValue).isNull()
+        assertThat(initialPasswordErrorValue).isNull()
+        assertThat(initialConfirmPasswordErrorValue).isNull()
+        assertThat(initialNameErrorValue).isNull()
+        assertThat(errorPasswordLabel).isEqualTo("Password")
+        assertThat(resultEmailErrorValue).isNull()
+        assertThat(resultPasswordErrorValue).isEqualTo("Password should have at least one digit")
+        assertThat(resultConfirmPasswordErrorValue).isNull()
+        assertThat(resultNameErrorValue).isNull()
+    }
+
+    @Test
+    fun passwordErrorTextFields_performClickOnButtonWhilePasswordTextFieldDoesNotHaveAtLeastOneCapitalLetter_errorsDisplayedCorrectly() {
+        val email = "email@email.com"
+        val password = "qwerty1+"
+        val name = "John Smith"
+        setScreen()
+
+        val emailNode = composeRule.onNodeWithTag("Signup email TF").fetchSemanticsNode()
+        val passwordNode = composeRule.onNodeWithTag("Signup password TF").fetchSemanticsNode()
+        val confirmPasswordNode = composeRule.onNodeWithTag("Signup confirm password TF").fetchSemanticsNode()
+        val nameNode = composeRule.onNodeWithTag("Signup name TF").fetchSemanticsNode()
+        val initialEmailErrorValue = emailNode.config.getOrNull(SemanticsProperties.Error)
+        val initialPasswordErrorValue = passwordNode.config.getOrNull(SemanticsProperties.Error)
+        val initialConfirmPasswordErrorValue = confirmPasswordNode.config.getOrNull(SemanticsProperties.Error)
+        val initialNameErrorValue = nameNode.config.getOrNull(SemanticsProperties.Error)
+
+        composeRule.onNodeWithTag("Signup email TF").performTextInput(email)
+        composeRule.onNodeWithTag("Signup password TF").performTextInput(password)
+        composeRule.onNodeWithTag("Signup confirm password TF").performTextInput(password)
+        composeRule.onNodeWithTag("Signup name TF").performTextInput(name)
+
+        checkSignupButton()
+
+        val resultPasswordNode = composeRule.onNodeWithTag("Signup password TF").fetchSemanticsNode()
+        val errorPasswordLabel = resultPasswordNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultPasswordErrorValue = resultPasswordNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        val resultEmailNode = composeRule.onNodeWithTag("Signup email TF").fetchSemanticsNode()
+        val resultConfirmPasswordNode = composeRule.onNodeWithTag("Signup confirm password TF").fetchSemanticsNode()
+        val resultNameNode = composeRule.onNodeWithTag("Signup name TF").fetchSemanticsNode()
+        val resultEmailErrorValue = resultEmailNode.config.getOrNull(SemanticsProperties.Error)
+        val resultConfirmPasswordErrorValue = resultConfirmPasswordNode.config.getOrNull(SemanticsProperties.Error)
+        val resultNameErrorValue = resultNameNode.config.getOrNull(SemanticsProperties.Error)
+
+        assertThat(initialEmailErrorValue).isNull()
+        assertThat(initialPasswordErrorValue).isNull()
+        assertThat(initialConfirmPasswordErrorValue).isNull()
+        assertThat(initialNameErrorValue).isNull()
+        assertThat(errorPasswordLabel).isEqualTo("Password")
+        assertThat(resultEmailErrorValue).isNull()
+        assertThat(resultPasswordErrorValue).isEqualTo("Password should have at least one capital letter")
+        assertThat(resultConfirmPasswordErrorValue).isNull()
+        assertThat(resultNameErrorValue).isNull()
+    }
+
+    @Test
+    fun passwordErrorTextFields_performClickOnButtonWhilePasswordTextFieldDoesNotHaveAtLeastOneSpecialCharacter_errorsDisplayedCorrectly() {
+        val email = "email@email.com"
+        val password = "Qwerty11"
+        val name = "John Smith"
+        setScreen()
+
+        val emailNode = composeRule.onNodeWithTag("Signup email TF").fetchSemanticsNode()
+        val passwordNode = composeRule.onNodeWithTag("Signup password TF").fetchSemanticsNode()
+        val confirmPasswordNode = composeRule.onNodeWithTag("Signup confirm password TF").fetchSemanticsNode()
+        val nameNode = composeRule.onNodeWithTag("Signup name TF").fetchSemanticsNode()
+        val initialEmailErrorValue = emailNode.config.getOrNull(SemanticsProperties.Error)
+        val initialPasswordErrorValue = passwordNode.config.getOrNull(SemanticsProperties.Error)
+        val initialConfirmPasswordErrorValue = confirmPasswordNode.config.getOrNull(SemanticsProperties.Error)
+        val initialNameErrorValue = nameNode.config.getOrNull(SemanticsProperties.Error)
+
+        composeRule.onNodeWithTag("Signup email TF").performTextInput(email)
+        composeRule.onNodeWithTag("Signup password TF").performTextInput(password)
+        composeRule.onNodeWithTag("Signup confirm password TF").performTextInput(password)
+        composeRule.onNodeWithTag("Signup name TF").performTextInput(name)
+
+        checkSignupButton()
+
+        val resultPasswordNode = composeRule.onNodeWithTag("Signup password TF").fetchSemanticsNode()
+        val errorPasswordLabel = resultPasswordNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultPasswordErrorValue = resultPasswordNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        val resultEmailNode = composeRule.onNodeWithTag("Signup email TF").fetchSemanticsNode()
+        val resultConfirmPasswordNode = composeRule.onNodeWithTag("Signup confirm password TF").fetchSemanticsNode()
+        val resultNameNode = composeRule.onNodeWithTag("Signup name TF").fetchSemanticsNode()
+        val resultEmailErrorValue = resultEmailNode.config.getOrNull(SemanticsProperties.Error)
+        val resultConfirmPasswordErrorValue = resultConfirmPasswordNode.config.getOrNull(SemanticsProperties.Error)
+        val resultNameErrorValue = resultNameNode.config.getOrNull(SemanticsProperties.Error)
+
+        assertThat(initialEmailErrorValue).isNull()
+        assertThat(initialPasswordErrorValue).isNull()
+        assertThat(initialConfirmPasswordErrorValue).isNull()
+        assertThat(initialNameErrorValue).isNull()
+        assertThat(errorPasswordLabel).isEqualTo("Password")
+        assertThat(resultEmailErrorValue).isNull()
+        assertThat(resultPasswordErrorValue).isEqualTo("Password should have at least one special character")
+        assertThat(resultConfirmPasswordErrorValue).isNull()
+        assertThat(resultNameErrorValue).isNull()
+    }
+
+    @Test
+    fun confirmPasswordErrorTextFields_performClickOnButtonWhileConfirmPasswordDoesNotMach_errorsDisplayedCorrectly() {
+        val email = "email@email.com"
+        val password = "Qwerty1+"
+        val confirmPassword = "Qwerty11"
+        val name = "John Smith"
+        setScreen()
+
+        val emailNode = composeRule.onNodeWithTag("Signup email TF").fetchSemanticsNode()
+        val passwordNode = composeRule.onNodeWithTag("Signup password TF").fetchSemanticsNode()
+        val confirmPasswordNode = composeRule.onNodeWithTag("Signup confirm password TF").fetchSemanticsNode()
+        val nameNode = composeRule.onNodeWithTag("Signup name TF").fetchSemanticsNode()
+        val initialEmailErrorValue = emailNode.config.getOrNull(SemanticsProperties.Error)
+        val initialPasswordErrorValue = passwordNode.config.getOrNull(SemanticsProperties.Error)
+        val initialConfirmPasswordErrorValue = confirmPasswordNode.config.getOrNull(SemanticsProperties.Error)
+        val initialNameErrorValue = nameNode.config.getOrNull(SemanticsProperties.Error)
+
+        composeRule.onNodeWithTag("Signup email TF").performTextInput(email)
+        composeRule.onNodeWithTag("Signup password TF").performTextInput(password)
+        composeRule.onNodeWithTag("Signup confirm password TF").performTextInput(confirmPassword)
+        composeRule.onNodeWithTag("Signup name TF").performTextInput(name)
+
+        checkSignupButton()
+
+        val resultConfirmPasswordNode = composeRule.onNodeWithTag("Signup confirm password TF").fetchSemanticsNode()
+        val errorConfirmPasswordLabel = resultConfirmPasswordNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultConfirmPasswordErrorValue = resultConfirmPasswordNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        val resultEmailNode = composeRule.onNodeWithTag("Signup email TF").fetchSemanticsNode()
+        val resultPasswordNode = composeRule.onNodeWithTag("Signup password TF").fetchSemanticsNode()
+        val resultNameNode = composeRule.onNodeWithTag("Signup name TF").fetchSemanticsNode()
+        val resultEmailErrorValue = resultEmailNode.config.getOrNull(SemanticsProperties.Error)
+        val resultPasswordErrorValue = resultPasswordNode.config.getOrNull(SemanticsProperties.Error)
+        val resultNameErrorValue = resultNameNode.config.getOrNull(SemanticsProperties.Error)
+
+        assertThat(initialEmailErrorValue).isNull()
+        assertThat(initialPasswordErrorValue).isNull()
+        assertThat(initialConfirmPasswordErrorValue).isNull()
+        assertThat(initialNameErrorValue).isNull()
+        assertThat(errorConfirmPasswordLabel).isEqualTo("Confirm Password")
+        assertThat(resultEmailErrorValue).isNull()
+        assertThat(resultPasswordErrorValue).isNull()
+        assertThat(resultConfirmPasswordErrorValue).isEqualTo("Passwords don't mach")
+        assertThat(resultNameErrorValue).isNull()
+    }
+
+    @Test
+    fun nameErrorTextFields_performClickOnButtonWhileNameIsTooShort_errorsDisplayedCorrectly() {
+        val email = "email@email.com"
+        val password = "Qwerty1+"
+        val name = "John"
+        setScreen()
+
+        val emailNode = composeRule.onNodeWithTag("Signup email TF").fetchSemanticsNode()
+        val passwordNode = composeRule.onNodeWithTag("Signup password TF").fetchSemanticsNode()
+        val confirmPasswordNode = composeRule.onNodeWithTag("Signup confirm password TF").fetchSemanticsNode()
+        val nameNode = composeRule.onNodeWithTag("Signup name TF").fetchSemanticsNode()
+        val initialEmailErrorValue = emailNode.config.getOrNull(SemanticsProperties.Error)
+        val initialPasswordErrorValue = passwordNode.config.getOrNull(SemanticsProperties.Error)
+        val initialConfirmPasswordErrorValue = confirmPasswordNode.config.getOrNull(SemanticsProperties.Error)
+        val initialNameErrorValue = nameNode.config.getOrNull(SemanticsProperties.Error)
+
+        composeRule.onNodeWithTag("Signup email TF").performTextInput(email)
+        composeRule.onNodeWithTag("Signup password TF").performTextInput(password)
+        composeRule.onNodeWithTag("Signup confirm password TF").performTextInput(password)
+        composeRule.onNodeWithTag("Signup name TF").performTextInput(name)
+
+        checkSignupButton()
+
+        val resultNameNode = composeRule.onNodeWithTag("Signup name TF").fetchSemanticsNode()
+        val errorNameLabel = resultNameNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultNameErrorValue = resultNameNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        val resultEmailNode = composeRule.onNodeWithTag("Signup email TF").fetchSemanticsNode()
+        val resultPasswordNode = composeRule.onNodeWithTag("Signup password TF").fetchSemanticsNode()
+        val resultConfirmPasswordNode = composeRule.onNodeWithTag("Signup confirm password TF").fetchSemanticsNode()
+        val resultEmailErrorValue = resultEmailNode.config.getOrNull(SemanticsProperties.Error)
+        val resultPasswordErrorValue = resultPasswordNode.config.getOrNull(SemanticsProperties.Error)
+        val resultConfirmPasswordErrorValue = resultConfirmPasswordNode.config.getOrNull(SemanticsProperties.Error)
+
+        assertThat(initialEmailErrorValue).isNull()
+        assertThat(initialPasswordErrorValue).isNull()
+        assertThat(initialConfirmPasswordErrorValue).isNull()
+        assertThat(initialNameErrorValue).isNull()
+        assertThat(errorNameLabel).isEqualTo("Name")
+        assertThat(resultEmailErrorValue).isNull()
+        assertThat(resultPasswordErrorValue).isNull()
+        assertThat(resultConfirmPasswordErrorValue).isNull()
+        assertThat(resultNameErrorValue).isEqualTo("Name is too short")
+    }
+
+    @Test
+    fun nameErrorTextFields_performClickOnButtonWhileNameHasAtLeastOneSpecialCharacter_errorsDisplayedCorrectly() {
+        val email = "email@email.com"
+        val password = "Qwerty1+"
+        val name = "Jo#n Smith"
+        setScreen()
+
+        val emailNode = composeRule.onNodeWithTag("Signup email TF").fetchSemanticsNode()
+        val passwordNode = composeRule.onNodeWithTag("Signup password TF").fetchSemanticsNode()
+        val confirmPasswordNode = composeRule.onNodeWithTag("Signup confirm password TF").fetchSemanticsNode()
+        val nameNode = composeRule.onNodeWithTag("Signup name TF").fetchSemanticsNode()
+        val initialEmailErrorValue = emailNode.config.getOrNull(SemanticsProperties.Error)
+        val initialPasswordErrorValue = passwordNode.config.getOrNull(SemanticsProperties.Error)
+        val initialConfirmPasswordErrorValue = confirmPasswordNode.config.getOrNull(SemanticsProperties.Error)
+        val initialNameErrorValue = nameNode.config.getOrNull(SemanticsProperties.Error)
+
+        composeRule.onNodeWithTag("Signup email TF").performTextInput(email)
+        composeRule.onNodeWithTag("Signup password TF").performTextInput(password)
+        composeRule.onNodeWithTag("Signup confirm password TF").performTextInput(password)
+        composeRule.onNodeWithTag("Signup name TF").performTextInput(name)
+
+        checkSignupButton()
+
+        val resultNameNode = composeRule.onNodeWithTag("Signup name TF").fetchSemanticsNode()
+        val errorNameLabel = resultNameNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultNameErrorValue = resultNameNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        val resultEmailNode = composeRule.onNodeWithTag("Signup email TF").fetchSemanticsNode()
+        val resultPasswordNode = composeRule.onNodeWithTag("Signup password TF").fetchSemanticsNode()
+        val resultConfirmPasswordNode = composeRule.onNodeWithTag("Signup confirm password TF").fetchSemanticsNode()
+        val resultEmailErrorValue = resultEmailNode.config.getOrNull(SemanticsProperties.Error)
+        val resultPasswordErrorValue = resultPasswordNode.config.getOrNull(SemanticsProperties.Error)
+        val resultConfirmPasswordErrorValue = resultConfirmPasswordNode.config.getOrNull(SemanticsProperties.Error)
+
+        assertThat(initialEmailErrorValue).isNull()
+        assertThat(initialPasswordErrorValue).isNull()
+        assertThat(initialConfirmPasswordErrorValue).isNull()
+        assertThat(initialNameErrorValue).isNull()
+        assertThat(errorNameLabel).isEqualTo("Name")
+        assertThat(resultEmailErrorValue).isNull()
+        assertThat(resultPasswordErrorValue).isNull()
+        assertThat(resultConfirmPasswordErrorValue).isNull()
+        assertThat(resultNameErrorValue).isEqualTo("At least one character in name is not allowed")
+    }
+
+    @Test
     fun errorTextFields_performClickOnButtonWhileAllTextFieldsAreEmpty_errorsDisplayedCorrectly() {
         setScreen()
 
