@@ -23,4 +23,13 @@
     <string name="newest">Newest</string>
     <string name="shopping_list">Shopping List</string>
     <string name="quantity">Quantity</string>
+    <string name="login">Login</string>
+    <string name="signup">Signup</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="name">Name</string>
+    <string name="no_account_text">Don\'t have an account?</string>
+    <string name="not_logged_in">You are not logged in</string>
+    <string name="login_or_signup">Login or Signup</string>
 </resources>

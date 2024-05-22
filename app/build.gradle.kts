@@ -104,8 +104,14 @@ dependencies {
     //Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
 
+    //Firebase BOM
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+
     //Firebase Firestore
-    implementation("com.google.firebase:firebase-firestore:24.11.0")
+    implementation("com.google.firebase:firebase-firestore")
+
+    //Firebase Authentication
+    implementation("com.google.firebase:firebase-auth")
 
     //Room
     implementation("androidx.room:room-runtime:2.6.1")

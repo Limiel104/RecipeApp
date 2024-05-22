@@ -1,16 +1,19 @@
 package com.example.recipeapp.presentation.home.composable
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -96,6 +99,17 @@ fun HomeContent(
             }
         }
     }
+
+    if(isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .testTag("Login CPI"),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    }
 }
 
 private fun getRecipes(): List<Recipe> {
@@ -174,6 +188,36 @@ fun HomeContentPreviewSearchIsActive() {
             selectedCategory = "",
             isSearchActive = true,
             isLoading = false,
+            onRecipeSelected = {},
+            onQueryChange = {},
+            onActiveChange = {},
+            onSearchClicked = {},
+            onClearClicked = {},
+            onSearchSuggestionClicked = {},
+            onSelectedCategory = {}
+        )
+    }
+}
+
+@Preview(
+    name = "Light Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun HomeContentPreviewCPI() {
+    RecipeAppTheme {
+        HomeContent(
+            recipes = getRecipes(),
+            query = "",
+            searchSuggestions = emptyList(),
+            categories = getCategories(),
+            selectedCategory = "",
+            isSearchActive = false,
+            isLoading = true,
             onRecipeSelected = {},
             onQueryChange = {},
             onActiveChange = {},

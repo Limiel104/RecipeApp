@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,7 +39,8 @@ fun AccountContent(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
     onAddRecipe: () -> Unit,
-    onRecipeSelected: () -> Unit
+    onRecipeSelected: () -> Unit,
+    onLogout: () -> Unit
 ) {
     Scaffold(
         modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -58,6 +60,13 @@ fun AccountContent(
                         Icon(
                             imageVector = Icons.Outlined.Edit,
                             contentDescription = "Edit button"
+                        )
+                    }
+
+                    IconButton(onClick = { onLogout() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Default.Logout,
+                            contentDescription = "Logout button"
                         )
                     }
                 },
@@ -126,7 +135,8 @@ fun AccountContentPreview() {
         AccountContent(
             scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState()),
             onAddRecipe = {},
-            onRecipeSelected = {}
+            onRecipeSelected = {},
+            onLogout = {}
         )
     }
 }
