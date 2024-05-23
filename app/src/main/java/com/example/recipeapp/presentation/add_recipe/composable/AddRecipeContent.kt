@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -28,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.R
@@ -38,7 +40,17 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 @Composable
 fun AddRecipeContent(
     modifier: Modifier = Modifier,
-    scrollState: ScrollState
+    scrollState: ScrollState,
+    title: String,
+    titleError: String?,
+    description: String,
+    descriptionError: String?,
+    ingredient: String,
+    ingredientError: String,
+    onTitleChange: (String) -> Unit,
+    onDescriptionChange: (String) -> Unit,
+    onIngredientChange: (String) -> Unit,
+    onAddRecipe: () -> Unit
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -54,7 +66,7 @@ fun AddRecipeContent(
                     }
                 },
                 actions = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = { onAddRecipe() }) {
                         Icon(
                             imageVector = Icons.Default.Add,
                             contentDescription = "Add recipe button"
@@ -79,11 +91,23 @@ fun AddRecipeContent(
             )
 
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
+                value = title,
+                onValueChange = { onTitleChange(it) },
+                label = { Text(text = stringResource(id = R.string.title)) },
+                placeholder = { Text(text = stringResource(id = R.string.title)) },
+                supportingText = {
+                    if (titleError != null) {
+                        Text(text = titleError)
+                    } },
+                isError = titleError != null,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email
+                ),
+                singleLine = true,
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(bottom = 24.dp)
+                    .testTag("Add recipe title TF")
             )
 
             AddPhotoCard()
@@ -95,11 +119,23 @@ fun AddRecipeContent(
             )
 
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
+                value = description,
+                onValueChange = { onDescriptionChange(it) },
+                label = { Text(text = stringResource(id = R.string.description)) },
+                placeholder = { Text(text = stringResource(id = R.string.description)) },
+                supportingText = {
+                    if (descriptionError != null) {
+                        Text(text = descriptionError)
+                    } },
+                isError = descriptionError != null,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email
+                ),
+                singleLine = true,
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(bottom = 24.dp)
+                    .testTag("Add recipe description TF")
             )
 
             Row(
@@ -143,12 +179,23 @@ fun AddRecipeContent(
             }
 
             OutlinedTextField(
-                value = "",
+                value = ingredient,
+                onValueChange = { onIngredientChange(it) },
                 label = { Text(text = stringResource(id = R.string.type_ingr_name)) },
-                onValueChange = {},
+                placeholder = { Text(text = stringResource(id = R.string.email)) },
+                supportingText = {
+                    if (ingredientError != null) {
+                        Text(text = ingredientError)
+                    } },
+                isError = ingredientError != null,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email
+                ),
+                singleLine = true,
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(bottom = 24.dp)
+                    .testTag("Add recipe type ingredient name TF")
             )
 
             RowWithTextButton(
@@ -176,7 +223,17 @@ fun AddRecipeContent(
 fun AddRecipeContentPreview() {
     RecipeAppTheme {
         AddRecipeContent(
-            scrollState = rememberScrollState()
+            scrollState = rememberScrollState(),
+            title = "",
+            titleError = "",
+            description = "",
+            ingredient = "",
+            ingredientError = "",
+            descriptionError = "",
+            onIngredientChange = {},
+            onTitleChange = {},
+            onDescriptionChange = {},
+            onAddRecipe = {}
         )
     }
 }

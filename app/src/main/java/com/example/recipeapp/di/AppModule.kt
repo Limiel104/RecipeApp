@@ -34,6 +34,7 @@ import com.example.recipeapp.domain.use_case.SignupUseCase
 import com.example.recipeapp.domain.use_case.UpdateUserUseCase
 import com.example.recipeapp.domain.use_case.ValidateConfirmPasswordUseCase
 import com.example.recipeapp.domain.use_case.ValidateEmailUseCase
+import com.example.recipeapp.domain.use_case.ValidateFieldUseCase
 import com.example.recipeapp.domain.use_case.ValidateLoginPasswordUseCase
 import com.example.recipeapp.domain.use_case.ValidateNameUseCase
 import com.example.recipeapp.domain.use_case.ValidateSignupPasswordUseCase
@@ -225,5 +226,11 @@ object AppModule {
     @Singleton
     fun provideValidateNameUseCase(): ValidateNameUseCase {
         return ValidateNameUseCase()
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidateFieldUseCase(): ValidateFieldUseCase {
+        return ValidateFieldUseCase()
     }
 }
