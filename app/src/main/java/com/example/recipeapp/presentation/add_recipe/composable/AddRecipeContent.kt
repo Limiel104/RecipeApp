@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.recipeapp.presentation.add_recipe.composable
 
 import android.content.res.Configuration
@@ -21,8 +23,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,16 +45,20 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 fun AddRecipeContent(
     modifier: Modifier = Modifier,
     scrollState: ScrollState,
+    modalBottomSheetState: SheetState,
+    isBottomSheetOpen: Boolean,
+    selectedServings: Int,
     title: String,
     titleError: String?,
     description: String,
     descriptionError: String?,
     ingredient: String,
-    ingredientError: String,
+    ingredientError: String?,
     onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onIngredientChange: (String) -> Unit,
-    onAddRecipe: () -> Unit
+    onAddRecipe: () -> Unit,
+    onSelectedServings: (Int) -> Unit
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -208,6 +216,14 @@ fun AddRecipeContent(
                 buttonText = stringResource(id = R.string.set_time)
             )
         }
+
+        if(isBottomSheetOpen) {
+            ServingsPicker(
+                modalSheetState = modalBottomSheetState,
+                selectedServings = selectedServings,
+                onSelectedServings = { onSelectedServings(it) }
+            )
+        }
     }
 }
 
@@ -224,16 +240,82 @@ fun AddRecipeContentPreview() {
     RecipeAppTheme {
         AddRecipeContent(
             scrollState = rememberScrollState(),
-            title = "",
-            titleError = "",
-            description = "",
-            ingredient = "",
-            ingredientError = "",
-            descriptionError = "",
+            modalBottomSheetState = rememberModalBottomSheetState(),
+            isBottomSheetOpen = false,
+            selectedServings = 1,
+            title = "New recipe title",
+            titleError = null,
+            description = "Description of the new recipe.",
+            descriptionError = null,
+            ingredient = "ingredient",
+            ingredientError = null,
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
-            onAddRecipe = {}
+            onAddRecipe = {},
+            onSelectedServings = {}
+        )
+    }
+}
+
+@Preview(
+    name = "Light Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun AddRecipeContentPreviewErrorsShown() {
+    RecipeAppTheme {
+        AddRecipeContent(
+            scrollState = rememberScrollState(),
+            modalBottomSheetState = rememberModalBottomSheetState(),
+            isBottomSheetOpen = false,
+            selectedServings = 1,
+            title = "Ti",
+            titleError = "Field too short",
+            description = "des",
+            descriptionError = "Field too short",
+            ingredient = "in",
+            ingredientError = "Field too short",
+            onIngredientChange = {},
+            onTitleChange = {},
+            onDescriptionChange = {},
+            onAddRecipe = {},
+            onSelectedServings = {}
+        )
+    }
+}
+
+@Preview(
+    name = "Light Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun AddRecipeContentPreviewBottomSheetOpen() {
+    RecipeAppTheme {
+        AddRecipeContent(
+            scrollState = rememberScrollState(),
+            modalBottomSheetState = rememberModalBottomSheetState(),
+            isBottomSheetOpen = true,
+            selectedServings = 1,
+            title = "New recipe title",
+            titleError = null,
+            description = "Description of the new recipe.",
+            descriptionError = null,
+            ingredient = "ingredient",
+            ingredientError = null,
+            onIngredientChange = {},
+            onTitleChange = {},
+            onDescriptionChange = {},
+            onAddRecipe = {},
+            onSelectedServings = {}
         )
     }
 }

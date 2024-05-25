@@ -13,5 +13,6 @@ data class AddRecipeState(
     val imageUrl: String = "",
     val createdBy: String = "",
     val categories: List<String> = emptyList(),
-    val ingredient: String = ""
+    val ingredient: String = "",
+    val selectedServings: Int = 0
 )

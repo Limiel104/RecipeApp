@@ -128,6 +128,9 @@ dependencies {
 
     //Testing coroutines
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+
+    //Picker
+    implementation("com.chargemap.compose:numberpicker:1.0.3")
 }
 
 // Allow references to generated code

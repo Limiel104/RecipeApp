@@ -32,4 +32,5 @@
     <string name="no_account_text">Don\'t have an account?</string>
     <string name="not_logged_in">You are not logged in</string>
     <string name="login_or_signup">Login or Signup</string>
+    <string name="prep_time_sheet_subtext">How long does it take to prepare this recipe</string>
 </resources>

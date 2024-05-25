@@ -45,6 +45,12 @@ class AddRecipeViewModel @Inject constructor(
                 )
             }
 
+            is AddRecipeEvent.SelectedServings -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    selectedServings = event.servings
+                )
+            }
+
             AddRecipeEvent.OnAddRecipe -> {
                 val title = _addRecipeState.value.title
                 val description = _addRecipeState.value.description
