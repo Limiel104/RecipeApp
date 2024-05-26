@@ -46,8 +46,9 @@ fun AddRecipeContent(
     modifier: Modifier = Modifier,
     scrollState: ScrollState,
     modalBottomSheetState: SheetState,
-    isBottomSheetOpen: Boolean,
+    isServingsBottomSheetOpen: Boolean,
     selectedServings: Int,
+    lastSavedServings: Int,
     title: String,
     titleError: String?,
     description: String,
@@ -57,8 +58,11 @@ fun AddRecipeContent(
     onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onIngredientChange: (String) -> Unit,
+    onSelectedServings: (Int) -> Unit,
+    onServingsPickerDismiss: () -> Unit,
+    onServingsPickerSave: () -> Unit,
+    onServingsButtonClicked: () -> Unit,
     onAddRecipe: () -> Unit,
-    onSelectedServings: (Int) -> Unit
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -208,20 +212,24 @@ fun AddRecipeContent(
 
             RowWithTextButton(
                 sectionName = stringResource(id = R.string.servings),
-                buttonText = stringResource(id = R.string.set_servings)
+                buttonText = if(lastSavedServings == 0) stringResource(id = R.string.set_servings) else lastSavedServings.toString(),
+                onClick = { onServingsButtonClicked() }
             )
 
             RowWithTextButton(
                 sectionName = stringResource(id = R.string.prep_time),
-                buttonText = stringResource(id = R.string.set_time)
+                buttonText = stringResource(id = R.string.set_time),
+                onClick = {  }
             )
         }
 
-        if(isBottomSheetOpen) {
+        if(isServingsBottomSheetOpen) {
             ServingsPicker(
                 modalSheetState = modalBottomSheetState,
                 selectedServings = selectedServings,
-                onSelectedServings = { onSelectedServings(it) }
+                onSelectedServings = { onSelectedServings(it) },
+                onDismiss = { onServingsPickerDismiss() },
+                onSave = { onServingsPickerSave() }
             )
         }
     }
@@ -241,8 +249,9 @@ fun AddRecipeContentPreview() {
         AddRecipeContent(
             scrollState = rememberScrollState(),
             modalBottomSheetState = rememberModalBottomSheetState(),
-            isBottomSheetOpen = false,
+            isServingsBottomSheetOpen = false,
             selectedServings = 1,
+            lastSavedServings = 0,
             title = "New recipe title",
             titleError = null,
             description = "Description of the new recipe.",
@@ -252,8 +261,11 @@ fun AddRecipeContentPreview() {
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
-            onAddRecipe = {},
-            onSelectedServings = {}
+            onSelectedServings = {},
+            onServingsPickerDismiss = {},
+            onServingsPickerSave = {},
+            onServingsButtonClicked = {},
+            onAddRecipe = {}
         )
     }
 }
@@ -272,8 +284,9 @@ fun AddRecipeContentPreviewErrorsShown() {
         AddRecipeContent(
             scrollState = rememberScrollState(),
             modalBottomSheetState = rememberModalBottomSheetState(),
-            isBottomSheetOpen = false,
+            isServingsBottomSheetOpen = false,
             selectedServings = 1,
+            lastSavedServings = 0,
             title = "Ti",
             titleError = "Field too short",
             description = "des",
@@ -283,8 +296,11 @@ fun AddRecipeContentPreviewErrorsShown() {
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
-            onAddRecipe = {},
-            onSelectedServings = {}
+            onSelectedServings = {},
+            onServingsPickerDismiss = {},
+            onServingsPickerSave = {},
+            onServingsButtonClicked = {},
+            onAddRecipe = {}
         )
     }
 }
@@ -303,8 +319,9 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
         AddRecipeContent(
             scrollState = rememberScrollState(),
             modalBottomSheetState = rememberModalBottomSheetState(),
-            isBottomSheetOpen = true,
+            isServingsBottomSheetOpen = true,
             selectedServings = 1,
+            lastSavedServings = 0,
             title = "New recipe title",
             titleError = null,
             description = "Description of the new recipe.",
@@ -314,8 +331,11 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
-            onAddRecipe = {},
-            onSelectedServings = {}
+            onSelectedServings = {},
+            onServingsPickerDismiss = {},
+            onServingsPickerSave = {},
+            onServingsButtonClicked = {},
+            onAddRecipe = {}
         )
     }
 }

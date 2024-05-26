@@ -17,8 +17,9 @@ fun AddRecipeScreen(
 ) {
     val scrollState = rememberScrollState()
     val modalBottomSheetState = rememberModalBottomSheetState()
-    val isBottomSheetOpen = true
+    val isServingsBottomSheetOpen = viewModel.addRecipeState.value.isServingsBottomSheetOpened
     val selectedServings = viewModel.addRecipeState.value.selectedServings
+    val lastSavedServings = viewModel.addRecipeState.value.lastSavedServings
     val title = viewModel.addRecipeState.value.title
     val titleError = viewModel.addRecipeState.value.titleError
     val description = viewModel.addRecipeState.value.description
@@ -28,8 +29,9 @@ fun AddRecipeScreen(
     AddRecipeContent(
         scrollState = scrollState,
         modalBottomSheetState = modalBottomSheetState,
-        isBottomSheetOpen = isBottomSheetOpen,
+        isServingsBottomSheetOpen = isServingsBottomSheetOpen,
         selectedServings = selectedServings,
+        lastSavedServings = lastSavedServings,
         title = title,
         titleError = titleError,
         description = description,
@@ -39,7 +41,10 @@ fun AddRecipeScreen(
         onTitleChange = { viewModel.onEvent(AddRecipeEvent.EnteredTitle(it)) },
         onDescriptionChange = { viewModel.onEvent(AddRecipeEvent.EnteredDescription(it)) },
         onIngredientChange = { viewModel.onEvent(AddRecipeEvent.EnteredIngredient(it)) },
+        onSelectedServings = { viewModel.onEvent(AddRecipeEvent.SelectedServings(it)) },
+        onServingsPickerDismiss = { viewModel.onEvent(AddRecipeEvent.OnServingsPickerDismissed) },
+        onServingsPickerSave = { viewModel.onEvent(AddRecipeEvent.OnServingsPickerSaved) },
+        onServingsButtonClicked = { viewModel.onEvent(AddRecipeEvent.OnServingsButtonClicked) },
         onAddRecipe = { viewModel.onEvent(AddRecipeEvent.OnAddRecipe) },
-        onSelectedServings = { viewModel.onEvent(AddRecipeEvent.SelectedServings(it)) }
     )
 }

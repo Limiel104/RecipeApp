@@ -18,7 +18,8 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 fun RowWithTextButton(
     modifier: Modifier = Modifier,
     sectionName: String,
-    buttonText: String
+    buttonText: String,
+    onClick: () -> Unit
 ) {
     Row(
         modifier = modifier
@@ -32,7 +33,10 @@ fun RowWithTextButton(
             style = MaterialTheme.typography.titleMedium
         )
 
-        TextButton(onClick = {}) {
+        TextButton(
+            onClick = { onClick() },
+            modifier = modifier.testTag("$sectionName button")
+        ) {
             Text(text = buttonText)
         }
     }
@@ -51,7 +55,8 @@ fun RowWithTextButtonPreview() {
     RecipeAppTheme {
         RowWithTextButton(
             sectionName = "Servings",
-            buttonText = "Set servings"
+            buttonText = "Set servings",
+            onClick = {}
         )
     }
 }

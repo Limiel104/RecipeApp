@@ -14,5 +14,7 @@ data class AddRecipeState(
     val createdBy: String = "",
     val categories: List<String> = emptyList(),
     val ingredient: String = "",
-    val selectedServings: Int = 0
+    val selectedServings: Int = 0,
+    val isServingsBottomSheetOpened: Boolean = false,
+    val lastSavedServings: Int = 0
 )

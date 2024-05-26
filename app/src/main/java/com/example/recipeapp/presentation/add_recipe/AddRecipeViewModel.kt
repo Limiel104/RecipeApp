@@ -51,6 +51,34 @@ class AddRecipeViewModel @Inject constructor(
                 )
             }
 
+            AddRecipeEvent.OnServingsPickerDismissed -> {
+                if(_addRecipeState.value.lastSavedServings != 0) {
+                    _addRecipeState.value = addRecipeState.value.copy(
+                        isServingsBottomSheetOpened = false,
+                        selectedServings = _addRecipeState.value.lastSavedServings
+                    )
+                }
+                else {
+                    _addRecipeState.value = addRecipeState.value.copy(
+                        selectedServings = 0,
+                        isServingsBottomSheetOpened = false
+                    )
+                }
+            }
+
+            AddRecipeEvent.OnServingsPickerSaved -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    isServingsBottomSheetOpened = false,
+                    lastSavedServings = _addRecipeState.value.selectedServings
+                )
+            }
+
+            AddRecipeEvent.OnServingsButtonClicked -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    isServingsBottomSheetOpened = true
+                )
+            }
+
             AddRecipeEvent.OnAddRecipe -> {
                 val title = _addRecipeState.value.title
                 val description = _addRecipeState.value.description

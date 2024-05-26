@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -11,7 +12,9 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,12 +29,13 @@ fun ServingsPicker(
     modifier: Modifier = Modifier,
     modalSheetState: SheetState,
     selectedServings: Int,
-    onSelectedServings: (Int) -> Unit
+    onSelectedServings: (Int) -> Unit,
+    onDismiss: () -> Unit,
+    onSave: () -> Unit
 ) {
     ModalBottomSheet(
-        onDismissRequest = { /*TODO*/ },
+        onDismissRequest = { onDismiss() },
         sheetState = modalSheetState,
-//        dragHandle = { BottomSheetDefaults.DragHandle() }
     ) {
         Column(
             modifier = modifier
@@ -59,6 +63,16 @@ fun ServingsPicker(
                 dividersColor = MaterialTheme.colorScheme.primary,
                 modifier = modifier.fillMaxWidth()
             )
+
+            Button(
+                modifier = modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(vertical = 8.dp)
+                    .testTag("Save servings button"),
+                onClick = { onSave() }
+            ) {
+                Text(text = stringResource(id = R.string.save))
+            }
         }
     }
 }
@@ -80,7 +94,9 @@ fun PrepTimePickerPreview() {
         ServingsPicker(
             modalSheetState = modalSheetState,
             selectedServings = 4,
-            onSelectedServings = {}
+            onSelectedServings = {},
+            onDismiss = {},
+            onSave = {}
         )
     }
 }

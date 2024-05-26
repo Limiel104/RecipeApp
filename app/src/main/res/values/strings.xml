@@ -33,4 +33,5 @@
     <string name="not_logged_in">You are not logged in</string>
     <string name="login_or_signup">Login or Signup</string>
     <string name="prep_time_sheet_subtext">How long does it take to prepare this recipe</string>
+    <string name="save">Save</string>
 </resources>
