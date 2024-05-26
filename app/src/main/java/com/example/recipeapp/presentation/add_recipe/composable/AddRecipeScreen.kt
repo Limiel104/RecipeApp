@@ -20,6 +20,10 @@ fun AddRecipeScreen(
     val isServingsBottomSheetOpen = viewModel.addRecipeState.value.isServingsBottomSheetOpened
     val selectedServings = viewModel.addRecipeState.value.selectedServings
     val lastSavedServings = viewModel.addRecipeState.value.lastSavedServings
+    val isPrepTimeBottomSheetOpen = viewModel.addRecipeState.value.isPrepTimeBottomSheetOpened
+    val selectedPrepTimeMinutes = viewModel.addRecipeState.value.selectedPrepTimeMinutes
+    val selectedPrepTimeHours = viewModel.addRecipeState.value.selectedPrepTimeHours
+    val lastSavedPrepTime = viewModel.addRecipeState.value.lastSavedPrepTime
     val title = viewModel.addRecipeState.value.title
     val titleError = viewModel.addRecipeState.value.titleError
     val description = viewModel.addRecipeState.value.description
@@ -32,6 +36,10 @@ fun AddRecipeScreen(
         isServingsBottomSheetOpen = isServingsBottomSheetOpen,
         selectedServings = selectedServings,
         lastSavedServings = lastSavedServings,
+        isPrepTimeBottomSheetOpen = isPrepTimeBottomSheetOpen,
+        selectedPrepTimeHours = selectedPrepTimeHours,
+        selectedPrepTimeMinutes = selectedPrepTimeMinutes,
+        lastSavedPrepTime = lastSavedPrepTime,
         title = title,
         titleError = titleError,
         description = description,
@@ -45,6 +53,11 @@ fun AddRecipeScreen(
         onServingsPickerDismiss = { viewModel.onEvent(AddRecipeEvent.OnServingsPickerDismissed) },
         onServingsPickerSave = { viewModel.onEvent(AddRecipeEvent.OnServingsPickerSaved) },
         onServingsButtonClicked = { viewModel.onEvent(AddRecipeEvent.OnServingsButtonClicked) },
+        onSelectedPrepTimeHours = { viewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours(it)) },
+        onSelectedPrepTimeMinutes = { viewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes(it)) },
+        onPrepTimePickerDismiss = { viewModel.onEvent(AddRecipeEvent.OnPrepTimePickerDismissed) },
+        onPrepTimePickerSave = { viewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved) },
+        onPrepTimeButtonClicked = { viewModel.onEvent(AddRecipeEvent.OnPrepTimeButtonClicked) },
         onAddRecipe = { viewModel.onEvent(AddRecipeEvent.OnAddRecipe) },
     )
 }

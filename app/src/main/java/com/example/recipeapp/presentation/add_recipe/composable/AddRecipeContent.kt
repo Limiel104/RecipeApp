@@ -40,7 +40,6 @@ import com.example.recipeapp.R
 import com.example.recipeapp.presentation.common.composable.RecipeIngredientItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddRecipeContent(
     modifier: Modifier = Modifier,
@@ -49,6 +48,10 @@ fun AddRecipeContent(
     isServingsBottomSheetOpen: Boolean,
     selectedServings: Int,
     lastSavedServings: Int,
+    isPrepTimeBottomSheetOpen: Boolean,
+    selectedPrepTimeHours: String,
+    selectedPrepTimeMinutes: String,
+    lastSavedPrepTime: String,
     title: String,
     titleError: String?,
     description: String,
@@ -62,6 +65,11 @@ fun AddRecipeContent(
     onServingsPickerDismiss: () -> Unit,
     onServingsPickerSave: () -> Unit,
     onServingsButtonClicked: () -> Unit,
+    onSelectedPrepTimeHours: (String) -> Unit,
+    onSelectedPrepTimeMinutes: (String) -> Unit,
+    onPrepTimePickerDismiss: () -> Unit,
+    onPrepTimePickerSave: () -> Unit,
+    onPrepTimeButtonClicked: () -> Unit,
     onAddRecipe: () -> Unit,
 ) {
     Scaffold(
@@ -218,8 +226,8 @@ fun AddRecipeContent(
 
             RowWithTextButton(
                 sectionName = stringResource(id = R.string.prep_time),
-                buttonText = stringResource(id = R.string.set_time),
-                onClick = {  }
+                buttonText = if(lastSavedPrepTime == "") stringResource(id = R.string.set_time) else lastSavedPrepTime,
+                onClick = { onPrepTimeButtonClicked() }
             )
         }
 
@@ -230,6 +238,18 @@ fun AddRecipeContent(
                 onSelectedServings = { onSelectedServings(it) },
                 onDismiss = { onServingsPickerDismiss() },
                 onSave = { onServingsPickerSave() }
+            )
+        }
+
+        if(isPrepTimeBottomSheetOpen) {
+            PrepTimePicker(
+                modalSheetState = modalBottomSheetState,
+                selectedPrepTimeHours = selectedPrepTimeHours,
+                selectedPrepTimeMinutes = selectedPrepTimeMinutes,
+                onSelectedPrepTimeHours = { onSelectedPrepTimeHours(it) },
+                onSelectedPrepTimeMinutes = { onSelectedPrepTimeMinutes(it) },
+                onDismiss = { onPrepTimePickerDismiss() },
+                onSave = { onPrepTimePickerSave() }
             )
         }
     }
@@ -252,6 +272,10 @@ fun AddRecipeContentPreview() {
             isServingsBottomSheetOpen = false,
             selectedServings = 1,
             lastSavedServings = 0,
+            isPrepTimeBottomSheetOpen = false,
+            selectedPrepTimeHours = "",
+            selectedPrepTimeMinutes = "",
+            lastSavedPrepTime = "",
             title = "New recipe title",
             titleError = null,
             description = "Description of the new recipe.",
@@ -265,6 +289,11 @@ fun AddRecipeContentPreview() {
             onServingsPickerDismiss = {},
             onServingsPickerSave = {},
             onServingsButtonClicked = {},
+            onSelectedPrepTimeHours = {},
+            onSelectedPrepTimeMinutes = {},
+            onPrepTimePickerDismiss = {},
+            onPrepTimePickerSave = {},
+            onPrepTimeButtonClicked = {},
             onAddRecipe = {}
         )
     }
@@ -287,6 +316,10 @@ fun AddRecipeContentPreviewErrorsShown() {
             isServingsBottomSheetOpen = false,
             selectedServings = 1,
             lastSavedServings = 0,
+            isPrepTimeBottomSheetOpen = false,
+            selectedPrepTimeHours = "",
+            selectedPrepTimeMinutes = "",
+            lastSavedPrepTime = "",
             title = "Ti",
             titleError = "Field too short",
             description = "des",
@@ -300,11 +333,17 @@ fun AddRecipeContentPreviewErrorsShown() {
             onServingsPickerDismiss = {},
             onServingsPickerSave = {},
             onServingsButtonClicked = {},
+            onSelectedPrepTimeHours = {},
+            onSelectedPrepTimeMinutes = {},
+            onPrepTimePickerDismiss = {},
+            onPrepTimePickerSave = {},
+            onPrepTimeButtonClicked = {},
             onAddRecipe = {}
         )
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(
     name = "Light Mode",
     uiMode = Configuration.UI_MODE_NIGHT_NO
@@ -322,6 +361,10 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
             isServingsBottomSheetOpen = true,
             selectedServings = 1,
             lastSavedServings = 0,
+            isPrepTimeBottomSheetOpen = false,
+            selectedPrepTimeHours = "",
+            selectedPrepTimeMinutes = "",
+            lastSavedPrepTime = "",
             title = "New recipe title",
             titleError = null,
             description = "Description of the new recipe.",
@@ -335,6 +378,11 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
             onServingsPickerDismiss = {},
             onServingsPickerSave = {},
             onServingsButtonClicked = {},
+            onSelectedPrepTimeHours = {},
+            onSelectedPrepTimeMinutes = {},
+            onPrepTimePickerDismiss = {},
+            onPrepTimePickerSave = {},
+            onPrepTimeButtonClicked = {},
             onAddRecipe = {}
         )
     }

@@ -51,6 +51,18 @@ class AddRecipeViewModel @Inject constructor(
                 )
             }
 
+            is AddRecipeEvent.SelectedPrepTimeHours -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    selectedPrepTimeHours = event.hours
+                )
+            }
+
+            is AddRecipeEvent.SelectedPrepTimeMinutes -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    selectedPrepTimeMinutes = event.minutes
+                )
+            }
+
             AddRecipeEvent.OnServingsPickerDismissed -> {
                 if(_addRecipeState.value.lastSavedServings != 0) {
                     _addRecipeState.value = addRecipeState.value.copy(
@@ -76,6 +88,40 @@ class AddRecipeViewModel @Inject constructor(
             AddRecipeEvent.OnServingsButtonClicked -> {
                 _addRecipeState.value = addRecipeState.value.copy(
                     isServingsBottomSheetOpened = true
+                )
+            }
+
+            AddRecipeEvent.OnPrepTimePickerDismissed -> {
+                if(_addRecipeState.value.lastSavedPrepTime != "") {
+                    _addRecipeState.value = addRecipeState.value.copy(
+                        isPrepTimeBottomSheetOpened = false,
+                        selectedPrepTimeHours = _addRecipeState.value.lastSavedPrepTimeHours,
+                        selectedPrepTimeMinutes = _addRecipeState.value.lastSavedPrepMinutes
+                    )
+                }
+                else {
+                    _addRecipeState.value = addRecipeState.value.copy(
+                        selectedPrepTimeHours = "",
+                        selectedPrepTimeMinutes = "",
+                        isPrepTimeBottomSheetOpened = false
+                    )
+                }
+            }
+
+            AddRecipeEvent.OnPrepTimePickerSaved -> {
+                val hours = _addRecipeState.value.selectedPrepTimeHours
+                val minutes = _addRecipeState.value.selectedPrepTimeMinutes
+                _addRecipeState.value = addRecipeState.value.copy(
+                    isPrepTimeBottomSheetOpened = false,
+                    lastSavedPrepTimeHours = hours,
+                    lastSavedPrepMinutes = minutes,
+                    lastSavedPrepTime = "$hours $minutes"
+                )
+            }
+
+            AddRecipeEvent.OnPrepTimeButtonClicked -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    isPrepTimeBottomSheetOpened = true
                 )
             }
 

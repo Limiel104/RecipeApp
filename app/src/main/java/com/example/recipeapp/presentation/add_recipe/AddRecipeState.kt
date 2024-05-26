@@ -16,5 +16,11 @@ data class AddRecipeState(
     val ingredient: String = "",
     val selectedServings: Int = 0,
     val isServingsBottomSheetOpened: Boolean = false,
-    val lastSavedServings: Int = 0
+    val lastSavedServings: Int = 0,
+    val selectedPrepTimeHours: String = "",
+    val selectedPrepTimeMinutes: String = "",
+    val isPrepTimeBottomSheetOpened: Boolean = false,
+    val lastSavedPrepTime: String = "",
+    val lastSavedPrepTimeHours: String = "",
+    val lastSavedPrepMinutes: String = ""
 )
