@@ -37,6 +37,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.R
+import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.presentation.common.composable.RecipeIngredientItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
@@ -57,7 +58,8 @@ fun AddRecipeContent(
     description: String,
     descriptionError: String?,
     ingredient: String,
-    ingredientError: String?,
+    ingredients: List<Ingredient>,
+    isDropDownMenuExpanded: Boolean,
     onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onIngredientChange: (String) -> Unit,
@@ -70,6 +72,7 @@ fun AddRecipeContent(
     onPrepTimePickerDismiss: () -> Unit,
     onPrepTimePickerSave: () -> Unit,
     onPrepTimeButtonClicked: () -> Unit,
+    onExpandedChange: () -> Unit,
     onAddRecipe: () -> Unit,
 ) {
     Scaffold(
@@ -198,24 +201,34 @@ fun AddRecipeContent(
                 }
             }
 
-            OutlinedTextField(
-                value = ingredient,
+//            OutlinedTextField(
+//                value = ingredient,
+//                onValueChange = { onIngredientChange(it) },
+//                label = { Text(text = stringResource(id = R.string.type_ingr_name)) },
+//                placeholder = { Text(text = stringResource(id = R.string.email)) },
+//                supportingText = {
+//                    if (ingredientError != null) {
+//                        Text(text = ingredientError)
+//                    } },
+//                isError = ingredientError != null,
+//                keyboardOptions = KeyboardOptions(
+//                    keyboardType = KeyboardType.Email
+//                ),
+//                singleLine = true,
+//                modifier = modifier
+//                    .fillMaxWidth()
+//                    .padding(bottom = 24.dp)
+//                    .testTag("Add recipe type ingredient name TF")
+//            )
+
+            AutoComplete(
+                expanded = isDropDownMenuExpanded,
+                ingredient = ingredient,
+                ingredients = ingredients,
+                onExpandedChange = { onExpandedChange() },
                 onValueChange = { onIngredientChange(it) },
-                label = { Text(text = stringResource(id = R.string.type_ingr_name)) },
-                placeholder = { Text(text = stringResource(id = R.string.email)) },
-                supportingText = {
-                    if (ingredientError != null) {
-                        Text(text = ingredientError)
-                    } },
-                isError = ingredientError != null,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email
-                ),
-                singleLine = true,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 24.dp)
-                    .testTag("Add recipe type ingredient name TF")
+                onDismissRequest = {},
+                onClick = {}
             )
 
             RowWithTextButton(
@@ -231,27 +244,27 @@ fun AddRecipeContent(
             )
         }
 
-        if(isServingsBottomSheetOpen) {
-            ServingsPicker(
-                modalSheetState = modalBottomSheetState,
-                selectedServings = selectedServings,
-                onSelectedServings = { onSelectedServings(it) },
-                onDismiss = { onServingsPickerDismiss() },
-                onSave = { onServingsPickerSave() }
-            )
-        }
-
-        if(isPrepTimeBottomSheetOpen) {
-            PrepTimePicker(
-                modalSheetState = modalBottomSheetState,
-                selectedPrepTimeHours = selectedPrepTimeHours,
-                selectedPrepTimeMinutes = selectedPrepTimeMinutes,
-                onSelectedPrepTimeHours = { onSelectedPrepTimeHours(it) },
-                onSelectedPrepTimeMinutes = { onSelectedPrepTimeMinutes(it) },
-                onDismiss = { onPrepTimePickerDismiss() },
-                onSave = { onPrepTimePickerSave() }
-            )
-        }
+//        if(isServingsBottomSheetOpen) {
+//            ServingsPicker(
+//                modalSheetState = modalBottomSheetState,
+//                selectedServings = selectedServings,
+//                onSelectedServings = { onSelectedServings(it) },
+//                onDismiss = { onServingsPickerDismiss() },
+//                onSave = { onServingsPickerSave() }
+//            )
+//        }
+//
+//        if(isPrepTimeBottomSheetOpen) {
+//            PrepTimePicker(
+//                modalSheetState = modalBottomSheetState,
+//                selectedPrepTimeHours = selectedPrepTimeHours,
+//                selectedPrepTimeMinutes = selectedPrepTimeMinutes,
+//                onSelectedPrepTimeHours = { onSelectedPrepTimeHours(it) },
+//                onSelectedPrepTimeMinutes = { onSelectedPrepTimeMinutes(it) },
+//                onDismiss = { onPrepTimePickerDismiss() },
+//                onSave = { onPrepTimePickerSave() }
+//            )
+//        }
     }
 }
 
@@ -281,7 +294,8 @@ fun AddRecipeContentPreview() {
             description = "Description of the new recipe.",
             descriptionError = null,
             ingredient = "ingredient",
-            ingredientError = null,
+            ingredients = emptyList(),
+            isDropDownMenuExpanded = false,
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
@@ -294,6 +308,7 @@ fun AddRecipeContentPreview() {
             onPrepTimePickerDismiss = {},
             onPrepTimePickerSave = {},
             onPrepTimeButtonClicked = {},
+            onExpandedChange = {},
             onAddRecipe = {}
         )
     }
@@ -325,7 +340,8 @@ fun AddRecipeContentPreviewErrorsShown() {
             description = "des",
             descriptionError = "Field too short",
             ingredient = "in",
-            ingredientError = "Field too short",
+            ingredients = emptyList(),
+            isDropDownMenuExpanded = false,
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
@@ -338,6 +354,7 @@ fun AddRecipeContentPreviewErrorsShown() {
             onPrepTimePickerDismiss = {},
             onPrepTimePickerSave = {},
             onPrepTimeButtonClicked = {},
+            onExpandedChange = {},
             onAddRecipe = {}
         )
     }
@@ -370,7 +387,8 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
             description = "Description of the new recipe.",
             descriptionError = null,
             ingredient = "ingredient",
-            ingredientError = null,
+            ingredients = emptyList(),
+            isDropDownMenuExpanded = false,
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
@@ -383,6 +401,7 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
             onPrepTimePickerDismiss = {},
             onPrepTimePickerSave = {},
             onPrepTimeButtonClicked = {},
+            onExpandedChange = {},
             onAddRecipe = {}
         )
     }

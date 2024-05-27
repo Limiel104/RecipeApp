@@ -4,15 +4,20 @@ import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.recipeapp.domain.model.Resource
+import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
 import com.example.recipeapp.domain.use_case.ValidateFieldUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AddRecipeViewModel @Inject constructor(
-    private val validateFieldUseCase: ValidateFieldUseCase
+    private val validateFieldUseCase: ValidateFieldUseCase,
+    private val getIngredientsUseCase: GetIngredientsUseCase
 ): ViewModel() {
 
     private val _addRecipeState = mutableStateOf(AddRecipeState())
@@ -23,6 +28,7 @@ class AddRecipeViewModel @Inject constructor(
 
     init {
         Log.i("TAG", "Add recipe VM")
+        getIngredients()
     }
 
     fun onEvent(event: AddRecipeEvent) {
@@ -43,6 +49,12 @@ class AddRecipeViewModel @Inject constructor(
                 _addRecipeState.value = addRecipeState.value.copy(
                     ingredient = event.ingredient
                 )
+//                if(event.ingredient != "") {
+//                    _addRecipeState.value = addRecipeState.value.copy(
+//                        isDropDownMenuExpanded = true
+//                    )
+//                    Log.i("TAG55",_addRecipeState.value.ingredients.toString())
+//                }
             }
 
             is AddRecipeEvent.SelectedServings -> {
@@ -125,6 +137,13 @@ class AddRecipeViewModel @Inject constructor(
                 )
             }
 
+            AddRecipeEvent.OnExpandChange -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    isDropDownMenuExpanded = !_addRecipeState.value.isDropDownMenuExpanded
+                )
+                Log.i("TAG","expanded: ${_addRecipeState.value.isDropDownMenuExpanded}")
+            }
+
             AddRecipeEvent.OnAddRecipe -> {
                 val title = _addRecipeState.value.title
                 val description = _addRecipeState.value.description
@@ -163,5 +182,31 @@ class AddRecipeViewModel @Inject constructor(
 
     private fun addRecipe() {
         Log.i("TAG", "Add recipe")
+    }
+
+    private fun getIngredients() {
+        viewModelScope.launch {
+            getIngredientsUseCase().collect { response ->
+                when(response) {
+                    is Resource.Error -> {
+                        Log.i("TAG","Error message from getIngredients: ${response.message}")
+                    }
+                    is Resource.Loading -> {
+                        Log.i("TAG","Loading ingredients: ${response.isLoading}")
+                        _addRecipeState.value = addRecipeState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i("TAG",response.data.toString())
+                        response.data?.let {
+                            _addRecipeState.value = addRecipeState.value.copy(
+                                ingredients = response.data
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 }

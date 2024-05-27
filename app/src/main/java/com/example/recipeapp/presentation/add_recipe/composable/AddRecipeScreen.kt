@@ -29,6 +29,9 @@ fun AddRecipeScreen(
     val description = viewModel.addRecipeState.value.description
     val descriptionError = viewModel.addRecipeState.value.descriptionError
     val ingredient = viewModel.addRecipeState.value.ingredient
+    val ingredients = viewModel.addRecipeState.value.ingredients
+    val isDropDownMenuExpanded = viewModel.addRecipeState.value.isDropDownMenuExpanded
+    val recipeIngredients = viewModel.addRecipeState.value.recipeIngredients
 
     AddRecipeContent(
         scrollState = scrollState,
@@ -45,7 +48,8 @@ fun AddRecipeScreen(
         description = description,
         descriptionError = descriptionError,
         ingredient = ingredient,
-        ingredientError = "",
+        ingredients = ingredients,
+        isDropDownMenuExpanded = isDropDownMenuExpanded,
         onTitleChange = { viewModel.onEvent(AddRecipeEvent.EnteredTitle(it)) },
         onDescriptionChange = { viewModel.onEvent(AddRecipeEvent.EnteredDescription(it)) },
         onIngredientChange = { viewModel.onEvent(AddRecipeEvent.EnteredIngredient(it)) },
@@ -58,6 +62,7 @@ fun AddRecipeScreen(
         onPrepTimePickerDismiss = { viewModel.onEvent(AddRecipeEvent.OnPrepTimePickerDismissed) },
         onPrepTimePickerSave = { viewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved) },
         onPrepTimeButtonClicked = { viewModel.onEvent(AddRecipeEvent.OnPrepTimeButtonClicked) },
+        onExpandedChange = { viewModel.onEvent(AddRecipeEvent.OnExpandChange) },
         onAddRecipe = { viewModel.onEvent(AddRecipeEvent.OnAddRecipe) },
     )
 }

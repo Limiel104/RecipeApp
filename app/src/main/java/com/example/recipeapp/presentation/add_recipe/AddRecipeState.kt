@@ -1,5 +1,7 @@
 package com.example.recipeapp.presentation.add_recipe
 
+import com.example.recipeapp.domain.model.Ingredient
+
 data class AddRecipeState(
     val recipeId: String = "",
     val title: String = "",
@@ -22,5 +24,9 @@ data class AddRecipeState(
     val isPrepTimeBottomSheetOpened: Boolean = false,
     val lastSavedPrepTime: String = "",
     val lastSavedPrepTimeHours: String = "",
-    val lastSavedPrepMinutes: String = ""
+    val lastSavedPrepMinutes: String = "",
+    val ingredients: List<Ingredient> = emptyList(),
+    val isDropDownMenuExpanded: Boolean = false,
+    val isLoading: Boolean = false,
+    val recipeIngredients: List<Ingredient> = emptyList()
 )
