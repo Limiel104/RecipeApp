@@ -14,16 +14,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.recipeapp.R
+import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
 fun RecipeIngredientItem(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    ingredient: Ingredient
 ) {
     Row(
         modifier = modifier
@@ -34,11 +34,11 @@ fun RecipeIngredientItem(
     ) {
         ImageItem(
             modifier = modifier.size(40.dp),
-            imageUrl = ""
+            imageUrl = ingredient.imageUrl
         )
 
         Text(
-            text = stringResource(id = R.string.ingredient),
+            text = ingredient.name,
             style = MaterialTheme.typography.bodyMedium,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier
@@ -60,7 +60,14 @@ fun RecipeIngredientItem(
 fun RecipeIngredientItemPreview() {
     RecipeAppTheme {
         Surface {
-            RecipeIngredientItem()
+            RecipeIngredientItem(
+                ingredient = Ingredient(
+                    ingredientId = "ingredientId",
+                    name = "Ingredient Name",
+                    imageUrl = "imageUrl",
+                    category = "category"
+                )
+            )
         }
     }
 }

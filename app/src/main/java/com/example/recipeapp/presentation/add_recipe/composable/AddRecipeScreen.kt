@@ -49,6 +49,7 @@ fun AddRecipeScreen(
         descriptionError = descriptionError,
         ingredient = ingredient,
         ingredients = ingredients,
+        recipeIngredients = recipeIngredients,
         isDropDownMenuExpanded = isDropDownMenuExpanded,
         onTitleChange = { viewModel.onEvent(AddRecipeEvent.EnteredTitle(it)) },
         onDescriptionChange = { viewModel.onEvent(AddRecipeEvent.EnteredDescription(it)) },

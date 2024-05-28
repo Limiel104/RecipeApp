@@ -59,6 +59,7 @@ fun AddRecipeContent(
     descriptionError: String?,
     ingredient: String,
     ingredients: List<Ingredient>,
+    recipeIngredients: List<Ingredient>,
     isDropDownMenuExpanded: Boolean,
     onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
@@ -190,15 +191,13 @@ fun AddRecipeContent(
             )
 
             Column(
-                modifier = modifier
-                    .padding(bottom = 20.dp)
+                modifier = modifier.padding(bottom = 20.dp)
             ) {
-                for (i in 1..4) {
-                    RecipeIngredientItem()
+                for(i in recipeIngredients.indices) {
+                    RecipeIngredientItem(ingredient = recipeIngredients[i])
 
-                    if (i != 4) {
+                    if(i != recipeIngredients.size-1)
                         HorizontalDivider()
-                    }
                 }
             }
 
@@ -248,6 +247,29 @@ fun AddRecipeContent(
     }
 }
 
+private fun getIngredients(): List<Ingredient> {
+    return listOf(
+        Ingredient(
+            ingredientId = "ingredientId",
+            name = "Ingredient Name",
+            imageUrl = "imageUrl",
+            category = "category"
+        ),
+        Ingredient(
+            ingredientId = "ingredient2Id",
+            name = "Ingredient2 Name",
+            imageUrl = "imageUrl",
+            category = "category"
+        ),
+        Ingredient(
+            ingredientId = "ingredient3Id",
+            name = "Ingredient3 Name",
+            imageUrl = "imageUrl",
+            category = "category"
+        )
+    )
+}
+
 @Preview(
     name = "Light Mode",
     uiMode = Configuration.UI_MODE_NIGHT_NO
@@ -275,6 +297,7 @@ fun AddRecipeContentPreview() {
             descriptionError = null,
             ingredient = "ingredient",
             ingredients = emptyList(),
+            recipeIngredients = getIngredients(),
             isDropDownMenuExpanded = false,
             onIngredientChange = {},
             onTitleChange = {},
@@ -322,6 +345,7 @@ fun AddRecipeContentPreviewErrorsShown() {
             descriptionError = "Field too short",
             ingredient = "in",
             ingredients = emptyList(),
+            recipeIngredients = getIngredients(),
             isDropDownMenuExpanded = false,
             onIngredientChange = {},
             onTitleChange = {},
@@ -370,6 +394,7 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
             descriptionError = null,
             ingredient = "ingredient",
             ingredients = emptyList(),
+            recipeIngredients = getIngredients(),
             isDropDownMenuExpanded = false,
             onIngredientChange = {},
             onTitleChange = {},
