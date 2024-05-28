@@ -73,6 +73,7 @@ fun AddRecipeContent(
     onPrepTimePickerSave: () -> Unit,
     onPrepTimeButtonClicked: () -> Unit,
     onExpandedChange: () -> Unit,
+    onIngredientSuggestionClick: (Ingredient) -> Unit,
     onAddRecipe: () -> Unit,
 ) {
     Scaffold(
@@ -201,34 +202,13 @@ fun AddRecipeContent(
                 }
             }
 
-//            OutlinedTextField(
-//                value = ingredient,
-//                onValueChange = { onIngredientChange(it) },
-//                label = { Text(text = stringResource(id = R.string.type_ingr_name)) },
-//                placeholder = { Text(text = stringResource(id = R.string.email)) },
-//                supportingText = {
-//                    if (ingredientError != null) {
-//                        Text(text = ingredientError)
-//                    } },
-//                isError = ingredientError != null,
-//                keyboardOptions = KeyboardOptions(
-//                    keyboardType = KeyboardType.Email
-//                ),
-//                singleLine = true,
-//                modifier = modifier
-//                    .fillMaxWidth()
-//                    .padding(bottom = 24.dp)
-//                    .testTag("Add recipe type ingredient name TF")
-//            )
-
             AutoComplete(
                 expanded = isDropDownMenuExpanded,
                 ingredient = ingredient,
                 ingredients = ingredients,
                 onExpandedChange = { onExpandedChange() },
                 onValueChange = { onIngredientChange(it) },
-                onDismissRequest = {},
-                onClick = {}
+                onClick = { onIngredientSuggestionClick(it) }
             )
 
             RowWithTextButton(
@@ -309,6 +289,7 @@ fun AddRecipeContentPreview() {
             onPrepTimePickerSave = {},
             onPrepTimeButtonClicked = {},
             onExpandedChange = {},
+            onIngredientSuggestionClick = {},
             onAddRecipe = {}
         )
     }
@@ -355,6 +336,7 @@ fun AddRecipeContentPreviewErrorsShown() {
             onPrepTimePickerSave = {},
             onPrepTimeButtonClicked = {},
             onExpandedChange = {},
+            onIngredientSuggestionClick = {},
             onAddRecipe = {}
         )
     }
@@ -402,6 +384,7 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
             onPrepTimePickerSave = {},
             onPrepTimeButtonClicked = {},
             onExpandedChange = {},
+            onIngredientSuggestionClick = {},
             onAddRecipe = {}
         )
     }

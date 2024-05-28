@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Resource
 import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
 import com.example.recipeapp.domain.use_case.ValidateFieldUseCase
@@ -49,12 +50,6 @@ class AddRecipeViewModel @Inject constructor(
                 _addRecipeState.value = addRecipeState.value.copy(
                     ingredient = event.ingredient
                 )
-//                if(event.ingredient != "") {
-//                    _addRecipeState.value = addRecipeState.value.copy(
-//                        isDropDownMenuExpanded = true
-//                    )
-//                    Log.i("TAG55",_addRecipeState.value.ingredients.toString())
-//                }
             }
 
             is AddRecipeEvent.SelectedServings -> {
@@ -72,6 +67,13 @@ class AddRecipeViewModel @Inject constructor(
             is AddRecipeEvent.SelectedPrepTimeMinutes -> {
                 _addRecipeState.value = addRecipeState.value.copy(
                     selectedPrepTimeMinutes = event.minutes
+                )
+            }
+
+            is AddRecipeEvent.SelectedIngredient -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    isDropDownMenuExpanded = false,
+                    recipeIngredients = getRecipeIngredients(event.ingredient, _addRecipeState.value.recipeIngredients)
                 )
             }
 
@@ -141,7 +143,6 @@ class AddRecipeViewModel @Inject constructor(
                 _addRecipeState.value = addRecipeState.value.copy(
                     isDropDownMenuExpanded = !_addRecipeState.value.isDropDownMenuExpanded
                 )
-                Log.i("TAG","expanded: ${_addRecipeState.value.isDropDownMenuExpanded}")
             }
 
             AddRecipeEvent.OnAddRecipe -> {
@@ -182,6 +183,16 @@ class AddRecipeViewModel @Inject constructor(
 
     private fun addRecipe() {
         Log.i("TAG", "Add recipe")
+    }
+
+    private fun getRecipeIngredients(newIngredient: Ingredient, ingredients: List<Ingredient>): List<Ingredient> {
+        val recipeIngredients = mutableListOf<Ingredient>()
+
+        for(ingredient in ingredients) {
+            recipeIngredients.add(ingredient)
+        }
+        recipeIngredients.add(newIngredient)
+        return recipeIngredients
     }
 
     private fun getIngredients() {

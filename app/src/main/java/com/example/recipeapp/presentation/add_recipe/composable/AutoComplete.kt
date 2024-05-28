@@ -1,9 +1,9 @@
 package com.example.recipeapp.presentation.add_recipe.composable
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.PopupProperties
 import com.example.recipeapp.R
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.ui.theme.RecipeAppTheme
@@ -30,9 +31,12 @@ fun AutoComplete(
     ingredients: List<Ingredient>,
     onExpandedChange: () -> Unit,
     onValueChange: (String) -> Unit,
-    onDismissRequest: () -> Unit,
-    onClick: () -> Unit
+    onClick: (Ingredient) -> Unit
 ) {
+    val filterOpts = ingredients.filter {
+        it.name.contains(ingredient, ignoreCase = true)
+    }
+
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { onExpandedChange() },
@@ -45,53 +49,28 @@ fun AutoComplete(
             onValueChange = { onValueChange(it) },
             label = { Text(text = stringResource(id = R.string.type_ingr_name)) },
             singleLine = true,
-            trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-            },
-//            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = modifier
-                .fillMaxWidth()
                 .menuAnchor()
+                .fillMaxWidth()
         )
 
-        val filterOpts = ingredients.filter {
-            it.name.contains(ingredient, ignoreCase = true)
-        }
-
-        Log.i("TAG567",filterOpts.toString())
-
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { onDismissRequest() }
-        ) {
-            filterOpts.forEach { option ->
-                DropdownMenuItem(
-                    text = { Text(text = option.name) },
-                    onClick = { onClick() },
-                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
-                )
+        if(filterOpts.isNotEmpty()) {
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { onExpandedChange() },
+                modifier = modifier.exposedDropdownSize(true),
+                properties = PopupProperties(focusable = false)
+            ) {
+                filterOpts.forEach { ingredientSuggestion ->
+                    DropdownMenuItem(
+                        text = { Text(text = ingredientSuggestion.name) },
+                        onClick = { onClick(ingredientSuggestion) },
+                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                    )
+                }
             }
         }
-
-//        val filterOpts = ingredients.filter {
-//            it.name.contains(ingredient, ignoreCase = true)
-//        }
-//
-//        Log.i("TAG567",filterOpts.toString())
-//
-//        if (filterOpts.isNotEmpty()) {
-//            ExposedDropdownMenu(
-//                expanded = expanded,
-//                onDismissRequest = { onDismissRequest() }
-//            ) {
-//                filterOpts.forEach { ingredient ->
-//                    DropdownMenuItem(
-//                        text = { Text(text = ingredient.name) },
-//                        onClick = { onClick() }
-//                    )
-//                }
-//            }
-//        }
     }
 }
 
@@ -136,7 +115,6 @@ fun AutoCompletePreview() {
                 ingredients = getIngredients(),
                 onExpandedChange = {},
                 onValueChange = {},
-                onDismissRequest = {},
                 onClick = {}
             )
         }
@@ -161,7 +139,6 @@ fun AutoCompletePreviewExpanded() {
                 ingredients = getIngredients(),
                 onExpandedChange = {},
                 onValueChange = {},
-                onDismissRequest = {},
                 onClick = {}
             )
         }

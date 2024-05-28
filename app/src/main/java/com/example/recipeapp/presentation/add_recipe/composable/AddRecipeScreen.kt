@@ -63,6 +63,7 @@ fun AddRecipeScreen(
         onPrepTimePickerSave = { viewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved) },
         onPrepTimeButtonClicked = { viewModel.onEvent(AddRecipeEvent.OnPrepTimeButtonClicked) },
         onExpandedChange = { viewModel.onEvent(AddRecipeEvent.OnExpandChange) },
+        onIngredientSuggestionClick = {viewModel.onEvent(AddRecipeEvent.SelectedIngredient(it))},
         onAddRecipe = { viewModel.onEvent(AddRecipeEvent.OnAddRecipe) },
     )
 }
