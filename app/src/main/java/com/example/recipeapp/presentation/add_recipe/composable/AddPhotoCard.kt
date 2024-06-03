@@ -22,13 +22,14 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
 fun AddPhotoCard(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(bottom = 24.dp)
-            .clickable {}
+            .clickable { onClick() }
     ) {
         Column(
             modifier = modifier
@@ -61,6 +62,8 @@ fun AddPhotoCard(
 @Composable
 fun AddPhotoCardPreview() {
     RecipeAppTheme {
-        AddPhotoCard()
+        AddPhotoCard(
+            onClick = {}
+        )
     }
 }

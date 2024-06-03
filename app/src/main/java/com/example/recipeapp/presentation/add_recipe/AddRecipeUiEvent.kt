@@ -1,4 +1,6 @@
 package com.example.recipeapp.presentation.add_recipe
 
-class AddRecipeUiEvent {
+sealed class AddRecipeUiEvent {
+    object LaunchCamera: AddRecipeUiEvent()
+    object LaunchGallery: AddRecipeUiEvent()
 }

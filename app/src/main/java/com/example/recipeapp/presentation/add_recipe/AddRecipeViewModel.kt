@@ -77,6 +77,18 @@ class AddRecipeViewModel @Inject constructor(
                 )
             }
 
+            is AddRecipeEvent.PreparedTempUri -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    tempUri = event.tempUri!!
+                )
+            }
+
+            is AddRecipeEvent.SelectedRecipePicture -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    photoUri = event.photoUri!!
+                )
+            }
+
             AddRecipeEvent.OnServingsPickerDismissed -> {
                 if(_addRecipeState.value.lastSavedServings != 0) {
                     _addRecipeState.value = addRecipeState.value.copy(
@@ -143,6 +155,32 @@ class AddRecipeViewModel @Inject constructor(
                 _addRecipeState.value = addRecipeState.value.copy(
                     isDropDownMenuExpanded = !_addRecipeState.value.isDropDownMenuExpanded
                 )
+            }
+
+            AddRecipeEvent.OnAddPhoto -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    isPhotoBottomSheetOpen = true
+                )
+            }
+
+            AddRecipeEvent.OnTakePhoto -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    isPhotoBottomSheetOpen = false
+                )
+
+                viewModelScope.launch {
+                    _addRecipeUiEventChannel.send(AddRecipeUiEvent.LaunchCamera)
+                }
+            }
+
+            AddRecipeEvent.OnSelectImage -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    isPhotoBottomSheetOpen = false
+                )
+
+                viewModelScope.launch {
+                    _addRecipeUiEventChannel.send(AddRecipeUiEvent.LaunchGallery)
+                }
             }
 
             AddRecipeEvent.OnAddRecipe -> {

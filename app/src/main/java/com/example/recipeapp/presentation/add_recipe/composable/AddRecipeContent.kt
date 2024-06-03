@@ -61,6 +61,7 @@ fun AddRecipeContent(
     ingredients: List<Ingredient>,
     recipeIngredients: List<Ingredient>,
     isDropDownMenuExpanded: Boolean,
+    isPhotoBottomSheetOpen: Boolean,
     onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onIngredientChange: (String) -> Unit,
@@ -75,6 +76,9 @@ fun AddRecipeContent(
     onPrepTimeButtonClicked: () -> Unit,
     onExpandedChange: () -> Unit,
     onIngredientSuggestionClick: (Ingredient) -> Unit,
+    onAddPhoto: () -> Unit,
+    onTakePhoto: () -> Unit,
+    onSelectImage: () -> Unit,
     onAddRecipe: () -> Unit,
 ) {
     Scaffold(
@@ -135,7 +139,9 @@ fun AddRecipeContent(
                     .testTag("Add recipe title TF")
             )
 
-            AddPhotoCard()
+            AddPhotoCard(
+                onClick = { onAddPhoto() }
+            )
 
             Text(
                 text = stringResource(id = R.string.description),
@@ -244,6 +250,15 @@ fun AddRecipeContent(
 //                onSave = { onPrepTimePickerSave() }
 //            )
 //        }
+
+        if(isPhotoBottomSheetOpen) {
+            PhotoPicker(
+                modalSheetState = modalBottomSheetState,
+                onDismiss = {},
+                onTakePhoto = { onTakePhoto() },
+                onSelectImage = { onSelectImage() }
+            )
+        }
     }
 }
 
@@ -299,6 +314,7 @@ fun AddRecipeContentPreview() {
             ingredients = emptyList(),
             recipeIngredients = getIngredients(),
             isDropDownMenuExpanded = false,
+            isPhotoBottomSheetOpen = false,
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
@@ -313,6 +329,9 @@ fun AddRecipeContentPreview() {
             onPrepTimeButtonClicked = {},
             onExpandedChange = {},
             onIngredientSuggestionClick = {},
+            onAddPhoto = {},
+            onTakePhoto = {},
+            onSelectImage = {},
             onAddRecipe = {}
         )
     }
@@ -347,6 +366,7 @@ fun AddRecipeContentPreviewErrorsShown() {
             ingredients = emptyList(),
             recipeIngredients = getIngredients(),
             isDropDownMenuExpanded = false,
+            isPhotoBottomSheetOpen = false,
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
@@ -361,6 +381,9 @@ fun AddRecipeContentPreviewErrorsShown() {
             onPrepTimeButtonClicked = {},
             onExpandedChange = {},
             onIngredientSuggestionClick = {},
+            onAddPhoto = {},
+            onTakePhoto = {},
+            onSelectImage = {},
             onAddRecipe = {}
         )
     }
@@ -396,6 +419,7 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
             ingredients = emptyList(),
             recipeIngredients = getIngredients(),
             isDropDownMenuExpanded = false,
+            isPhotoBottomSheetOpen = false,
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
@@ -410,6 +434,9 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
             onPrepTimeButtonClicked = {},
             onExpandedChange = {},
             onIngredientSuggestionClick = {},
+            onAddPhoto = {},
+            onTakePhoto = {},
+            onSelectImage = {},
             onAddRecipe = {}
         )
     }

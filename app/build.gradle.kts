@@ -120,6 +120,9 @@ dependencies {
     //Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:2.6.1")
 
+    //Image cropper
+    implementation("com.vanniktech:android-image-cropper:4.5.0")
+
     //MockK
     testImplementation("io.mockk:mockk-android:1.13.10")
     testImplementation("io.mockk:mockk-agent:1.13.10")

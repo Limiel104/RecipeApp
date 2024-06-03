@@ -1,5 +1,6 @@
 package com.example.recipeapp.presentation.add_recipe
 
+import android.net.Uri
 import com.example.recipeapp.domain.model.Ingredient
 
 data class AddRecipeState(
@@ -28,5 +29,8 @@ data class AddRecipeState(
     val ingredients: List<Ingredient> = emptyList(),
     val isDropDownMenuExpanded: Boolean = false,
     val isLoading: Boolean = false,
-    val recipeIngredients: List<Ingredient> = emptyList()
+    val recipeIngredients: List<Ingredient> = emptyList(),
+    val tempUri: Uri = Uri.EMPTY,
+    val isPhotoBottomSheetOpen: Boolean = false,
+    val photoUri: Uri = Uri.EMPTY
 )
