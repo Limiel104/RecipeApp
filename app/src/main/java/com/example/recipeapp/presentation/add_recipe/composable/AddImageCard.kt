@@ -1,9 +1,13 @@
 package com.example.recipeapp.presentation.add_recipe.composable
 
 import android.content.res.Configuration
+import android.net.Uri
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PhotoCamera
@@ -18,35 +22,41 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.R
+import com.example.recipeapp.presentation.common.composable.ImageItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
-fun AddPhotoCard(
+fun AddImageCard(
     modifier: Modifier = Modifier,
+    imageUri: Uri?,
     onClick: () -> Unit
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
+            .height(150.dp)
             .padding(bottom = 24.dp)
             .clickable { onClick() }
     ) {
         Column(
             modifier = modifier
-                .fillMaxWidth()
-                .padding(30.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Icon(
-                imageVector = Icons.Outlined.PhotoCamera,
-                contentDescription = "Add photo button"
-            )
+            if(imageUri == Uri.EMPTY) {
+                Icon(
+                    imageVector = Icons.Outlined.PhotoCamera,
+                    contentDescription = "Add image button"
+                )
 
-            Text(
-                text = stringResource(id = R.string.add_photo),
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(top = 8.dp)
-            )
+                Text(
+                    text = stringResource(id = R.string.add_image),
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
+            else { ImageItem(imageUrl = imageUri.toString()) }
         }
     }
 }
@@ -60,9 +70,28 @@ fun AddPhotoCard(
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
-fun AddPhotoCardPreview() {
+fun AddImageCardPreview() {
     RecipeAppTheme {
-        AddPhotoCard(
+        AddImageCard(
+            imageUri = Uri.EMPTY,
+            onClick = {}
+        )
+    }
+}
+
+@Preview(
+    name = "Light Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun AddImageCardPreviewImageUriNotEmpty() {
+    RecipeAppTheme {
+        AddImageCard(
+            imageUri = Uri.parse("imageUri"),
             onClick = {}
         )
     }

@@ -54,7 +54,8 @@ fun AddRecipeScreen(
     val isDropDownMenuExpanded = viewModel.addRecipeState.value.isDropDownMenuExpanded
     val recipeIngredients = viewModel.addRecipeState.value.recipeIngredients
 //    val tempUri = viewModel.addRecipeState.value.tempUri
-    val isPhotoBottomSheetOpen = viewModel.addRecipeState.value.isPhotoBottomSheetOpen
+    val imageUri = viewModel.addRecipeState.value.imageUri
+    val isImageBottomSheetOpen = viewModel.addRecipeState.value.isImageBottomSheetOpen
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val authority = stringResource(id = R.string.fileprovider)
@@ -145,7 +146,8 @@ fun AddRecipeScreen(
         ingredients = ingredients,
         recipeIngredients = recipeIngredients,
         isDropDownMenuExpanded = isDropDownMenuExpanded,
-        isPhotoBottomSheetOpen = isPhotoBottomSheetOpen,
+        isImageBottomSheetOpen = isImageBottomSheetOpen,
+        imageUri = imageUri,
         onTitleChange = { viewModel.onEvent(AddRecipeEvent.EnteredTitle(it)) },
         onDescriptionChange = { viewModel.onEvent(AddRecipeEvent.EnteredDescription(it)) },
         onIngredientChange = { viewModel.onEvent(AddRecipeEvent.EnteredIngredient(it)) },
@@ -160,9 +162,10 @@ fun AddRecipeScreen(
         onPrepTimeButtonClicked = { viewModel.onEvent(AddRecipeEvent.OnPrepTimeButtonClicked) },
         onExpandedChange = { viewModel.onEvent(AddRecipeEvent.OnExpandChange) },
         onIngredientSuggestionClick = {viewModel.onEvent(AddRecipeEvent.SelectedIngredient(it))},
-        onAddPhoto = { viewModel.onEvent(AddRecipeEvent.OnAddPhoto) },
+        onAddPhoto = { viewModel.onEvent(AddRecipeEvent.OnAddImage) },
         onTakePhoto = {  viewModel.onEvent(AddRecipeEvent.OnTakePhoto) },
         onSelectImage = {  viewModel.onEvent(AddRecipeEvent.OnSelectImage) },
+        onAddImageDismiss = { viewModel.onEvent(AddRecipeEvent.OnAddImageDismiss) },
         onAddRecipe = { viewModel.onEvent(AddRecipeEvent.OnAddRecipe) },
     )
 }

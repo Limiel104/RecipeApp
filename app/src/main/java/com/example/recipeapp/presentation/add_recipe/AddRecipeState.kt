@@ -31,6 +31,6 @@ data class AddRecipeState(
     val isLoading: Boolean = false,
     val recipeIngredients: List<Ingredient> = emptyList(),
     val tempUri: Uri = Uri.EMPTY,
-    val isPhotoBottomSheetOpen: Boolean = false,
-    val photoUri: Uri = Uri.EMPTY
+    val isImageBottomSheetOpen: Boolean = false,
+    val imageUri: Uri = Uri.EMPTY
 )

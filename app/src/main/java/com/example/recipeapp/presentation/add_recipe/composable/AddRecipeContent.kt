@@ -3,6 +3,7 @@
 package com.example.recipeapp.presentation.add_recipe.composable
 
 import android.content.res.Configuration
+import android.net.Uri
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -61,7 +62,8 @@ fun AddRecipeContent(
     ingredients: List<Ingredient>,
     recipeIngredients: List<Ingredient>,
     isDropDownMenuExpanded: Boolean,
-    isPhotoBottomSheetOpen: Boolean,
+    isImageBottomSheetOpen: Boolean,
+    imageUri: Uri?,
     onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onIngredientChange: (String) -> Unit,
@@ -79,6 +81,7 @@ fun AddRecipeContent(
     onAddPhoto: () -> Unit,
     onTakePhoto: () -> Unit,
     onSelectImage: () -> Unit,
+    onAddImageDismiss: () -> Unit,
     onAddRecipe: () -> Unit,
 ) {
     Scaffold(
@@ -139,7 +142,8 @@ fun AddRecipeContent(
                     .testTag("Add recipe title TF")
             )
 
-            AddPhotoCard(
+            AddImageCard(
+                imageUri = imageUri,
                 onClick = { onAddPhoto() }
             )
 
@@ -229,32 +233,32 @@ fun AddRecipeContent(
             )
         }
 
-//        if(isServingsBottomSheetOpen) {
-//            ServingsPicker(
-//                modalSheetState = modalBottomSheetState,
-//                selectedServings = selectedServings,
-//                onSelectedServings = { onSelectedServings(it) },
-//                onDismiss = { onServingsPickerDismiss() },
-//                onSave = { onServingsPickerSave() }
-//            )
-//        }
-//
-//        if(isPrepTimeBottomSheetOpen) {
-//            PrepTimePicker(
-//                modalSheetState = modalBottomSheetState,
-//                selectedPrepTimeHours = selectedPrepTimeHours,
-//                selectedPrepTimeMinutes = selectedPrepTimeMinutes,
-//                onSelectedPrepTimeHours = { onSelectedPrepTimeHours(it) },
-//                onSelectedPrepTimeMinutes = { onSelectedPrepTimeMinutes(it) },
-//                onDismiss = { onPrepTimePickerDismiss() },
-//                onSave = { onPrepTimePickerSave() }
-//            )
-//        }
-
-        if(isPhotoBottomSheetOpen) {
-            PhotoPicker(
+        if(isServingsBottomSheetOpen) {
+            ServingsPicker(
                 modalSheetState = modalBottomSheetState,
-                onDismiss = {},
+                selectedServings = selectedServings,
+                onSelectedServings = { onSelectedServings(it) },
+                onDismiss = { onServingsPickerDismiss() },
+                onSave = { onServingsPickerSave() }
+            )
+        }
+
+        if(isPrepTimeBottomSheetOpen) {
+            PrepTimePicker(
+                modalSheetState = modalBottomSheetState,
+                selectedPrepTimeHours = selectedPrepTimeHours,
+                selectedPrepTimeMinutes = selectedPrepTimeMinutes,
+                onSelectedPrepTimeHours = { onSelectedPrepTimeHours(it) },
+                onSelectedPrepTimeMinutes = { onSelectedPrepTimeMinutes(it) },
+                onDismiss = { onPrepTimePickerDismiss() },
+                onSave = { onPrepTimePickerSave() }
+            )
+        }
+
+        if(isImageBottomSheetOpen) {
+            ImagePicker(
+                modalSheetState = modalBottomSheetState,
+                onDismiss = { onAddImageDismiss() },
                 onTakePhoto = { onTakePhoto() },
                 onSelectImage = { onSelectImage() }
             )
@@ -314,7 +318,8 @@ fun AddRecipeContentPreview() {
             ingredients = emptyList(),
             recipeIngredients = getIngredients(),
             isDropDownMenuExpanded = false,
-            isPhotoBottomSheetOpen = false,
+            isImageBottomSheetOpen = false,
+            imageUri = Uri.EMPTY,
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
@@ -332,6 +337,7 @@ fun AddRecipeContentPreview() {
             onAddPhoto = {},
             onTakePhoto = {},
             onSelectImage = {},
+            onAddImageDismiss = {},
             onAddRecipe = {}
         )
     }
@@ -366,7 +372,8 @@ fun AddRecipeContentPreviewErrorsShown() {
             ingredients = emptyList(),
             recipeIngredients = getIngredients(),
             isDropDownMenuExpanded = false,
-            isPhotoBottomSheetOpen = false,
+            isImageBottomSheetOpen = false,
+            imageUri = Uri.EMPTY,
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
@@ -384,6 +391,7 @@ fun AddRecipeContentPreviewErrorsShown() {
             onAddPhoto = {},
             onTakePhoto = {},
             onSelectImage = {},
+            onAddImageDismiss = {},
             onAddRecipe = {}
         )
     }
@@ -419,7 +427,8 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
             ingredients = emptyList(),
             recipeIngredients = getIngredients(),
             isDropDownMenuExpanded = false,
-            isPhotoBottomSheetOpen = false,
+            isImageBottomSheetOpen = false,
+            imageUri = Uri.EMPTY,
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
@@ -437,6 +446,7 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
             onAddPhoto = {},
             onTakePhoto = {},
             onSelectImage = {},
+            onAddImageDismiss = {},
             onAddRecipe = {}
         )
     }
