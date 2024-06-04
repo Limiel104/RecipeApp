@@ -53,17 +53,17 @@ fun AddRecipeScreen(
     val ingredients = viewModel.addRecipeState.value.ingredients
     val isDropDownMenuExpanded = viewModel.addRecipeState.value.isDropDownMenuExpanded
     val recipeIngredients = viewModel.addRecipeState.value.recipeIngredients
-//    val tempUri = viewModel.addRecipeState.value.tempUri
     val imageUri = viewModel.addRecipeState.value.imageUri
     val isImageBottomSheetOpen = viewModel.addRecipeState.value.isImageBottomSheetOpen
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val authority = stringResource(id = R.string.fileprovider)
+    val directory = File(context.cacheDir, "images")
 
     val tempUri = remember { mutableStateOf<Uri?>(null) }
 
-    fun getTempUri(directory: File? = null): Uri? {
-        directory?.let {
+    fun getTempUri(): Uri? {
+        directory.let {
             it.mkdirs()
             val file = File.createTempFile(
                 "image_" + System.currentTimeMillis().toString(),
@@ -72,25 +72,21 @@ fun AddRecipeScreen(
             )
             return FileProvider.getUriForFile(context, authority, file)
         }
-        return null
     }
 
     val galleryLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia()) { result ->
-        viewModel.onEvent(AddRecipeEvent.SelectedRecipePicture(result))
+        viewModel.onEvent(AddRecipeEvent.SelectedRecipeImage(result))
     }
 
     val cameraLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicture()) { isSaved ->
-//        viewModel.onEvent(AddRecipeEvent.SelectedRecipePicture(tempUri.value))
-        Log.i("TAG", "elo elo 3 2 0")
+        viewModel.onEvent(AddRecipeEvent.SelectedRecipeImage(tempUri.value))
     }
 
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-//            viewModel.onEvent(AddRecipeEvent.PreparedTempUri(getTempUri()))
-            val tmpUri = getTempUri()
-            tempUri.value = tmpUri
+            tempUri.value = getTempUri()
             cameraLauncher.launch(tempUri.value)
         }
         else {
@@ -107,15 +103,13 @@ fun AddRecipeScreen(
                         val permission = Manifest.permission.CAMERA
                         if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
                         ) {
-                            // Permission is already granted, proceed to step 2
-                            val tmpUri = getTempUri()
-                            tempUri.value = tmpUri
+                            tempUri.value = getTempUri()
                             cameraLauncher.launch(tempUri.value)
                         } else {
-                            // Permission is not granted, request it
                             cameraPermissionLauncher.launch(permission)
                         }
                     }
+
                     AddRecipeUiEvent.LaunchGallery -> {
                         galleryLauncher.launch(
                             PickVisualMediaRequest(

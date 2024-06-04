@@ -77,15 +77,9 @@ class AddRecipeViewModel @Inject constructor(
                 )
             }
 
-            is AddRecipeEvent.PreparedTempUri -> {
+            is AddRecipeEvent.SelectedRecipeImage -> {
                 _addRecipeState.value = addRecipeState.value.copy(
-                    tempUri = event.tempUri!!
-                )
-            }
-
-            is AddRecipeEvent.SelectedRecipePicture -> {
-                _addRecipeState.value = addRecipeState.value.copy(
-                    imageUri = event.photoUri!!
+                    imageUri = event.imageUri!!
                 )
             }
 
@@ -168,9 +162,7 @@ class AddRecipeViewModel @Inject constructor(
                     isImageBottomSheetOpen = false
                 )
 
-                viewModelScope.launch {
-                    _addRecipeUiEventChannel.send(AddRecipeUiEvent.LaunchCamera)
-                }
+                viewModelScope.launch { _addRecipeUiEventChannel.send(AddRecipeUiEvent.LaunchCamera) }
             }
 
             AddRecipeEvent.OnSelectImage -> {
@@ -178,9 +170,7 @@ class AddRecipeViewModel @Inject constructor(
                     isImageBottomSheetOpen = false
                 )
 
-                viewModelScope.launch {
-                    _addRecipeUiEventChannel.send(AddRecipeUiEvent.LaunchGallery)
-                }
+                viewModelScope.launch { _addRecipeUiEventChannel.send(AddRecipeUiEvent.LaunchGallery) }
             }
 
             AddRecipeEvent.OnAddImageDismiss -> {

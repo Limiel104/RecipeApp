@@ -30,7 +30,6 @@ data class AddRecipeState(
     val isDropDownMenuExpanded: Boolean = false,
     val isLoading: Boolean = false,
     val recipeIngredients: List<Ingredient> = emptyList(),
-    val tempUri: Uri = Uri.EMPTY,
     val isImageBottomSheetOpen: Boolean = false,
     val imageUri: Uri = Uri.EMPTY
 )
