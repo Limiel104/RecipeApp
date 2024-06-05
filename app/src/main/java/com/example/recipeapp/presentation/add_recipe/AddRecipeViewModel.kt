@@ -79,8 +79,16 @@ class AddRecipeViewModel @Inject constructor(
 
             is AddRecipeEvent.SelectedRecipeImage -> {
                 _addRecipeState.value = addRecipeState.value.copy(
-                    imageUri = event.imageUri!!
+                    imageUri = event.imageUri
                 )
+            }
+
+            is AddRecipeEvent.PreparedTempUri -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    tempUri = event.tempUri
+                )
+
+                viewModelScope.launch { _addRecipeUiEventChannel.send(AddRecipeUiEvent.LaunchCamera(_addRecipeState.value.tempUri)) }
             }
 
             AddRecipeEvent.OnServingsPickerDismissed -> {
@@ -162,7 +170,7 @@ class AddRecipeViewModel @Inject constructor(
                     isImageBottomSheetOpen = false
                 )
 
-                viewModelScope.launch { _addRecipeUiEventChannel.send(AddRecipeUiEvent.LaunchCamera) }
+                viewModelScope.launch { _addRecipeUiEventChannel.send(AddRecipeUiEvent.LaunchGetPermission) }
             }
 
             AddRecipeEvent.OnSelectImage -> {

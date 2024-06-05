@@ -12,8 +12,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
@@ -55,12 +53,11 @@ fun AddRecipeScreen(
     val recipeIngredients = viewModel.addRecipeState.value.recipeIngredients
     val imageUri = viewModel.addRecipeState.value.imageUri
     val isImageBottomSheetOpen = viewModel.addRecipeState.value.isImageBottomSheetOpen
+    val tempUri = viewModel.addRecipeState.value.tempUri
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val authority = stringResource(id = R.string.fileprovider)
     val directory = File(context.cacheDir, "images")
-
-    val tempUri = remember { mutableStateOf<Uri?>(null) }
 
     fun getTempUri(): Uri? {
         directory.let {
@@ -79,15 +76,14 @@ fun AddRecipeScreen(
     }
 
     val cameraLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicture()) { isSaved ->
-        viewModel.onEvent(AddRecipeEvent.SelectedRecipeImage(tempUri.value))
+        viewModel.onEvent(AddRecipeEvent.SelectedRecipeImage(tempUri))
     }
 
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            tempUri.value = getTempUri()
-            cameraLauncher.launch(tempUri.value)
+            viewModel.onEvent(AddRecipeEvent.PreparedTempUri(getTempUri()))
         }
         else {
             // Permission is denied, handle it accordingly
@@ -99,12 +95,16 @@ fun AddRecipeScreen(
             viewModel.addRecipeUiEventChannelFlow.collectLatest { event ->
                 Log.i("TAG", "Add recipe screen LE")
                 when(event) {
-                    AddRecipeUiEvent.LaunchCamera -> {
+                    is AddRecipeUiEvent.LaunchCamera -> {
+                        cameraLauncher.launch(event.tempUri)
+                    }
+
+                    AddRecipeUiEvent.LaunchGetPermission -> {
                         val permission = Manifest.permission.CAMERA
                         if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
                         ) {
-                            tempUri.value = getTempUri()
-                            cameraLauncher.launch(tempUri.value)
+                            viewModel.onEvent(AddRecipeEvent.PreparedTempUri(getTempUri()))
+
                         } else {
                             cameraPermissionLauncher.launch(permission)
                         }
