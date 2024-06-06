@@ -72,11 +72,13 @@ fun AddRecipeScreen(
     }
 
     val galleryLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia()) { result ->
-        viewModel.onEvent(AddRecipeEvent.SelectedRecipeImage(result))
+        if(result != null)
+            viewModel.onEvent(AddRecipeEvent.SelectedRecipeImage(result))
     }
 
     val cameraLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicture()) { isSaved ->
-        viewModel.onEvent(AddRecipeEvent.SelectedRecipeImage(tempUri))
+        if(isSaved)
+            viewModel.onEvent(AddRecipeEvent.SelectedRecipeImage(tempUri))
     }
 
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
