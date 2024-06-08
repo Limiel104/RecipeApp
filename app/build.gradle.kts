@@ -113,6 +113,9 @@ dependencies {
     //Firebase Authentication
     implementation("com.google.firebase:firebase-auth")
 
+    //Firebase Storage
+    implementation("com.google.firebase:firebase-storage")
+
     //Room
     implementation("androidx.room:room-runtime:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")

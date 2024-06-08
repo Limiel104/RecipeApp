@@ -1,5 +1,6 @@
 package com.example.recipeapp.presentation.add_recipe
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -7,18 +8,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Resource
+import com.example.recipeapp.domain.use_case.AddImageUseCase
 import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
 import com.example.recipeapp.domain.use_case.ValidateFieldUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class AddRecipeViewModel @Inject constructor(
     private val validateFieldUseCase: ValidateFieldUseCase,
-    private val getIngredientsUseCase: GetIngredientsUseCase
+    private val getIngredientsUseCase: GetIngredientsUseCase,
+    private val addImageUseCase: AddImageUseCase,
 ): ViewModel() {
 
     private val _addRecipeState = mutableStateOf(AddRecipeState())
@@ -190,6 +194,9 @@ class AddRecipeViewModel @Inject constructor(
             AddRecipeEvent.OnAddRecipe -> {
                 val title = _addRecipeState.value.title
                 val description = _addRecipeState.value.description
+                val imageName = System.currentTimeMillis().toString()+"_"+UUID.randomUUID().toString()+".jpg"
+
+                _addRecipeState.value.imageUri?.let { addImage(it, imageName) }
 
                 if(isValidationSuccessful(title, description))
                     addRecipe()
@@ -223,10 +230,6 @@ class AddRecipeViewModel @Inject constructor(
         return true
     }
 
-    private fun addRecipe() {
-        Log.i("TAG", "Add recipe")
-    }
-
     private fun getRecipeIngredients(newIngredient: Ingredient, ingredients: List<Ingredient>): List<Ingredient> {
         val recipeIngredients = mutableListOf<Ingredient>()
 
@@ -245,7 +248,7 @@ class AddRecipeViewModel @Inject constructor(
                         Log.i("TAG","Error message from getIngredients: ${response.message}")
                     }
                     is Resource.Loading -> {
-                        Log.i("TAG","Loading ingredients: ${response.isLoading}")
+                        Log.i("TAG","Loading get ingredients: ${response.isLoading}")
                         _addRecipeState.value = addRecipeState.value.copy(
                             isLoading = response.isLoading
                         )
@@ -261,5 +264,33 @@ class AddRecipeViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun addImage(imageUri: Uri, imageName: String) {
+        viewModelScope.launch {
+            addImageUseCase(imageUri, imageName).collect { response ->
+                when(response) {
+                    is Resource.Error -> {
+                        Log.i("TAG","Error message from addImage: ${response.message}")
+                    }
+                    is Resource.Loading -> {
+                        Log.i("TAG","Loading add image: ${response.isLoading}")
+                        _addRecipeState.value = addRecipeState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i("TAG",response.data.toString())
+                        response.data?.let {
+                            Log.i("TAG", "image url vm: ${response.data}")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun addRecipe() {
+        Log.i("TAG", "Add recipe")
     }
 }
