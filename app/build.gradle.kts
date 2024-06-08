@@ -126,6 +126,9 @@ dependencies {
     //Image cropper
     implementation("com.vanniktech:android-image-cropper:4.5.0")
 
+    //Picker
+    implementation("com.chargemap.compose:numberpicker:1.0.3")
+
     //MockK
     testImplementation("io.mockk:mockk-android:1.13.10")
     testImplementation("io.mockk:mockk-agent:1.13.10")
@@ -134,9 +137,6 @@ dependencies {
 
     //Testing coroutines
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
-
-    //Picker
-    implementation("com.chargemap.compose:numberpicker:1.0.3")
 }
 
 // Allow references to generated code

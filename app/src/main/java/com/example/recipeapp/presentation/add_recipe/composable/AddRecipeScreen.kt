@@ -21,6 +21,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageContractOptions
 import com.example.recipeapp.R
 import com.example.recipeapp.presentation.add_recipe.AddRecipeEvent
 import com.example.recipeapp.presentation.add_recipe.AddRecipeUiEvent
@@ -54,6 +56,8 @@ fun AddRecipeScreen(
     val imageUri = viewModel.addRecipeState.value.imageUri
     val isImageBottomSheetOpen = viewModel.addRecipeState.value.isImageBottomSheetOpen
     val tempUri = viewModel.addRecipeState.value.tempUri
+    val cropImageOptions = viewModel.addRecipeState.value.cropImageOptions
+
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val authority = stringResource(id = R.string.fileprovider)
@@ -71,25 +75,30 @@ fun AddRecipeScreen(
         }
     }
 
+    val imageCropLauncher = rememberLauncherForActivityResult(CropImageContract()) { result ->
+        viewModel.onEvent(AddRecipeEvent.SelectedRecipeImage(result.uriContent))
+    }
+
     val galleryLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia()) { result ->
-        if(result != null)
-            viewModel.onEvent(AddRecipeEvent.SelectedRecipeImage(result))
+        result?.let {
+            val cropOptions = CropImageContractOptions(result, cropImageOptions)
+            imageCropLauncher.launch(cropOptions)
+        }
     }
 
     val cameraLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicture()) { isSaved ->
-        if(isSaved)
-            viewModel.onEvent(AddRecipeEvent.SelectedRecipeImage(tempUri))
+        if(isSaved) {
+            val cropOptions = CropImageContractOptions(tempUri, cropImageOptions)
+            imageCropLauncher.launch(cropOptions)
+        }
     }
 
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
-        if (isGranted) {
+        if(isGranted)
             viewModel.onEvent(AddRecipeEvent.PreparedTempUri(getTempUri()))
-        }
-        else {
-            // Permission is denied, handle it accordingly
-        }
+        // else: Permission is denied, handle it accordingly
     }
 
     LaunchedEffect(lifecycleOwner.lifecycle) {

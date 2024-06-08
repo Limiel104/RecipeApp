@@ -1,6 +1,7 @@
 package com.example.recipeapp.presentation.add_recipe
 
 import android.net.Uri
+import com.canhub.cropper.CropImageOptions
 import com.example.recipeapp.domain.model.Ingredient
 
 data class AddRecipeState(
@@ -32,5 +33,9 @@ data class AddRecipeState(
     val recipeIngredients: List<Ingredient> = emptyList(),
     val isImageBottomSheetOpen: Boolean = false,
     val imageUri: Uri? = Uri.EMPTY,
-    val tempUri: Uri? = Uri.EMPTY
+    val tempUri: Uri? = Uri.EMPTY,
+    val cropImageOptions: CropImageOptions = CropImageOptions(
+        maxCropResultWidth = 2400,
+        maxCropResultHeight = 1800,
+    )
 )
