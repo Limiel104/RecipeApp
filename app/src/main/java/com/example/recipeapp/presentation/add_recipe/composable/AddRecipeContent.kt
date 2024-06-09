@@ -2,9 +2,13 @@
 
 package com.example.recipeapp.presentation.add_recipe.composable
 
+import android.content.ClipDescription
 import android.content.res.Configuration
 import android.net.Uri
+import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.draganddrop.dragAndDropTarget
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,6 +35,10 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draganddrop.DragAndDropEvent
+import androidx.compose.ui.draganddrop.DragAndDropTarget
+import androidx.compose.ui.draganddrop.mimeTypes
+import androidx.compose.ui.draganddrop.toAndroidDragEvent
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -42,6 +50,7 @@ import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.presentation.common.composable.RecipeIngredientItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AddRecipeContent(
     modifier: Modifier = Modifier,
@@ -201,7 +210,22 @@ fun AddRecipeContent(
             )
 
             Column(
-                modifier = modifier.padding(bottom = 20.dp)
+                modifier = modifier
+                    .padding(bottom = 20.dp)
+                    .dragAndDropTarget(
+                        shouldStartDragAndDrop = { event ->
+                            event
+                                .mimeTypes()
+                                .contains(ClipDescription.MIMETYPE_TEXT_PLAIN)
+                        },
+                        target = object: DragAndDropTarget {
+                            override fun onDrop(event: DragAndDropEvent): Boolean {
+                                val t = event.toAndroidDragEvent().clipData.getItemAt(0).text
+                                Log.i("TAG","bylo: $t")
+                                return true
+                            }
+                        }
+                    )
             ) {
                 for(i in recipeIngredients.indices) {
                     RecipeIngredientItem(ingredient = recipeIngredients[i])

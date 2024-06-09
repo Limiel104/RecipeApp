@@ -1,7 +1,12 @@
 package com.example.recipeapp.presentation.common.composable
 
+import android.content.ClipData
 import android.content.res.Configuration
+import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.draganddrop.dragAndDropSource
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,12 +19,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draganddrop.DragAndDropTransferData
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RecipeIngredientItem(
     modifier: Modifier = Modifier,
@@ -29,7 +36,21 @@ fun RecipeIngredientItem(
         modifier = modifier
             .clickable {}
             .fillMaxWidth()
-            .height(IntrinsicSize.Max),
+            .height(IntrinsicSize.Max)
+            .dragAndDropSource {
+                detectTapGestures(
+                    onLongPress = {
+                        Log.i("TAG","long")
+                        startTransfer(
+                            DragAndDropTransferData(
+                                clipData = ClipData.newPlainText(
+                                    "ingredientId", ingredient.ingredientId
+                                )
+                            )
+                        )
+                    }
+                )
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         ImageItem(
