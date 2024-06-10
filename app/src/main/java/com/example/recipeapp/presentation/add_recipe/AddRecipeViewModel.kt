@@ -96,7 +96,6 @@ class AddRecipeViewModel @Inject constructor(
             }
 
             is AddRecipeEvent.OnDragIndexChange -> {
-                Log.i("TAG","nowy drag index: ${event.dragIndex}")
                 _addRecipeState.value = addRecipeState.value.copy(
                     dragIndex = event.dragIndex,
                     dropIndex = -1
@@ -104,10 +103,20 @@ class AddRecipeViewModel @Inject constructor(
             }
 
             is AddRecipeEvent.OnDropIndexChange -> {
-                Log.i("TAG","nowy drop index: ${event.dropIndex}")
                 _addRecipeState.value = addRecipeState.value.copy(
                     dragIndex = -1,
                     dropIndex = event.dropIndex
+                )
+            }
+
+            is AddRecipeEvent.OnDraggedIngredientChange -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    draggedIngredientIndex = event.draggedIngredientIndex
+                )
+
+                reorderIngredientList(
+                    _addRecipeState.value.dropIndex,
+                    _addRecipeState.value.draggedIngredientIndex
                 )
             }
 
@@ -254,6 +263,21 @@ class AddRecipeViewModel @Inject constructor(
         }
         recipeIngredients.add(newIngredient)
         return recipeIngredients
+    }
+
+    private fun reorderIngredientList(dropIndex: Int, draggedIngredientIndex: Int) {
+        val tempList = mutableListOf<Ingredient>()
+        for(ingredient in _addRecipeState.value.recipeIngredients) {
+            tempList.add(ingredient)
+        }
+        val tempIngredient = tempList[draggedIngredientIndex]
+
+        tempList.removeAt(draggedIngredientIndex)
+        tempList.add(dropIndex,tempIngredient)
+
+        _addRecipeState.value = addRecipeState.value.copy(
+            recipeIngredients = tempList
+        )
     }
 
     private fun getIngredients() {

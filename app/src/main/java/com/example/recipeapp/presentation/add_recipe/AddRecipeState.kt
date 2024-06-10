@@ -39,5 +39,6 @@ data class AddRecipeState(
         maxCropResultHeight = 1800,
     ),
     val dragIndex: Int = -1,
-    val dropIndex: Int = -1
+    val dropIndex: Int = -1,
+    val draggedIngredientIndex: Int = -1
 )

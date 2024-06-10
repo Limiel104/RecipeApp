@@ -48,9 +48,7 @@ fun RecipeIngredientItem(
                     onLongPress = {
                         startTransfer(
                             DragAndDropTransferData(
-                                clipData = ClipData.newPlainText(
-                                    "ingredientId", ingredient.ingredientId
-                                )
+                                clipData = ClipData.newPlainText("ingredientIndex", elementIndex.toString())
                             )
                         )
                     }
