@@ -57,6 +57,8 @@ fun AddRecipeScreen(
     val isImageBottomSheetOpen = viewModel.addRecipeState.value.isImageBottomSheetOpen
     val tempUri = viewModel.addRecipeState.value.tempUri
     val cropImageOptions = viewModel.addRecipeState.value.cropImageOptions
+    val dragIndex = viewModel.addRecipeState.value.dragIndex
+    val dropIndex = viewModel.addRecipeState.value.dropIndex
 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -153,6 +155,8 @@ fun AddRecipeScreen(
         isDropDownMenuExpanded = isDropDownMenuExpanded,
         isImageBottomSheetOpen = isImageBottomSheetOpen,
         imageUri = imageUri,
+        dragIndex = dragIndex,
+        dropIndex = dropIndex,
         onTitleChange = { viewModel.onEvent(AddRecipeEvent.EnteredTitle(it)) },
         onDescriptionChange = { viewModel.onEvent(AddRecipeEvent.EnteredDescription(it)) },
         onIngredientChange = { viewModel.onEvent(AddRecipeEvent.EnteredIngredient(it)) },
@@ -171,6 +175,8 @@ fun AddRecipeScreen(
         onTakePhoto = {  viewModel.onEvent(AddRecipeEvent.OnTakePhoto) },
         onSelectImage = {  viewModel.onEvent(AddRecipeEvent.OnSelectImage) },
         onAddImageDismiss = { viewModel.onEvent(AddRecipeEvent.OnAddImageDismiss) },
+        onDragIndexChange = {viewModel.onEvent(AddRecipeEvent.OnDragIndexChange(it))},
+        onDropIndexChange = { viewModel.onEvent(AddRecipeEvent.OnDropIndexChange(it)) },
         onAddRecipe = { viewModel.onEvent(AddRecipeEvent.OnAddRecipe) },
     )
 }

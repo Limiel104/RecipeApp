@@ -2,8 +2,8 @@ package com.example.recipeapp.presentation.common.composable
 
 import android.content.ClipData
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.draganddrop.dragAndDropSource
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -30,17 +30,22 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 @Composable
 fun RecipeIngredientItem(
     modifier: Modifier = Modifier,
-    ingredient: Ingredient
+    ingredient: Ingredient,
+    dragIndex: Int,
+    elementIndex: Int,
 ) {
     Row(
         modifier = modifier
             .clickable {}
             .fillMaxWidth()
             .height(IntrinsicSize.Max)
+            .background(
+                if(dragIndex == elementIndex) MaterialTheme.colorScheme.secondary
+                else MaterialTheme.colorScheme.background
+            )
             .dragAndDropSource {
                 detectTapGestures(
                     onLongPress = {
-                        Log.i("TAG","long")
                         startTransfer(
                             DragAndDropTransferData(
                                 clipData = ClipData.newPlainText(
@@ -87,7 +92,9 @@ fun RecipeIngredientItemPreview() {
                     name = "Ingredient Name",
                     imageUrl = "imageUrl",
                     category = "category"
-                )
+                ),
+                dragIndex = -1,
+                elementIndex = 1
             )
         }
     }

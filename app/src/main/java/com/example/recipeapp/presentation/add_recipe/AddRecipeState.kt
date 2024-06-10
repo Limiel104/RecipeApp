@@ -37,5 +37,7 @@ data class AddRecipeState(
     val cropImageOptions: CropImageOptions = CropImageOptions(
         maxCropResultWidth = 2400,
         maxCropResultHeight = 1800,
-    )
+    ),
+    val dragIndex: Int = -1,
+    val dropIndex: Int = -1
 )

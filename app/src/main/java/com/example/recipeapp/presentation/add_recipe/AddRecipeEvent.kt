@@ -13,6 +13,8 @@ sealed class AddRecipeEvent {
     data class SelectedIngredient(val ingredient: Ingredient): AddRecipeEvent()
     data class SelectedRecipeImage(val imageUri: Uri?): AddRecipeEvent()
     data class PreparedTempUri(val tempUri: Uri?): AddRecipeEvent()
+    data class OnDragIndexChange(val dragIndex: Int): AddRecipeEvent()
+    data class OnDropIndexChange(val dropIndex: Int): AddRecipeEvent()
     object OnServingsPickerDismissed: AddRecipeEvent()
     object OnServingsPickerSaved: AddRecipeEvent()
     object OnServingsButtonClicked: AddRecipeEvent()

@@ -2,10 +2,8 @@
 
 package com.example.recipeapp.presentation.add_recipe.composable
 
-import android.content.ClipDescription
 import android.content.res.Configuration
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.draganddrop.dragAndDropTarget
@@ -37,8 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draganddrop.DragAndDropEvent
 import androidx.compose.ui.draganddrop.DragAndDropTarget
-import androidx.compose.ui.draganddrop.mimeTypes
-import androidx.compose.ui.draganddrop.toAndroidDragEvent
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -73,6 +69,8 @@ fun AddRecipeContent(
     isDropDownMenuExpanded: Boolean,
     isImageBottomSheetOpen: Boolean,
     imageUri: Uri?,
+    dragIndex: Int,
+    dropIndex: Int,
     onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onIngredientChange: (String) -> Unit,
@@ -91,7 +89,9 @@ fun AddRecipeContent(
     onTakePhoto: () -> Unit,
     onSelectImage: () -> Unit,
     onAddImageDismiss: () -> Unit,
-    onAddRecipe: () -> Unit,
+    onDragIndexChange: (Int) -> Unit,
+    onDropIndexChange: (Int) -> Unit,
+    onAddRecipe: () -> Unit
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -210,25 +210,38 @@ fun AddRecipeContent(
             )
 
             Column(
-                modifier = modifier
-                    .padding(bottom = 20.dp)
-                    .dragAndDropTarget(
-                        shouldStartDragAndDrop = { event ->
-                            event
-                                .mimeTypes()
-                                .contains(ClipDescription.MIMETYPE_TEXT_PLAIN)
-                        },
-                        target = object: DragAndDropTarget {
-                            override fun onDrop(event: DragAndDropEvent): Boolean {
-                                val t = event.toAndroidDragEvent().clipData.getItemAt(0).text
-                                Log.i("TAG","bylo: $t")
-                                return true
-                            }
-                        }
-                    )
+                modifier = modifier.padding(bottom = 20.dp)
             ) {
                 for(i in recipeIngredients.indices) {
-                    RecipeIngredientItem(ingredient = recipeIngredients[i])
+                    RecipeIngredientItem(
+                        ingredient = recipeIngredients[i],
+                        dragIndex = dragIndex,
+                        elementIndex = i,
+                        modifier = modifier
+                            .dragAndDropTarget(
+                                shouldStartDragAndDrop = { true },
+                                target = object: DragAndDropTarget {
+                                    override fun onDrop(event: DragAndDropEvent): Boolean {
+//                                      val t = event.toAndroidDragEvent().clipData.getItemAt(0).text
+                                        onDropIndexChange(i)
+//                                        Log.i("TAG","onDrop: $dragIndex  and $dropIndex")
+                                        return true
+                                    }
+
+                                    override fun onEntered(event: DragAndDropEvent) {
+                                        super.onEntered(event)
+                                        onDragIndexChange(i)
+//                                        Log.i("TAG","onEntered: $dragIndex  and $dropIndex")
+                                    }
+
+                                    override fun onExited(event: DragAndDropEvent) {
+                                        super.onExited(event)
+                                        onDragIndexChange(-1)
+//                                        Log.i("TAG","onExited: $dragIndex  and $dropIndex")
+                                    }
+                                }
+                            )
+                    )
 
                     if(i != recipeIngredients.size-1)
                         HorizontalDivider()
@@ -344,6 +357,8 @@ fun AddRecipeContentPreview() {
             isDropDownMenuExpanded = false,
             isImageBottomSheetOpen = false,
             imageUri = Uri.EMPTY,
+            dragIndex = -1,
+            dropIndex = -1,
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
@@ -362,6 +377,8 @@ fun AddRecipeContentPreview() {
             onTakePhoto = {},
             onSelectImage = {},
             onAddImageDismiss = {},
+            onDragIndexChange = {},
+            onDropIndexChange = {},
             onAddRecipe = {}
         )
     }
@@ -398,6 +415,8 @@ fun AddRecipeContentPreviewErrorsShown() {
             isDropDownMenuExpanded = false,
             isImageBottomSheetOpen = false,
             imageUri = Uri.EMPTY,
+            dragIndex = -1,
+            dropIndex = -1,
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
@@ -416,7 +435,9 @@ fun AddRecipeContentPreviewErrorsShown() {
             onTakePhoto = {},
             onSelectImage = {},
             onAddImageDismiss = {},
-            onAddRecipe = {}
+            onDragIndexChange = {},
+            onDropIndexChange = {},
+            onAddRecipe = {},
         )
     }
 }
@@ -453,6 +474,8 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
             isDropDownMenuExpanded = false,
             isImageBottomSheetOpen = false,
             imageUri = Uri.EMPTY,
+            dragIndex = -1,
+            dropIndex = -1,
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
@@ -471,6 +494,8 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
             onTakePhoto = {},
             onSelectImage = {},
             onAddImageDismiss = {},
+            onDragIndexChange = {},
+            onDropIndexChange = {},
             onAddRecipe = {}
         )
     }

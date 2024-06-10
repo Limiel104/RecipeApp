@@ -95,6 +95,22 @@ class AddRecipeViewModel @Inject constructor(
                 viewModelScope.launch { _addRecipeUiEventChannel.send(AddRecipeUiEvent.LaunchCamera(_addRecipeState.value.tempUri)) }
             }
 
+            is AddRecipeEvent.OnDragIndexChange -> {
+                Log.i("TAG","nowy drag index: ${event.dragIndex}")
+                _addRecipeState.value = addRecipeState.value.copy(
+                    dragIndex = event.dragIndex,
+                    dropIndex = -1
+                )
+            }
+
+            is AddRecipeEvent.OnDropIndexChange -> {
+                Log.i("TAG","nowy drop index: ${event.dropIndex}")
+                _addRecipeState.value = addRecipeState.value.copy(
+                    dragIndex = -1,
+                    dropIndex = event.dropIndex
+                )
+            }
+
             AddRecipeEvent.OnServingsPickerDismissed -> {
                 if(_addRecipeState.value.lastSavedServings != 0) {
                     _addRecipeState.value = addRecipeState.value.copy(
