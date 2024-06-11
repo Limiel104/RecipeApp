@@ -176,6 +176,7 @@ fun AddRecipeScreen(
         onDragIndexChange = {viewModel.onEvent(AddRecipeEvent.OnDragIndexChange(it))},
         onDropIndexChange = { viewModel.onEvent(AddRecipeEvent.OnDropIndexChange(it)) },
         onDraggedIngredientChange = { viewModel.onEvent(AddRecipeEvent.OnDraggedIngredientChange(it)) },
+        onSwipeToDelete = { viewModel.onEvent(AddRecipeEvent.OnSwipeToDelete(it)) },
         onAddRecipe = { viewModel.onEvent(AddRecipeEvent.OnAddRecipe) },
     )
 }

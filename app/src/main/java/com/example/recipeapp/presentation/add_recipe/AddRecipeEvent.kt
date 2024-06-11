@@ -16,6 +16,7 @@ sealed class AddRecipeEvent {
     data class OnDragIndexChange(val dragIndex: Int): AddRecipeEvent()
     data class OnDropIndexChange(val dropIndex: Int): AddRecipeEvent()
     data class OnDraggedIngredientChange(val draggedIngredientIndex: Int): AddRecipeEvent()
+    data class OnSwipeToDelete(val index: Int): AddRecipeEvent()
     object OnServingsPickerDismissed: AddRecipeEvent()
     object OnServingsPickerSaved: AddRecipeEvent()
     object OnServingsButtonClicked: AddRecipeEvent()

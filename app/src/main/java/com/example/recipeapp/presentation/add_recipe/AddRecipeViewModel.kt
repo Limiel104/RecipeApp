@@ -120,6 +120,11 @@ class AddRecipeViewModel @Inject constructor(
                 )
             }
 
+            is AddRecipeEvent.OnSwipeToDelete -> {
+                deleteIngredientFromIngredientList(event.index)
+                Log.i("TAG","delete! ${event.index}")
+            }
+
             AddRecipeEvent.OnServingsPickerDismissed -> {
                 if(_addRecipeState.value.lastSavedServings != 0) {
                     _addRecipeState.value = addRecipeState.value.copy(
@@ -265,11 +270,16 @@ class AddRecipeViewModel @Inject constructor(
         return recipeIngredients
     }
 
-    private fun reorderIngredientList(dropIndex: Int, draggedIngredientIndex: Int) {
+    private fun getTempIngredientList(): MutableList<Ingredient> {
         val tempList = mutableListOf<Ingredient>()
         for(ingredient in _addRecipeState.value.recipeIngredients) {
             tempList.add(ingredient)
         }
+        return tempList
+    }
+
+    private fun reorderIngredientList(dropIndex: Int, draggedIngredientIndex: Int) {
+        val tempList = getTempIngredientList()
         val tempIngredient = tempList[draggedIngredientIndex]
 
         tempList.removeAt(draggedIngredientIndex)
@@ -278,6 +288,19 @@ class AddRecipeViewModel @Inject constructor(
         _addRecipeState.value = addRecipeState.value.copy(
             recipeIngredients = tempList
         )
+    }
+
+    private fun deleteIngredientFromIngredientList(index: Int) {
+        val tempList = getTempIngredientList()
+        Log.i("TAG","index w delete: $index")
+        Log.i("TAG","lista w delete: $tempList")
+
+        tempList.removeAt(index)
+
+        _addRecipeState.value = addRecipeState.value.copy(
+            recipeIngredients = tempList
+        )
+        Thread.sleep(5000L)
     }
 
     private fun getIngredients() {

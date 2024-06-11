@@ -4,9 +4,12 @@ package com.example.recipeapp.presentation.add_recipe.composable
 
 import android.content.res.Configuration
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.draganddrop.dragAndDropTarget
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +20,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -25,14 +29,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draganddrop.DragAndDropEvent
 import androidx.compose.ui.draganddrop.DragAndDropTarget
 import androidx.compose.ui.draganddrop.toAndroidDragEvent
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -89,6 +99,7 @@ fun AddRecipeContent(
     onDragIndexChange: (Int) -> Unit,
     onDropIndexChange: (Int) -> Unit,
     onDraggedIngredientChange: (Int) -> Unit,
+    onSwipeToDelete: (Int) -> Unit,
     onAddRecipe: () -> Unit
 ) {
     Scaffold(
@@ -197,36 +208,84 @@ fun AddRecipeContent(
             Column(
                 modifier = modifier.padding(bottom = 20.dp)
             ) {
-                for(i in recipeIngredients.indices) {
-                    RecipeIngredientItem(
-                        ingredient = recipeIngredients[i],
-                        dragIndex = dragIndex,
-                        elementIndex = i,
-                        modifier = modifier
-                            .dragAndDropTarget(
-                                shouldStartDragAndDrop = { true },
-                                target = object: DragAndDropTarget {
-                                    override fun onDrop(event: DragAndDropEvent): Boolean {
-                                        onDropIndexChange(i)
-                                        onDraggedIngredientChange(event.toAndroidDragEvent().clipData.getItemAt(0).text.toString().toInt())
-                                        return true
-                                    }
+                for (index in recipeIngredients.indices) {
 
-                                    override fun onEntered(event: DragAndDropEvent) {
-                                        super.onEntered(event)
-                                        onDragIndexChange(i)
-                                    }
+                    key(index.hashCode()) {
 
-                                    override fun onExited(event: DragAndDropEvent) {
-                                        super.onExited(event)
-                                        onDragIndexChange(-1)
-                                    }
+                        Log.i("TAG", "elo $index")
+
+                        val dismissState = rememberSwipeToDismissBoxState(
+                            confirmValueChange = { value ->
+                                Log.i("TAG", "confirm $index")
+
+                                if (value == SwipeToDismissBoxValue.EndToStart) {
+                                    onSwipeToDelete(index)
+                                    Log.i("TAG", "inside dismiss state")
+                                    true
+                                } else false
+                            }
+                        )
+
+                        SwipeToDismissBox(
+                            state = dismissState,
+                            enableDismissFromStartToEnd = false,
+                            backgroundContent = {
+                                val color =
+                                    if (dismissState.dismissDirection == SwipeToDismissBoxValue.EndToStart) {
+                                        Color.Red
+                                    } else Color.Transparent
+
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(color)
+                                        .padding(16.dp),
+                                    contentAlignment = Alignment.CenterEnd
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Delete,
+                                        contentDescription = "Delete icon",
+                                        tint = Color.White
+                                    )
                                 }
-                            )
-                    )
+                            },
+                            content = {
+                                RecipeIngredientItem(
+                                    ingredient = recipeIngredients[index],
+                                    dragIndex = dragIndex,
+                                    elementIndex = index,
+                                    modifier = modifier
+                                        .dragAndDropTarget(
+                                            shouldStartDragAndDrop = { true },
+                                            target = object : DragAndDropTarget {
+                                                override fun onDrop(event: DragAndDropEvent): Boolean {
+                                                    onDropIndexChange(index)
+                                                    onDraggedIngredientChange(
+                                                        event.toAndroidDragEvent().clipData.getItemAt(
+                                                            0
+                                                        ).text.toString().toInt()
+                                                    )
+                                                    return true
+                                                }
 
-                    if(i != recipeIngredients.size-1)
-                        HorizontalDivider()
+                                                override fun onEntered(event: DragAndDropEvent) {
+                                                    super.onEntered(event)
+                                                    onDragIndexChange(index)
+                                                }
+
+                                                override fun onExited(event: DragAndDropEvent) {
+                                                    super.onExited(event)
+                                                    onDragIndexChange(-1)
+                                                }
+                                            }
+                                        )
+                                )
+                            }
+                        )
+
+                        if (index != recipeIngredients.size - 1)
+                            HorizontalDivider()
+                    }
                 }
             }
 
@@ -361,6 +420,7 @@ fun AddRecipeContentPreview() {
             onDragIndexChange = {},
             onDropIndexChange = {},
             onDraggedIngredientChange = {},
+            onSwipeToDelete = {},
             onAddRecipe = {}
         )
     }
@@ -419,6 +479,7 @@ fun AddRecipeContentPreviewErrorsShown() {
             onDragIndexChange = {},
             onDropIndexChange = {},
             onDraggedIngredientChange = {},
+            onSwipeToDelete = {},
             onAddRecipe = {},
         )
     }
@@ -478,6 +539,7 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
             onDragIndexChange = {},
             onDropIndexChange = {},
             onDraggedIngredientChange = {},
+            onSwipeToDelete = {},
             onAddRecipe = {}
         )
     }
