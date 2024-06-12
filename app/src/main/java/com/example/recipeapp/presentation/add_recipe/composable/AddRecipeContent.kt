@@ -4,7 +4,6 @@ package com.example.recipeapp.presentation.add_recipe.composable
 
 import android.content.res.Configuration
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -54,7 +53,7 @@ import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.presentation.common.composable.RecipeIngredientItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AddRecipeContent(
     modifier: Modifier = Modifier,
@@ -77,7 +76,7 @@ fun AddRecipeContent(
     isDropDownMenuExpanded: Boolean,
     isImageBottomSheetOpen: Boolean,
     imageUri: Uri?,
-    dragIndex: Int,
+    dragIndex: String,
     onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onIngredientChange: (String) -> Unit,
@@ -96,10 +95,10 @@ fun AddRecipeContent(
     onTakePhoto: () -> Unit,
     onSelectImage: () -> Unit,
     onAddImageDismiss: () -> Unit,
-    onDragIndexChange: (Int) -> Unit,
-    onDropIndexChange: (Int) -> Unit,
-    onDraggedIngredientChange: (Int) -> Unit,
-    onSwipeToDelete: (Int) -> Unit,
+    onDragIndexChange: (String) -> Unit,
+    onDropIndexChange: (String) -> Unit,
+    onDraggedIngredientChange: (String) -> Unit,
+    onSwipeToDelete: (Ingredient) -> Unit,
     onAddRecipe: () -> Unit
 ) {
     Scaffold(
@@ -208,19 +207,12 @@ fun AddRecipeContent(
             Column(
                 modifier = modifier.padding(bottom = 20.dp)
             ) {
-                for (index in recipeIngredients.indices) {
-
-                    key(index.hashCode()) {
-
-                        Log.i("TAG", "elo $index")
-
+                recipeIngredients.forEach { recipeIngredient ->
+                    key(recipeIngredient) {
                         val dismissState = rememberSwipeToDismissBoxState(
                             confirmValueChange = { value ->
-                                Log.i("TAG", "confirm $index")
-
                                 if (value == SwipeToDismissBoxValue.EndToStart) {
-                                    onSwipeToDelete(index)
-                                    Log.i("TAG", "inside dismiss state")
+                                    onSwipeToDelete(recipeIngredient)
                                     true
                                 } else false
                             }
@@ -251,31 +243,26 @@ fun AddRecipeContent(
                             },
                             content = {
                                 RecipeIngredientItem(
-                                    ingredient = recipeIngredients[index],
+                                    ingredient = recipeIngredient,
                                     dragIndex = dragIndex,
-                                    elementIndex = index,
                                     modifier = modifier
                                         .dragAndDropTarget(
                                             shouldStartDragAndDrop = { true },
                                             target = object : DragAndDropTarget {
                                                 override fun onDrop(event: DragAndDropEvent): Boolean {
-                                                    onDropIndexChange(index)
-                                                    onDraggedIngredientChange(
-                                                        event.toAndroidDragEvent().clipData.getItemAt(
-                                                            0
-                                                        ).text.toString().toInt()
-                                                    )
+                                                    onDropIndexChange(recipeIngredient.ingredientId)
+                                                    onDraggedIngredientChange(event.toAndroidDragEvent().clipData.getItemAt(0).text.toString())
                                                     return true
                                                 }
 
                                                 override fun onEntered(event: DragAndDropEvent) {
                                                     super.onEntered(event)
-                                                    onDragIndexChange(index)
+                                                    onDragIndexChange(recipeIngredient.ingredientId)
                                                 }
 
                                                 override fun onExited(event: DragAndDropEvent) {
                                                     super.onExited(event)
-                                                    onDragIndexChange(-1)
+                                                    onDragIndexChange("")
                                                 }
                                             }
                                         )
@@ -283,7 +270,7 @@ fun AddRecipeContent(
                             }
                         )
 
-                        if (index != recipeIngredients.size - 1)
+                        if (recipeIngredients.indexOf(recipeIngredient) != recipeIngredients.lastIndex)
                             HorizontalDivider()
                     }
                 }
@@ -398,7 +385,7 @@ fun AddRecipeContentPreview() {
             isDropDownMenuExpanded = false,
             isImageBottomSheetOpen = false,
             imageUri = Uri.EMPTY,
-            dragIndex = -1,
+            dragIndex = "",
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
@@ -457,7 +444,7 @@ fun AddRecipeContentPreviewErrorsShown() {
             isDropDownMenuExpanded = false,
             isImageBottomSheetOpen = false,
             imageUri = Uri.EMPTY,
-            dragIndex = -1,
+            dragIndex = "",
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
@@ -517,7 +504,7 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
             isDropDownMenuExpanded = false,
             isImageBottomSheetOpen = false,
             imageUri = Uri.EMPTY,
-            dragIndex = -1,
+            dragIndex = "",
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},

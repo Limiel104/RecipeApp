@@ -31,8 +31,7 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 fun RecipeIngredientItem(
     modifier: Modifier = Modifier,
     ingredient: Ingredient,
-    dragIndex: Int,
-    elementIndex: Int,
+    dragIndex: String
 ) {
     Row(
         modifier = modifier
@@ -40,7 +39,7 @@ fun RecipeIngredientItem(
             .fillMaxWidth()
             .height(IntrinsicSize.Max)
             .background(
-                if(dragIndex == elementIndex) MaterialTheme.colorScheme.secondary
+                if(dragIndex == ingredient.ingredientId) MaterialTheme.colorScheme.secondary
                 else MaterialTheme.colorScheme.background
             )
             .dragAndDropSource {
@@ -48,7 +47,7 @@ fun RecipeIngredientItem(
                     onLongPress = {
                         startTransfer(
                             DragAndDropTransferData(
-                                clipData = ClipData.newPlainText("ingredientIndex", elementIndex.toString())
+                                clipData = ClipData.newPlainText("ingredientIndex", ingredient.ingredientId)
                             )
                         )
                     }
@@ -91,8 +90,7 @@ fun RecipeIngredientItemPreview() {
                     imageUrl = "imageUrl",
                     category = "category"
                 ),
-                dragIndex = -1,
-                elementIndex = 1
+                dragIndex = ""
             )
         }
     }

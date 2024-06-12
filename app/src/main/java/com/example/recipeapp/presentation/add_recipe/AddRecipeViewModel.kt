@@ -76,9 +76,10 @@ class AddRecipeViewModel @Inject constructor(
 
             is AddRecipeEvent.SelectedIngredient -> {
                 _addRecipeState.value = addRecipeState.value.copy(
-                    isDropDownMenuExpanded = false,
-                    recipeIngredients = getRecipeIngredients(event.ingredient, _addRecipeState.value.recipeIngredients)
+                    isDropDownMenuExpanded = false
                 )
+
+                addIngredientToRecipeIngredientList(event.ingredient)
             }
 
             is AddRecipeEvent.SelectedRecipeImage -> {
@@ -98,31 +99,30 @@ class AddRecipeViewModel @Inject constructor(
             is AddRecipeEvent.OnDragIndexChange -> {
                 _addRecipeState.value = addRecipeState.value.copy(
                     dragIndex = event.dragIndex,
-                    dropIndex = -1
+                    dropIndex = ""
                 )
             }
 
             is AddRecipeEvent.OnDropIndexChange -> {
                 _addRecipeState.value = addRecipeState.value.copy(
-                    dragIndex = -1,
+                    dragIndex = "",
                     dropIndex = event.dropIndex
                 )
             }
 
             is AddRecipeEvent.OnDraggedIngredientChange -> {
                 _addRecipeState.value = addRecipeState.value.copy(
-                    draggedIngredientIndex = event.draggedIngredientIndex
+                    draggedIngredientId = event.draggedIngredientId
                 )
 
-                reorderIngredientList(
+                reorderRecipeIngredientList(
                     _addRecipeState.value.dropIndex,
-                    _addRecipeState.value.draggedIngredientIndex
+                    _addRecipeState.value.draggedIngredientId
                 )
             }
 
             is AddRecipeEvent.OnSwipeToDelete -> {
-                deleteIngredientFromIngredientList(event.index)
-                Log.i("TAG","delete! ${event.index}")
+                deleteIngredientFromRecipeIngredientList(event.ingredient)
             }
 
             AddRecipeEvent.OnServingsPickerDismissed -> {
@@ -260,47 +260,54 @@ class AddRecipeViewModel @Inject constructor(
         return true
     }
 
-    private fun getRecipeIngredients(newIngredient: Ingredient, ingredients: List<Ingredient>): List<Ingredient> {
-        val recipeIngredients = mutableListOf<Ingredient>()
-
-        for(ingredient in ingredients) {
-            recipeIngredients.add(ingredient)
-        }
-        recipeIngredients.add(newIngredient)
-        return recipeIngredients
-    }
-
-    private fun getTempIngredientList(): MutableList<Ingredient> {
+    private fun getTempList(ingredients: List<Ingredient>): MutableList<Ingredient> {
         val tempList = mutableListOf<Ingredient>()
-        for(ingredient in _addRecipeState.value.recipeIngredients) {
+        for(ingredient in ingredients) {
             tempList.add(ingredient)
         }
         return tempList
     }
 
-    private fun reorderIngredientList(dropIndex: Int, draggedIngredientIndex: Int) {
-        val tempList = getTempIngredientList()
-        val tempIngredient = tempList[draggedIngredientIndex]
+    private fun getCurrentIngredients(recipeIngredients: List<Ingredient>): List<Ingredient> {
+        val allIngredients = _addRecipeState.value.allIngredients
 
-        tempList.removeAt(draggedIngredientIndex)
-        tempList.add(dropIndex,tempIngredient)
+        return allIngredients.filter { ingredient -> recipeIngredients.all { recipeIngredient ->  recipeIngredient.ingredientId != ingredient.ingredientId}  }
+    }
+
+    private fun addIngredientToRecipeIngredientList(newIngredient: Ingredient) {
+        val recipeIngredients = getTempList(_addRecipeState.value.recipeIngredients)
+
+        recipeIngredients.add(newIngredient)
 
         _addRecipeState.value = addRecipeState.value.copy(
-            recipeIngredients = tempList
+            recipeIngredients = recipeIngredients,
+            ingredients = getCurrentIngredients(recipeIngredients)
         )
     }
 
-    private fun deleteIngredientFromIngredientList(index: Int) {
-        val tempList = getTempIngredientList()
-        Log.i("TAG","index w delete: $index")
-        Log.i("TAG","lista w delete: $tempList")
+    private fun reorderRecipeIngredientList(dropIndex: String, draggedIngredientId: String) {
+        val recipeIngredients = getTempList(_addRecipeState.value.recipeIngredients)
+        val dragIngredient = recipeIngredients.find { ingredient -> ingredient.ingredientId == draggedIngredientId }
+        val dropIngredient = recipeIngredients.find { ingredient -> ingredient.ingredientId == dropIndex }
+        val index = recipeIngredients.indexOf(dropIngredient)
 
-        tempList.removeAt(index)
+        recipeIngredients.remove(dragIngredient)
+        dragIngredient?.let { recipeIngredients.add(index, it) }
 
         _addRecipeState.value = addRecipeState.value.copy(
-            recipeIngredients = tempList
+            recipeIngredients = recipeIngredients
         )
-        Thread.sleep(5000L)
+    }
+
+    private fun deleteIngredientFromRecipeIngredientList(ingredient: Ingredient) {
+        val recipeIngredients = getTempList(_addRecipeState.value.recipeIngredients)
+
+        recipeIngredients.remove(ingredient)
+
+        _addRecipeState.value = addRecipeState.value.copy(
+            recipeIngredients = recipeIngredients,
+            ingredients = getCurrentIngredients(recipeIngredients)
+        )
     }
 
     private fun getIngredients() {
@@ -320,7 +327,8 @@ class AddRecipeViewModel @Inject constructor(
                         Log.i("TAG",response.data.toString())
                         response.data?.let {
                             _addRecipeState.value = addRecipeState.value.copy(
-                                ingredients = response.data
+                                ingredients = response.data,
+                                allIngredients = response.data
                             )
                         }
                     }

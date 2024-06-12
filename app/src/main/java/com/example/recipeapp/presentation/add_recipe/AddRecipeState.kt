@@ -38,7 +38,8 @@ data class AddRecipeState(
         maxCropResultWidth = 2400,
         maxCropResultHeight = 1800,
     ),
-    val dragIndex: Int = -1,
-    val dropIndex: Int = -1,
-    val draggedIngredientIndex: Int = -1
+    val dragIndex: String = "",
+    val dropIndex: String = "",
+    val draggedIngredientId: String = "",
+    val allIngredients: List<Ingredient> = emptyList()
 )
