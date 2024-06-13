@@ -13,12 +13,15 @@ import com.example.recipeapp.data.repository.ShoppingListRepositoryImpl
 import com.example.recipeapp.data.repository.UserRepositoryImpl
 import com.example.recipeapp.domain.repository.AuthRepository
 import com.example.recipeapp.domain.repository.CategoryRepository
+import com.example.recipeapp.domain.repository.ImageStorageRepository
 import com.example.recipeapp.domain.repository.IngredientRepository
 import com.example.recipeapp.domain.repository.RecipeRepository
 import com.example.recipeapp.domain.repository.SavedRecipeRepository
 import com.example.recipeapp.domain.repository.SearchSuggestionRepository
 import com.example.recipeapp.domain.repository.ShoppingListRepository
 import com.example.recipeapp.domain.repository.UserRepository
+import com.example.recipeapp.domain.use_case.AddImageUseCase
+import com.example.recipeapp.domain.use_case.AddRecipeUseCase
 import com.example.recipeapp.domain.use_case.AddSearchSuggestionUseCase
 import com.example.recipeapp.domain.use_case.AddUserUseCase
 import com.example.recipeapp.domain.use_case.GetCategoriesUseCase
@@ -172,6 +175,18 @@ object TestAppModule {
     @Singleton
     fun provideGetCurrentUserUseCase(authRepository: AuthRepository): GetCurrentUserUseCase {
         return GetCurrentUserUseCase(authRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAddImageUseCase(imageStorageRepository: ImageStorageRepository): AddImageUseCase {
+        return AddImageUseCase(imageStorageRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAddRecipeUseCase(recipeRepository: RecipeRepository): AddRecipeUseCase {
+        return AddRecipeUseCase(recipeRepository)
     }
 
     @Provides

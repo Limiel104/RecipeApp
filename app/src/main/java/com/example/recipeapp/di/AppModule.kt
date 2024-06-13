@@ -22,6 +22,7 @@ import com.example.recipeapp.domain.repository.SearchSuggestionRepository
 import com.example.recipeapp.domain.repository.ShoppingListRepository
 import com.example.recipeapp.domain.repository.UserRepository
 import com.example.recipeapp.domain.use_case.AddImageUseCase
+import com.example.recipeapp.domain.use_case.AddRecipeUseCase
 import com.example.recipeapp.domain.use_case.AddSearchSuggestionUseCase
 import com.example.recipeapp.domain.use_case.AddUserUseCase
 import com.example.recipeapp.domain.use_case.GetCategoriesUseCase
@@ -195,6 +196,12 @@ object AppModule {
     @Singleton
     fun provideAddImageUseCase(imageStorageRepository: ImageStorageRepository): AddImageUseCase {
         return AddImageUseCase(imageStorageRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAddRecipeUseCase(recipeRepository: RecipeRepository): AddRecipeUseCase {
+        return AddRecipeUseCase(recipeRepository)
     }
 
     @Provides

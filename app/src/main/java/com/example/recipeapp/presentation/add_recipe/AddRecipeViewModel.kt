@@ -7,8 +7,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipeapp.domain.model.Ingredient
+import com.example.recipeapp.domain.model.RecipeWithIngredients
 import com.example.recipeapp.domain.model.Resource
 import com.example.recipeapp.domain.use_case.AddImageUseCase
+import com.example.recipeapp.domain.use_case.AddRecipeUseCase
+import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
 import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
 import com.example.recipeapp.domain.use_case.ValidateFieldUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +26,8 @@ class AddRecipeViewModel @Inject constructor(
     private val validateFieldUseCase: ValidateFieldUseCase,
     private val getIngredientsUseCase: GetIngredientsUseCase,
     private val addImageUseCase: AddImageUseCase,
+    private val getCurrentUserUseCase: GetCurrentUserUseCase,
+    private val addRecipeUseCase: AddRecipeUseCase
 ): ViewModel() {
 
     private val _addRecipeState = mutableStateOf(AddRecipeState())
@@ -226,10 +231,11 @@ class AddRecipeViewModel @Inject constructor(
                 val description = _addRecipeState.value.description
                 val imageName = System.currentTimeMillis().toString()+"_"+UUID.randomUUID().toString()+".jpg"
 
-                _addRecipeState.value.imageUri?.let { addImage(it, imageName) }
 
-                if(isValidationSuccessful(title, description))
-                    addRecipe()
+
+                if(isValidationSuccessful(title, description)) {
+                    _addRecipeState.value.imageUri?.let { addImage(it, imageName) }
+                }
                 else
                     Log.i("TAG", "Form validation error")
             }
@@ -354,6 +360,22 @@ class AddRecipeViewModel @Inject constructor(
                         Log.i("TAG",response.data.toString())
                         response.data?.let {
                             Log.i("TAG", "image url vm: ${response.data}")
+
+                            val recipeWithIngredients = RecipeWithIngredients(
+                                recipeId = "",
+                                name = _addRecipeState.value.title,
+                                ingredients = emptyMap(),
+                                prepTime = _addRecipeState.value.lastSavedPrepTime,
+                                servings = _addRecipeState.value.lastSavedServings,
+                                description = _addRecipeState.value.description,
+                                isVegetarian = false,
+                                isVegan = false,
+                                imageUrl = response.data.toString(),
+                                createdBy = getCurrentUserUseCase()!!.uid,
+                                categories = emptyList()
+                            )
+
+                            addRecipe(recipeWithIngredients)
                         }
                     }
                 }
@@ -361,7 +383,24 @@ class AddRecipeViewModel @Inject constructor(
         }
     }
 
-    private fun addRecipe() {
-        Log.i("TAG", "Add recipe")
+    private fun addRecipe(recipeWithIngredients: RecipeWithIngredients) {
+        viewModelScope.launch {
+            addRecipeUseCase(recipeWithIngredients).collect { response ->
+                when(response) {
+                    is Resource.Error -> {
+                        Log.i("TAG", "Error message from addRecipe: ${response.message}")
+                    }
+                    is Resource.Loading -> {
+                        Log.i("TAG", "Loading add recipe: ${response.isLoading}")
+                        _addRecipeState.value = addRecipeState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i("TAG", response.data.toString())
+                    }
+                }
+            }
+        }
     }
 }
