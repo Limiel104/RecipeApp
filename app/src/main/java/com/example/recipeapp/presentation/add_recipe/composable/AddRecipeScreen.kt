@@ -58,6 +58,11 @@ fun AddRecipeScreen(
     val tempUri = viewModel.addRecipeState.value.tempUri
     val cropImageOptions = viewModel.addRecipeState.value.cropImageOptions
     val dragIndex = viewModel.addRecipeState.value.dragIndex
+    val isReorderModeActivated = viewModel.addRecipeState.value.isReorderModeActivated
+    val isQuantityBottomSheetOpen = viewModel.addRecipeState.value.isQuantityBottomSheetOpen
+    val selectedWholeQuantity = viewModel.addRecipeState.value.selectedWholeQuantity
+    val selectedDecimalQuantity = viewModel.addRecipeState.value.selectedDecimalQuantity
+    val selectedTypeQuantity = viewModel.addRecipeState.value.selectedTypeQuantity
 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -155,6 +160,11 @@ fun AddRecipeScreen(
         isImageBottomSheetOpen = isImageBottomSheetOpen,
         imageUri = imageUri,
         dragIndex = dragIndex,
+        isReorderModeActivated = isReorderModeActivated,
+        isQuantityBottomSheetOpen = isQuantityBottomSheetOpen,
+        selectedWholeQuantity = selectedWholeQuantity,
+        selectedDecimalQuantity = selectedDecimalQuantity,
+        selectedTypeQuantity = selectedTypeQuantity,
         onTitleChange = { viewModel.onEvent(AddRecipeEvent.EnteredTitle(it)) },
         onDescriptionChange = { viewModel.onEvent(AddRecipeEvent.EnteredDescription(it)) },
         onIngredientChange = { viewModel.onEvent(AddRecipeEvent.EnteredIngredient(it)) },
@@ -172,11 +182,18 @@ fun AddRecipeScreen(
         onAddPhoto = { viewModel.onEvent(AddRecipeEvent.OnAddImage) },
         onTakePhoto = {  viewModel.onEvent(AddRecipeEvent.OnTakePhoto) },
         onSelectImage = {  viewModel.onEvent(AddRecipeEvent.OnSelectImage) },
+        onReorder = { viewModel.onEvent(AddRecipeEvent.OnReorder) },
         onAddImageDismiss = { viewModel.onEvent(AddRecipeEvent.OnAddImageDismiss) },
         onDragIndexChange = {viewModel.onEvent(AddRecipeEvent.OnDragIndexChange(it))},
         onDropIndexChange = { viewModel.onEvent(AddRecipeEvent.OnDropIndexChange(it)) },
         onDraggedIngredientChange = { viewModel.onEvent(AddRecipeEvent.OnDraggedIngredientChange(it)) },
         onSwipeToDelete = { viewModel.onEvent(AddRecipeEvent.OnSwipeToDelete(it)) },
+        onIngredientClicked = { viewModel.onEvent(AddRecipeEvent.OnIngredientClicked(it)) },
+        onSelectedWholeQuantity = { viewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity(it)) },
+        onSelectedDecimalQuantity = { viewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(it)) },
+        onSelectedTypeQuantity = { viewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity(it)) },
+        onQuantityPickerDismiss = { viewModel.onEvent(AddRecipeEvent.OnQuantityPickerDismissed) },
+        onQuantityPickerSave = { viewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved) },
         onAddRecipe = { viewModel.onEvent(AddRecipeEvent.OnAddRecipe) },
     )
 }

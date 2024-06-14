@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -53,10 +54,12 @@ fun RowWithTextButton(
 @Composable
 fun RowWithTextButtonPreview() {
     RecipeAppTheme {
-        RowWithTextButton(
-            sectionName = "Servings",
-            buttonText = "Set servings",
-            onClick = {}
-        )
+        Surface {
+            RowWithTextButton(
+                sectionName = "Servings",
+                buttonText = "Set servings",
+                onClick = {}
+            )
+        }
     }
 }

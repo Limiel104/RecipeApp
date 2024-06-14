@@ -8,8 +8,10 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.draganddrop.dragAndDropTarget
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -31,6 +33,7 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberSwipeToDismissBoxState
@@ -53,7 +56,7 @@ import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.presentation.common.composable.RecipeIngredientItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AddRecipeContent(
     modifier: Modifier = Modifier,
@@ -77,6 +80,11 @@ fun AddRecipeContent(
     isImageBottomSheetOpen: Boolean,
     imageUri: Uri?,
     dragIndex: String,
+    isReorderModeActivated: Boolean,
+    isQuantityBottomSheetOpen: Boolean,
+    selectedWholeQuantity: String,
+    selectedDecimalQuantity: String,
+    selectedTypeQuantity: String,
     onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onIngredientChange: (String) -> Unit,
@@ -95,10 +103,17 @@ fun AddRecipeContent(
     onTakePhoto: () -> Unit,
     onSelectImage: () -> Unit,
     onAddImageDismiss: () -> Unit,
+    onReorder: () -> Unit,
     onDragIndexChange: (String) -> Unit,
     onDropIndexChange: (String) -> Unit,
     onDraggedIngredientChange: (String) -> Unit,
     onSwipeToDelete: (Ingredient) -> Unit,
+    onIngredientClicked: (String) -> Unit,
+    onSelectedWholeQuantity: (String) -> Unit,
+    onSelectedDecimalQuantity: (String) -> Unit,
+    onSelectedTypeQuantity: (String) -> Unit,
+    onQuantityPickerDismiss: () -> Unit,
+    onQuantityPickerSave: () -> Unit,
     onAddRecipe: () -> Unit
 ) {
     Scaffold(
@@ -190,19 +205,36 @@ fun AddRecipeContent(
                     .testTag("Add recipe description TF")
             )
 
-            Text(
-                text = stringResource(id = R.string.ingredients),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold,
-                modifier = modifier.padding(bottom = 4.dp)
-            )
+            Row(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 20.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column() {
+                    Text(
+                        text = stringResource(id = R.string.ingredients),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = modifier.padding(bottom = 4.dp)
+                    )
 
-            Text(
-                text = stringResource(id = R.string.long_tap_or_swipe),
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Light,
-                modifier = modifier.padding(bottom = 20.dp)
-            )
+                    Text(
+                        text = stringResource(id = R.string.tap_or_swipe),
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Light,
+
+                    )
+                }
+
+                TextButton(
+                    onClick = { onReorder() },
+                    modifier = modifier.testTag("Reorder button"),
+                ) {
+                    Text(text = stringResource(id = R.string.reorder))
+                }
+            }
 
             Column(
                 modifier = modifier.padding(bottom = 20.dp)
@@ -244,7 +276,10 @@ fun AddRecipeContent(
                             content = {
                                 RecipeIngredientItem(
                                     ingredient = recipeIngredient,
+                                    quantity = "200 g",
                                     dragIndex = dragIndex,
+                                    isReorderModeActivated = isReorderModeActivated,
+                                    onClick = { onIngredientClicked(it) },
                                     modifier = modifier
                                         .dragAndDropTarget(
                                             shouldStartDragAndDrop = { true },
@@ -328,6 +363,20 @@ fun AddRecipeContent(
                 onSelectImage = { onSelectImage() }
             )
         }
+
+        if(isQuantityBottomSheetOpen) {
+            QuantityPicker(
+                modalSheetState = modalBottomSheetState,
+                selectedWholeQuantity = selectedWholeQuantity,
+                selectedDecimalQuantity = selectedDecimalQuantity,
+                selectedTypeQuantity = selectedTypeQuantity,
+                onSelectedWholeQuantity = { onSelectedWholeQuantity(it) },
+                onSelectedDecimalQuantity = { onSelectedDecimalQuantity(it) },
+                onSelectedTypeQuantity = { onSelectedTypeQuantity(it) },
+                onDismiss = { onQuantityPickerDismiss() },
+                onSave = { onQuantityPickerSave() }
+            )
+        }
     }
 }
 
@@ -386,6 +435,11 @@ fun AddRecipeContentPreview() {
             isImageBottomSheetOpen = false,
             imageUri = Uri.EMPTY,
             dragIndex = "",
+            isReorderModeActivated = false,
+            isQuantityBottomSheetOpen = false,
+            selectedWholeQuantity = "",
+            selectedDecimalQuantity = "",
+            selectedTypeQuantity = "",
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
@@ -408,6 +462,13 @@ fun AddRecipeContentPreview() {
             onDropIndexChange = {},
             onDraggedIngredientChange = {},
             onSwipeToDelete = {},
+            onReorder = {},
+            onIngredientClicked = {},
+            onSelectedWholeQuantity = {},
+            onSelectedDecimalQuantity = {},
+            onSelectedTypeQuantity = {},
+            onQuantityPickerDismiss = {},
+            onQuantityPickerSave = {},
             onAddRecipe = {}
         )
     }
@@ -445,6 +506,11 @@ fun AddRecipeContentPreviewErrorsShown() {
             isImageBottomSheetOpen = false,
             imageUri = Uri.EMPTY,
             dragIndex = "",
+            isReorderModeActivated = false,
+            isQuantityBottomSheetOpen = false,
+            selectedWholeQuantity = "",
+            selectedDecimalQuantity = "",
+            selectedTypeQuantity = "",
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
@@ -467,6 +533,13 @@ fun AddRecipeContentPreviewErrorsShown() {
             onDropIndexChange = {},
             onDraggedIngredientChange = {},
             onSwipeToDelete = {},
+            onReorder = {},
+            onIngredientClicked = {},
+            onSelectedWholeQuantity = {},
+            onSelectedDecimalQuantity = {},
+            onSelectedTypeQuantity = {},
+            onQuantityPickerDismiss = {},
+            onQuantityPickerSave = {},
             onAddRecipe = {},
         )
     }
@@ -505,6 +578,11 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
             isImageBottomSheetOpen = false,
             imageUri = Uri.EMPTY,
             dragIndex = "",
+            isReorderModeActivated = false,
+            isQuantityBottomSheetOpen = false,
+            selectedWholeQuantity = "",
+            selectedDecimalQuantity = "",
+            selectedTypeQuantity = "",
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
@@ -527,6 +605,13 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
             onDropIndexChange = {},
             onDraggedIngredientChange = {},
             onSwipeToDelete = {},
+            onReorder = {},
+            onIngredientClicked = {},
+            onSelectedWholeQuantity = {},
+            onSelectedDecimalQuantity = {},
+            onSelectedTypeQuantity = {},
+            onQuantityPickerDismiss = {},
+            onQuantityPickerSave = {},
             onAddRecipe = {}
         )
     }

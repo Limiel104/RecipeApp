@@ -3,6 +3,7 @@ package com.example.recipeapp.presentation.add_recipe
 import android.net.Uri
 import com.canhub.cropper.CropImageOptions
 import com.example.recipeapp.domain.model.Ingredient
+import com.example.recipeapp.domain.model.Quantity
 
 data class AddRecipeState(
     val recipeId: String = "",
@@ -41,5 +42,12 @@ data class AddRecipeState(
     val dragIndex: String = "",
     val dropIndex: String = "",
     val draggedIngredientId: String = "",
-    val allIngredients: List<Ingredient> = emptyList()
+    val allIngredients: List<Ingredient> = emptyList(),
+    val isReorderModeActivated: Boolean = false,
+    val isQuantityBottomSheetOpen: Boolean = false,
+    val selectedWholeQuantity: String = "",
+    val selectedDecimalQuantity: String = "",
+    val selectedTypeQuantity: String = "",
+    val recipeIngredientsMap: Map<Ingredient, Quantity> = emptyMap(),
+    val selectedIngredientId: String = ""
 )

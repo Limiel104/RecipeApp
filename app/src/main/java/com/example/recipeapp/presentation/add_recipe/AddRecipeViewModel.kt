@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipeapp.domain.model.Ingredient
+import com.example.recipeapp.domain.model.Quantity
 import com.example.recipeapp.domain.model.RecipeWithIngredients
 import com.example.recipeapp.domain.model.Resource
 import com.example.recipeapp.domain.use_case.AddImageUseCase
@@ -130,6 +131,31 @@ class AddRecipeViewModel @Inject constructor(
                 deleteIngredientFromRecipeIngredientList(event.ingredient)
             }
 
+            is AddRecipeEvent.OnIngredientClicked -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    selectedIngredientId = event.ingredientId,
+                    isQuantityBottomSheetOpen = true
+                )
+            }
+
+            is AddRecipeEvent.SelectedWholeQuantity -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    selectedWholeQuantity = event.whole
+                )
+            }
+
+            is AddRecipeEvent.SelectedDecimalQuantity -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    selectedDecimalQuantity = event.decimal
+                )
+            }
+
+            is AddRecipeEvent.SelectedTypeQuantity -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    selectedTypeQuantity = event.type
+                )
+            }
+
             AddRecipeEvent.OnServingsPickerDismissed -> {
                 if(_addRecipeState.value.lastSavedServings != 0) {
                     _addRecipeState.value = addRecipeState.value.copy(
@@ -223,6 +249,53 @@ class AddRecipeViewModel @Inject constructor(
             AddRecipeEvent.OnAddImageDismiss -> {
                 _addRecipeState.value = addRecipeState.value.copy(
                     isImageBottomSheetOpen = false
+                )
+            }
+
+            AddRecipeEvent.OnReorder -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    isReorderModeActivated = !_addRecipeState.value.isReorderModeActivated
+                )
+            }
+
+            AddRecipeEvent.OnQuantityPickerDismissed -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    selectedWholeQuantity = "",
+                    selectedDecimalQuantity = "",
+                    selectedTypeQuantity = "",
+                    isQuantityBottomSheetOpen = false
+                )
+            }
+
+            AddRecipeEvent.OnQuantityPickerSaved -> {
+                val ingredient = _addRecipeState.value.recipeIngredients.find { ingredient ->
+                    ingredient.ingredientId == _addRecipeState.value.selectedIngredientId
+                }
+
+                val quantity = _addRecipeState.value.selectedWholeQuantity +
+                        _addRecipeState.value.selectedDecimalQuantity +
+                        " " + _addRecipeState.value.selectedTypeQuantity
+
+                val tempList = mutableListOf<Ingredient>()
+                for(ingr in _addRecipeState.value.recipeIngredients) {
+                    tempList.add(ingr)
+                }
+
+                val recipeIngredientsMap = mutableMapOf<Ingredient, Quantity>()
+                for(recipeIngredient in _addRecipeState.value.recipeIngredientsMap) {
+                    recipeIngredientsMap[recipeIngredient.key] = recipeIngredient.value
+                }
+
+                ingredient?.let {
+                    if(recipeIngredientsMap.keys.contains(ingredient))
+                        recipeIngredientsMap.replace(it, quantity)
+                    else
+                        recipeIngredientsMap.put(it, quantity)
+                }
+
+                _addRecipeState.value = addRecipeState.value.copy(
+                    recipeIngredientsMap = recipeIngredientsMap,
+                    isQuantityBottomSheetOpen = false
                 )
             }
 

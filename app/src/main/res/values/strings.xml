@@ -7,7 +7,7 @@
     <string name="description">Description</string>
     <string name="ingredients">Ingredients</string>
     <string name="reorder">Reorder</string>
-    <string name="long_tap_or_swipe">Long tap to reorder, swipe to delete</string>
+    <string name="tap_or_swipe">Tap to edit, swipe to delete</string>
     <string name="type_ingr_name">Type ingredient name</string>
     <string name="servings">Servings</string>
     <string name="set_servings">Set servings</string>

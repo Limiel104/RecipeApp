@@ -2,6 +2,7 @@
 
 package com.example.recipeapp.presentation.add_recipe.composable
 
+import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,13 +16,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.R
+import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
 fun ImagePicker(
@@ -78,6 +83,27 @@ fun ImagePicker(
                     text = stringResource(id = R.string.select_image),
                     style = MaterialTheme.typography.titleMedium
                 )
+            }
+        }
+    }
+}
+
+@Preview(
+    name = "Light Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun ImagePickerPreview() {
+    RecipeAppTheme {
+        Surface {
+            ImagePicker(
+                modalSheetState = rememberModalBottomSheetState(),
+                onDismiss = {},
+                onTakePhoto = {}) {
             }
         }
     }

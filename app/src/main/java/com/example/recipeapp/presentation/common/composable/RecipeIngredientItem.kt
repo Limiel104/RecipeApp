@@ -13,6 +13,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DragHandle
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -31,28 +34,36 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 fun RecipeIngredientItem(
     modifier: Modifier = Modifier,
     ingredient: Ingredient,
-    dragIndex: String
+    quantity: String,
+    dragIndex: String,
+    isReorderModeActivated: Boolean,
+    onClick: (String) -> Unit
 ) {
     Row(
         modifier = modifier
-            .clickable {}
+            .then(
+                if (isReorderModeActivated) {
+                    modifier.dragAndDropSource {
+                        detectTapGestures(
+                            onLongPress = {
+                                startTransfer(
+                                    DragAndDropTransferData(
+                                        clipData = ClipData.newPlainText("ingredientIndex", ingredient.ingredientId)
+                                    )
+                                )
+                            }
+                        )
+                    }
+                } else {
+                    modifier.clickable { onClick(ingredient.ingredientId) }
+                }
+            )
             .fillMaxWidth()
             .height(IntrinsicSize.Max)
             .background(
                 if(dragIndex == ingredient.ingredientId) MaterialTheme.colorScheme.secondary
                 else MaterialTheme.colorScheme.background
-            )
-            .dragAndDropSource {
-                detectTapGestures(
-                    onLongPress = {
-                        startTransfer(
-                            DragAndDropTransferData(
-                                clipData = ClipData.newPlainText("ingredientIndex", ingredient.ingredientId)
-                            )
-                        )
-                    }
-                )
-            },
+            ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ImageItem(
@@ -64,10 +75,25 @@ fun RecipeIngredientItem(
             text = ingredient.name,
             style = MaterialTheme.typography.bodyMedium,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = modifier.padding(horizontal = 8.dp)
+        )
+
+        Text(
+            text = quantity,
+            style = MaterialTheme.typography.bodySmall,
+            overflow = TextOverflow.Ellipsis,
+            modifier = modifier
+                .weight(1F)
                 .padding(horizontal = 8.dp)
         )
+
+        if(isReorderModeActivated) {
+            Icon(
+                imageVector = Icons.Default.DragHandle,
+                contentDescription = "Drag handle icon",
+                modifier = modifier
+            )
+        }
     }
 }
 
@@ -90,7 +116,66 @@ fun RecipeIngredientItemPreview() {
                     imageUrl = "imageUrl",
                     category = "category"
                 ),
-                dragIndex = ""
+                quantity = "200 g",
+                dragIndex = "",
+                isReorderModeActivated = false,
+                onClick = {}
+            )
+        }
+    }
+}
+
+@Preview(
+    name = "Light Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun RecipeIngredientItemDragIndexEqualToItemId() {
+    RecipeAppTheme {
+        Surface {
+            RecipeIngredientItem(
+                ingredient = Ingredient(
+                    ingredientId = "ingredientId",
+                    name = "Ingredient Name",
+                    imageUrl = "imageUrl",
+                    category = "category"
+                ),
+                quantity = "200 g",
+                dragIndex = "ingredientId",
+                isReorderModeActivated = false,
+                onClick = {}
+            )
+        }
+    }
+}
+
+@Preview(
+    name = "Light Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun RecipeIngredientItemPreviewReorderActivated() {
+    RecipeAppTheme {
+        Surface {
+            RecipeIngredientItem(
+                ingredient = Ingredient(
+                    ingredientId = "ingredientId",
+                    name = "Ingredient Name",
+                    imageUrl = "imageUrl",
+                    category = "category"
+                ),
+                quantity = "200 g",
+                dragIndex = "",
+                isReorderModeActivated = true,
+                onClick = {}
             )
         }
     }
