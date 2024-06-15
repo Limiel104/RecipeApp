@@ -268,7 +268,7 @@ class AddRecipeViewModel @Inject constructor(
             }
 
             AddRecipeEvent.OnQuantityPickerSaved -> {
-                val ingredient = _addRecipeState.value.recipeIngredients.find { ingredient ->
+                val ingredient = _addRecipeState.value.recipeIngredients.keys.find { ingredient ->
                     ingredient.ingredientId == _addRecipeState.value.selectedIngredientId
                 }
 
@@ -276,25 +276,20 @@ class AddRecipeViewModel @Inject constructor(
                         _addRecipeState.value.selectedDecimalQuantity +
                         " " + _addRecipeState.value.selectedTypeQuantity
 
-                val tempList = mutableListOf<Ingredient>()
-                for(ingr in _addRecipeState.value.recipeIngredients) {
-                    tempList.add(ingr)
-                }
-
-                val recipeIngredientsMap = mutableMapOf<Ingredient, Quantity>()
-                for(recipeIngredient in _addRecipeState.value.recipeIngredientsMap) {
-                    recipeIngredientsMap[recipeIngredient.key] = recipeIngredient.value
-                }
+                val recipeIngredients = getTempMap(_addRecipeState.value.recipeIngredients)
 
                 ingredient?.let {
-                    if(recipeIngredientsMap.keys.contains(ingredient))
-                        recipeIngredientsMap.replace(it, quantity)
+                    if(recipeIngredients.keys.contains(ingredient))
+                        recipeIngredients.replace(it, quantity)
                     else
-                        recipeIngredientsMap.put(it, quantity)
+                        recipeIngredients.put(it, quantity)
                 }
 
                 _addRecipeState.value = addRecipeState.value.copy(
-                    recipeIngredientsMap = recipeIngredientsMap,
+                    recipeIngredients = recipeIngredients,
+                    selectedWholeQuantity = "",
+                    selectedDecimalQuantity = "",
+                    selectedTypeQuantity = "",
                     isQuantityBottomSheetOpen = false
                 )
             }
@@ -339,47 +334,92 @@ class AddRecipeViewModel @Inject constructor(
         return true
     }
 
-    private fun getTempList(ingredients: List<Ingredient>): MutableList<Ingredient> {
-        val tempList = mutableListOf<Ingredient>()
-        for(ingredient in ingredients) {
-            tempList.add(ingredient)
+    private fun getTempMap(recipeIngredients: Map<Ingredient, Quantity>): MutableMap<Ingredient, Quantity> {
+        val tempMap = mutableMapOf<Ingredient, Quantity>()
+        for(recipeIngredient in recipeIngredients) {
+            tempMap[recipeIngredient.key] = recipeIngredient.value
         }
-        return tempList
+        return tempMap
     }
 
-    private fun getCurrentIngredients(recipeIngredients: List<Ingredient>): List<Ingredient> {
+    private fun addIngredientToMapAtIndex(
+        recipeIngredients: Map<Ingredient, Quantity>,
+        index: Int,
+        newIngredient: Ingredient,
+        quantity: Quantity
+    ): Map<Ingredient, Quantity> {
+        val tempMap = mutableMapOf<Ingredient, Quantity>()
+
+        if(index == recipeIngredients.size) {
+            for(ingredient in recipeIngredients)
+                tempMap[ingredient.key] = ingredient.value
+            tempMap[newIngredient] = quantity
+        }
+        else {
+            for(ingredient in recipeIngredients) {
+                if(tempMap.size != index)
+                    tempMap[ingredient.key] = ingredient.value
+                else {
+                    tempMap[newIngredient] = quantity
+                    tempMap[ingredient.key] = ingredient.value
+                }
+            }
+        }
+        return tempMap
+    }
+
+    private fun getCurrentIngredients(recipeIngredients: Map<Ingredient, Quantity>): List<Ingredient> {
         val allIngredients = _addRecipeState.value.allIngredients
 
-        return allIngredients.filter { ingredient -> recipeIngredients.all { recipeIngredient ->  recipeIngredient.ingredientId != ingredient.ingredientId}  }
+        return allIngredients.filter { ingredient -> recipeIngredients.all { recipeIngredient ->  recipeIngredient.key.ingredientId != ingredient.ingredientId}  }
     }
 
     private fun addIngredientToRecipeIngredientList(newIngredient: Ingredient) {
-        val recipeIngredients = getTempList(_addRecipeState.value.recipeIngredients)
+        val recipeIngredients = getTempMap(_addRecipeState.value.recipeIngredients)
 
-        recipeIngredients.add(newIngredient)
-
-        _addRecipeState.value = addRecipeState.value.copy(
-            recipeIngredients = recipeIngredients,
-            ingredients = getCurrentIngredients(recipeIngredients)
-        )
-    }
-
-    private fun reorderRecipeIngredientList(dropIndex: String, draggedIngredientId: String) {
-        val recipeIngredients = getTempList(_addRecipeState.value.recipeIngredients)
-        val dragIngredient = recipeIngredients.find { ingredient -> ingredient.ingredientId == draggedIngredientId }
-        val dropIngredient = recipeIngredients.find { ingredient -> ingredient.ingredientId == dropIndex }
-        val index = recipeIngredients.indexOf(dropIngredient)
-
-        recipeIngredients.remove(dragIngredient)
-        dragIngredient?.let { recipeIngredients.add(index, it) }
+        recipeIngredients[newIngredient] = ""
 
         _addRecipeState.value = addRecipeState.value.copy(
+            ingredients = getCurrentIngredients(recipeIngredients),
             recipeIngredients = recipeIngredients
         )
     }
 
+    private fun reorderRecipeIngredientList(dropIndex: String, draggedIngredientId: String) {
+        val recipeIngredients = getTempMap(_addRecipeState.value.recipeIngredients)
+        val dragIngredient = recipeIngredients.keys.find { ingredient -> ingredient.ingredientId == draggedIngredientId }
+        val dropIngredient = recipeIngredients.keys.find { ingredient -> ingredient.ingredientId == dropIndex }
+        recipeIngredients.keys.onEachIndexed { index, ingredient ->
+            if(ingredient  == dropIngredient) {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    index = index
+                )
+            }
+        }
+        val dropQuantity = recipeIngredients[dragIngredient]
+
+        recipeIngredients.remove(dragIngredient)
+        val reorderedRecipeIngredients = dragIngredient?.let { ingredient ->
+            dropQuantity?.let { quantity ->
+                addIngredientToMapAtIndex(
+                    recipeIngredients, _addRecipeState.value.index, ingredient, quantity
+                )
+            }
+        }
+
+        reorderedRecipeIngredients?.let {
+            _addRecipeState.value = addRecipeState.value.copy(
+                recipeIngredients = emptyMap() //equal returns true so no update
+            )
+
+            _addRecipeState.value = addRecipeState.value.copy(
+                recipeIngredients = it
+            )
+        }
+    }
+
     private fun deleteIngredientFromRecipeIngredientList(ingredient: Ingredient) {
-        val recipeIngredients = getTempList(_addRecipeState.value.recipeIngredients)
+        val recipeIngredients = getTempMap(_addRecipeState.value.recipeIngredients)
 
         recipeIngredients.remove(ingredient)
 
@@ -437,7 +477,7 @@ class AddRecipeViewModel @Inject constructor(
                             val recipeWithIngredients = RecipeWithIngredients(
                                 recipeId = "",
                                 name = _addRecipeState.value.title,
-                                ingredients = emptyMap(),
+                                ingredients = _addRecipeState.value.recipeIngredients,
                                 prepTime = _addRecipeState.value.lastSavedPrepTime,
                                 servings = _addRecipeState.value.lastSavedServings,
                                 description = _addRecipeState.value.description,

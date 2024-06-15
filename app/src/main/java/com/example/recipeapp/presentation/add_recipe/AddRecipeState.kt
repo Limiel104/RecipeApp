@@ -31,7 +31,7 @@ data class AddRecipeState(
     val ingredients: List<Ingredient> = emptyList(),
     val isDropDownMenuExpanded: Boolean = false,
     val isLoading: Boolean = false,
-    val recipeIngredients: List<Ingredient> = emptyList(),
+    val recipeIngredients: Map<Ingredient, Quantity> = emptyMap(),
     val isImageBottomSheetOpen: Boolean = false,
     val imageUri: Uri? = Uri.EMPTY,
     val tempUri: Uri? = Uri.EMPTY,
@@ -48,6 +48,6 @@ data class AddRecipeState(
     val selectedWholeQuantity: String = "",
     val selectedDecimalQuantity: String = "",
     val selectedTypeQuantity: String = "",
-    val recipeIngredientsMap: Map<Ingredient, Quantity> = emptyMap(),
-    val selectedIngredientId: String = ""
+    val selectedIngredientId: String = "",
+    val index: Int = -1
 )

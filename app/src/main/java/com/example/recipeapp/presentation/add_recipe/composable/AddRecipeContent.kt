@@ -53,6 +53,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.R
 import com.example.recipeapp.domain.model.Ingredient
+import com.example.recipeapp.domain.model.Quantity
 import com.example.recipeapp.presentation.common.composable.RecipeIngredientItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
@@ -75,7 +76,7 @@ fun AddRecipeContent(
     descriptionError: String?,
     ingredient: String,
     ingredients: List<Ingredient>,
-    recipeIngredients: List<Ingredient>,
+    recipeIngredients: Map<Ingredient, Quantity>,
     isDropDownMenuExpanded: Boolean,
     isImageBottomSheetOpen: Boolean,
     imageUri: Uri?,
@@ -244,7 +245,7 @@ fun AddRecipeContent(
                         val dismissState = rememberSwipeToDismissBoxState(
                             confirmValueChange = { value ->
                                 if (value == SwipeToDismissBoxValue.EndToStart) {
-                                    onSwipeToDelete(recipeIngredient)
+                                    onSwipeToDelete(recipeIngredient.key)
                                     true
                                 } else false
                             }
@@ -275,8 +276,8 @@ fun AddRecipeContent(
                             },
                             content = {
                                 RecipeIngredientItem(
-                                    ingredient = recipeIngredient,
-                                    quantity = "200 g",
+                                    ingredient = recipeIngredient.key,
+                                    quantity = recipeIngredient.value,
                                     dragIndex = dragIndex,
                                     isReorderModeActivated = isReorderModeActivated,
                                     onClick = { onIngredientClicked(it) },
@@ -285,14 +286,14 @@ fun AddRecipeContent(
                                             shouldStartDragAndDrop = { true },
                                             target = object : DragAndDropTarget {
                                                 override fun onDrop(event: DragAndDropEvent): Boolean {
-                                                    onDropIndexChange(recipeIngredient.ingredientId)
+                                                    onDropIndexChange(recipeIngredient.key.ingredientId)
                                                     onDraggedIngredientChange(event.toAndroidDragEvent().clipData.getItemAt(0).text.toString())
                                                     return true
                                                 }
 
                                                 override fun onEntered(event: DragAndDropEvent) {
                                                     super.onEntered(event)
-                                                    onDragIndexChange(recipeIngredient.ingredientId)
+                                                    onDragIndexChange(recipeIngredient.key.ingredientId)
                                                 }
 
                                                 override fun onExited(event: DragAndDropEvent) {
@@ -305,7 +306,7 @@ fun AddRecipeContent(
                             }
                         )
 
-                        if (recipeIngredients.indexOf(recipeIngredient) != recipeIngredients.lastIndex)
+                        if (recipeIngredients.keys.indexOf(recipeIngredient.key) != recipeIngredients.keys.toList().lastIndex)
                             HorizontalDivider()
                     }
                 }
@@ -380,25 +381,34 @@ fun AddRecipeContent(
     }
 }
 
-private fun getIngredients(): List<Ingredient> {
-    return listOf(
-        Ingredient(
-            ingredientId = "ingredientId",
-            name = "Ingredient Name",
-            imageUrl = "imageUrl",
-            category = "category"
+private fun getRecipeIngredients(): Map<Ingredient, Quantity> {
+    return mapOf(
+        Pair(
+            Ingredient(
+                ingredientId = "ingredientId",
+                name = "Ingredient Name",
+                imageUrl = "imageUrl",
+                category = "category"
+            ),
+            "200.0 g"
         ),
-        Ingredient(
-            ingredientId = "ingredient2Id",
-            name = "Ingredient2 Name",
-            imageUrl = "imageUrl",
-            category = "category"
+        Pair(
+            Ingredient(
+                ingredientId = "ingredient2Id",
+                name = "Ingredient2 Name",
+                imageUrl = "imageUrl",
+                category = "category"
+            ),
+            "5.0 kg"
         ),
-        Ingredient(
-            ingredientId = "ingredient3Id",
-            name = "Ingredient3 Name",
-            imageUrl = "imageUrl",
-            category = "category"
+        Pair(
+            Ingredient(
+                ingredientId = "ingredient3Id",
+                name = "Ingredient3 Name",
+                imageUrl = "imageUrl",
+                category = "category"
+            ),
+            "1 cup"
         )
     )
 }
@@ -430,7 +440,7 @@ fun AddRecipeContentPreview() {
             descriptionError = null,
             ingredient = "ingredient",
             ingredients = emptyList(),
-            recipeIngredients = getIngredients(),
+            recipeIngredients = getRecipeIngredients(),
             isDropDownMenuExpanded = false,
             isImageBottomSheetOpen = false,
             imageUri = Uri.EMPTY,
@@ -501,7 +511,7 @@ fun AddRecipeContentPreviewErrorsShown() {
             descriptionError = "Field too short",
             ingredient = "in",
             ingredients = emptyList(),
-            recipeIngredients = getIngredients(),
+            recipeIngredients = getRecipeIngredients(),
             isDropDownMenuExpanded = false,
             isImageBottomSheetOpen = false,
             imageUri = Uri.EMPTY,
@@ -573,7 +583,7 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
             descriptionError = null,
             ingredient = "ingredient",
             ingredients = emptyList(),
-            recipeIngredients = getIngredients(),
+            recipeIngredients = getRecipeIngredients(),
             isDropDownMenuExpanded = false,
             isImageBottomSheetOpen = false,
             imageUri = Uri.EMPTY,
