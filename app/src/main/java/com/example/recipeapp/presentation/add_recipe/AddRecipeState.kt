@@ -32,7 +32,7 @@ data class AddRecipeState(
     val isDropDownMenuExpanded: Boolean = false,
     val isLoading: Boolean = false,
     val recipeIngredients: Map<Ingredient, Quantity> = emptyMap(),
-    val isImageBottomSheetOpen: Boolean = false,
+    val isImageBottomSheetOpened: Boolean = false,
     val imageUri: Uri? = Uri.EMPTY,
     val tempUri: Uri? = Uri.EMPTY,
     val cropImageOptions: CropImageOptions = CropImageOptions(
@@ -44,7 +44,7 @@ data class AddRecipeState(
     val draggedIngredientId: String = "",
     val allIngredients: List<Ingredient> = emptyList(),
     val isReorderModeActivated: Boolean = false,
-    val isQuantityBottomSheetOpen: Boolean = false,
+    val isQuantityBottomSheetOpened: Boolean = false,
     val selectedWholeQuantity: String = "",
     val selectedDecimalQuantity: String = "",
     val selectedTypeQuantity: String = "",

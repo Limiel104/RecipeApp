@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import com.example.recipeapp.R
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Quantity
+import com.example.recipeapp.presentation.add_recipe.AddRecipeState
 import com.example.recipeapp.presentation.common.composable.RecipeIngredientItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
@@ -63,29 +64,7 @@ fun AddRecipeContent(
     modifier: Modifier = Modifier,
     scrollState: ScrollState,
     modalBottomSheetState: SheetState,
-    isServingsBottomSheetOpen: Boolean,
-    selectedServings: Int,
-    lastSavedServings: Int,
-    isPrepTimeBottomSheetOpen: Boolean,
-    selectedPrepTimeHours: String,
-    selectedPrepTimeMinutes: String,
-    lastSavedPrepTime: String,
-    title: String,
-    titleError: String?,
-    description: String,
-    descriptionError: String?,
-    ingredient: String,
-    ingredients: List<Ingredient>,
-    recipeIngredients: Map<Ingredient, Quantity>,
-    isDropDownMenuExpanded: Boolean,
-    isImageBottomSheetOpen: Boolean,
-    imageUri: Uri?,
-    dragIndex: String,
-    isReorderModeActivated: Boolean,
-    isQuantityBottomSheetOpen: Boolean,
-    selectedWholeQuantity: String,
-    selectedDecimalQuantity: String,
-    selectedTypeQuantity: String,
+    uiState: AddRecipeState,
     onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onIngredientChange: (String) -> Unit,
@@ -156,15 +135,15 @@ fun AddRecipeContent(
             )
 
             OutlinedTextField(
-                value = title,
+                value = uiState.title,
                 onValueChange = { onTitleChange(it) },
                 label = { Text(text = stringResource(id = R.string.title)) },
                 placeholder = { Text(text = stringResource(id = R.string.title)) },
                 supportingText = {
-                    if (titleError != null) {
-                        Text(text = titleError)
+                    if (uiState.titleError != null) {
+                        Text(text = uiState.titleError)
                     } },
-                isError = titleError != null,
+                isError = uiState.titleError != null,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email
                 ),
@@ -176,7 +155,7 @@ fun AddRecipeContent(
             )
 
             AddImageCard(
-                imageUri = imageUri,
+                imageUri = uiState.imageUri,
                 onClick = { onAddPhoto() }
             )
 
@@ -187,15 +166,15 @@ fun AddRecipeContent(
             )
 
             OutlinedTextField(
-                value = description,
+                value = uiState.description,
                 onValueChange = { onDescriptionChange(it) },
                 label = { Text(text = stringResource(id = R.string.description)) },
                 placeholder = { Text(text = stringResource(id = R.string.description)) },
                 supportingText = {
-                    if (descriptionError != null) {
-                        Text(text = descriptionError)
+                    if (uiState.descriptionError != null) {
+                        Text(text = uiState.descriptionError)
                     } },
-                isError = descriptionError != null,
+                isError = uiState.descriptionError != null,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email
                 ),
@@ -240,7 +219,7 @@ fun AddRecipeContent(
             Column(
                 modifier = modifier.padding(bottom = 20.dp)
             ) {
-                recipeIngredients.forEach { recipeIngredient ->
+                uiState.recipeIngredients.forEach { recipeIngredient ->
                     key(recipeIngredient) {
                         val dismissState = rememberSwipeToDismissBoxState(
                             confirmValueChange = { value ->
@@ -278,8 +257,8 @@ fun AddRecipeContent(
                                 RecipeIngredientItem(
                                     ingredient = recipeIngredient.key,
                                     quantity = recipeIngredient.value,
-                                    dragIndex = dragIndex,
-                                    isReorderModeActivated = isReorderModeActivated,
+                                    dragIndex = uiState.dragIndex,
+                                    isReorderModeActivated = uiState.isReorderModeActivated,
                                     onClick = { onIngredientClicked(it) },
                                     modifier = modifier
                                         .dragAndDropTarget(
@@ -306,16 +285,19 @@ fun AddRecipeContent(
                             }
                         )
 
-                        if (recipeIngredients.keys.indexOf(recipeIngredient.key) != recipeIngredients.keys.toList().lastIndex)
+                        val isIngredientLastInColumn =
+                            uiState.recipeIngredients.keys.indexOf(recipeIngredient.key)!= uiState.recipeIngredients.keys.toList().lastIndex
+
+                        if (isIngredientLastInColumn)
                             HorizontalDivider()
                     }
                 }
             }
 
             AutoComplete(
-                expanded = isDropDownMenuExpanded,
-                ingredient = ingredient,
-                ingredients = ingredients,
+                expanded = uiState.isDropDownMenuExpanded,
+                ingredient = uiState.ingredient,
+                ingredients = uiState.ingredients,
                 onExpandedChange = { onExpandedChange() },
                 onValueChange = { onIngredientChange(it) },
                 onClick = { onIngredientSuggestionClick(it) }
@@ -323,32 +305,32 @@ fun AddRecipeContent(
 
             RowWithTextButton(
                 sectionName = stringResource(id = R.string.servings),
-                buttonText = if(lastSavedServings == 0) stringResource(id = R.string.set_servings) else lastSavedServings.toString(),
+                buttonText = if(uiState.lastSavedServings == 0) stringResource(id = R.string.set_servings) else uiState.lastSavedServings.toString(),
                 onClick = { onServingsButtonClicked() }
             )
 
             RowWithTextButton(
                 sectionName = stringResource(id = R.string.prep_time),
-                buttonText = if(lastSavedPrepTime == "") stringResource(id = R.string.set_time) else lastSavedPrepTime,
+                buttonText = if(uiState.lastSavedPrepTime == "") stringResource(id = R.string.set_time) else uiState.lastSavedPrepTime,
                 onClick = { onPrepTimeButtonClicked() }
             )
         }
 
-        if(isServingsBottomSheetOpen) {
+        if(uiState.isServingsBottomSheetOpened) {
             ServingsPicker(
                 modalSheetState = modalBottomSheetState,
-                selectedServings = selectedServings,
+                selectedServings = uiState.selectedServings,
                 onSelectedServings = { onSelectedServings(it) },
                 onDismiss = { onServingsPickerDismiss() },
                 onSave = { onServingsPickerSave() }
             )
         }
 
-        if(isPrepTimeBottomSheetOpen) {
+        if(uiState.isPrepTimeBottomSheetOpened) {
             PrepTimePicker(
                 modalSheetState = modalBottomSheetState,
-                selectedPrepTimeHours = selectedPrepTimeHours,
-                selectedPrepTimeMinutes = selectedPrepTimeMinutes,
+                selectedPrepTimeHours = uiState.selectedPrepTimeHours,
+                selectedPrepTimeMinutes = uiState.selectedPrepTimeMinutes,
                 onSelectedPrepTimeHours = { onSelectedPrepTimeHours(it) },
                 onSelectedPrepTimeMinutes = { onSelectedPrepTimeMinutes(it) },
                 onDismiss = { onPrepTimePickerDismiss() },
@@ -356,7 +338,7 @@ fun AddRecipeContent(
             )
         }
 
-        if(isImageBottomSheetOpen) {
+        if(uiState.isImageBottomSheetOpened) {
             ImagePicker(
                 modalSheetState = modalBottomSheetState,
                 onDismiss = { onAddImageDismiss() },
@@ -365,12 +347,12 @@ fun AddRecipeContent(
             )
         }
 
-        if(isQuantityBottomSheetOpen) {
+        if(uiState.isQuantityBottomSheetOpened) {
             QuantityPicker(
                 modalSheetState = modalBottomSheetState,
-                selectedWholeQuantity = selectedWholeQuantity,
-                selectedDecimalQuantity = selectedDecimalQuantity,
-                selectedTypeQuantity = selectedTypeQuantity,
+                selectedWholeQuantity = uiState.selectedWholeQuantity,
+                selectedDecimalQuantity = uiState.selectedDecimalQuantity,
+                selectedTypeQuantity = uiState.selectedTypeQuantity,
                 onSelectedWholeQuantity = { onSelectedWholeQuantity(it) },
                 onSelectedDecimalQuantity = { onSelectedDecimalQuantity(it) },
                 onSelectedTypeQuantity = { onSelectedTypeQuantity(it) },
@@ -413,6 +395,34 @@ private fun getRecipeIngredients(): Map<Ingredient, Quantity> {
     )
 }
 
+private fun getUiState(): AddRecipeState {
+    return AddRecipeState(
+        isServingsBottomSheetOpened = false,
+        selectedServings = 1,
+        lastSavedServings = 0,
+        isPrepTimeBottomSheetOpened = false,
+        selectedPrepTimeHours = "",
+        selectedPrepTimeMinutes = "",
+        lastSavedPrepTime = "",
+        title = "New recipe title",
+        titleError = null,
+        description = "Description of the new recipe.",
+        descriptionError = null,
+        ingredient = "ingredient",
+        ingredients = emptyList(),
+        recipeIngredients = getRecipeIngredients(),
+        isDropDownMenuExpanded = false,
+        isImageBottomSheetOpened = false,
+        imageUri = Uri.EMPTY,
+        dragIndex = "",
+        isReorderModeActivated = false,
+        isQuantityBottomSheetOpened = false,
+        selectedWholeQuantity = "",
+        selectedDecimalQuantity = "",
+        selectedTypeQuantity = "",
+    )
+}
+
 @Preview(
     name = "Light Mode",
     uiMode = Configuration.UI_MODE_NIGHT_NO
@@ -427,29 +437,7 @@ fun AddRecipeContentPreview() {
         AddRecipeContent(
             scrollState = rememberScrollState(),
             modalBottomSheetState = rememberModalBottomSheetState(),
-            isServingsBottomSheetOpen = false,
-            selectedServings = 1,
-            lastSavedServings = 0,
-            isPrepTimeBottomSheetOpen = false,
-            selectedPrepTimeHours = "",
-            selectedPrepTimeMinutes = "",
-            lastSavedPrepTime = "",
-            title = "New recipe title",
-            titleError = null,
-            description = "Description of the new recipe.",
-            descriptionError = null,
-            ingredient = "ingredient",
-            ingredients = emptyList(),
-            recipeIngredients = getRecipeIngredients(),
-            isDropDownMenuExpanded = false,
-            isImageBottomSheetOpen = false,
-            imageUri = Uri.EMPTY,
-            dragIndex = "",
-            isReorderModeActivated = false,
-            isQuantityBottomSheetOpen = false,
-            selectedWholeQuantity = "",
-            selectedDecimalQuantity = "",
-            selectedTypeQuantity = "",
+            uiState = getUiState(),
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
@@ -498,29 +486,7 @@ fun AddRecipeContentPreviewErrorsShown() {
         AddRecipeContent(
             scrollState = rememberScrollState(),
             modalBottomSheetState = rememberModalBottomSheetState(),
-            isServingsBottomSheetOpen = false,
-            selectedServings = 1,
-            lastSavedServings = 0,
-            isPrepTimeBottomSheetOpen = false,
-            selectedPrepTimeHours = "",
-            selectedPrepTimeMinutes = "",
-            lastSavedPrepTime = "",
-            title = "Ti",
-            titleError = "Field too short",
-            description = "des",
-            descriptionError = "Field too short",
-            ingredient = "in",
-            ingredients = emptyList(),
-            recipeIngredients = getRecipeIngredients(),
-            isDropDownMenuExpanded = false,
-            isImageBottomSheetOpen = false,
-            imageUri = Uri.EMPTY,
-            dragIndex = "",
-            isReorderModeActivated = false,
-            isQuantityBottomSheetOpen = false,
-            selectedWholeQuantity = "",
-            selectedDecimalQuantity = "",
-            selectedTypeQuantity = "",
+            uiState = getUiState(),
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
@@ -570,29 +536,7 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
         AddRecipeContent(
             scrollState = rememberScrollState(),
             modalBottomSheetState = rememberModalBottomSheetState(),
-            isServingsBottomSheetOpen = true,
-            selectedServings = 1,
-            lastSavedServings = 0,
-            isPrepTimeBottomSheetOpen = false,
-            selectedPrepTimeHours = "",
-            selectedPrepTimeMinutes = "",
-            lastSavedPrepTime = "",
-            title = "New recipe title",
-            titleError = null,
-            description = "Description of the new recipe.",
-            descriptionError = null,
-            ingredient = "ingredient",
-            ingredients = emptyList(),
-            recipeIngredients = getRecipeIngredients(),
-            isDropDownMenuExpanded = false,
-            isImageBottomSheetOpen = false,
-            imageUri = Uri.EMPTY,
-            dragIndex = "",
-            isReorderModeActivated = false,
-            isQuantityBottomSheetOpen = false,
-            selectedWholeQuantity = "",
-            selectedDecimalQuantity = "",
-            selectedTypeQuantity = "",
+            uiState = getUiState(),
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},

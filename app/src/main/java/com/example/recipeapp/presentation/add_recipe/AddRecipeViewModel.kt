@@ -134,7 +134,7 @@ class AddRecipeViewModel @Inject constructor(
             is AddRecipeEvent.OnIngredientClicked -> {
                 _addRecipeState.value = addRecipeState.value.copy(
                     selectedIngredientId = event.ingredientId,
-                    isQuantityBottomSheetOpen = true
+                    isQuantityBottomSheetOpened = true
                 )
             }
 
@@ -226,13 +226,13 @@ class AddRecipeViewModel @Inject constructor(
 
             AddRecipeEvent.OnAddImage -> {
                 _addRecipeState.value = addRecipeState.value.copy(
-                    isImageBottomSheetOpen = true
+                    isImageBottomSheetOpened = true
                 )
             }
 
             AddRecipeEvent.OnTakePhoto -> {
                 _addRecipeState.value = addRecipeState.value.copy(
-                    isImageBottomSheetOpen = false
+                    isImageBottomSheetOpened = false
                 )
 
                 viewModelScope.launch { _addRecipeUiEventChannel.send(AddRecipeUiEvent.LaunchGetPermission) }
@@ -240,7 +240,7 @@ class AddRecipeViewModel @Inject constructor(
 
             AddRecipeEvent.OnSelectImage -> {
                 _addRecipeState.value = addRecipeState.value.copy(
-                    isImageBottomSheetOpen = false
+                    isImageBottomSheetOpened = false
                 )
 
                 viewModelScope.launch { _addRecipeUiEventChannel.send(AddRecipeUiEvent.LaunchGallery) }
@@ -248,7 +248,7 @@ class AddRecipeViewModel @Inject constructor(
 
             AddRecipeEvent.OnAddImageDismiss -> {
                 _addRecipeState.value = addRecipeState.value.copy(
-                    isImageBottomSheetOpen = false
+                    isImageBottomSheetOpened = false
                 )
             }
 
@@ -263,7 +263,7 @@ class AddRecipeViewModel @Inject constructor(
                     selectedWholeQuantity = "",
                     selectedDecimalQuantity = "",
                     selectedTypeQuantity = "",
-                    isQuantityBottomSheetOpen = false
+                    isQuantityBottomSheetOpened = false
                 )
             }
 
@@ -290,7 +290,7 @@ class AddRecipeViewModel @Inject constructor(
                     selectedWholeQuantity = "",
                     selectedDecimalQuantity = "",
                     selectedTypeQuantity = "",
-                    isQuantityBottomSheetOpen = false
+                    isQuantityBottomSheetOpened = false
                 )
             }
 

@@ -68,9 +68,9 @@ fun ImagePicker(
             Row(
                 modifier = modifier
                     .fillMaxWidth()
+                    .padding(bottom = 36.dp)
                     .clickable { onSelectImage() }
-                    .padding(vertical = 12.dp)
-                    .padding(bottom = 36.dp),
+                    .padding(vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(

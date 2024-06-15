@@ -38,31 +38,7 @@ fun AddRecipeScreen(
 ) {
     val scrollState = rememberScrollState()
     val modalBottomSheetState = rememberModalBottomSheetState()
-    val isServingsBottomSheetOpen = viewModel.addRecipeState.value.isServingsBottomSheetOpened
-    val selectedServings = viewModel.addRecipeState.value.selectedServings
-    val lastSavedServings = viewModel.addRecipeState.value.lastSavedServings
-    val isPrepTimeBottomSheetOpen = viewModel.addRecipeState.value.isPrepTimeBottomSheetOpened
-    val selectedPrepTimeMinutes = viewModel.addRecipeState.value.selectedPrepTimeMinutes
-    val selectedPrepTimeHours = viewModel.addRecipeState.value.selectedPrepTimeHours
-    val lastSavedPrepTime = viewModel.addRecipeState.value.lastSavedPrepTime
-    val title = viewModel.addRecipeState.value.title
-    val titleError = viewModel.addRecipeState.value.titleError
-    val description = viewModel.addRecipeState.value.description
-    val descriptionError = viewModel.addRecipeState.value.descriptionError
-    val ingredient = viewModel.addRecipeState.value.ingredient
-    val ingredients = viewModel.addRecipeState.value.ingredients
-    val isDropDownMenuExpanded = viewModel.addRecipeState.value.isDropDownMenuExpanded
-    val recipeIngredients = viewModel.addRecipeState.value.recipeIngredients
-    val imageUri = viewModel.addRecipeState.value.imageUri
-    val isImageBottomSheetOpen = viewModel.addRecipeState.value.isImageBottomSheetOpen
-    val tempUri = viewModel.addRecipeState.value.tempUri
-    val cropImageOptions = viewModel.addRecipeState.value.cropImageOptions
-    val dragIndex = viewModel.addRecipeState.value.dragIndex
-    val isReorderModeActivated = viewModel.addRecipeState.value.isReorderModeActivated
-    val isQuantityBottomSheetOpen = viewModel.addRecipeState.value.isQuantityBottomSheetOpen
-    val selectedWholeQuantity = viewModel.addRecipeState.value.selectedWholeQuantity
-    val selectedDecimalQuantity = viewModel.addRecipeState.value.selectedDecimalQuantity
-    val selectedTypeQuantity = viewModel.addRecipeState.value.selectedTypeQuantity
+    val uiState = viewModel.addRecipeState.value
 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -87,14 +63,14 @@ fun AddRecipeScreen(
 
     val galleryLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia()) { result ->
         result?.let {
-            val cropOptions = CropImageContractOptions(result, cropImageOptions)
+            val cropOptions = CropImageContractOptions(result, uiState.cropImageOptions)
             imageCropLauncher.launch(cropOptions)
         }
     }
 
     val cameraLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicture()) { isSaved ->
         if(isSaved) {
-            val cropOptions = CropImageContractOptions(tempUri, cropImageOptions)
+            val cropOptions = CropImageContractOptions(uiState.tempUri, uiState.cropImageOptions)
             imageCropLauncher.launch(cropOptions)
         }
     }
@@ -142,29 +118,7 @@ fun AddRecipeScreen(
     AddRecipeContent(
         scrollState = scrollState,
         modalBottomSheetState = modalBottomSheetState,
-        isServingsBottomSheetOpen = isServingsBottomSheetOpen,
-        selectedServings = selectedServings,
-        lastSavedServings = lastSavedServings,
-        isPrepTimeBottomSheetOpen = isPrepTimeBottomSheetOpen,
-        selectedPrepTimeHours = selectedPrepTimeHours,
-        selectedPrepTimeMinutes = selectedPrepTimeMinutes,
-        lastSavedPrepTime = lastSavedPrepTime,
-        title = title,
-        titleError = titleError,
-        description = description,
-        descriptionError = descriptionError,
-        ingredient = ingredient,
-        ingredients = ingredients,
-        recipeIngredients = recipeIngredients,
-        isDropDownMenuExpanded = isDropDownMenuExpanded,
-        isImageBottomSheetOpen = isImageBottomSheetOpen,
-        imageUri = imageUri,
-        dragIndex = dragIndex,
-        isReorderModeActivated = isReorderModeActivated,
-        isQuantityBottomSheetOpen = isQuantityBottomSheetOpen,
-        selectedWholeQuantity = selectedWholeQuantity,
-        selectedDecimalQuantity = selectedDecimalQuantity,
-        selectedTypeQuantity = selectedTypeQuantity,
+        uiState = uiState,
         onTitleChange = { viewModel.onEvent(AddRecipeEvent.EnteredTitle(it)) },
         onDescriptionChange = { viewModel.onEvent(AddRecipeEvent.EnteredDescription(it)) },
         onIngredientChange = { viewModel.onEvent(AddRecipeEvent.EnteredIngredient(it)) },
