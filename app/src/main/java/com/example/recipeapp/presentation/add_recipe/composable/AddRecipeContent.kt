@@ -94,6 +94,7 @@ fun AddRecipeContent(
     onSelectedTypeQuantity: (String) -> Unit,
     onQuantityPickerDismiss: () -> Unit,
     onQuantityPickerSave: () -> Unit,
+    onCategoriesButtonClicked: () -> Unit,
     onAddRecipe: () -> Unit
 ) {
     Scaffold(
@@ -314,6 +315,12 @@ fun AddRecipeContent(
                 buttonText = if(uiState.lastSavedPrepTime == "") stringResource(id = R.string.set_time) else uiState.lastSavedPrepTime,
                 onClick = { onPrepTimeButtonClicked() }
             )
+
+            RowWithTextButton(
+                sectionName = stringResource(id = R.string.categories),
+                buttonText = stringResource(id = R.string.set_categories),
+                onClick = { onCategoriesButtonClicked() }
+            )
         }
 
         if(uiState.isServingsBottomSheetOpened) {
@@ -360,6 +367,11 @@ fun AddRecipeContent(
                 onSave = { onQuantityPickerSave() }
             )
         }
+
+        CategoriesDialog(
+            categories = uiState.categories,
+            onSave = {}
+        )
     }
 }
 
@@ -467,6 +479,7 @@ fun AddRecipeContentPreview() {
             onSelectedTypeQuantity = {},
             onQuantityPickerDismiss = {},
             onQuantityPickerSave = {},
+            onCategoriesButtonClicked = {},
             onAddRecipe = {}
         )
     }
@@ -516,6 +529,7 @@ fun AddRecipeContentPreviewErrorsShown() {
             onSelectedTypeQuantity = {},
             onQuantityPickerDismiss = {},
             onQuantityPickerSave = {},
+            onCategoriesButtonClicked = {},
             onAddRecipe = {},
         )
     }
@@ -566,6 +580,58 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
             onSelectedTypeQuantity = {},
             onQuantityPickerDismiss = {},
             onQuantityPickerSave = {},
+            onCategoriesButtonClicked = {},
+            onAddRecipe = {}
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(
+    name = "Light Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun AddRecipeContentPreviewCategoriesDialog() {
+    RecipeAppTheme {
+        AddRecipeContent(
+            scrollState = rememberScrollState(),
+            modalBottomSheetState = rememberModalBottomSheetState(),
+            uiState = getUiState(),
+            onIngredientChange = {},
+            onTitleChange = {},
+            onDescriptionChange = {},
+            onSelectedServings = {},
+            onServingsPickerDismiss = {},
+            onServingsPickerSave = {},
+            onServingsButtonClicked = {},
+            onSelectedPrepTimeHours = {},
+            onSelectedPrepTimeMinutes = {},
+            onPrepTimePickerDismiss = {},
+            onPrepTimePickerSave = {},
+            onPrepTimeButtonClicked = {},
+            onExpandedChange = {},
+            onIngredientSuggestionClick = {},
+            onAddPhoto = {},
+            onTakePhoto = {},
+            onSelectImage = {},
+            onAddImageDismiss = {},
+            onDragIndexChange = {},
+            onDropIndexChange = {},
+            onDraggedIngredientChange = {},
+            onSwipeToDelete = {},
+            onReorder = {},
+            onIngredientClicked = {},
+            onSelectedWholeQuantity = {},
+            onSelectedDecimalQuantity = {},
+            onSelectedTypeQuantity = {},
+            onQuantityPickerDismiss = {},
+            onQuantityPickerSave = {},
+            onCategoriesButtonClicked = {},
             onAddRecipe = {}
         )
     }

@@ -12,6 +12,7 @@ import com.example.recipeapp.domain.model.RecipeWithIngredients
 import com.example.recipeapp.domain.model.Resource
 import com.example.recipeapp.domain.use_case.AddImageUseCase
 import com.example.recipeapp.domain.use_case.AddRecipeUseCase
+import com.example.recipeapp.domain.use_case.GetCategoriesUseCase
 import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
 import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
 import com.example.recipeapp.domain.use_case.ValidateFieldUseCase
@@ -28,6 +29,7 @@ class AddRecipeViewModel @Inject constructor(
     private val getIngredientsUseCase: GetIngredientsUseCase,
     private val addImageUseCase: AddImageUseCase,
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
+    private val getCategoriesUseCase: GetCategoriesUseCase,
     private val addRecipeUseCase: AddRecipeUseCase
 ): ViewModel() {
 
@@ -40,6 +42,7 @@ class AddRecipeViewModel @Inject constructor(
     init {
         Log.i("TAG", "Add recipe VM")
         getIngredients()
+        getCategories()
     }
 
     fun onEvent(event: AddRecipeEvent) {
@@ -489,6 +492,31 @@ class AddRecipeViewModel @Inject constructor(
                             )
 
                             addRecipe(recipeWithIngredients)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getCategories() {
+        viewModelScope.launch {
+            getCategoriesUseCase().collect { response ->
+                when(response) {
+                    is Resource.Error -> {
+                        Log.i("TAG","Error message from getCategories: ${response.message}")
+                    }
+                    is Resource.Loading -> {
+                        Log.i("TAG","Loading categories: ${response.isLoading}")
+                        _addRecipeState.value = addRecipeState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        response.data?.let {
+                            _addRecipeState.value = addRecipeState.value.copy(
+                                categories = response.data.associateWith { false }
+                            )
                         }
                     }
                 }

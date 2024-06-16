@@ -148,6 +148,7 @@ fun AddRecipeScreen(
         onSelectedTypeQuantity = { viewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity(it)) },
         onQuantityPickerDismiss = { viewModel.onEvent(AddRecipeEvent.OnQuantityPickerDismissed) },
         onQuantityPickerSave = { viewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved) },
+        onCategoriesButtonClicked = {},
         onAddRecipe = { viewModel.onEvent(AddRecipeEvent.OnAddRecipe) },
     )
 }

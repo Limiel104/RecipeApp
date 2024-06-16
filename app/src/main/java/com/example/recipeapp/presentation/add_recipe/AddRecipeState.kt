@@ -2,6 +2,7 @@ package com.example.recipeapp.presentation.add_recipe
 
 import android.net.Uri
 import com.canhub.cropper.CropImageOptions
+import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Quantity
 
@@ -17,7 +18,7 @@ data class AddRecipeState(
     val isVegan: Boolean = false,
     val imageUrl: String = "",
     val createdBy: String = "",
-    val categories: List<String> = emptyList(),
+    val categories: Map<Category, Boolean> = emptyMap(),
     val ingredient: String = "",
     val selectedServings: Int = 0,
     val isServingsBottomSheetOpened: Boolean = false,

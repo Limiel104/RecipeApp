@@ -37,4 +37,5 @@
     <string name="save">Save</string>
     <string name="take_photo">Take photo</string>
     <string name="select_image">Select Image</string>
+    <string name="set_categories">Set categories</string>
 </resources>
