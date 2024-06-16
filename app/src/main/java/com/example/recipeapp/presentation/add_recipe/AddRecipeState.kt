@@ -50,5 +50,7 @@ data class AddRecipeState(
     val selectedDecimalQuantity: String = "",
     val selectedTypeQuantity: String = "",
     val selectedIngredientId: String = "",
-    val index: Int = -1
+    val index: Int = -1,
+    val isCategoriesDialogActivated: Boolean = false,
+    val lastSavedCategories: Map<Category, Boolean> = emptyMap()
 )

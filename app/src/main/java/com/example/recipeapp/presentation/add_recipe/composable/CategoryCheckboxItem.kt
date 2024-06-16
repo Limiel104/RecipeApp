@@ -25,7 +25,7 @@ fun CategoryCheckboxItem(
     modifier: Modifier = Modifier,
     category: Category,
     isChecked: Boolean,
-    onCheckedChange: () -> Unit
+    onCheckedChange: (Category) -> Unit
 ) {
     Row(
         modifier = modifier
@@ -35,7 +35,7 @@ fun CategoryCheckboxItem(
     ) {
         Checkbox(
             checked = isChecked,
-            onCheckedChange = { onCheckedChange() }
+            onCheckedChange = { onCheckedChange(category) }
         )
 
         ImageItem(

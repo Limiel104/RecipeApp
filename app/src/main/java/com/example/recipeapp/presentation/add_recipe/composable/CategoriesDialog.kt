@@ -31,6 +31,8 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 fun CategoriesDialog(
     modifier: Modifier = Modifier,
     categories: Map<Category, Boolean>,
+    onCheckBoxToggled: (Category) -> Unit,
+    onDismiss: () -> Unit,
     onSave: () -> Unit
 ) {
     Dialog(
@@ -42,7 +44,7 @@ fun CategoriesDialog(
                 TopAppBar(
                     title = {Text(text = "Select recipe categories") },
                     navigationIcon = {
-                        IconButton(onClick = {}) {
+                        IconButton(onClick = { onDismiss() }) {
                             Icon(
                                 imageVector = Icons.Default.Clear,
                                 contentDescription = "Clear button"
@@ -67,11 +69,11 @@ fun CategoriesDialog(
             ) {
                 LazyColumn() {
                     itemsIndexed(categories.keys.toList()) { _, category ->
-                        categories[category]?.let {
+                        categories[category]?.let { isChecked ->
                             CategoryCheckboxItem(
                                 category = category,
-                                isChecked = it,
-                                onCheckedChange = {}
+                                isChecked = isChecked,
+                                onCheckedChange = { onCheckBoxToggled(it) }
                             )
                         }
                     }
@@ -104,6 +106,8 @@ fun CategoriesDialogPreview() {
     RecipeAppTheme {
         CategoriesDialog(
             categories = getCategories(),
+            onCheckBoxToggled = {},
+            onDismiss = {},
             onSave = {}
         )
     }

@@ -52,6 +52,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.R
+import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Quantity
 import com.example.recipeapp.presentation.add_recipe.AddRecipeState
@@ -95,6 +96,9 @@ fun AddRecipeContent(
     onQuantityPickerDismiss: () -> Unit,
     onQuantityPickerSave: () -> Unit,
     onCategoriesButtonClicked: () -> Unit,
+    onCheckBoxToggled: (Category) -> Unit,
+    onDialogDismiss: () -> Unit,
+    onDialogSave: () -> Unit,
     onAddRecipe: () -> Unit
 ) {
     Scaffold(
@@ -368,10 +372,14 @@ fun AddRecipeContent(
             )
         }
 
-        CategoriesDialog(
-            categories = uiState.categories,
-            onSave = {}
-        )
+        if(uiState.isCategoriesDialogActivated) {
+            CategoriesDialog(
+                categories = uiState.categories,
+                onCheckBoxToggled = { onCheckBoxToggled(it) },
+                onDismiss = { onDialogDismiss() },
+                onSave = { onDialogSave() }
+            )
+        }
     }
 }
 
@@ -480,6 +488,9 @@ fun AddRecipeContentPreview() {
             onQuantityPickerDismiss = {},
             onQuantityPickerSave = {},
             onCategoriesButtonClicked = {},
+            onCheckBoxToggled = {},
+            onDialogDismiss = {},
+            onDialogSave = {},
             onAddRecipe = {}
         )
     }
@@ -530,6 +541,9 @@ fun AddRecipeContentPreviewErrorsShown() {
             onQuantityPickerDismiss = {},
             onQuantityPickerSave = {},
             onCategoriesButtonClicked = {},
+            onCheckBoxToggled = {},
+            onDialogDismiss = {},
+            onDialogSave = {},
             onAddRecipe = {},
         )
     }
@@ -581,6 +595,9 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
             onQuantityPickerDismiss = {},
             onQuantityPickerSave = {},
             onCategoriesButtonClicked = {},
+            onCheckBoxToggled = {},
+            onDialogDismiss = {},
+            onDialogSave = {},
             onAddRecipe = {}
         )
     }
@@ -632,6 +649,9 @@ fun AddRecipeContentPreviewCategoriesDialog() {
             onQuantityPickerDismiss = {},
             onQuantityPickerSave = {},
             onCategoriesButtonClicked = {},
+            onCheckBoxToggled = {},
+            onDialogDismiss = {},
+            onDialogSave = {},
             onAddRecipe = {}
         )
     }

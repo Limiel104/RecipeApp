@@ -1,6 +1,7 @@
 package com.example.recipeapp.presentation.add_recipe
 
 import android.net.Uri
+import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.domain.model.Ingredient
 
 sealed class AddRecipeEvent {
@@ -21,6 +22,7 @@ sealed class AddRecipeEvent {
     data class SelectedWholeQuantity(val whole: String): AddRecipeEvent()
     data class SelectedDecimalQuantity(val decimal: String): AddRecipeEvent()
     data class SelectedTypeQuantity(val type: String): AddRecipeEvent()
+    data class OnCheckBoxToggled(val category: Category): AddRecipeEvent()
     object OnServingsPickerDismissed: AddRecipeEvent()
     object OnServingsPickerSaved: AddRecipeEvent()
     object OnServingsButtonClicked: AddRecipeEvent()
@@ -35,5 +37,8 @@ sealed class AddRecipeEvent {
     object OnReorder: AddRecipeEvent()
     object OnQuantityPickerDismissed: AddRecipeEvent()
     object OnQuantityPickerSaved: AddRecipeEvent()
+    object OnCategoriesButtonClicked: AddRecipeEvent()
+    object OnDialogDismiss: AddRecipeEvent()
+    object OnDialogSave: AddRecipeEvent()
     object OnAddRecipe: AddRecipeEvent()
 }

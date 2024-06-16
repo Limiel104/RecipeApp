@@ -6,6 +6,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Quantity
 import com.example.recipeapp.domain.model.RecipeWithIngredients
@@ -159,6 +160,10 @@ class AddRecipeViewModel @Inject constructor(
                 )
             }
 
+            is AddRecipeEvent.OnCheckBoxToggled -> {
+                toggleCheckBox(event.category)
+            }
+
             AddRecipeEvent.OnServingsPickerDismissed -> {
                 if(_addRecipeState.value.lastSavedServings != 0) {
                     _addRecipeState.value = addRecipeState.value.copy(
@@ -297,6 +302,26 @@ class AddRecipeViewModel @Inject constructor(
                 )
             }
 
+            AddRecipeEvent.OnCategoriesButtonClicked -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    isCategoriesDialogActivated = true
+                )
+            }
+
+            AddRecipeEvent.OnDialogDismiss -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    isCategoriesDialogActivated = false,
+                    categories = _addRecipeState.value.lastSavedCategories,
+                )
+            }
+
+            AddRecipeEvent.OnDialogSave -> {
+                _addRecipeState.value = addRecipeState.value.copy(
+                    isCategoriesDialogActivated = false,
+                    lastSavedCategories = _addRecipeState.value.categories
+                )
+            }
+
             AddRecipeEvent.OnAddRecipe -> {
                 val title = _addRecipeState.value.title
                 val description = _addRecipeState.value.description
@@ -432,6 +457,33 @@ class AddRecipeViewModel @Inject constructor(
         )
     }
 
+    private fun toggleCheckBox(categoryToToggle: Category) {
+        val categories = mutableMapOf<Category, Boolean>()
+        for(category in _addRecipeState.value.categories) {
+            categories[category.key] = category.value
+        }
+
+        val oldValue = categories[categoryToToggle]
+        oldValue?.let { categories[categoryToToggle] = !it }
+
+        _addRecipeState.value = addRecipeState.value.copy(
+            categories = categories
+        )
+    }
+
+    private fun getRecipeCategories(): List<String> {
+        val recipeCategories = _addRecipeState.value.lastSavedCategories.filter { category ->
+            category.value
+        }.keys.toList()
+
+        val categoryIds = mutableListOf<String>()
+        for(category in recipeCategories) {
+            categoryIds.add(category.categoryId)
+        }
+
+        return categoryIds
+    }
+
     private fun getIngredients() {
         viewModelScope.launch {
             getIngredientsUseCase().collect { response ->
@@ -488,7 +540,7 @@ class AddRecipeViewModel @Inject constructor(
                                 isVegan = false,
                                 imageUrl = response.data.toString(),
                                 createdBy = getCurrentUserUseCase()!!.uid,
-                                categories = emptyList()
+                                categories = getRecipeCategories()
                             )
 
                             addRecipe(recipeWithIngredients)
@@ -515,7 +567,8 @@ class AddRecipeViewModel @Inject constructor(
                     is Resource.Success -> {
                         response.data?.let {
                             _addRecipeState.value = addRecipeState.value.copy(
-                                categories = response.data.associateWith { false }
+                                categories = response.data.associateWith { false },
+                                lastSavedCategories = response.data.associateWith { false }
                             )
                         }
                     }
