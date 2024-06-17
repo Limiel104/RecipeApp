@@ -330,7 +330,10 @@ class AddRecipeViewModel @Inject constructor(
 
 
                 if(isValidationSuccessful(title, description)) {
-                    _addRecipeState.value.imageUri?.let { addImage(it, imageName) }
+                    if(_addRecipeState.value.imageUri != Uri.EMPTY)
+                        _addRecipeState.value.imageUri?.let { addImage(it, imageName) }
+                    else
+                        addRecipe()
                 }
                 else
                     Log.i("TAG", "Form validation error")
@@ -528,22 +531,10 @@ class AddRecipeViewModel @Inject constructor(
                         Log.i("TAG",response.data.toString())
                         response.data?.let {
                             Log.i("TAG", "image url vm: ${response.data}")
-
-                            val recipeWithIngredients = RecipeWithIngredients(
-                                recipeId = "",
-                                name = _addRecipeState.value.title,
-                                ingredients = _addRecipeState.value.recipeIngredients,
-                                prepTime = _addRecipeState.value.lastSavedPrepTime,
-                                servings = _addRecipeState.value.lastSavedServings,
-                                description = _addRecipeState.value.description,
-                                isVegetarian = false,
-                                isVegan = false,
-                                imageUrl = response.data.toString(),
-                                createdBy = getCurrentUserUseCase()!!.uid,
-                                categories = getRecipeCategories()
+                            _addRecipeState.value = addRecipeState.value.copy(
+                                imageUrl = response.data.toString()
                             )
-
-                            addRecipe(recipeWithIngredients)
+                            addRecipe()
                         }
                     }
                 }
@@ -577,7 +568,21 @@ class AddRecipeViewModel @Inject constructor(
         }
     }
 
-    private fun addRecipe(recipeWithIngredients: RecipeWithIngredients) {
+    private fun addRecipe() {
+        val recipeWithIngredients = RecipeWithIngredients(
+            recipeId = "",
+            name = _addRecipeState.value.title,
+            ingredients = _addRecipeState.value.recipeIngredients,
+            prepTime = _addRecipeState.value.lastSavedPrepTime,
+            servings = _addRecipeState.value.lastSavedServings,
+            description = _addRecipeState.value.description,
+            isVegetarian = false,
+            isVegan = false,
+            imageUrl = _addRecipeState.value.imageUrl,
+            createdBy = getCurrentUserUseCase()!!.uid,
+            categories = getRecipeCategories()
+        )
+
         viewModelScope.launch {
             addRecipeUseCase(recipeWithIngredients).collect { response ->
                 when(response) {
