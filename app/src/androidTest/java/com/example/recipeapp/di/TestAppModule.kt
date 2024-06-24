@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.example.recipeapp.data.local.RecipeDatabase
 import com.example.recipeapp.data.repository.AuthRepositoryImpl
 import com.example.recipeapp.data.repository.CategoryRepositoryImpl
+import com.example.recipeapp.data.repository.ImageStorageRepositoryImpl
 import com.example.recipeapp.data.repository.IngredientRepositoryImpl
 import com.example.recipeapp.data.repository.RecipeRepositoryImpl
 import com.example.recipeapp.data.repository.SavedRecipeRepositoryImpl
@@ -44,6 +45,7 @@ import com.example.recipeapp.domain.use_case.ValidateSignupPasswordUseCase
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
+import com.google.firebase.storage.storage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -115,6 +117,13 @@ object TestAppModule {
     fun provideUserRepository(): UserRepository {
         val usersRef = Firebase.firestore.collection("users")
         return UserRepositoryImpl(usersRef)
+    }
+
+    @Provides
+    @Singleton
+    fun provideImageStorageRepository(): ImageStorageRepository {
+        val storage = Firebase.storage.reference
+        return ImageStorageRepositoryImpl(storage)
     }
 
     @Provides

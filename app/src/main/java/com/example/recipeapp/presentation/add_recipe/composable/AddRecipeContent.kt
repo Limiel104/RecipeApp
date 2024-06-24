@@ -136,7 +136,9 @@ fun AddRecipeContent(
             Text(
                 text = stringResource(id = R.string.title),
                 style = MaterialTheme.typography.titleMedium,
-                modifier = modifier.padding(bottom = 8.dp)
+                modifier = modifier
+                    .padding(bottom = 8.dp)
+                    .testTag("Title")
             )
 
             OutlinedTextField(
@@ -167,7 +169,9 @@ fun AddRecipeContent(
             Text(
                 text = stringResource(id = R.string.description),
                 style = MaterialTheme.typography.titleMedium,
-                modifier = modifier.padding(bottom = 8.dp)
+                modifier = modifier
+                    .padding(bottom = 8.dp)
+                    .testTag("Description")
             )
 
             OutlinedTextField(
@@ -266,6 +270,7 @@ fun AddRecipeContent(
                                     isReorderModeActivated = uiState.isReorderModeActivated,
                                     onClick = { onIngredientClicked(it) },
                                     modifier = modifier
+                                        .testTag("Recipe Ingredient Item")
                                         .dragAndDropTarget(
                                             shouldStartDragAndDrop = { true },
                                             target = object : DragAndDropTarget {

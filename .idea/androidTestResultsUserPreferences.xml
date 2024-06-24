@@ -62,6 +62,7 @@
                 <map>
                   <entry key="Duration" value="90" />
                   <entry key="Tests" value="360" />
+                  <entry key="samsung SM-J530F" value="120" />
                   <entry key="samsung SM-S911B" value="120" />
                 </map>
               </option>
