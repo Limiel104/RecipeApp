@@ -5,7 +5,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.isNotDisplayed
@@ -15,6 +18,8 @@ import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
@@ -27,6 +32,7 @@ import com.example.recipeapp.domain.model.Quantity
 import com.example.recipeapp.presentation.MainActivity
 import com.example.recipeapp.presentation.add_recipe.AddRecipeState
 import com.example.recipeapp.ui.theme.RecipeAppTheme
+import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -262,11 +268,7 @@ class AddRecipeScreenTest {
 
     @Test
     fun addRecipeScreen_wholeLayoutSwipesVertically() {
-        setScreenState(
-            addRecipeState(
-                recipeIngredients = recipeIngredients
-            )
-        )
+        setScreenState(addRecipeState(recipeIngredients = recipeIngredients))
 
         backButtonIsDisplayed()
         titleIsDisplayed()
@@ -326,6 +328,187 @@ class AddRecipeScreenTest {
         servingsSectionIsNotDisplayed()
         prepTimeSectionIsNotDisplayed()
         categoriesSectionIsNotDisplayed()
+    }
+
+    @Test
+    fun titleTextField_inputTextIsDisplayedCorrectly() {
+        val title = "Recipe Title"
+        setScreenState(AddRecipeState(title = title))
+
+        composeRule.onNodeWithTag("Add recipe title TF").performTextInput(title)
+        val titleNode = composeRule.onNodeWithTag("Add recipe title TF").fetchSemanticsNode()
+        val textInput = titleNode.config.getOrNull(SemanticsProperties.EditableText).toString()
+        assertThat(textInput).isEqualTo(title)
+    }
+
+    @Test
+    fun descriptionTextField_inputTextIsDisplayedCorrectly() {
+        val description = "Recipe Description"
+        setScreenState(AddRecipeState(description = description))
+
+        composeRule.onNodeWithTag("Add recipe description TF").performTextInput(description)
+        val descriptionNode = composeRule.onNodeWithTag("Add recipe description TF").fetchSemanticsNode()
+        val textInput = descriptionNode.config.getOrNull(SemanticsProperties.EditableText).toString()
+        assertThat(textInput).isEqualTo(description)
+    }
+
+    @Test
+    fun titleErrorTextField_errorIsDisplayedCorrectly() {
+        setScreenState(AddRecipeState(titleError = "Field can't be empty"))
+
+        val titleNode = composeRule.onNodeWithTag("Add recipe title TF").fetchSemanticsNode()
+        val errorLabel = titleNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val errorValue = titleNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+        assertThat(errorLabel).isEqualTo("Title")
+        assertThat(errorValue).isEqualTo("Field can't be empty")
+    }
+
+    @Test
+    fun descriptionErrorTextField_errorIsDisplayedCorrectly() {
+        setScreenState(AddRecipeState(descriptionError = "Field can't be empty"))
+
+        val descriptionNode = composeRule.onNodeWithTag("Add recipe description TF").fetchSemanticsNode()
+        val errorLabel = descriptionNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val errorValue = descriptionNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+        assertThat(errorLabel).isEqualTo("Description")
+        assertThat(errorValue).isEqualTo("Field can't be empty")
+    }
+
+    @Test
+    fun titleErrorTextField_performAddRecipeWhileTitleTextFieldIsEmpty_errorDisplayedCorrectly() {
+        val description = "Recipe Description"
+        setScreen()
+        composeRule
+            .onNodeWithTag("Add Recipe Content")
+            .performTouchInput { swipeUp() }
+
+        val initialTitleNode = composeRule.onNodeWithTag("Add recipe title TF").fetchSemanticsNode()
+        val initialErrorValue = initialTitleNode.config.getOrNull(SemanticsProperties.Error)
+
+        composeRule.onNodeWithTag("Add recipe description TF").performTextInput(description)
+
+        checkAddRecipeButton()
+        val resultTitleNode = composeRule.onNodeWithTag("Add recipe title TF").fetchSemanticsNode()
+        val errorLabel = resultTitleNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultTitleNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        assertThat(initialErrorValue).isNull()
+        assertThat(errorLabel).isEqualTo("Title")
+        assertThat(resultErrorValue).isEqualTo("Field can't be empty")
+    }
+
+    @Test
+    fun descriptionErrorTextField_performAddRecipeWhileDescriptionTextFieldIsEmpty_errorDisplayedCorrectly() {
+        val title = "Recipe Title"
+        setScreen()
+
+        val initialDescriptionNode = composeRule.onNodeWithTag("Add recipe description TF").fetchSemanticsNode()
+        val initialErrorValue = initialDescriptionNode.config.getOrNull(SemanticsProperties.Error)
+
+        composeRule.onNodeWithTag("Add recipe title TF").performTextInput(title)
+
+        checkAddRecipeButton()
+        val resultDescriptionNode = composeRule.onNodeWithTag("Add recipe description TF").fetchSemanticsNode()
+        val errorLabel = resultDescriptionNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultDescriptionNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        assertThat(initialErrorValue).isNull()
+        assertThat(errorLabel).isEqualTo("Description")
+        assertThat(resultErrorValue).isEqualTo("Field can't be empty")
+    }
+
+    @Test
+    fun titleErrorTextField_performAddRecipeWhileTitleTextFieldIsTooShort_errorDisplayedCorrectly() {
+        val title = "Rec"
+        val description = "Recipe Description"
+        setScreen()
+        composeRule
+            .onNodeWithTag("Add Recipe Content")
+            .performTouchInput { swipeUp() }
+
+        val initialTitleNode = composeRule.onNodeWithTag("Add recipe title TF").fetchSemanticsNode()
+        val initialErrorValue = initialTitleNode.config.getOrNull(SemanticsProperties.Error)
+
+        composeRule.onNodeWithTag("Add recipe title TF").performTextInput(title)
+        composeRule.onNodeWithTag("Add recipe description TF").performTextInput(description)
+
+        checkAddRecipeButton()
+        val resultTitleNode = composeRule.onNodeWithTag("Add recipe title TF").fetchSemanticsNode()
+        val errorLabel = resultTitleNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultTitleNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        assertThat(initialErrorValue).isNull()
+        assertThat(errorLabel).isEqualTo("Title")
+        assertThat(resultErrorValue).isEqualTo("Field is too short")
+    }
+
+    @Test
+    fun descriptionErrorTextField_performAddRecipeWhileDescriptionTextFieldIsTooShort_errorDisplayedCorrectly() {
+        val title = "Recipe Title"
+        val description = "Rec"
+        setScreen()
+
+        val initialDescriptionNode = composeRule.onNodeWithTag("Add recipe description TF").fetchSemanticsNode()
+        val initialErrorValue = initialDescriptionNode.config.getOrNull(SemanticsProperties.Error)
+
+        composeRule.onNodeWithTag("Add recipe title TF").performTextInput(title)
+        composeRule.onNodeWithTag("Add recipe description TF").performTextInput(description)
+
+        checkAddRecipeButton()
+        val resultDescriptionNode = composeRule.onNodeWithTag("Add recipe description TF").fetchSemanticsNode()
+        val errorLabel = resultDescriptionNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultDescriptionNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        assertThat(initialErrorValue).isNull()
+        assertThat(errorLabel).isEqualTo("Description")
+        assertThat(resultErrorValue).isEqualTo("Field is too short")
+    }
+
+    @Test
+    fun titleErrorTextField_performAddRecipeWhileTitleTextFieldContainsSpecialChars_errorDisplayedCorrectly() {
+        val title = "Recipe_Title"
+        val description = "Recipe Description"
+        setScreen()
+        composeRule
+            .onNodeWithTag("Add Recipe Content")
+            .performTouchInput { swipeUp() }
+
+        val initialTitleNode = composeRule.onNodeWithTag("Add recipe title TF").fetchSemanticsNode()
+        val initialErrorValue = initialTitleNode.config.getOrNull(SemanticsProperties.Error)
+
+        composeRule.onNodeWithTag("Add recipe title TF").performTextInput(title)
+        composeRule.onNodeWithTag("Add recipe description TF").performTextInput(description)
+
+        checkAddRecipeButton()
+        val resultTitleNode = composeRule.onNodeWithTag("Add recipe title TF").fetchSemanticsNode()
+        val errorLabel = resultTitleNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultTitleNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        assertThat(initialErrorValue).isNull()
+        assertThat(errorLabel).isEqualTo("Title")
+        assertThat(resultErrorValue).isEqualTo("At least one character is not allowed")
+    }
+
+    @Test
+    fun descriptionErrorTextField_performAddRecipeWhileDescriptionTextFieldContainsSpecialChars_errorDisplayedCorrectly() {
+        val title = "Recipe Title"
+        val description = "Recipe_Description"
+        setScreen()
+
+        val initialDescriptionNode = composeRule.onNodeWithTag("Add recipe description TF").fetchSemanticsNode()
+        val initialErrorValue = initialDescriptionNode.config.getOrNull(SemanticsProperties.Error)
+
+        composeRule.onNodeWithTag("Add recipe title TF").performTextInput(title)
+        composeRule.onNodeWithTag("Add recipe description TF").performTextInput(description)
+
+        checkAddRecipeButton()
+        val resultDescriptionNode = composeRule.onNodeWithTag("Add recipe description TF").fetchSemanticsNode()
+        val errorLabel = resultDescriptionNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultDescriptionNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        assertThat(initialErrorValue).isNull()
+        assertThat(errorLabel).isEqualTo("Description")
+        assertThat(resultErrorValue).isEqualTo("At least one character is not allowed")
     }
 
     private fun backButtonIsDisplayed() = composeRule
@@ -436,4 +619,10 @@ class AddRecipeScreenTest {
     private fun categoriesSectionIsNotDisplayed() = composeRule
         .onNodeWithTag("Categories")
         .assertIsNotDisplayed()
+
+    private fun checkAddRecipeButton() {
+        composeRule.onNodeWithContentDescription("Add recipe button").assertIsDisplayed()
+        composeRule.onNodeWithContentDescription("Add recipe button").assertIsEnabled()
+        composeRule.onNodeWithContentDescription("Add recipe button").performClick()
+    }
 }

@@ -5,6 +5,12 @@
       <entry key="AddRecipeContentPreviewErrorsShown - Light Mode">
         <State />
       </entry>
+      <entry key="HomeScreenTest">
+        <State />
+      </entry>
+      <entry key="SignupScreenTest">
+        <State />
+      </entry>
       <entry key="addRecipeScreen_wholeLayoutSwipesVertically()">
         <State />
       </entry>

@@ -4,20 +4,20 @@ import com.example.recipeapp.domain.model.ValidationResult
 
 class ValidateFieldUseCase {
 
-    operator fun invoke(name: String): ValidationResult {
-        if (name.isBlank()) {
+    operator fun invoke(fieldText: String): ValidationResult {
+        if (fieldText.isBlank()) {
             return ValidationResult(
                 isSuccessful = false,
                 errorMessage = "Field can't be empty"
             )
         }
-        if(name.length < 4) {
+        if(fieldText.length < 4) {
             return ValidationResult(
                 isSuccessful = false,
                 errorMessage = "Field is too short"
             )
         }
-        val containsSpecialChar = name.any { it in "@#*$%^&_+={}[];<>/" }
+        val containsSpecialChar = fieldText.any { it in "@#*$%^&_+={}[];<>/" }
         if (containsSpecialChar) {
             return ValidationResult(
                 isSuccessful = false,
