@@ -24,6 +24,7 @@ import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
 import androidx.navigation.compose.rememberNavController
+import androidx.test.espresso.Espresso
 import com.canhub.cropper.CropImageOptions
 import com.example.recipeapp.di.AppModule
 import com.example.recipeapp.domain.model.Category
@@ -378,14 +379,12 @@ class AddRecipeScreenTest {
     fun titleErrorTextField_performAddRecipeWhileTitleTextFieldIsEmpty_errorDisplayedCorrectly() {
         val description = "Recipe Description"
         setScreen()
-        composeRule
-            .onNodeWithTag("Add Recipe Content")
-            .performTouchInput { swipeUp() }
 
         val initialTitleNode = composeRule.onNodeWithTag("Add recipe title TF").fetchSemanticsNode()
         val initialErrorValue = initialTitleNode.config.getOrNull(SemanticsProperties.Error)
 
         composeRule.onNodeWithTag("Add recipe description TF").performTextInput(description)
+        Espresso.closeSoftKeyboard()
 
         checkAddRecipeButton()
         val resultTitleNode = composeRule.onNodeWithTag("Add recipe title TF").fetchSemanticsNode()
@@ -422,15 +421,13 @@ class AddRecipeScreenTest {
         val title = "Rec"
         val description = "Recipe Description"
         setScreen()
-        composeRule
-            .onNodeWithTag("Add Recipe Content")
-            .performTouchInput { swipeUp() }
 
         val initialTitleNode = composeRule.onNodeWithTag("Add recipe title TF").fetchSemanticsNode()
         val initialErrorValue = initialTitleNode.config.getOrNull(SemanticsProperties.Error)
 
         composeRule.onNodeWithTag("Add recipe title TF").performTextInput(title)
         composeRule.onNodeWithTag("Add recipe description TF").performTextInput(description)
+        Espresso.closeSoftKeyboard()
 
         checkAddRecipeButton()
         val resultTitleNode = composeRule.onNodeWithTag("Add recipe title TF").fetchSemanticsNode()
@@ -453,6 +450,7 @@ class AddRecipeScreenTest {
 
         composeRule.onNodeWithTag("Add recipe title TF").performTextInput(title)
         composeRule.onNodeWithTag("Add recipe description TF").performTextInput(description)
+        Espresso.closeSoftKeyboard()
 
         checkAddRecipeButton()
         val resultDescriptionNode = composeRule.onNodeWithTag("Add recipe description TF").fetchSemanticsNode()
@@ -469,15 +467,13 @@ class AddRecipeScreenTest {
         val title = "Recipe_Title"
         val description = "Recipe Description"
         setScreen()
-        composeRule
-            .onNodeWithTag("Add Recipe Content")
-            .performTouchInput { swipeUp() }
 
         val initialTitleNode = composeRule.onNodeWithTag("Add recipe title TF").fetchSemanticsNode()
         val initialErrorValue = initialTitleNode.config.getOrNull(SemanticsProperties.Error)
 
         composeRule.onNodeWithTag("Add recipe title TF").performTextInput(title)
         composeRule.onNodeWithTag("Add recipe description TF").performTextInput(description)
+        Espresso.closeSoftKeyboard()
 
         checkAddRecipeButton()
         val resultTitleNode = composeRule.onNodeWithTag("Add recipe title TF").fetchSemanticsNode()
@@ -500,6 +496,7 @@ class AddRecipeScreenTest {
 
         composeRule.onNodeWithTag("Add recipe title TF").performTextInput(title)
         composeRule.onNodeWithTag("Add recipe description TF").performTextInput(description)
+        Espresso.closeSoftKeyboard()
 
         checkAddRecipeButton()
         val resultDescriptionNode = composeRule.onNodeWithTag("Add recipe description TF").fetchSemanticsNode()
