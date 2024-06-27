@@ -40,17 +40,18 @@ fun ServingsPicker(
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp)
+                .testTag("Servings picker"),
         ) {
             Text(
-                text = stringResource(id = R.string.prep_time),
+                text = stringResource(id = R.string.servings),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 modifier = modifier.padding(bottom = 4.dp)
             )
 
             Text(
-                text = stringResource(id = R.string.prep_time_sheet_subtext),
+                text = stringResource(id = R.string.servings_sheet_subtext),
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Light,
                 modifier = modifier.padding(bottom = 20.dp)
@@ -61,7 +62,9 @@ fun ServingsPicker(
                 range = 1..25,
                 onValueChange = { onSelectedServings(it) },
                 dividersColor = MaterialTheme.colorScheme.primary,
-                modifier = modifier.fillMaxWidth()
+                modifier = modifier
+                    .fillMaxWidth()
+                    .testTag("Servings number picker")
             )
 
             Button(

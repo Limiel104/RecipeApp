@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draganddrop.DragAndDropTransferData
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -63,7 +64,8 @@ fun RecipeIngredientItem(
             .background(
                 if(dragIndex == ingredient.ingredientId) MaterialTheme.colorScheme.secondary
                 else MaterialTheme.colorScheme.background
-            ),
+            )
+            .testTag("Recipe Ingredient Item ${ingredient.name}"),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ImageItem(

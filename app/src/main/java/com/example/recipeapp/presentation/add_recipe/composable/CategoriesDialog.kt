@@ -66,6 +66,7 @@ fun CategoriesDialog(
                 modifier = modifier
                     .fillMaxSize()
                     .padding(paddingValues)
+                    .testTag("Categories dialog")
             ) {
                 LazyColumn() {
                     itemsIndexed(categories.keys.toList()) { _, category ->

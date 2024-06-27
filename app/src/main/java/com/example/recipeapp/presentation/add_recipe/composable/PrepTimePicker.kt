@@ -61,7 +61,8 @@ fun PrepTimePicker(
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp)
+                .testTag("Prep time picker"),
         ) {
             Text(
                 text = stringResource(id = R.string.prep_time),
@@ -85,7 +86,9 @@ fun PrepTimePicker(
                     onValueChange = { onSelectedPrepTimeHours(it) },
                     dividersColor = MaterialTheme.colorScheme.primary,
                     list = hourList,
-                    modifier = modifier.weight(1F)
+                    modifier = modifier
+                        .weight(1F)
+                        .testTag("Hours list item picker")
                 )
 
                 ListItemPicker(
@@ -93,7 +96,10 @@ fun PrepTimePicker(
                     onValueChange = { onSelectedPrepTimeMinutes(it) },
                     dividersColor = MaterialTheme.colorScheme.primary,
                     list = minuteList,
-                    modifier = modifier.weight(1F)
+                    modifier = modifier
+                        .weight(1F)
+                        .testTag("Minutes list item picker")
+
                 )
             }
 

@@ -7,18 +7,22 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.isNotDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
@@ -283,7 +287,7 @@ class AddRecipeScreenTest {
         tapOrSwipeTextIsDisplayed()
         reorderButtonIsDisplayed()
         recipeIngredientItemsAreDisplayed()
-        autoCompleteIsNotDisplayed()
+        assertThat(autoCompleteIsNotDisplayed()).isTrue()
         servingsSectionIsNotDisplayed()
         prepTimeSectionIsNotDisplayed()
         categoriesSectionIsNotDisplayed()
@@ -304,7 +308,7 @@ class AddRecipeScreenTest {
         tapOrSwipeTextIsDisplayed()
         reorderButtonIsDisplayed()
         recipeIngredientItemsAreDisplayed()
-        autoCompleteIsDisplayed()
+        assertThat(autoCompleteIsNotDisplayed()).isTrue()
         servingsSectionIsDisplayed()
         prepTimeSectionIsDisplayed()
         categoriesSectionIsDisplayed()
@@ -325,7 +329,7 @@ class AddRecipeScreenTest {
         tapOrSwipeTextIsDisplayed()
         reorderButtonIsDisplayed()
         recipeIngredientItemsAreDisplayed()
-        autoCompleteIsNotDisplayed()
+        assertThat(autoCompleteIsNotDisplayed()).isTrue()
         servingsSectionIsNotDisplayed()
         prepTimeSectionIsNotDisplayed()
         categoriesSectionIsNotDisplayed()
@@ -506,6 +510,116 @@ class AddRecipeScreenTest {
         assertThat(initialErrorValue).isNull()
         assertThat(errorLabel).isEqualTo("Description")
         assertThat(resultErrorValue).isEqualTo("At least one character is not allowed")
+    }
+
+    @Test
+    fun servingsPicker_isDisplayedCorrectly() {
+        setScreenState(AddRecipeState(isServingsBottomSheetOpened = true))
+
+        composeRule.onNodeWithTag("Servings picker").assertIsDisplayed()
+        composeRule.onNodeWithTag("Servings picker").onChildAt(0).assert(hasText("Servings"))
+        composeRule.onNodeWithText("Select number of portions this recipe makes").assertIsDisplayed()
+        composeRule.onAllNodesWithTag("Servings number picker").onFirst().assertIsDisplayed()
+        composeRule.onNodeWithTag("Save servings button").assertIsDisplayed()
+        composeRule.onNodeWithTag("Save servings button").assertIsEnabled()
+    }
+
+    @Test
+    fun servingsPicker_opensCorrectly() {
+        setScreen()
+
+        composeRule.onNodeWithTag("Servings button").performScrollTo()
+        composeRule.onNodeWithTag("Servings picker").assertIsNotDisplayed()
+        composeRule.onNodeWithTag("Servings button").performClick()
+        composeRule.onNodeWithTag("Servings picker").assertIsDisplayed()
+    }
+
+    @Test
+    fun servingsPicker_closesCorrectly() {
+        setScreen()
+
+        composeRule.onNodeWithTag("Servings button").performScrollTo()
+        composeRule.onNodeWithTag("Servings picker").assertIsNotDisplayed()
+        composeRule.onNodeWithTag("Servings button").performClick()
+        composeRule.onNodeWithTag("Servings picker").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Servings picker").assertIsDisplayed()
+        composeRule.onNodeWithTag("Save servings button").performClick()
+        composeRule.onNodeWithTag("Servings picker").assertIsNotDisplayed()
+    }
+
+    @Test
+    fun servingsPicker_closesCorrectlyWhenPressedBackButton() {
+        setScreen()
+
+        composeRule.onNodeWithTag("Servings button").performScrollTo()
+        composeRule.onNodeWithTag("Servings picker").assertIsNotDisplayed()
+        composeRule.onNodeWithTag("Servings button").performClick()
+        composeRule.onNodeWithTag("Servings picker").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Servings picker").assertIsDisplayed()
+        Espresso.pressBack()
+        composeRule.onNodeWithTag("Servings picker").assertIsNotDisplayed()
+    }
+
+    @Test
+    fun prepTimePicker_isDisplayedCorrectly() {
+        setScreenState(AddRecipeState(isPrepTimeBottomSheetOpened = true))
+
+        composeRule.onNodeWithTag("Prep time picker").assertIsDisplayed()
+        composeRule.onNodeWithTag("Prep time picker").onChildAt(0).assert(hasText("Prep time"))
+        composeRule.onNodeWithText("How long does it take to prepare this recipe").assertIsDisplayed()
+        composeRule.onAllNodesWithTag("Hours list item picker").onFirst().assertIsDisplayed()
+        composeRule.onNodeWithTag("Save prep time button").assertIsDisplayed()
+        composeRule.onNodeWithTag("Save prep time button").assertIsEnabled()
+    }
+
+    @Test
+    fun prepTimePicker_opensCorrectly() {
+        setScreen()
+
+        composeRule.onNodeWithTag("Prep time button").performScrollTo()
+        composeRule.onNodeWithTag("Prep time picker").assertIsNotDisplayed()
+        composeRule.onNodeWithTag("Prep time button").performClick()
+        composeRule.onNodeWithTag("Prep time picker").assertIsDisplayed()
+    }
+
+    @Test
+    fun prepTimePicker_closesCorrectly() {
+        setScreen()
+
+        composeRule.onNodeWithTag("Prep time button").performScrollTo()
+        composeRule.onNodeWithTag("Prep time picker").assertIsNotDisplayed()
+        composeRule.onNodeWithTag("Prep time button").performClick()
+        composeRule.onNodeWithTag("Prep time picker").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Prep time picker").assertIsDisplayed()
+        composeRule.onNodeWithTag("Save prep time button").performClick()
+        composeRule.onNodeWithTag("Prep time picker").assertIsNotDisplayed()
+    }
+
+    @Test
+    fun prepTimePicker_closesCorrectlyWhenPressedBackButton() {
+        setScreen()
+
+        composeRule.onNodeWithTag("Prep time button").performScrollTo()
+        composeRule.onNodeWithTag("Prep time picker").assertIsNotDisplayed()
+        composeRule.onNodeWithTag("Prep time button").performClick()
+        composeRule.onNodeWithTag("Prep time picker").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Prep time picker").assertIsDisplayed()
+        Espresso.pressBack()
+        composeRule.onNodeWithTag("Prep time picker").assertIsNotDisplayed()
+    }
+
+    @Test
+    fun categoriesDialog_opensCorrectly() {
+        setScreen()
+
+        composeRule.onNodeWithTag("Categories button").performScrollTo()
+        composeRule.onNodeWithTag("Categories dialog").assertIsNotDisplayed()
+        composeRule.onNodeWithTag("Categories button").performClick()
+        composeRule.onNodeWithTag("Categories dialog").assertIsDisplayed()
     }
 
     private fun backButtonIsDisplayed() = composeRule
