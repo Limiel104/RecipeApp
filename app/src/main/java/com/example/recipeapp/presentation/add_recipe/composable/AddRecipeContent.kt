@@ -445,6 +445,7 @@ private fun getUiState(): AddRecipeState {
         selectedWholeQuantity = "",
         selectedDecimalQuantity = "",
         selectedTypeQuantity = "",
+        isCategoriesDialogActivated = false
     )
 }
 
@@ -623,7 +624,7 @@ fun AddRecipeContentPreviewCategoriesDialog() {
         AddRecipeContent(
             scrollState = rememberScrollState(),
             modalBottomSheetState = rememberModalBottomSheetState(),
-            uiState = getUiState(),
+            uiState = AddRecipeState(isCategoriesDialogActivated = true),
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},

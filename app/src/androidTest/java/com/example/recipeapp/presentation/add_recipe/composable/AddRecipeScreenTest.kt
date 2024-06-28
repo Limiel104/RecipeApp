@@ -51,6 +51,8 @@ import org.junit.Test
 class AddRecipeScreenTest {
 
     private lateinit var recipeIngredients: Map<Ingredient, Quantity>
+    private lateinit var categories: Map<Category, Boolean>
+    private lateinit var categoryIds: List<String>
 
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
@@ -118,6 +120,19 @@ class AddRecipeScreenTest {
                 "1 glass"
             )
         )
+
+        categoryIds = listOf(
+            "Appetizer", "Breakfast",
+            "Chicken", "Dinner", "Fish",
+            "Pasta", "Pork", "Pizza",
+            "Salad", "Soup", "Stew"
+        )
+
+        val categoriesMap = mutableMapOf<Category, Boolean>()
+        for(category in categoryIds) {
+            categoriesMap[Category(category, "")] = false
+        }
+        categories = categoriesMap
     }
 
     private fun setScreen() {
@@ -273,7 +288,7 @@ class AddRecipeScreenTest {
 
     @Test
     fun addRecipeScreen_wholeLayoutSwipesVertically() {
-        setScreenState(addRecipeState(recipeIngredients = recipeIngredients))
+        setScreenState(AddRecipeState(recipeIngredients = recipeIngredients))
 
         backButtonIsDisplayed()
         titleIsDisplayed()
@@ -613,6 +628,20 @@ class AddRecipeScreenTest {
     }
 
     @Test
+    fun categoriesDialog_isDisplayedCorrectly() {
+        setScreenState(
+            AddRecipeState(
+                categories = categories,
+                isCategoriesDialogActivated = true
+            )
+        )
+
+        for(category in categoryIds) {
+            composeRule.onNodeWithTag("Category checkbox item $category").assertIsDisplayed()
+        }
+    }
+
+    @Test
     fun categoriesDialog_opensCorrectly() {
         setScreen()
 
@@ -620,6 +649,32 @@ class AddRecipeScreenTest {
         composeRule.onNodeWithTag("Categories dialog").assertIsNotDisplayed()
         composeRule.onNodeWithTag("Categories button").performClick()
         composeRule.onNodeWithTag("Categories dialog").assertIsDisplayed()
+    }
+
+    @Test
+    fun categoriesDialog_closesCorrectlyByClickingClearButton() {
+        setScreen()
+
+        composeRule.onNodeWithTag("Categories button").performScrollTo()
+        composeRule.onNodeWithTag("Categories dialog").assertIsNotDisplayed()
+        composeRule.onNodeWithTag("Categories button").performClick()
+        composeRule.onNodeWithTag("Categories dialog").assertIsDisplayed()
+
+        composeRule.onNodeWithContentDescription("Clear button").performClick()
+        composeRule.onNodeWithTag("Categories dialog").assertIsNotDisplayed()
+    }
+
+    @Test
+    fun categoriesDialog_closesCorrectlyByClickingSaveButton() {
+        setScreen()
+
+        composeRule.onNodeWithTag("Categories button").performScrollTo()
+        composeRule.onNodeWithTag("Categories dialog").assertIsNotDisplayed()
+        composeRule.onNodeWithTag("Categories button").performClick()
+        composeRule.onNodeWithTag("Categories dialog").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Save button").performClick()
+        composeRule.onNodeWithTag("Categories dialog").assertIsNotDisplayed()
     }
 
     private fun backButtonIsDisplayed() = composeRule
