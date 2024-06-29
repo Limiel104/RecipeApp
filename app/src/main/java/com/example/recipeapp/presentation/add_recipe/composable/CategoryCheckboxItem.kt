@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -31,6 +32,10 @@ fun CategoryCheckboxItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .toggleable(
+                value = isChecked,
+                onValueChange = { onCheckedChange(category) }
+            )
             .padding(vertical = 4.dp)
             .testTag("Category checkbox item ${category.categoryId}"),
         verticalAlignment = Alignment.CenterVertically

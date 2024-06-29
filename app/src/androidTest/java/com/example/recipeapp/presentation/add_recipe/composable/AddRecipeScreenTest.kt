@@ -1,6 +1,5 @@
 package com.example.recipeapp.presentation.add_recipe.composable
 
-import android.net.Uri
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -11,6 +10,7 @@ import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.isNotDisplayed
@@ -23,17 +23,18 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
 import androidx.navigation.compose.rememberNavController
 import androidx.test.espresso.Espresso
-import com.canhub.cropper.CropImageOptions
 import com.example.recipeapp.di.AppModule
 import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Quantity
+import com.example.recipeapp.domain.use_case.GetCategoriesUseCase
 import com.example.recipeapp.presentation.MainActivity
 import com.example.recipeapp.presentation.add_recipe.AddRecipeState
 import com.example.recipeapp.ui.theme.RecipeAppTheme
@@ -142,149 +143,54 @@ class AddRecipeScreenTest {
         }
     }
 
-    private fun addRecipeState(
-        recipeId: String = "",
-        title: String = "",
-        titleError: String? = null,
-        prepTime: String = "",
-        servings: Int = 0,
-        description: String = "",
-        descriptionError: String? = null,
-        isVegetarian: Boolean = false,
-        isVegan: Boolean = false,
-        imageUrl: String = "",
-        createdBy: String = "",
-        categories: Map<Category, Boolean> = emptyMap(),
-        ingredient: String = "",
-        selectedServings: Int = 0,
-        isServingsBottomSheetOpened: Boolean = false,
-        lastSavedServings: Int = 0,
-        selectedPrepTimeHours: String = "",
-        selectedPrepTimeMinutes: String = "",
-        isPrepTimeBottomSheetOpened: Boolean = false,
-        lastSavedPrepTime: String = "",
-        lastSavedPrepTimeHours: String = "",
-        lastSavedPrepMinutes: String = "",
-        ingredients: List<Ingredient> = emptyList(),
-        isDropDownMenuExpanded: Boolean = false,
-        isLoading: Boolean = false,
-        recipeIngredients: Map<Ingredient, Quantity> = emptyMap(),
-        isImageBottomSheetOpened: Boolean = false,
-        imageUri: Uri? = Uri.EMPTY,
-        tempUri: Uri? = Uri.EMPTY,
-        cropImageOptions: CropImageOptions = CropImageOptions(
-            maxCropResultWidth = 2400,
-            maxCropResultHeight = 1800,
-        ),
-        dragIndex: String = "",
-        dropIndex: String = "",
-        draggedIngredientId: String = "",
-        allIngredients: List<Ingredient> = emptyList(),
-        isReorderModeActivated: Boolean = false,
-        isQuantityBottomSheetOpened: Boolean = false,
-        selectedWholeQuantity: String = "",
-        selectedDecimalQuantity: String = "",
-        selectedTypeQuantity: String = "",
-        selectedIngredientId: String = "",
-        index: Int = -1,
-        isCategoriesDialogActivated: Boolean = false,
-        lastSavedCategories: Map<Category, Boolean> = emptyMap()
-    ): AddRecipeState {
-        return AddRecipeState(
-            recipeId = recipeId,
-            title = title,
-            titleError = titleError,
-            prepTime = prepTime,
-            servings = servings,
-            description = description,
-            descriptionError = descriptionError,
-            isVegetarian = isVegetarian,
-            isVegan = isVegan,
-            imageUrl = imageUrl,
-            createdBy = createdBy,
-            categories = categories,
-            ingredient = ingredient,
-            selectedServings = selectedServings,
-            isServingsBottomSheetOpened = isServingsBottomSheetOpened,
-            lastSavedServings = lastSavedServings,
-            selectedPrepTimeHours = selectedPrepTimeHours,
-            selectedPrepTimeMinutes = selectedPrepTimeMinutes,
-            isPrepTimeBottomSheetOpened = isPrepTimeBottomSheetOpened,
-            lastSavedPrepTime = lastSavedPrepTime,
-            lastSavedPrepTimeHours = lastSavedPrepTimeHours,
-            lastSavedPrepMinutes = lastSavedPrepMinutes,
-            ingredients = ingredients,
-            isDropDownMenuExpanded = isDropDownMenuExpanded,
-            isLoading = isLoading,
-            recipeIngredients = recipeIngredients,
-            isImageBottomSheetOpened = isImageBottomSheetOpened,
-            imageUri = imageUri,
-            tempUri = tempUri,
-            cropImageOptions = cropImageOptions,
-            dragIndex = dragIndex,
-            dropIndex = dropIndex,
-            draggedIngredientId = draggedIngredientId,
-            allIngredients = allIngredients,
-            isReorderModeActivated = isReorderModeActivated,
-            isQuantityBottomSheetOpened = isQuantityBottomSheetOpened,
-            selectedWholeQuantity = selectedWholeQuantity,
-            selectedDecimalQuantity = selectedDecimalQuantity,
-            selectedTypeQuantity = selectedTypeQuantity,
-            selectedIngredientId = selectedIngredientId,
-            index = index,
-            isCategoriesDialogActivated = isCategoriesDialogActivated,
-            lastSavedCategories = lastSavedCategories
-        )
-    }
-
     @OptIn(ExperimentalMaterial3Api::class)
     private fun setScreenState(
-        uiState: AddRecipeState = addRecipeState()
+        uiState: AddRecipeState = AddRecipeState()
     ) {
         composeRule.activity.setContent {
-        RecipeAppTheme() {
-            AddRecipeContent(
-                scrollState = rememberScrollState(),
-                modalBottomSheetState = rememberModalBottomSheetState(),
-                uiState = uiState,
-                onTitleChange = {},
-                onDescriptionChange = {},
-                onIngredientChange = {},
-                onSelectedServings = {},
-                onServingsPickerDismiss = {},
-                onServingsPickerSave = {},
-                onServingsButtonClicked = {},
-                onSelectedPrepTimeHours = {},
-                onSelectedPrepTimeMinutes = {},
-                onPrepTimePickerDismiss = {},
-                onPrepTimePickerSave = {},
-                onPrepTimeButtonClicked = {},
-                onExpandedChange = {},
-                onIngredientSuggestionClick = {},
-                onAddPhoto = {},
-                onTakePhoto = {},
-                onSelectImage = {},
-                onAddImageDismiss = {},
-                onReorder = {},
-                onDragIndexChange = {},
-                onDropIndexChange = {},
-                onDraggedIngredientChange = {},
-                onSwipeToDelete = {},
-                onIngredientClicked = {},
-                onSelectedWholeQuantity = {},
-                onSelectedDecimalQuantity = {},
-                onSelectedTypeQuantity = {},
-                onQuantityPickerDismiss = {},
-                onQuantityPickerSave = {},
-                onCategoriesButtonClicked = {},
-                onCheckBoxToggled = {},
-                onDialogDismiss = {},
-                onDialogSave = {},
-                onAddRecipe = {}
-            )
+            RecipeAppTheme() {
+                AddRecipeContent(
+                    scrollState = rememberScrollState(),
+                    modalBottomSheetState = rememberModalBottomSheetState(),
+                    uiState = uiState,
+                    onTitleChange = {},
+                    onDescriptionChange = {},
+                    onIngredientChange = {},
+                    onSelectedServings = {},
+                    onServingsPickerDismiss = {},
+                    onServingsPickerSave = {},
+                    onServingsButtonClicked = {},
+                    onSelectedPrepTimeHours = {},
+                    onSelectedPrepTimeMinutes = {},
+                    onPrepTimePickerDismiss = {},
+                    onPrepTimePickerSave = {},
+                    onPrepTimeButtonClicked = {},
+                    onExpandedChange = {},
+                    onIngredientSuggestionClick = {},
+                    onAddPhoto = {},
+                    onTakePhoto = {},
+                    onSelectImage = {},
+                    onAddImageDismiss = {},
+                    onReorder = {},
+                    onDragIndexChange = {},
+                    onDropIndexChange = {},
+                    onDraggedIngredientChange = {},
+                    onSwipeToDelete = {},
+                    onIngredientClicked = {},
+                    onSelectedWholeQuantity = {},
+                    onSelectedDecimalQuantity = {},
+                    onSelectedTypeQuantity = {},
+                    onQuantityPickerDismiss = {},
+                    onQuantityPickerSave = {},
+                    onCategoriesButtonClicked = {},
+                    onCheckBoxToggled = {},
+                    onDialogDismiss = {},
+                    onDialogSave = {},
+                    onAddRecipe = {}
+                )
+            }
         }
     }
-}
 
     @Test
     fun addRecipeScreen_wholeLayoutSwipesVertically() {
@@ -636,9 +542,10 @@ class AddRecipeScreenTest {
             )
         )
 
-        for(category in categoryIds) {
-            composeRule.onNodeWithTag("Category checkbox item $category").assertIsDisplayed()
-        }
+        composeRule.onNodeWithContentDescription("Clear button").assertIsDisplayed()
+        composeRule.onNodeWithText("Select recipe categories").assertIsDisplayed()
+        composeRule.onNodeWithTag("Save button").assertIsDisplayed()
+        composeRule.onNodeWithTag("Category lazy column").assertIsDisplayed()
     }
 
     @Test
@@ -675,6 +582,30 @@ class AddRecipeScreenTest {
 
         composeRule.onNodeWithTag("Save button").performClick()
         composeRule.onNodeWithTag("Categories dialog").assertIsNotDisplayed()
+    }
+
+    @Test
+    fun categoriesDialog_lazyColumnScrollsVertically() {
+        setScreenState(
+            AddRecipeState(
+                categories = categories,
+                isCategoriesDialogActivated = true
+            )
+        )
+
+        composeRule.onNodeWithTag("Category checkbox item Appetizer").assertIsDisplayed()
+        composeRule.onNodeWithTag("Category checkbox item Stew").assertIsNotDisplayed()
+
+        composeRule.onNodeWithTag("Category lazy column").performScrollToNode(
+            hasTestTag("Category checkbox item Stew")
+        )
+        composeRule.onNodeWithTag("Category checkbox item Appetizer").assertIsNotDisplayed()
+        composeRule.onNodeWithTag("Category checkbox item Stew").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Category lazy column").performScrollToNode(
+            hasTestTag("Category checkbox item Appetizer"))
+        composeRule.onNodeWithTag("Category checkbox item Appetizer").assertIsDisplayed()
+        composeRule.onNodeWithTag("Category checkbox item Stew").assertIsNotDisplayed()
     }
 
     private fun backButtonIsDisplayed() = composeRule

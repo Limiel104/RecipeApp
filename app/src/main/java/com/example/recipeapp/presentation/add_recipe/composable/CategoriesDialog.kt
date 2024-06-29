@@ -68,7 +68,9 @@ fun CategoriesDialog(
                     .padding(paddingValues)
                     .testTag("Categories dialog")
             ) {
-                LazyColumn() {
+                LazyColumn(
+                    modifier = modifier.testTag("Category lazy column")
+                ) {
                     itemsIndexed(categories.keys.toList()) { _, category ->
                         categories[category]?.let { isChecked ->
                             CategoryCheckboxItem(

@@ -570,7 +570,7 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
         AddRecipeContent(
             scrollState = rememberScrollState(),
             modalBottomSheetState = rememberModalBottomSheetState(),
-            uiState = getUiState(),
+            uiState = AddRecipeState(isServingsBottomSheetOpened = true),
             onIngredientChange = {},
             onTitleChange = {},
             onDescriptionChange = {},
