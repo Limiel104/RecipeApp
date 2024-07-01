@@ -35,8 +35,8 @@ fun AddImageCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(150.dp)
             .padding(bottom = 24.dp)
+            .height(150.dp)
             .clickable { onClick() }
             .testTag("Add image card")
     ) {

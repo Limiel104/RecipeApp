@@ -7,6 +7,8 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.assertHasClickAction
+import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotDisplayed
@@ -28,13 +30,13 @@ import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import androidx.test.espresso.Espresso
 import com.example.recipeapp.di.AppModule
 import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Quantity
-import com.example.recipeapp.domain.use_case.GetCategoriesUseCase
 import com.example.recipeapp.presentation.MainActivity
 import com.example.recipeapp.presentation.add_recipe.AddRecipeState
 import com.example.recipeapp.ui.theme.RecipeAppTheme
@@ -606,6 +608,46 @@ class AddRecipeScreenTest {
             hasTestTag("Category checkbox item Appetizer"))
         composeRule.onNodeWithTag("Category checkbox item Appetizer").assertIsDisplayed()
         composeRule.onNodeWithTag("Category checkbox item Stew").assertIsNotDisplayed()
+    }
+
+    @Test
+    fun addImageCard_isDisplayedCorrectly() {
+        setScreen()
+
+        composeRule.onNodeWithTag("Add image card").assertHeightIsEqualTo(150.dp)
+        composeRule.onNodeWithTag("Add image card").assertHasClickAction()
+        composeRule.onNodeWithContentDescription("Add image button").assertIsDisplayed()
+        composeRule.onNodeWithText("Add image").assertIsDisplayed()
+    }
+
+    @Test
+    fun imagePicker_isDisplayedCorrectly() {
+        setScreenState(AddRecipeState(isImageBottomSheetOpened = true))
+
+        composeRule.onNodeWithContentDescription("Take photo icon").assertIsDisplayed()
+        composeRule.onNodeWithText("Take Photo").assertIsDisplayed()
+        composeRule.onNodeWithContentDescription("Select image icon").assertIsDisplayed()
+        composeRule.onNodeWithText("Select Image").assertIsDisplayed()
+    }
+
+    @Test
+    fun imagePicker_opensCorrectly() {
+        setScreen()
+
+        composeRule.onNodeWithTag("Image picker").assertIsNotDisplayed()
+        composeRule.onNodeWithTag("Add image card").performClick()
+        composeRule.onNodeWithTag("Image picker").assertIsDisplayed()
+    }
+
+    @Test
+    fun imagePicker_closesCorrectlyBySwipeDown() {
+        setScreen()
+
+        composeRule.onNodeWithTag("Image picker").assertIsNotDisplayed()
+        composeRule.onNodeWithTag("Add image card").performClick()
+        composeRule.onNodeWithTag("Image picker").assertIsDisplayed()
+        composeRule.onNodeWithTag("Image picker").performTouchInput { swipeDown() }
+        composeRule.onNodeWithTag("Image picker").assertIsNotDisplayed()
     }
 
     private fun backButtonIsDisplayed() = composeRule

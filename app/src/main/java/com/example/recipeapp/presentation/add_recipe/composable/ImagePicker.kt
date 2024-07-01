@@ -22,6 +22,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,6 +40,7 @@ fun ImagePicker(
     ModalBottomSheet(
         onDismissRequest = { onDismiss() },
         sheetState = modalSheetState,
+        modifier = modifier.testTag("Image picker")
     ) {
         Column(
             modifier = modifier
