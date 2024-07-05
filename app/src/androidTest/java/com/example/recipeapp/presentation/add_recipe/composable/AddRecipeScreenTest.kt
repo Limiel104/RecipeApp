@@ -56,6 +56,8 @@ class AddRecipeScreenTest {
     private lateinit var recipeIngredients: Map<Ingredient, Quantity>
     private lateinit var categories: Map<Category, Boolean>
     private lateinit var categoryIds: List<String>
+    private lateinit var ingredients: List<Ingredient>
+    private lateinit var allIngredients: List<Ingredient>
 
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
@@ -67,61 +69,58 @@ class AddRecipeScreenTest {
     fun setUp() {
         hiltRule.inject()
 
-        recipeIngredients = mapOf(
-            Pair(
-                Ingredient(
-                    ingredientId = "ingredientId",
-                    name = "Ingredient Name",
-                    imageUrl = "imageUrl",
-                    category = "category"
-                ),
-                "200.0 g"
+        allIngredients = listOf(
+            Ingredient(
+                ingredientId = "ingredientId",
+                name = "Ingredient Name",
+                imageUrl = "imageUrl",
+                category = "category"
             ),
-            Pair(
-                Ingredient(
-                    ingredientId = "ingredient2Id",
-                    name = "Ingredient2 Name",
-                    imageUrl = "imageUrl",
-                    category = "category"
-                ),
-                "5.0 kg"
+            Ingredient(
+                ingredientId = "ingredient2Id",
+                name = "Ingredient2 Name",
+                imageUrl = "imageUrl",
+                category = "category"
             ),
-            Pair(
-                Ingredient(
-                    ingredientId = "ingredient3Id",
-                    name = "Ingredient3 Name",
-                    imageUrl = "imageUrl",
-                    category = "category"
-                ),
-                "1 cup"
+            Ingredient(
+                ingredientId = "ingredient3Id",
+                name = "Ingredient3 Name",
+                imageUrl = "imageUrl",
+                category = "category"
             ),
-            Pair(
-                Ingredient(
-                    ingredientId = "ingredient4Id",
-                    name = "Ingredient4 Name",
-                    imageUrl = "imageUrl",
-                    category = "category"
-                ),
-                "125.0 ml"
+            Ingredient(
+                ingredientId = "ingredient4Id",
+                name = "Ingredient4 Name",
+                imageUrl = "imageUrl",
+                category = "category"
             ),
-            Pair(
-                Ingredient(
-                    ingredientId = "ingredient5Id",
-                    name = "Ingredient5 Name",
-                    imageUrl = "imageUrl",
-                    category = "category"
-                ),
-                "4 tbsp"
+            Ingredient(
+                ingredientId = "ingredient5Id",
+                name = "Ingredient5 Name",
+                imageUrl = "imageUrl",
+                category = "category"
             ),
-            Pair(
-                Ingredient(
-                    ingredientId = "ingredient6Id",
-                    name = "Ingredient6 Name",
-                    imageUrl = "imageUrl",
-                    category = "category"
-                ),
-                "1 glass"
+            Ingredient(
+                ingredientId = "ingredient6Id",
+                name = "Ingredient6 Name",
+                imageUrl = "imageUrl",
+                category = "category"
             )
+        )
+
+        ingredients = listOf(
+            allIngredients[1],
+            allIngredients[3],
+            allIngredients[4]
+        )
+
+        recipeIngredients = mapOf(
+            Pair(allIngredients[0], "200.0 g"),
+            Pair(allIngredients[1], "5.0 kg"),
+            Pair(allIngredients[2], "1 cup"),
+            Pair(allIngredients[3], "125.0 ml"),
+            Pair(allIngredients[4], "4 tbsp"),
+            Pair(allIngredients[5], "1 glass")
         )
 
         categoryIds = listOf(
@@ -648,6 +647,47 @@ class AddRecipeScreenTest {
         composeRule.onNodeWithTag("Image picker").assertIsDisplayed()
         composeRule.onNodeWithTag("Image picker").performTouchInput { swipeDown() }
         composeRule.onNodeWithTag("Image picker").assertIsNotDisplayed()
+    }
+
+    @Test
+    fun autoComplete_inputTextIsDisplayedCorrectly() {
+        val query = "Recipe Title"
+        setScreenState(AddRecipeState(ingredient = query))
+
+        composeRule.onNodeWithTag("Autocomplete TF").performTextInput(query)
+        val autocompleteNode = composeRule.onNodeWithTag("Autocomplete TF").fetchSemanticsNode()
+        val textInput = autocompleteNode.config.getOrNull(SemanticsProperties.EditableText).toString()
+        assertThat(textInput).isEqualTo(query)
+    }
+
+    @Test
+    fun autoComplete_isDisplayedCorrectly() {
+        setScreenState(
+            AddRecipeState(
+                isDropDownMenuExpanded = true,
+                allIngredients = allIngredients,
+                ingredients = ingredients,
+            )
+        )
+
+        Thread.sleep(5000L)
+
+        composeRule.onNodeWithTag("Autocomplete TF").isDisplayed()
+        composeRule.onNodeWithTag("Autocomplete DDM")
+        composeRule.onNodeWithText("Ingredient2 Name").isDisplayed()
+        composeRule.onNodeWithText("Ingredient4 Name").isDisplayed()
+        composeRule.onNodeWithText("Ingredient5 Name").isDisplayed()
+        val leftIngredients = composeRule.onNodeWithTag("Autocomplete DDM").fetchSemanticsNode().children.size
+        assertThat(leftIngredients).isEqualTo(3)
+    }
+
+    @Test
+    fun autoComplete_isExtendedAfterClick() {
+        setScreen()
+
+        composeRule.onNodeWithTag("Autocomplete DDM").isNotDisplayed()
+        composeRule.onNodeWithTag("Add recipe type ingredient name EDDM")
+        composeRule.onNodeWithTag("Autocomplete DDM").isDisplayed()
     }
 
     private fun backButtonIsDisplayed() = composeRule

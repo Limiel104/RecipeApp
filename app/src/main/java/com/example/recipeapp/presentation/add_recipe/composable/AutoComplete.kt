@@ -53,13 +53,16 @@ fun AutoComplete(
             modifier = modifier
                 .menuAnchor()
                 .fillMaxWidth()
+                .testTag("Autocomplete TF")
         )
 
         if(filterOpts.isNotEmpty()) {
             DropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { onExpandedChange() },
-                modifier = modifier.exposedDropdownSize(true),
+                modifier = modifier
+                    .exposedDropdownSize(true)
+                    .testTag("Autocomplete DDM"),
                 properties = PopupProperties(focusable = false)
             ) {
                 filterOpts.forEach { ingredientSuggestion ->
