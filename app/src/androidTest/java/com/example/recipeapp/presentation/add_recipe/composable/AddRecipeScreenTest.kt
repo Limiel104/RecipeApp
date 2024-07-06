@@ -686,8 +686,61 @@ class AddRecipeScreenTest {
         setScreen()
 
         composeRule.onNodeWithTag("Autocomplete DDM").isNotDisplayed()
-        composeRule.onNodeWithTag("Add recipe type ingredient name EDDM")
+        composeRule.onNodeWithTag("Add recipe type ingredient name EDDM").performClick()
         composeRule.onNodeWithTag("Autocomplete DDM").isDisplayed()
+    }
+
+    @Test
+    fun autoComplete_isClosedAfterClickOnTF() {
+        setScreen()
+
+        composeRule.onNodeWithTag("Add recipe type ingredient name EDDM").performClick()
+        composeRule.onNodeWithTag("Autocomplete DDM").isDisplayed()
+        composeRule.onNodeWithTag("Autocomplete TF").performClick()
+        composeRule.onNodeWithTag("Autocomplete DDM").isNotDisplayed()
+    }
+
+    @Test
+    fun autoComplete_isClosedAfterClosingKeyboard() {
+        setScreen()
+
+        composeRule.onNodeWithTag("Add recipe type ingredient name EDDM").performClick()
+        composeRule.onNodeWithTag("Autocomplete DDM").isDisplayed()
+        Espresso.closeSoftKeyboard()
+        composeRule.onNodeWithTag("Autocomplete DDM").isNotDisplayed()
+    }
+
+    @Test
+    fun autoComplete_isClosedAfterClickOnOutsideElement() {
+        setScreen()
+
+        composeRule.onNodeWithTag("Add recipe type ingredient name EDDM").performClick()
+        composeRule.onNodeWithTag("Autocomplete DDM").isDisplayed()
+        composeRule.onNodeWithTag("Description").performClick()
+        composeRule.onNodeWithTag("Autocomplete DDM").isNotDisplayed()
+    }
+
+    @Test
+    fun recipeIngredientList_isDisplayedCorrectly() {
+        setScreenState(AddRecipeState(recipeIngredients = recipeIngredients))
+
+        ingredientsTextIsDisplayed()
+        tapOrSwipeTextIsDisplayed()
+        reorderButtonIsDisplayed()
+        composeRule.onNodeWithTag("Add recipe ingredient list").isDisplayed()
+        val ingredientCount = composeRule.onAllNodesWithTag("Recipe Ingredient Item").fetchSemanticsNodes().size
+        assertThat(ingredientCount).isEqualTo(6)
+    }
+
+    @Test
+    fun quantityPicker_isDisplayedCorrectly() {
+        setScreenState(AddRecipeState(isQuantityBottomSheetOpened = true))
+
+        composeRule.onNodeWithTag("Quantity picker").isDisplayed()
+        composeRule.onAllNodesWithTag("Whole list item picker").onFirst().assertIsDisplayed()
+        composeRule.onAllNodesWithTag("Decimal list item picker").onFirst().assertIsDisplayed()
+        composeRule.onAllNodesWithTag("Type list item picker").onFirst().assertIsDisplayed()
+        composeRule.onNodeWithTag("Save quantity button").isDisplayed()
     }
 
     private fun backButtonIsDisplayed() = composeRule

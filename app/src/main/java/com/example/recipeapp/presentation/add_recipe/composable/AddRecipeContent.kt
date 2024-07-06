@@ -226,7 +226,9 @@ fun AddRecipeContent(
             }
 
             Column(
-                modifier = modifier.padding(bottom = 20.dp)
+                modifier = modifier
+                    .padding(bottom = 20.dp)
+                    .testTag("Add recipe ingredient list")
             ) {
                 uiState.recipeIngredients.forEach { recipeIngredient ->
                     key(recipeIngredient) {

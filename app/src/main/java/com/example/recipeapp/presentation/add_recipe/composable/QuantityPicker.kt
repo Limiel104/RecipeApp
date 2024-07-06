@@ -76,7 +76,8 @@ fun  QuantityPicker(
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp)
+                .testTag("Quantity picker"),
         ) {
             Row(
                 modifier = modifier.fillMaxWidth()
@@ -86,7 +87,9 @@ fun  QuantityPicker(
                     onValueChange = { onSelectedWholeQuantity(it) },
                     dividersColor = MaterialTheme.colorScheme.primary,
                     list = wholeList,
-                    modifier = modifier.weight(1F)
+                    modifier = modifier
+                        .weight(1F)
+                        .testTag("Whole list item picker")
                 )
 
                 ListItemPicker(
@@ -94,7 +97,9 @@ fun  QuantityPicker(
                     onValueChange = { onSelectedDecimalQuantity(it) },
                     dividersColor = MaterialTheme.colorScheme.primary,
                     list = decimalList,
-                    modifier = modifier.weight(1F)
+                    modifier = modifier
+                        .weight(1F)
+                        .testTag("Decimal list item picker")
                 )
 
                 ListItemPicker(
@@ -102,7 +107,9 @@ fun  QuantityPicker(
                     onValueChange = { onSelectedTypeQuantity(it) },
                     dividersColor = MaterialTheme.colorScheme.primary,
                     list = typeList,
-                    modifier = modifier.weight(1F)
+                    modifier = modifier
+                        .weight(1F)
+                        .testTag("Type list item picker")
                 )
             }
 
