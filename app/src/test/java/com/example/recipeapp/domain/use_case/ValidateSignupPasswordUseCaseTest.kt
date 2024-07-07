@@ -1,14 +1,12 @@
 package com.example.recipeapp.domain.use_case
 
 import com.google.common.truth.Truth.assertThat
-import io.mockk.impl.annotations.MockK
 
 import org.junit.Before
 import org.junit.Test
 
 class ValidateSignupPasswordUseCaseTest {
 
-    @MockK
     private lateinit var validateSignupPasswordUseCase: ValidateSignupPasswordUseCase
 
     @Before
