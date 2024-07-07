@@ -1,7 +1,6 @@
 package com.example.recipeapp.domain.use_case
 
 import com.example.recipeapp.domain.model.Ingredient
-import com.example.recipeapp.domain.model.Recipe
 import com.example.recipeapp.domain.model.RecipeWithIngredients
 import com.example.recipeapp.domain.model.Resource
 import com.example.recipeapp.domain.repository.RecipeRepository
