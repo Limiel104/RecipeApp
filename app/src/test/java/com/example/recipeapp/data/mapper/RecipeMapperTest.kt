@@ -31,6 +31,7 @@ class RecipeMapperTest {
     private lateinit var ingredient2: Ingredient
     private lateinit var recipeWithIngredient: RecipeWithIngredient
     private lateinit var recipeWithIngredients: RecipeWithIngredients
+    private lateinit var categoryList: List<RecipeCategoryEntity>
 
     @Before
     fun setUp() {
@@ -172,6 +173,24 @@ class RecipeMapperTest {
             createdBy = "userId",
             categories = listOf("Category", "Category2", "Category3")
         )
+
+        categoryList = listOf(
+            RecipeCategoryEntity(
+                categoryId = 0,
+                categoryName = "Category",
+                recipeId = "recipeId"
+            ),
+            RecipeCategoryEntity(
+                categoryId = 0,
+                categoryName = "Category2",
+                recipeId = "recipeId"
+            ),
+            RecipeCategoryEntity(
+                categoryId = 0,
+                categoryName = "Category3",
+                recipeId = "recipeId"
+            )
+        )
     }
 
     @Test
@@ -209,5 +228,19 @@ class RecipeMapperTest {
         val mappedRecipeDto = recipeWithIngredients.toRecipeDto("recipeId")
 
         assertThat(mappedRecipeDto).isEqualTo(recipeDto)
+    }
+
+    @Test
+    fun `get list of RecipeCategory from RecipeDto`() {
+        val mappedList = recipeDto.getRecipeCategoryList()
+
+        assertThat(mappedList).isEqualTo(categoryList)
+    }
+
+    @Test
+    fun `RecipeWithCategory can be mapped to Recipe`() {
+        val mappedRecipe = recipeWithCategory.toRecipe()
+
+        assertThat(mappedRecipe).isEqualTo(recipe)
     }
 }
