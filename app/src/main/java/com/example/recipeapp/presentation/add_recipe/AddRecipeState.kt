@@ -1,7 +1,6 @@
 package com.example.recipeapp.presentation.add_recipe
 
 import android.net.Uri
-import com.canhub.cropper.CropImageOptions
 import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Quantity
@@ -36,10 +35,6 @@ data class AddRecipeState(
     val isImageBottomSheetOpened: Boolean = false,
     val imageUri: Uri? = Uri.EMPTY,
     val tempUri: Uri? = Uri.EMPTY,
-    val cropImageOptions: CropImageOptions = CropImageOptions(
-        maxCropResultWidth = 2400,
-        maxCropResultHeight = 1800,
-    ),
     val dragIndex: String = "",
     val dropIndex: String = "",
     val draggedIngredientId: String = "",

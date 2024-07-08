@@ -23,6 +23,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
+import com.canhub.cropper.CropImageOptions
 import com.example.recipeapp.R
 import com.example.recipeapp.presentation.add_recipe.AddRecipeEvent
 import com.example.recipeapp.presentation.add_recipe.AddRecipeUiEvent
@@ -45,6 +46,11 @@ fun AddRecipeScreen(
     val authority = stringResource(id = R.string.fileprovider)
     val directory = File(context.cacheDir, "images")
 
+    val cropImageOptions = CropImageOptions(
+        maxCropResultWidth = 2400,
+        maxCropResultHeight = 1800
+    )
+
     fun getTempUri(): Uri? {
         directory.let {
             it.mkdirs()
@@ -63,14 +69,14 @@ fun AddRecipeScreen(
 
     val galleryLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia()) { result ->
         result?.let {
-            val cropOptions = CropImageContractOptions(result, uiState.cropImageOptions)
+            val cropOptions = CropImageContractOptions(result, cropImageOptions)
             imageCropLauncher.launch(cropOptions)
         }
     }
 
     val cameraLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicture()) { isSaved ->
         if(isSaved) {
-            val cropOptions = CropImageContractOptions(uiState.tempUri, uiState.cropImageOptions)
+            val cropOptions = CropImageContractOptions(uiState.tempUri, cropImageOptions)
             imageCropLauncher.launch(cropOptions)
         }
     }
