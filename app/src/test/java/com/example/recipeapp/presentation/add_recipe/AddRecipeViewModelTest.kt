@@ -2,6 +2,7 @@ package com.example.recipeapp.presentation.add_recipe
 
 import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.domain.model.Ingredient
+import com.example.recipeapp.domain.model.RecipeWithIngredients
 import com.example.recipeapp.domain.model.Resource
 import com.example.recipeapp.domain.use_case.AddImageUseCase
 import com.example.recipeapp.domain.use_case.AddRecipeUseCase
@@ -14,6 +15,8 @@ import com.google.common.truth.Truth.assertThat
 import com.google.firebase.auth.FirebaseUser
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
+import io.mockk.coExcludeRecords
+import io.mockk.coVerify
 import io.mockk.coVerifySequence
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -40,6 +43,8 @@ class AddRecipeViewModelTest {
     private lateinit var firebaseUser: FirebaseUser
     private lateinit var ingredients: List<Ingredient>
     private lateinit var categories: List<Category>
+    private lateinit var recipeWithIngredients: RecipeWithIngredients
+    private lateinit var categoryMap: Map<Category, Boolean>
 
     @Before
     fun setUp() {
@@ -113,6 +118,25 @@ class AddRecipeViewModelTest {
                 imageUrl = "imageUrl"
             )
         )
+
+        recipeWithIngredients = RecipeWithIngredients(
+            recipeId = "recipeId",
+            name = "Recipe Name",
+            ingredients = mapOf(
+                ingredients[0] to "3 g",
+                ingredients[1] to "5 g"
+            ),
+            prepTime = "40 min",
+            servings = 4,
+            description = "Recipe description",
+            isVegetarian = true,
+            isVegan = false,
+            imageUrl = "imageUrl",
+            createdBy = "userUID",
+            categories = listOf("category", "category2", "category4")
+        )
+
+        categoryMap = categories.associateWith { false }
     }
 
     @After
@@ -480,5 +504,95 @@ class AddRecipeViewModelTest {
         assertThat(resultTitleErrorState).isNull()
         assertThat(initialDescriptionErrorState).isNull()
         assertThat(resultDescriptionErrorState).isNull()
+    }
+
+    @Test
+    fun `getIngredients runs successfully`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
+        coExcludeRecords { getCategoriesUseCase() }
+
+        addRecipeViewModel = setViewModel()
+        val result = getCurrentAdRecipeState().ingredients
+        val isLoading = getCurrentAdRecipeState().isLoading
+
+        coVerify(exactly = 1) { getIngredientsUseCase() }
+        assertThat(result).isEqualTo(ingredients)
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `getIngredients returns error`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Error("Error message"))
+        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
+        coExcludeRecords { getCategoriesUseCase() }
+
+        addRecipeViewModel = setViewModel()
+        val result = getCurrentAdRecipeState().ingredients
+        val isLoading = getCurrentAdRecipeState().isLoading
+
+        coVerify(exactly = 1) { getIngredientsUseCase() }
+        assertThat(result).isEmpty()
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `getIngredients is loading`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Loading(true))
+        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
+        coExcludeRecords { getCategoriesUseCase() }
+
+        addRecipeViewModel = setViewModel()
+        val result = getCurrentAdRecipeState().ingredients
+        val isLoading = getCurrentAdRecipeState().isLoading
+
+        coVerify(exactly = 1) { getIngredientsUseCase() }
+        assertThat(result).isEmpty()
+        assertThat(isLoading).isTrue()
+    }
+
+    @Test
+    fun `getCategories runs successfully`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
+        coExcludeRecords { getIngredientsUseCase() }
+
+        addRecipeViewModel = setViewModel()
+        val result = getCurrentAdRecipeState().categories
+        val isLoading = getCurrentAdRecipeState().isLoading
+
+        coVerify(exactly = 1) { getCategoriesUseCase() }
+        assertThat(result).isEqualTo(categoryMap)
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `getCategories returns error`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Error("Error message"))
+        coExcludeRecords { getIngredientsUseCase() }
+
+        addRecipeViewModel = setViewModel()
+        val result = getCurrentAdRecipeState().categories
+        val isLoading = getCurrentAdRecipeState().isLoading
+
+        coVerify(exactly = 1) { getCategoriesUseCase() }
+        assertThat(result).isEmpty()
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `getCategories is loading`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Loading(true))
+        coExcludeRecords { getIngredientsUseCase() }
+
+        addRecipeViewModel = setViewModel()
+        val result = getCurrentAdRecipeState().categories
+        val isLoading = getCurrentAdRecipeState().isLoading
+
+        coVerify(exactly = 1) { getCategoriesUseCase() }
+        assertThat(result).isEmpty()
+        assertThat(isLoading).isTrue()
     }
 }
