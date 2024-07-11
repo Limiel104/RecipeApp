@@ -595,4 +595,190 @@ class AddRecipeViewModelTest {
         assertThat(result).isEmpty()
         assertThat(isLoading).isTrue()
     }
+
+    @Test
+    fun `selectedServings - initially empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
+
+        addRecipeViewModel = setViewModel()
+        val initialServingsState = getCurrentAdRecipeState().selectedServings
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(2))
+        val resultServingsState = getCurrentAdRecipeState().selectedServings
+
+
+        coVerifySequence {
+            getIngredientsUseCase()
+            getCategoriesUseCase()
+        }
+        assertThat(initialServingsState).isEqualTo(0)
+        assertThat(resultServingsState).isEqualTo(2)
+    }
+
+    @Test
+    fun `selectedServings - initially not empty - changed value`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
+
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(2))
+        val initialServingsState = getCurrentAdRecipeState().selectedServings
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(5))
+        val resultServingsState = getCurrentAdRecipeState().selectedServings
+
+
+        coVerifySequence {
+            getIngredientsUseCase()
+            getCategoriesUseCase()
+        }
+        assertThat(initialServingsState).isEqualTo(2)
+        assertThat(resultServingsState).isEqualTo(5)
+    }
+
+    @Test
+    fun `selectedServings - initially not empty - result empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
+
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(2))
+        val initialServingsState = getCurrentAdRecipeState().selectedServings
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(0))
+        val resultServingsState = getCurrentAdRecipeState().selectedServings
+
+
+        coVerifySequence {
+            getIngredientsUseCase()
+            getCategoriesUseCase()
+        }
+        assertThat(initialServingsState).isEqualTo(2)
+        assertThat(resultServingsState).isEqualTo(0)
+    }
+
+    @Test
+    fun `selectedPrepTimeHours - initially empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
+
+        addRecipeViewModel = setViewModel()
+        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("2 hours"))
+        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+
+
+        coVerifySequence {
+            getIngredientsUseCase()
+            getCategoriesUseCase()
+        }
+        assertThat(initialPrepTimeHoursState).isEqualTo("")
+        assertThat(resultPrepTimeHoursState).isEqualTo("2 hours")
+    }
+
+    @Test
+    fun `selectedPrepTimeHours - initially not empty - changed value`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
+
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("2 hours"))
+        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("3 hours"))
+        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+
+
+        coVerifySequence {
+            getIngredientsUseCase()
+            getCategoriesUseCase()
+        }
+        assertThat(initialPrepTimeHoursState).isEqualTo("2 hours")
+        assertThat(resultPrepTimeHoursState).isEqualTo("3 hours")
+    }
+
+    @Test
+    fun `selectedPrepTimeHours - initially not empty - result empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
+
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("2 hours"))
+        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours(""))
+        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+
+
+        coVerifySequence {
+            getIngredientsUseCase()
+            getCategoriesUseCase()
+        }
+        assertThat(initialPrepTimeHoursState).isEqualTo("2 hours")
+        assertThat(resultPrepTimeHoursState).isEqualTo("")
+    }
+
+    @Test
+    fun `selectedPrepTimeMinutes - initially empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
+
+        addRecipeViewModel = setViewModel()
+        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("15 min"))
+        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+
+
+        coVerifySequence {
+            getIngredientsUseCase()
+            getCategoriesUseCase()
+        }
+        assertThat(initialPrepTimeMinutesState).isEqualTo("")
+        assertThat(resultPrepTimeMinutesState).isEqualTo("15 min")
+    }
+
+    @Test
+    fun `selectedPrepTimeMinutes - initially not empty - changed value`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
+
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("15 min"))
+        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("35 min"))
+        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+
+
+        coVerifySequence {
+            getIngredientsUseCase()
+            getCategoriesUseCase()
+        }
+        assertThat(initialPrepTimeMinutesState).isEqualTo("15 min")
+        assertThat(resultPrepTimeMinutesState).isEqualTo("35 min")
+    }
+
+    @Test
+    fun `selectedPrepTimeMinutes - initially not empty - result empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
+
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("15 min"))
+        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes(""))
+        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+
+
+        coVerifySequence {
+            getIngredientsUseCase()
+            getCategoriesUseCase()
+        }
+        assertThat(initialPrepTimeMinutesState).isEqualTo("15 min")
+        assertThat(resultPrepTimeMinutesState).isEqualTo("")
+    }
 }

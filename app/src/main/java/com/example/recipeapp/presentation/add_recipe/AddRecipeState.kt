@@ -10,7 +10,6 @@ data class AddRecipeState(
     val title: String = "",
     val titleError: String? = null,
     val prepTime: String = "",
-    val servings: Int = 0,
     val description: String = "",
     val descriptionError: String? = null,
     val isVegetarian: Boolean = false,
