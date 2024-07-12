@@ -165,31 +165,35 @@ class AddRecipeViewModelTest {
         return addRecipeViewModel.addRecipeState.value
     }
 
-    @Test
-    fun `enteredTitle - initially empty`() {
+    private fun setMocks()  {
         coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
         coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
+    }
 
+    private fun verifyMocks() {
+        coVerifySequence {
+            getIngredientsUseCase()
+            getCategoriesUseCase()
+        }
+    }
+
+    @Test
+    fun `enteredTitle - initially empty`() {
+        setMocks()
         addRecipeViewModel = setViewModel()
         val initialTitleState = getCurrentAdRecipeState().title
 
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("title"))
         val resultTitleState = getCurrentAdRecipeState().title
 
-
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialTitleState).isEmpty()
         assertThat(resultTitleState).isEqualTo("title")
     }
 
     @Test
     fun `enteredTitle - initially not empty - changed string`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
-
+        setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("old title"))
         val initialTitleState = getCurrentAdRecipeState().title
@@ -197,20 +201,14 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("new title"))
         val resultTitleState = getCurrentAdRecipeState().title
 
-
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialTitleState).isEqualTo("old title")
         assertThat(resultTitleState).isEqualTo("new title")
     }
 
     @Test
     fun `enteredTitle - initially not empty - result empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
-
+        setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("title"))
         val initialTitleState = getCurrentAdRecipeState().title
@@ -218,40 +216,28 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle(""))
         val resultTitleState = getCurrentAdRecipeState().title
 
-
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialTitleState).isEqualTo("title")
         assertThat(resultTitleState).isEqualTo("")
     }
 
     @Test
     fun `enteredDescription - initially empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
-
+        setMocks()
         addRecipeViewModel = setViewModel()
         val initialDescriptionState = getCurrentAdRecipeState().description
 
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("description"))
         val resultDescriptionState = getCurrentAdRecipeState().description
 
-
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialDescriptionState).isEmpty()
         assertThat(resultDescriptionState).isEqualTo("description")
     }
 
     @Test
     fun `enteredDescription - initially not empty - changed string`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
-
+        setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("old description"))
         val initialDescriptionState = getCurrentAdRecipeState().description
@@ -259,20 +245,14 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("new description"))
         val resultDescriptionState = getCurrentAdRecipeState().description
 
-
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialDescriptionState).isEqualTo("old description")
         assertThat(resultDescriptionState).isEqualTo("new description")
     }
 
     @Test
     fun `enteredDescription - initially not empty - result empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
-
+        setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("description"))
         val initialDescriptionState = getCurrentAdRecipeState().description
@@ -280,40 +260,28 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription(""))
         val resultDescriptionState = getCurrentAdRecipeState().description
 
-
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialDescriptionState).isEqualTo("description")
         assertThat(resultDescriptionState).isEqualTo("")
     }
 
     @Test
     fun `enteredIngredient - initially empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
-
+        setMocks()
         addRecipeViewModel = setViewModel()
         val initialIngredientState = getCurrentAdRecipeState().ingredient
 
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredIngredient("ingredient"))
         val resultIngredientState = getCurrentAdRecipeState().ingredient
 
-
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialIngredientState).isEmpty()
         assertThat(resultIngredientState).isEqualTo("ingredient")
     }
 
     @Test
     fun `enteredIngredient - initially not empty - changed string`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
-
+        setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredIngredient("old ingredient"))
         val initialIngredientState = getCurrentAdRecipeState().ingredient
@@ -321,20 +289,14 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredIngredient("new ingredient"))
         val resultIngredientState = getCurrentAdRecipeState().ingredient
 
-
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialIngredientState).isEqualTo("old ingredient")
         assertThat(resultIngredientState).isEqualTo("new ingredient")
     }
 
     @Test
     fun `enteredIngredient - initially not empty - result empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
-
+        setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredIngredient("ingredient"))
         val initialIngredientState = getCurrentAdRecipeState().ingredient
@@ -342,20 +304,14 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredIngredient(""))
         val resultIngredientState = getCurrentAdRecipeState().ingredient
 
-
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialIngredientState).isEqualTo("ingredient")
         assertThat(resultIngredientState).isEqualTo("")
     }
 
     @Test
     fun `onAddRecipe - title is empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
-
+        setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("description"))
         val initialTitleErrorState = getCurrentAdRecipeState().titleError
@@ -363,19 +319,14 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddRecipe)
         val resultTitleErrorState = getCurrentAdRecipeState().titleError
 
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialTitleErrorState).isNull()
         assertThat(resultTitleErrorState).isEqualTo("Field can't be empty")
     }
 
     @Test
     fun `onAddRecipe - title is too short`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
-
+        setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("ti"))
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("description"))
@@ -384,19 +335,14 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddRecipe)
         val resultTitleErrorState = getCurrentAdRecipeState().titleError
 
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialTitleErrorState).isNull()
         assertThat(resultTitleErrorState).isEqualTo("Field is too short")
     }
 
     @Test
     fun `onAddRecipe - title has at least one not allowed character`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
-
+        setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("title%"))
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("description"))
@@ -405,19 +351,14 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddRecipe)
         val resultTitleErrorState = getCurrentAdRecipeState().titleError
 
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialTitleErrorState).isNull()
         assertThat(resultTitleErrorState).isEqualTo("At least one character is not allowed")
     }
 
     @Test
     fun `onAddRecipe - description is empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
-
+        setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("title"))
         val initialDescriptionErrorState = getCurrentAdRecipeState().descriptionError
@@ -425,19 +366,14 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddRecipe)
         val resultDescriptionErrorState = getCurrentAdRecipeState().descriptionError
 
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialDescriptionErrorState).isNull()
         assertThat(resultDescriptionErrorState).isEqualTo("Field can't be empty")
     }
 
     @Test
     fun `onAddRecipe - description is too short`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
-
+        setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("title"))
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("des"))
@@ -446,19 +382,14 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddRecipe)
         val resultDescriptionErrorState = getCurrentAdRecipeState().descriptionError
 
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialDescriptionErrorState).isNull()
         assertThat(resultDescriptionErrorState).isEqualTo("Field is too short")
     }
 
     @Test
     fun `onAddRecipe - description has at least one not allowed character`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
-
+        setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("title"))
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("desc_ription"))
@@ -467,10 +398,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddRecipe)
         val resultDescriptionErrorState = getCurrentAdRecipeState().descriptionError
 
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialDescriptionErrorState).isNull()
         assertThat(resultDescriptionErrorState).isEqualTo("At least one character is not allowed")
     }
@@ -479,8 +407,7 @@ class AddRecipeViewModelTest {
     fun `onAddRecipe - all fields are correct`() {
         val result = Resource.Success(true)
 
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
+        setMocks()
         coEvery { addRecipeUseCase(any()) } returns flowOf(result)
 
         addRecipeViewModel = setViewModel()
@@ -508,8 +435,7 @@ class AddRecipeViewModelTest {
 
     @Test
     fun `getIngredients runs successfully`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
+        setMocks()
         coExcludeRecords { getCategoriesUseCase() }
 
         addRecipeViewModel = setViewModel()
@@ -553,8 +479,7 @@ class AddRecipeViewModelTest {
 
     @Test
     fun `getCategories runs successfully`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
+        setMocks()
         coExcludeRecords { getIngredientsUseCase() }
 
         addRecipeViewModel = setViewModel()
@@ -597,30 +522,36 @@ class AddRecipeViewModelTest {
     }
 
     @Test
-    fun `selectedServings - initially empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
+    fun `onServingsButtonClicked - state is set correctly`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialServingsSheetState = getCurrentAdRecipeState().isServingsBottomSheetOpened
 
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsButtonClicked)
+        val resultServingsSheetState = getCurrentAdRecipeState().isServingsBottomSheetOpened
+
+        verifyMocks()
+        assertThat(initialServingsSheetState).isFalse()
+        assertThat(resultServingsSheetState).isTrue()
+    }
+
+    @Test
+    fun `selectedServings - initially empty`() {
+        setMocks()
         addRecipeViewModel = setViewModel()
         val initialServingsState = getCurrentAdRecipeState().selectedServings
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(2))
         val resultServingsState = getCurrentAdRecipeState().selectedServings
 
-
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialServingsState).isEqualTo(0)
         assertThat(resultServingsState).isEqualTo(2)
     }
 
     @Test
     fun `selectedServings - initially not empty - changed value`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
-
+        setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(2))
         val initialServingsState = getCurrentAdRecipeState().selectedServings
@@ -628,20 +559,14 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(5))
         val resultServingsState = getCurrentAdRecipeState().selectedServings
 
-
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialServingsState).isEqualTo(2)
         assertThat(resultServingsState).isEqualTo(5)
     }
 
     @Test
     fun `selectedServings - initially not empty - result empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
-
+        setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(2))
         val initialServingsState = getCurrentAdRecipeState().selectedServings
@@ -649,40 +574,170 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(0))
         val resultServingsState = getCurrentAdRecipeState().selectedServings
 
-
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialServingsState).isEqualTo(2)
         assertThat(resultServingsState).isEqualTo(0)
     }
 
     @Test
-    fun `selectedPrepTimeHours - initially empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
+    fun `onServingsPickerSaved - isServingsBottomSheetOpened state is set correctly`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsButtonClicked)
+        val initialServingsBottomSheetState = getCurrentAdRecipeState().isServingsBottomSheetOpened
 
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerSaved)
+        val resultServingsBottomSheetState = getCurrentAdRecipeState().isServingsBottomSheetOpened
+
+        verifyMocks()
+        assertThat(initialServingsBottomSheetState).isTrue()
+        assertThat(resultServingsBottomSheetState).isFalse()
+    }
+
+    @Test
+    fun `onServingsPickerSaved - servings are not selected`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialLastSavedServingsState = getCurrentAdRecipeState().lastSavedServings
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerSaved)
+        val resultLastSavedServingsState = getCurrentAdRecipeState().lastSavedServings
+
+        verifyMocks()
+        assertThat(initialLastSavedServingsState).isEqualTo(0)
+        assertThat(resultLastSavedServingsState).isEqualTo(0)
+    }
+
+    @Test
+    fun `onServingsPickerSaved - servings are selected`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(3))
+        val initialLastSavedServingsState = getCurrentAdRecipeState().lastSavedServings
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerSaved)
+        val resultLastSavedServingsState = getCurrentAdRecipeState().lastSavedServings
+
+        verifyMocks()
+        assertThat(initialLastSavedServingsState).isEqualTo(0)
+        assertThat(resultLastSavedServingsState).isEqualTo(3)
+    }
+
+    @Test
+    fun `onServingsPickerDismissed - lastSavedServings is 0 - reset to default`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialServingsState = getCurrentAdRecipeState().selectedServings
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerDismissed)
+        val resultServingsState = getCurrentAdRecipeState().selectedServings
+
+        verifyMocks()
+        assertThat(initialServingsState).isEqualTo(0)
+        assertThat(resultServingsState).isEqualTo(0)
+    }
+
+    @Test
+    fun `onServingsPickerDismissed - lastSavedServings is 0 but selectedServings are not 0 - reset to default`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(2))
+        val initialServingsState = getCurrentAdRecipeState().selectedServings
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerDismissed)
+        val resultServingsState = getCurrentAdRecipeState().selectedServings
+
+        verifyMocks()
+        assertThat(initialServingsState).isEqualTo(2)
+        assertThat(resultServingsState).isEqualTo(0)
+    }
+
+    @Test
+    fun `onServingsPickerDismissed - lastSavedServings is 0 - bottom sheet is closed`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsButtonClicked)
+        val initialServingsBottomSheetState = getCurrentAdRecipeState().isServingsBottomSheetOpened
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerSaved)
+        val resultServingsBottomSheetState = getCurrentAdRecipeState().isServingsBottomSheetOpened
+
+        verifyMocks()
+        assertThat(initialServingsBottomSheetState).isTrue()
+        assertThat(resultServingsBottomSheetState).isFalse()
+    }
+
+    @Test
+    fun `onServingsPickerDismissed - lastSavedServings is not 0 - reset to last saved`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(3))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerSaved)
+        val initialServingsState = getCurrentAdRecipeState().selectedServings
+        val initialLastSavedServingsState = getCurrentAdRecipeState().lastSavedServings
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerDismissed)
+        val resultServingsState = getCurrentAdRecipeState().selectedServings
+
+        verifyMocks()
+        assertThat(initialServingsState).isEqualTo(3)
+        assertThat(initialLastSavedServingsState).isEqualTo(3)
+        assertThat(resultServingsState).isEqualTo(3)
+    }
+
+    @Test
+    fun `onServingsPickerDismissed - lastSavedServings and selectedServings are both not 0 but not the same - reset to last saved`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(3))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerSaved)
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(6))
+        val initialServingsState = getCurrentAdRecipeState().selectedServings
+        val initialLastSavedServingsState = getCurrentAdRecipeState().lastSavedServings
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerDismissed)
+        val resultServingsState = getCurrentAdRecipeState().selectedServings
+
+        verifyMocks()
+        assertThat(initialServingsState).isEqualTo(6)
+        assertThat(initialLastSavedServingsState).isEqualTo(3)
+        assertThat(resultServingsState).isEqualTo(3)
+    }
+
+    @Test
+    fun `onServingsPickerDismissed - lastSavedServings is not 0 - bottom sheet is closed`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(3))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerSaved)
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsButtonClicked)
+        val initialServingsBottomSheetState = getCurrentAdRecipeState().isServingsBottomSheetOpened
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerSaved)
+        val resultServingsBottomSheetState = getCurrentAdRecipeState().isServingsBottomSheetOpened
+
+        verifyMocks()
+        assertThat(initialServingsBottomSheetState).isTrue()
+        assertThat(resultServingsBottomSheetState).isFalse()
+    }
+
+    @Test
+    fun `selectedPrepTimeHours - initially empty`() {
+        setMocks()
         addRecipeViewModel = setViewModel()
         val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("2 hours"))
         val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
 
-
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialPrepTimeHoursState).isEqualTo("")
         assertThat(resultPrepTimeHoursState).isEqualTo("2 hours")
     }
 
     @Test
     fun `selectedPrepTimeHours - initially not empty - changed value`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
-
+        setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("2 hours"))
         val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
@@ -690,20 +745,14 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("3 hours"))
         val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
 
-
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialPrepTimeHoursState).isEqualTo("2 hours")
         assertThat(resultPrepTimeHoursState).isEqualTo("3 hours")
     }
 
     @Test
     fun `selectedPrepTimeHours - initially not empty - result empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
-
+        setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("2 hours"))
         val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
@@ -711,40 +760,28 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours(""))
         val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
 
-
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialPrepTimeHoursState).isEqualTo("2 hours")
         assertThat(resultPrepTimeHoursState).isEqualTo("")
     }
 
     @Test
     fun `selectedPrepTimeMinutes - initially empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
-
+        setMocks()
         addRecipeViewModel = setViewModel()
         val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("15 min"))
         val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
 
-
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialPrepTimeMinutesState).isEqualTo("")
         assertThat(resultPrepTimeMinutesState).isEqualTo("15 min")
     }
 
     @Test
     fun `selectedPrepTimeMinutes - initially not empty - changed value`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
-
+        setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("15 min"))
         val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
@@ -752,20 +789,14 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("35 min"))
         val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
 
-
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialPrepTimeMinutesState).isEqualTo("15 min")
         assertThat(resultPrepTimeMinutesState).isEqualTo("35 min")
     }
 
     @Test
     fun `selectedPrepTimeMinutes - initially not empty - result empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-        coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(categories))
-
+        setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("15 min"))
         val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
@@ -773,11 +804,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes(""))
         val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
 
-
-        coVerifySequence {
-            getIngredientsUseCase()
-            getCategoriesUseCase()
-        }
+        verifyMocks()
         assertThat(initialPrepTimeMinutesState).isEqualTo("15 min")
         assertThat(resultPrepTimeMinutesState).isEqualTo("")
     }
