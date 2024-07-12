@@ -722,6 +722,20 @@ class AddRecipeViewModelTest {
     }
 
     @Test
+    fun `onPrepTimeButtonClicked - state is set correctly`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialPrepTimeSheetState = getCurrentAdRecipeState().isPrepTimeBottomSheetOpened
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimeButtonClicked)
+        val resultPrepTimeSheetState = getCurrentAdRecipeState().isPrepTimeBottomSheetOpened
+
+        verifyMocks()
+        assertThat(initialPrepTimeSheetState).isFalse()
+        assertThat(resultPrepTimeSheetState).isTrue()
+    }
+
+    @Test
     fun `selectedPrepTimeHours - initially empty`() {
         setMocks()
         addRecipeViewModel = setViewModel()
@@ -807,5 +821,372 @@ class AddRecipeViewModelTest {
         verifyMocks()
         assertThat(initialPrepTimeMinutesState).isEqualTo("15 min")
         assertThat(resultPrepTimeMinutesState).isEqualTo("")
+    }
+
+    @Test
+    fun `onPrepTimePickerSaved - isPrepTimeBottomSheetOpened state is set correctly`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimeButtonClicked)
+        val initialPrepTimeBottomSheetState = getCurrentAdRecipeState().isPrepTimeBottomSheetOpened
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
+        val resultPrepTimeBottomSheetState = getCurrentAdRecipeState().isPrepTimeBottomSheetOpened
+
+        verifyMocks()
+        assertThat(initialPrepTimeBottomSheetState).isTrue()
+        assertThat(resultPrepTimeBottomSheetState).isFalse()
+    }
+
+    @Test
+    fun `onPrepTimePickerSaved - hours and minutes are not selected`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
+        val initialLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
+        val resultLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
+        val resultLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+
+        verifyMocks()
+        assertThat(initialLastSavedPrepTimeHoursState).isEqualTo("")
+        assertThat(initialLastSavedPrepTimeMinutesState).isEqualTo("")
+        assertThat(resultLastSavedPrepTimeHoursState).isEqualTo("")
+        assertThat(resultLastSavedPrepTimeMinutesState).isEqualTo("")
+    }
+
+    @Test
+    fun `onPrepTimePickerSaved - hours and minutes are selected`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
+        val initialLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("1 hour"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("20 min"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
+        val resultLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
+        val resultLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+
+        verifyMocks()
+        assertThat(initialLastSavedPrepTimeHoursState).isEqualTo("")
+        assertThat(initialLastSavedPrepTimeMinutesState).isEqualTo("")
+        assertThat(resultLastSavedPrepTimeHoursState).isEqualTo("1 hour")
+        assertThat(resultLastSavedPrepTimeMinutesState).isEqualTo("20 min")
+    }
+
+    @Test
+    fun `onPrepTimePickerSaved - hours are selected`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
+        val initialLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("1 hour"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
+        val resultLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
+        val resultLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+
+        verifyMocks()
+        assertThat(initialLastSavedPrepTimeHoursState).isEqualTo("")
+        assertThat(initialLastSavedPrepTimeMinutesState).isEqualTo("")
+        assertThat(resultLastSavedPrepTimeHoursState).isEqualTo("1 hour")
+        assertThat(resultLastSavedPrepTimeMinutesState).isEqualTo("")
+    }
+
+    @Test
+    fun `onPrepTimePickerSaved - minutes are selected`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
+        val initialLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("20 min"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
+        val resultLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
+        val resultLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+
+        verifyMocks()
+        assertThat(initialLastSavedPrepTimeHoursState).isEqualTo("")
+        assertThat(initialLastSavedPrepTimeMinutesState).isEqualTo("")
+        assertThat(resultLastSavedPrepTimeHoursState).isEqualTo("")
+        assertThat(resultLastSavedPrepTimeMinutesState).isEqualTo("20 min")
+    }
+
+    @Test
+    fun `onPrepTimePickerSaved - hours and minutes are not selected - lastSavedPrepTime string`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialLastSavedPrepTimeState = getCurrentAdRecipeState().lastSavedPrepTime
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
+        val resultLastSavedPrepTimeState = getCurrentAdRecipeState().lastSavedPrepTime
+
+        verifyMocks()
+        assertThat(initialLastSavedPrepTimeState).isEqualTo("")
+        assertThat(resultLastSavedPrepTimeState).isEqualTo("")
+    }
+
+    @Test
+    fun `onPrepTimePickerSaved - hours and minutes are selected - lastSavedPrepTime string`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialLastSavedPrepTimeState = getCurrentAdRecipeState().lastSavedPrepTime
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("1 hour"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("20 min"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
+        val resultLastSavedPrepTimeState = getCurrentAdRecipeState().lastSavedPrepTime
+
+        verifyMocks()
+        assertThat(initialLastSavedPrepTimeState).isEqualTo("")
+        assertThat(resultLastSavedPrepTimeState).isEqualTo("1 hour 20 min")
+    }
+
+    @Test
+    fun `onPrepTimePickerSaved - hours are selected - lastSavedPrepTime string`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialLastSavedPrepTimeState = getCurrentAdRecipeState().lastSavedPrepTime
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("1 hour"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
+        val resultLastSavedPrepTimeState = getCurrentAdRecipeState().lastSavedPrepTime
+
+        verifyMocks()
+        assertThat(initialLastSavedPrepTimeState).isEqualTo("")
+        assertThat(resultLastSavedPrepTimeState).isEqualTo("1 hour")
+    }
+
+    @Test
+    fun `onPrepTimePickerSaved - minutes are selected - lastSavedPrepTime string`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialLastSavedPrepTimeState = getCurrentAdRecipeState().lastSavedPrepTime
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("20 min"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
+        val resultLastSavedPrepTimeState = getCurrentAdRecipeState().lastSavedPrepTime
+
+        verifyMocks()
+        assertThat(initialLastSavedPrepTimeState).isEqualTo("")
+        assertThat(resultLastSavedPrepTimeState).isEqualTo("20 min")
+    }
+
+    @Test
+    fun `onPrepTimePickerDismissed - lastSavedPrepTime is empty - reset to default`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerDismissed)
+        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+
+        verifyMocks()
+        assertThat(initialPrepTimeHoursState).isEqualTo("")
+        assertThat(initialPrepTimeMinutesState).isEqualTo("")
+        assertThat(resultPrepTimeMinutesState).isEqualTo("")
+        assertThat(resultPrepTimeHoursState).isEqualTo("")
+    }
+
+    @Test
+    fun `onPrepTimePickerDismissed - lastSavedPrepTime is empty but hours and minutes are not empty - reset to default`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("1 hour"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("20 min"))
+        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerDismissed)
+        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+
+        verifyMocks()
+        assertThat(initialPrepTimeHoursState).isEqualTo("1 hour")
+        assertThat(initialPrepTimeMinutesState).isEqualTo("20 min")
+        assertThat(resultPrepTimeMinutesState).isEqualTo("")
+        assertThat(resultPrepTimeHoursState).isEqualTo("")
+    }
+
+    @Test
+    fun `onPrepTimePickerDismissed - lastSavedPrepTime is empty but hours are not empty - reset to default`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("1 hour"))
+        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerDismissed)
+        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+
+        verifyMocks()
+        assertThat(initialPrepTimeHoursState).isEqualTo("1 hour")
+        assertThat(initialPrepTimeMinutesState).isEqualTo("")
+        assertThat(resultPrepTimeMinutesState).isEqualTo("")
+        assertThat(resultPrepTimeHoursState).isEqualTo("")
+    }
+
+    @Test
+    fun `onPrepTimePickerDismissed - lastSavedPrepTime is empty but minutes are not empty - reset to default`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("20 min"))
+        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerDismissed)
+        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+
+        verifyMocks()
+        assertThat(initialPrepTimeHoursState).isEqualTo("")
+        assertThat(initialPrepTimeMinutesState).isEqualTo("20 min")
+        assertThat(resultPrepTimeMinutesState).isEqualTo("")
+        assertThat(resultPrepTimeHoursState).isEqualTo("")
+    }
+
+    @Test
+    fun `onPrepTimePickerDismissed - lastSavedPrepTime is empty - bottom sheet is closed`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimeButtonClicked)
+        val initialPrepTimeBottomSheetState = getCurrentAdRecipeState().isPrepTimeBottomSheetOpened
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
+        val resultPrepTimeBottomSheetState = getCurrentAdRecipeState().isPrepTimeBottomSheetOpened
+
+        verifyMocks()
+        assertThat(initialPrepTimeBottomSheetState).isTrue()
+        assertThat(resultPrepTimeBottomSheetState).isFalse()
+    }
+
+    @Test
+    fun `onPrepTimePickerDismissed - lastSavedPrepTime is not empty - reset to last saved`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("1 hour"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("20 min"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
+        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val initialLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
+        val initialLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerDismissed)
+        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+
+        verifyMocks()
+        assertThat(initialPrepTimeHoursState).isEqualTo("1 hour")
+        assertThat(initialPrepTimeMinutesState).isEqualTo("20 min")
+        assertThat(initialLastSavedPrepTimeHoursState).isEqualTo("1 hour")
+        assertThat(initialLastSavedPrepTimeMinutesState).isEqualTo("20 min")
+        assertThat(resultPrepTimeHoursState).isEqualTo("1 hour")
+        assertThat(resultPrepTimeMinutesState).isEqualTo("20 min")
+    }
+
+    @Test
+    fun `onPrepTimePickerDismissed - lastSavedPrepTime, hours and minutes are all not empty but not the same - reset to last saved`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("1 hour"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("20 min"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("3 hours"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("5 min"))
+        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val initialLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
+        val initialLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerDismissed)
+        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+
+        verifyMocks()
+        assertThat(initialPrepTimeHoursState).isEqualTo("3 hours")
+        assertThat(initialPrepTimeMinutesState).isEqualTo("5 min")
+        assertThat(initialLastSavedPrepTimeHoursState).isEqualTo("1 hour")
+        assertThat(initialLastSavedPrepTimeMinutesState).isEqualTo("20 min")
+        assertThat(resultPrepTimeHoursState).isEqualTo("1 hour")
+        assertThat(resultPrepTimeMinutesState).isEqualTo("20 min")
+    }
+
+    @Test
+    fun `onPrepTimePickerDismissed - lastSavedPrepTime, hours and minutes are all not empty but hours are the same - reset to last saved`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("1 hour"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("20 min"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("5 min"))
+        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val initialLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
+        val initialLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerDismissed)
+        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+
+        verifyMocks()
+        assertThat(initialPrepTimeHoursState).isEqualTo("1 hour")
+        assertThat(initialPrepTimeMinutesState).isEqualTo("5 min")
+        assertThat(initialLastSavedPrepTimeHoursState).isEqualTo("1 hour")
+        assertThat(initialLastSavedPrepTimeMinutesState).isEqualTo("20 min")
+        assertThat(resultPrepTimeHoursState).isEqualTo("1 hour")
+        assertThat(resultPrepTimeMinutesState).isEqualTo("20 min")
+    }
+
+    @Test
+    fun `onPrepTimePickerDismissed - lastSavedPrepTime, hours and minutes are all not empty but minutes are the same - reset to last saved`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("1 hour"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("20 min"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("3 hours"))
+        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val initialLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
+        val initialLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerDismissed)
+        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+
+        verifyMocks()
+        assertThat(initialPrepTimeHoursState).isEqualTo("3 hours")
+        assertThat(initialPrepTimeMinutesState).isEqualTo("20 min")
+        assertThat(initialLastSavedPrepTimeHoursState).isEqualTo("1 hour")
+        assertThat(initialLastSavedPrepTimeMinutesState).isEqualTo("20 min")
+        assertThat(resultPrepTimeHoursState).isEqualTo("1 hour")
+        assertThat(resultPrepTimeMinutesState).isEqualTo("20 min")
+    }
+
+    @Test
+    fun `onPrepTimePickerDismissed - lastSavedPrepTime is not empty - bottom sheet is closed`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("1 hour"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("20 min"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimeButtonClicked)
+        val initialPrepTimeBottomSheetState = getCurrentAdRecipeState().isPrepTimeBottomSheetOpened
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
+        val resultPrepTimeBottomSheetState = getCurrentAdRecipeState().isPrepTimeBottomSheetOpened
+
+        verifyMocks()
+        assertThat(initialPrepTimeBottomSheetState).isTrue()
+        assertThat(resultPrepTimeBottomSheetState).isFalse()
     }
 }

@@ -197,7 +197,7 @@ class AddRecipeViewModel @Inject constructor(
                     _addRecipeState.value = addRecipeState.value.copy(
                         isPrepTimeBottomSheetOpened = false,
                         selectedPrepTimeHours = _addRecipeState.value.lastSavedPrepTimeHours,
-                        selectedPrepTimeMinutes = _addRecipeState.value.lastSavedPrepMinutes
+                        selectedPrepTimeMinutes = _addRecipeState.value.lastSavedPrepTimeMinutes
                     )
                 }
                 else {
@@ -215,8 +215,8 @@ class AddRecipeViewModel @Inject constructor(
                 _addRecipeState.value = addRecipeState.value.copy(
                     isPrepTimeBottomSheetOpened = false,
                     lastSavedPrepTimeHours = hours,
-                    lastSavedPrepMinutes = minutes,
-                    lastSavedPrepTime = "$hours $minutes"
+                    lastSavedPrepTimeMinutes = minutes,
+                    lastSavedPrepTime = getPrepTime(hours, minutes)
                 )
             }
 
@@ -485,6 +485,13 @@ class AddRecipeViewModel @Inject constructor(
         }
 
         return categoryIds
+    }
+
+    private fun getPrepTime(hours: String, minutes: String): String {
+        return if (hours != "" && minutes != "") "$hours $minutes"
+        else if (hours != "") hours
+        else if (minutes != "") minutes
+        else ""
     }
 
     private fun getIngredients() {
