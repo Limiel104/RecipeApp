@@ -29,7 +29,7 @@ sealed class AddRecipeEvent {
     object OnPrepTimePickerDismissed: AddRecipeEvent()
     object OnPrepTimePickerSaved: AddRecipeEvent()
     object OnPrepTimeButtonClicked: AddRecipeEvent()
-    object OnExpandChange: AddRecipeEvent()
+    object OnDropDownMenuExpandChange: AddRecipeEvent()
     object OnAddImage: AddRecipeEvent()
     object OnTakePhoto: AddRecipeEvent()
     object OnSelectImage: AddRecipeEvent()

@@ -166,7 +166,7 @@ class AddRecipeScreenTest {
                     onPrepTimePickerDismiss = {},
                     onPrepTimePickerSave = {},
                     onPrepTimeButtonClicked = {},
-                    onExpandedChange = {},
+                    onDropDownMenuExpandedChange = {},
                     onIngredientSuggestionClick = {},
                     onAddPhoto = {},
                     onTakePhoto = {},

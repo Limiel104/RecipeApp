@@ -226,7 +226,7 @@ class AddRecipeViewModel @Inject constructor(
                 )
             }
 
-            AddRecipeEvent.OnExpandChange -> {
+            AddRecipeEvent.OnDropDownMenuExpandChange -> {
                 _addRecipeState.value = addRecipeState.value.copy(
                     isDropDownMenuExpanded = !_addRecipeState.value.isDropDownMenuExpanded
                 )

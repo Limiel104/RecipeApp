@@ -137,7 +137,7 @@ fun AddRecipeScreen(
         onPrepTimePickerDismiss = { viewModel.onEvent(AddRecipeEvent.OnPrepTimePickerDismissed) },
         onPrepTimePickerSave = { viewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved) },
         onPrepTimeButtonClicked = { viewModel.onEvent(AddRecipeEvent.OnPrepTimeButtonClicked) },
-        onExpandedChange = { viewModel.onEvent(AddRecipeEvent.OnExpandChange) },
+        onDropDownMenuExpandedChange = { viewModel.onEvent(AddRecipeEvent.OnDropDownMenuExpandChange) },
         onIngredientSuggestionClick = {viewModel.onEvent(AddRecipeEvent.SelectedIngredient(it))},
         onAddPhoto = { viewModel.onEvent(AddRecipeEvent.OnAddImage) },
         onTakePhoto = {  viewModel.onEvent(AddRecipeEvent.OnTakePhoto) },
