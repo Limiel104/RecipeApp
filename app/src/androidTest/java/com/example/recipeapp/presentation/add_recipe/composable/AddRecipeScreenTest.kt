@@ -666,7 +666,7 @@ class AddRecipeScreenTest {
             AddRecipeState(
                 isDropDownMenuExpanded = true,
                 allIngredients = allIngredients,
-                ingredients = ingredients,
+                ingredientsToSelect = ingredients,
             )
         )
 

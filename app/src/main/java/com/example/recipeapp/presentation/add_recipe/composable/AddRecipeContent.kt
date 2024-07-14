@@ -309,7 +309,7 @@ fun AddRecipeContent(
             AutoComplete(
                 expanded = uiState.isDropDownMenuExpanded,
                 ingredient = uiState.ingredient,
-                ingredients = uiState.ingredients,
+                ingredients = uiState.ingredientsToSelect,
                 onExpandedChange = { onDropDownMenuExpandedChange() },
                 onValueChange = { onIngredientChange(it) },
                 onClick = { onIngredientSuggestionClick(it) }
@@ -436,7 +436,7 @@ private fun getUiState(): AddRecipeState {
         description = "Description of the new recipe.",
         descriptionError = null,
         ingredient = "ingredient",
-        ingredients = emptyList(),
+        ingredientsToSelect = emptyList(),
         recipeIngredients = getRecipeIngredients(),
         isDropDownMenuExpanded = false,
         isImageBottomSheetOpened = false,

@@ -411,7 +411,7 @@ class AddRecipeViewModel @Inject constructor(
         recipeIngredients[newIngredient] = ""
 
         _addRecipeState.value = addRecipeState.value.copy(
-            ingredients = getCurrentIngredients(recipeIngredients),
+            ingredientsToSelect = getCurrentIngredients(recipeIngredients),
             recipeIngredients = recipeIngredients
         )
     }
@@ -456,7 +456,7 @@ class AddRecipeViewModel @Inject constructor(
 
         _addRecipeState.value = addRecipeState.value.copy(
             recipeIngredients = recipeIngredients,
-            ingredients = getCurrentIngredients(recipeIngredients)
+            ingredientsToSelect = getCurrentIngredients(recipeIngredients)
         )
     }
 
@@ -511,7 +511,7 @@ class AddRecipeViewModel @Inject constructor(
                         Log.i("TAG",response.data.toString())
                         response.data?.let {
                             _addRecipeState.value = addRecipeState.value.copy(
-                                ingredients = response.data,
+                                ingredientsToSelect = response.data,
                                 allIngredients = response.data
                             )
                         }

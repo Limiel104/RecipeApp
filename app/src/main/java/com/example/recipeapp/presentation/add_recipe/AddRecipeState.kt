@@ -27,7 +27,7 @@ data class AddRecipeState(
     val lastSavedPrepTime: String = "",
     val lastSavedPrepTimeHours: String = "",
     val lastSavedPrepTimeMinutes: String = "",
-    val ingredients: List<Ingredient> = emptyList(),
+    val ingredientsToSelect: List<Ingredient> = emptyList(),
     val isDropDownMenuExpanded: Boolean = false,
     val isLoading: Boolean = false,
     val recipeIngredients: Map<Ingredient, Quantity> = emptyMap(),

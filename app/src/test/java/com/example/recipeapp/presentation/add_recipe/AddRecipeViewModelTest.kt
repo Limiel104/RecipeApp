@@ -2,6 +2,7 @@ package com.example.recipeapp.presentation.add_recipe
 
 import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.domain.model.Ingredient
+import com.example.recipeapp.domain.model.Quantity
 import com.example.recipeapp.domain.model.RecipeWithIngredients
 import com.example.recipeapp.domain.model.Resource
 import com.example.recipeapp.domain.use_case.AddImageUseCase
@@ -439,7 +440,7 @@ class AddRecipeViewModelTest {
         coExcludeRecords { getCategoriesUseCase() }
 
         addRecipeViewModel = setViewModel()
-        val result = getCurrentAdRecipeState().ingredients
+        val result = getCurrentAdRecipeState().ingredientsToSelect
         val isLoading = getCurrentAdRecipeState().isLoading
 
         coVerify(exactly = 1) { getIngredientsUseCase() }
@@ -454,7 +455,7 @@ class AddRecipeViewModelTest {
         coExcludeRecords { getCategoriesUseCase() }
 
         addRecipeViewModel = setViewModel()
-        val result = getCurrentAdRecipeState().ingredients
+        val result = getCurrentAdRecipeState().ingredientsToSelect
         val isLoading = getCurrentAdRecipeState().isLoading
 
         coVerify(exactly = 1) { getIngredientsUseCase() }
@@ -469,7 +470,7 @@ class AddRecipeViewModelTest {
         coExcludeRecords { getCategoriesUseCase() }
 
         addRecipeViewModel = setViewModel()
-        val result = getCurrentAdRecipeState().ingredients
+        val result = getCurrentAdRecipeState().ingredientsToSelect
         val isLoading = getCurrentAdRecipeState().isLoading
 
         coVerify(exactly = 1) { getIngredientsUseCase() }
@@ -1241,10 +1242,10 @@ class AddRecipeViewModelTest {
     fun `selectedIngredient - no recipe ingredients selected - ingredients to select`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialIngredientsState = getCurrentAdRecipeState().ingredients
+        val initialIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
-        val resultIngredientsState = getCurrentAdRecipeState().ingredients
+        val resultIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
 
         verifyMocks()
         assertThat(initialIngredientsState).isEqualTo(ingredients)
@@ -1286,15 +1287,15 @@ class AddRecipeViewModelTest {
     }
 
     @Test
-    fun `selectedIngredient - 2 out of 5 recipe ingredients selected initially- ingredients to select`() {
+    fun `selectedIngredient - 2 out of 5 recipe ingredients selected initially - ingredients to select`() {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[1]))
-        val initialIngredientsState = getCurrentAdRecipeState().ingredients
+        val initialIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
-        val resultIngredientsState = getCurrentAdRecipeState().ingredients
+        val resultIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
 
         verifyMocks()
         assertThat(initialIngredientsState).isEqualTo(
@@ -1313,7 +1314,7 @@ class AddRecipeViewModelTest {
     }
 
     @Test
-    fun `selectedIngredient - 4 out of 5 recipe ingredients selected initially- recipe ingredients`() {
+    fun `selectedIngredient - 4 out of 5 recipe ingredients selected initially - recipe ingredients`() {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[0]))
@@ -1346,17 +1347,17 @@ class AddRecipeViewModelTest {
     }
 
     @Test
-    fun `selectedIngredient - 4 out of 5 recipe ingredients selected initially- ingredients to select`() {
+    fun `selectedIngredient - 4 out of 5 recipe ingredients selected initially - ingredients to select`() {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[3]))
-        val initialIngredientsState = getCurrentAdRecipeState().ingredients
+        val initialIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
-        val resultIngredientsState = getCurrentAdRecipeState().ingredients
+        val resultIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
 
         verifyMocks()
         assertThat(initialIngredientsState).isEqualTo(
@@ -1365,5 +1366,194 @@ class AddRecipeViewModelTest {
             )
         )
         assertThat(resultIngredientsState).isEqualTo(emptyList<Ingredient>())
+    }
+
+    @Test
+    fun `onSwipeToDelete - 1 recipe ingredient selected initially - recipe ingredients`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[4]))
+        val initialRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnSwipeToDelete(ingredients[4]))
+        val resultRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+
+        verifyMocks()
+        assertThat(initialRecipeIngredientsState).isEqualTo(
+            mapOf(
+                Pair(ingredients[4],"")
+            )
+        )
+        assertThat(resultRecipeIngredientsState).isEqualTo(emptyMap<Ingredient, Quantity>())
+    }
+
+    @Test
+    fun `onSwipeToDelete - 1 recipe ingredient selected initially - ingredients to select`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[4]))
+        val initialIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnSwipeToDelete(ingredients[4]))
+        val resultIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
+
+        verifyMocks()
+        assertThat(initialIngredientsState).isEqualTo(
+            listOf(
+                ingredients[0],
+                ingredients[1],
+                ingredients[2],
+                ingredients[3]
+            )
+        )
+        assertThat(resultIngredientsState).isEqualTo(
+            listOf(
+                ingredients[0],
+                ingredients[1],
+                ingredients[2],
+                ingredients[3],
+                ingredients[4]
+            )
+        )
+    }
+
+    @Test
+    fun `onSwipeToDelete - 3 recipe ingredient selected initially - recipe ingredients`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[3]))
+        val initialRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnSwipeToDelete(ingredients[4]))
+        val resultRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+
+        verifyMocks()
+        assertThat(initialRecipeIngredientsState).isEqualTo(
+            mapOf(
+                Pair(ingredients[0],""),
+                Pair(ingredients[4],""),
+                Pair(ingredients[3],"")
+            )
+        )
+        assertThat(resultRecipeIngredientsState).isEqualTo(
+            mapOf(
+                Pair(ingredients[0],""),
+                Pair(ingredients[3],"")
+            )
+        )
+    }
+
+    @Test
+    fun `onSwipeToDelete - 3 recipe ingredient selected initially - ingredients to select`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[3]))
+        val initialIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnSwipeToDelete(ingredients[4]))
+        val resultIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
+
+        verifyMocks()
+        assertThat(initialIngredientsState).isEqualTo(
+            listOf(
+                ingredients[1],
+                ingredients[2],
+            )
+        )
+        assertThat(resultIngredientsState).isEqualTo(
+            listOf(
+                ingredients[1],
+                ingredients[2],
+                ingredients[4]
+            )
+        )
+    }
+
+    @Test
+    fun `onSwipeToDelete - all recipe ingredient selected initially - recipe ingredients`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[3]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[1]))
+        val initialRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnSwipeToDelete(ingredients[4]))
+        val resultRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+
+        verifyMocks()
+        assertThat(initialRecipeIngredientsState).isEqualTo(
+            mapOf(
+                Pair(ingredients[0],""),
+                Pair(ingredients[4],""),
+                Pair(ingredients[3],""),
+                Pair(ingredients[2],""),
+                Pair(ingredients[1],"")
+            )
+        )
+        assertThat(resultRecipeIngredientsState).isEqualTo(
+            mapOf(
+                Pair(ingredients[0],""),
+                Pair(ingredients[3],""),
+                Pair(ingredients[2],""),
+                Pair(ingredients[1],"")
+            )
+        )
+    }
+
+    @Test
+    fun `onSwipeToDelete - all recipe ingredient selected initially - ingredients to select`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[3]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[1]))
+        val initialIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnSwipeToDelete(ingredients[4]))
+        val resultIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
+
+        verifyMocks()
+        assertThat(initialIngredientsState).isEqualTo(emptyList<Ingredient>())
+        assertThat(resultIngredientsState).isEqualTo(
+            listOf(ingredients[4])
+        )
+    }
+
+    @Test
+    fun `onReorder - initially false`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialReorderModeState = getCurrentAdRecipeState().isReorderModeActivated
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnReorder)
+        val resultReorderModeState = getCurrentAdRecipeState().isReorderModeActivated
+
+        verifyMocks()
+        assertThat(initialReorderModeState).isFalse()
+        assertThat(resultReorderModeState).isTrue()
+    }
+
+    @Test
+    fun `onReorder - initially true`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnReorder)
+        val initialReorderModeState = getCurrentAdRecipeState().isReorderModeActivated
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnReorder)
+        val resultReorderModeState = getCurrentAdRecipeState().isReorderModeActivated
+
+        verifyMocks()
+        assertThat(initialReorderModeState).isTrue()
+        assertThat(resultReorderModeState).isFalse()
     }
 }
