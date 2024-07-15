@@ -1818,4 +1818,612 @@ class AddRecipeViewModelTest {
             )
         )
     }
+
+    @Test
+    fun `onIngredientClicked - initially not selected - selected ingredient`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialSelectedIngredientIdState = getCurrentAdRecipeState().selectedIngredientId
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        val resultSelectedIngredientIdState = getCurrentAdRecipeState().selectedIngredientId
+
+        verifyMocks()
+        assertThat(initialSelectedIngredientIdState).isEqualTo("")
+        assertThat(resultSelectedIngredientIdState).isEqualTo(ingredients[2].ingredientId)
+    }
+
+    @Test
+    fun `onIngredientClicked - initially selected - selected ingredient`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[1].ingredientId))
+        val initialSelectedIngredientIdState = getCurrentAdRecipeState().selectedIngredientId
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        val resultSelectedIngredientIdState = getCurrentAdRecipeState().selectedIngredientId
+
+        verifyMocks()
+        assertThat(initialSelectedIngredientIdState).isEqualTo(ingredients[1].ingredientId)
+        assertThat(resultSelectedIngredientIdState).isEqualTo(ingredients[2].ingredientId)
+    }
+
+    @Test
+    fun `onIngredientClicked - is quantity bottom sheet opened after click`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialQuantityBottomSheetState = getCurrentAdRecipeState().isQuantityBottomSheetOpened
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        val resultQuantityBottomSheetState = getCurrentAdRecipeState().isQuantityBottomSheetOpened
+
+        verifyMocks()
+        assertThat(initialQuantityBottomSheetState).isFalse()
+        assertThat(resultQuantityBottomSheetState).isTrue()
+    }
+
+    @Test
+    fun `selectedWholeQuantity - initially empty`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialWholeQuantityState = getCurrentAdRecipeState().selectedWholeQuantity
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("350"))
+        val resultWholeQuantityState = getCurrentAdRecipeState().selectedWholeQuantity
+
+        verifyMocks()
+        assertThat(initialWholeQuantityState).isEqualTo("")
+        assertThat(resultWholeQuantityState).isEqualTo("350")
+    }
+
+    @Test
+    fun `selectedWholeQuantity - initially not empty - changed value`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("350"))
+        val initialWholeQuantityState = getCurrentAdRecipeState().selectedWholeQuantity
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("45"))
+        val resultWholeQuantityState = getCurrentAdRecipeState().selectedWholeQuantity
+
+        verifyMocks()
+        assertThat(initialWholeQuantityState).isEqualTo("350")
+        assertThat(resultWholeQuantityState).isEqualTo("45")
+    }
+
+    @Test
+    fun `selectedWholeQuantity - initially not empty - result empty`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("350"))
+        val initialWholeQuantityState = getCurrentAdRecipeState().selectedWholeQuantity
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("0"))
+        val resultWholeQuantityState = getCurrentAdRecipeState().selectedWholeQuantity
+
+        verifyMocks()
+        assertThat(initialWholeQuantityState).isEqualTo("350")
+        assertThat(resultWholeQuantityState).isEqualTo("0")
+    }
+
+    @Test
+    fun `selectedDecimalQuantity - initially empty`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialDecimalQuantityState = getCurrentAdRecipeState().selectedDecimalQuantity
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".7"))
+        val resultDecimalQuantityState = getCurrentAdRecipeState().selectedDecimalQuantity
+
+        verifyMocks()
+        assertThat(initialDecimalQuantityState).isEqualTo("")
+        assertThat(resultDecimalQuantityState).isEqualTo(".7")
+    }
+
+    @Test
+    fun `selectedDecimalQuantity - initially not empty - changed value`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".7"))
+        val initialDecimalQuantityState = getCurrentAdRecipeState().selectedDecimalQuantity
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".3"))
+        val resultDecimalQuantityState = getCurrentAdRecipeState().selectedDecimalQuantity
+
+        verifyMocks()
+        assertThat(initialDecimalQuantityState).isEqualTo(".7")
+        assertThat(resultDecimalQuantityState).isEqualTo(".3")
+    }
+
+    @Test
+    fun `selectedDecimalQuantity - initially not empty - result empty`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".7"))
+        val initialDecimalQuantityState = getCurrentAdRecipeState().selectedDecimalQuantity
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".0"))
+        val resultDecimalQuantityState = getCurrentAdRecipeState().selectedDecimalQuantity
+
+        verifyMocks()
+        assertThat(initialDecimalQuantityState).isEqualTo(".7")
+        assertThat(resultDecimalQuantityState).isEqualTo(".0")
+    }
+
+    @Test
+    fun `selectedTypeQuantity - initially empty`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialTypeQuantityState = getCurrentAdRecipeState().selectedTypeQuantity
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("bowl"))
+        val resultTypeQuantityState = getCurrentAdRecipeState().selectedTypeQuantity
+
+        verifyMocks()
+        assertThat(initialTypeQuantityState).isEqualTo("")
+        assertThat(resultTypeQuantityState).isEqualTo("bowl")
+    }
+
+    @Test
+    fun `selectedTypeQuantity - initially not empty - changed value`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("bowl"))
+        val initialTypeQuantityState = getCurrentAdRecipeState().selectedTypeQuantity
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("handful"))
+        val resultTypeQuantityState = getCurrentAdRecipeState().selectedTypeQuantity
+
+        verifyMocks()
+        assertThat(initialTypeQuantityState).isEqualTo("bowl")
+        assertThat(resultTypeQuantityState).isEqualTo("handful")
+    }
+
+    @Test
+    fun `selectedTypeQuantity - initially not empty - result empty`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("bowl"))
+        val initialTypeQuantityState = getCurrentAdRecipeState().selectedTypeQuantity
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("-"))
+        val resultTypeQuantityState = getCurrentAdRecipeState().selectedTypeQuantity
+
+        verifyMocks()
+        assertThat(initialTypeQuantityState).isEqualTo("bowl")
+        assertThat(resultTypeQuantityState).isEqualTo("-")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - isQuantityBottomSheetOpened state is set correctly`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        val initialQuantityBottomSheetState = getCurrentAdRecipeState().isQuantityBottomSheetOpened
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val resultQuantityBottomSheetState = getCurrentAdRecipeState().isQuantityBottomSheetOpened
+
+        verifyMocks()
+        assertThat(initialQuantityBottomSheetState).isTrue()
+        assertThat(resultQuantityBottomSheetState).isFalse()
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - quantity is not selected`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("")
+        assertThat(resultIngredientQuantityState).isEqualTo("")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - quantity is selected - initially empty`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("30"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
+        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("")
+        assertThat(resultIngredientQuantityState).isEqualTo("30.5 g")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - whole and decimal quantity is selected - initially empty`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("30"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
+        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("")
+        assertThat(resultIngredientQuantityState).isEqualTo("30.5")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - whole and type quantity is selected - initially empty`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("30"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
+        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("")
+        assertThat(resultIngredientQuantityState).isEqualTo("30 g")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - decimal and type quantity is selected - initially empty`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
+        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("")
+        assertThat(resultIngredientQuantityState).isEqualTo(".5 g")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - only whole quantity is selected - initially empty`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("30"))
+        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("")
+        assertThat(resultIngredientQuantityState).isEqualTo("30")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - only decimal quantity is selected - initially empty`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
+        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("")
+        assertThat(resultIngredientQuantityState).isEqualTo(".5")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - only type quantity is selected - initially empty`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
+        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("")
+        assertThat(resultIngredientQuantityState).isEqualTo("g")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - quantity is selected - initially not empty`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("30"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("12"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".0"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("kg"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
+        assertThat(resultIngredientQuantityState).isEqualTo("12.0 kg")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - whole and decimal quantity is selected - initially not empty`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("30"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("12"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".0"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
+        assertThat(resultIngredientQuantityState).isEqualTo("12.0")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - whole and type quantity is selected - initially not empty`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("30"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("12"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("kg"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
+        assertThat(resultIngredientQuantityState).isEqualTo("12 kg")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - decimal and type quantity is selected - initially not empty`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("30"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".0"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("kg"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
+        assertThat(resultIngredientQuantityState).isEqualTo(".0 kg")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - only whole quantity is selected - initially not empty`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("30"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("12"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
+        assertThat(resultIngredientQuantityState).isEqualTo("12")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - only decimal quantity is selected - initially not empty`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("30"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".0"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
+        assertThat(resultIngredientQuantityState).isEqualTo(".0")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - only type quantity is selected - initially not empty`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("30"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("kg"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
+        assertThat(resultIngredientQuantityState).isEqualTo("kg")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - quantity initially not empty - result empty`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("30"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity(""))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(""))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity(""))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
+        assertThat(resultIngredientQuantityState).isEqualTo("")
+    }
+
+    @Test
+    fun `onQuantityPickerDismissed - ingredient quantity not set - still default`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerDismissed)
+        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("")
+        assertThat(resultIngredientQuantityState).isEqualTo("")
+    }
+
+    @Test
+    fun `onQuantityPickerDismissed - ingredient quantity set - value not changed`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("30"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerDismissed)
+        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
+        assertThat(resultIngredientQuantityState).isEqualTo("30.5 g")
+    }
+
+    @Test
+    fun `onQuantityPickerDismissed - ingredient quantity not set and then changed - still default`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("15"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".0"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("kg"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerDismissed)
+        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("")
+        assertThat(resultIngredientQuantityState).isEqualTo("")
+    }
+
+    @Test
+    fun `onQuantityPickerDismissed - ingredient quantity set and then changed - value not changed`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("30"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("15"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".0"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("kg"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerDismissed)
+        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
+        assertThat(resultIngredientQuantityState).isEqualTo("30.5 g")
+    }
+
+    @Test
+    fun `onQuantityPickerDismissed - quantity bottom sheet is closed`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        val initialQuantityBottomSheetState = getCurrentAdRecipeState().isQuantityBottomSheetOpened
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerDismissed)
+        val resultIngredientQuantityState = getCurrentAdRecipeState().isQuantityBottomSheetOpened
+
+        verifyMocks()
+        assertThat(initialQuantityBottomSheetState).isTrue()
+        assertThat(resultIngredientQuantityState).isFalse()
+    }
 }

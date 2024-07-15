@@ -280,9 +280,11 @@ class AddRecipeViewModel @Inject constructor(
                     ingredient.ingredientId == _addRecipeState.value.selectedIngredientId
                 }
 
-                val quantity = _addRecipeState.value.selectedWholeQuantity +
-                        _addRecipeState.value.selectedDecimalQuantity +
-                        " " + _addRecipeState.value.selectedTypeQuantity
+                val quantity = getIngredientQuantity(
+                    _addRecipeState.value.selectedWholeQuantity,
+                    _addRecipeState.value.selectedDecimalQuantity,
+                    _addRecipeState.value.selectedTypeQuantity
+                )
 
                 val recipeIngredients = getTempMap(_addRecipeState.value.recipeIngredients)
 
@@ -491,6 +493,17 @@ class AddRecipeViewModel @Inject constructor(
         return if (hours != "" && minutes != "") "$hours $minutes"
         else if (hours != "") hours
         else if (minutes != "") minutes
+        else ""
+    }
+
+    private fun getIngredientQuantity(whole: String, decimal: String, type: String): String {
+        return if (whole != "" && decimal != "" && type != "") "$whole$decimal $type"
+        else if(whole != "" && decimal != "") "$whole$decimal"
+        else if(whole != "" && type != "") "$whole $type"
+        else if(decimal != "" && type != "") "$decimal $type"
+        else if(whole != "" ) whole
+        else if(decimal != "") decimal
+        else if(type != "") type
         else ""
     }
 
