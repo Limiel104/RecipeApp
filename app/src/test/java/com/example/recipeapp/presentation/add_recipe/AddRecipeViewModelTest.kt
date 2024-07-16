@@ -3078,19 +3078,6 @@ class AddRecipeViewModelTest {
         )
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     @Test
     fun `onDialogSave - initially empty - selected and unselected one - categories`() {
         setMocks()
@@ -3534,5 +3521,683 @@ class AddRecipeViewModelTest {
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { true })
         assertThat(resultLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
+    }
+
+    @Test
+    fun `onDialogSave - dialog is closed`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCategoriesButtonClicked)
+        val initialCategoriesDialogActivatedState = getCurrentAdRecipeState().isCategoriesDialogActivated
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
+        val resultCategoriesDialogActivatedState = getCurrentAdRecipeState().isCategoriesDialogActivated
+
+        verifyMocks()
+        assertThat(initialCategoriesDialogActivatedState).isTrue()
+        assertThat(resultCategoriesDialogActivatedState).isFalse()
+    }
+
+    @Test
+    fun `onDialogDismiss - initially empty - selected one - categories`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialCategoriesState = getCurrentAdRecipeState().categories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultCategoriesState = getCurrentAdRecipeState().categories
+
+        verifyMocks()
+        assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
+        assertThat(resultCategoriesState).isEqualTo(categories.associateWith { false })
+    }
+
+    @Test
+    fun `onDialogDismiss - initially empty - selected one - lastSavedCategories`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        verifyMocks()
+        assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
+        assertThat(resultLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
+    }
+
+    @Test
+    fun `onDialogDismiss - initially empty - selected three - categories`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialCategoriesState = getCurrentAdRecipeState().categories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultCategoriesState = getCurrentAdRecipeState().categories
+
+        verifyMocks()
+        assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
+        assertThat(resultCategoriesState).isEqualTo(categories.associateWith { false })
+    }
+
+    @Test
+    fun `onDialogDismiss - initially empty - selected three - lastSavedCategories`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        verifyMocks()
+        assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
+        assertThat(resultLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
+    }
+
+    @Test
+    fun `onDialogDismiss - initially empty - selected all - categories`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialCategoriesState = getCurrentAdRecipeState().categories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultCategoriesState = getCurrentAdRecipeState().categories
+
+        verifyMocks()
+        assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
+        assertThat(resultCategoriesState).isEqualTo(categories.associateWith { false })
+    }
+
+    @Test
+    fun `onDialogDismiss - initially empty - selected all - lastSavedCategories`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        verifyMocks()
+        assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
+        assertThat(resultLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
+    }
+
+    @Test
+    fun `onDialogDismiss - initially not empty - selected one more - categories`() {
+        val recipeCategories = mapOf(
+            Pair(categories[0],true),
+            Pair(categories[1],false),
+            Pair(categories[2],true),
+            Pair(categories[3],false),
+            Pair(categories[4],false),
+            Pair(categories[5],true)
+        )
+
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
+        val initialCategoriesState = getCurrentAdRecipeState().categories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultCategoriesState = getCurrentAdRecipeState().categories
+
+        verifyMocks()
+        assertThat(initialCategoriesState).isEqualTo(recipeCategories)
+        assertThat(resultCategoriesState).isEqualTo(recipeCategories)
+    }
+
+    @Test
+    fun `onDialogDismiss - initially not empty - selected one more - lastSavedCategories`() {
+        val recipeCategories = mapOf(
+            Pair(categories[0],true),
+            Pair(categories[1],false),
+            Pair(categories[2],true),
+            Pair(categories[3],false),
+            Pair(categories[4],false),
+            Pair(categories[5],true)
+        )
+
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
+        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        verifyMocks()
+        assertThat(initialLastSavedCategoriesState).isEqualTo(recipeCategories)
+        assertThat(resultLastSavedCategoriesState).isEqualTo(recipeCategories)
+    }
+
+    @Test
+    fun `onDialogDismiss - initially not empty - selected two more - categories`() {
+        val recipeCategories = mapOf(
+            Pair(categories[0],true),
+            Pair(categories[1],false),
+            Pair(categories[2],true),
+            Pair(categories[3],false),
+            Pair(categories[4],false),
+            Pair(categories[5],true)
+        )
+
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
+        val initialCategoriesState = getCurrentAdRecipeState().categories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultCategoriesState = getCurrentAdRecipeState().categories
+
+        verifyMocks()
+        assertThat(initialCategoriesState).isEqualTo(recipeCategories)
+        assertThat(resultCategoriesState).isEqualTo(recipeCategories)
+    }
+
+    @Test
+    fun `onDialogDismiss - initially not empty - selected two more - lastSavedCategories`() {
+        val recipeCategories = mapOf(
+            Pair(categories[0],true),
+            Pair(categories[1],false),
+            Pair(categories[2],true),
+            Pair(categories[3],false),
+            Pair(categories[4],false),
+            Pair(categories[5],true)
+        )
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
+        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        verifyMocks()
+        assertThat(initialLastSavedCategoriesState).isEqualTo(recipeCategories)
+        assertThat(resultLastSavedCategoriesState).isEqualTo(recipeCategories)
+    }
+
+    @Test
+    fun `onDialogDismiss - initially not empty - selected all left - categories`() {
+        val recipeCategories = mapOf(
+            Pair(categories[0],true),
+            Pair(categories[1],false),
+            Pair(categories[2],true),
+            Pair(categories[3],false),
+            Pair(categories[4],false),
+            Pair(categories[5],true)
+        )
+
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
+        val initialCategoriesState = getCurrentAdRecipeState().categories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultCategoriesState = getCurrentAdRecipeState().categories
+
+        verifyMocks()
+        assertThat(initialCategoriesState).isEqualTo(recipeCategories)
+        assertThat(resultCategoriesState).isEqualTo(recipeCategories)
+    }
+
+    @Test
+    fun `onDialogDismiss - initially not empty - selected all left - lastSavedCategories`() {
+        val recipeCategories = mapOf(
+            Pair(categories[0],true),
+            Pair(categories[1],false),
+            Pair(categories[2],true),
+            Pair(categories[3],false),
+            Pair(categories[4],false),
+            Pair(categories[5],true)
+        )
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
+        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        verifyMocks()
+        assertThat(initialLastSavedCategoriesState).isEqualTo(recipeCategories)
+        assertThat(resultLastSavedCategoriesState).isEqualTo(recipeCategories)
+    }
+
+    @Test
+    fun `onDialogDismiss - initially empty - selected and unselected one - categories`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialCategoriesState = getCurrentAdRecipeState().categories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultCategoriesState = getCurrentAdRecipeState().categories
+
+        verifyMocks()
+        assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
+        assertThat(resultCategoriesState).isEqualTo(categories.associateWith { false })
+    }
+
+    @Test
+    fun `onDialogDismiss - initially empty - selected and unselected one - lastSavedCategories`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        verifyMocks()
+        assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
+        assertThat(resultLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
+    }
+
+    @Test
+    fun `onDialogDismiss - initially empty - selected and unselected three - categories`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialCategoriesState = getCurrentAdRecipeState().categories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultCategoriesState = getCurrentAdRecipeState().categories
+
+        verifyMocks()
+        assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
+        assertThat(resultCategoriesState).isEqualTo(categories.associateWith { false })
+    }
+
+    @Test
+    fun `onDialogDismiss - initially empty - selected and unselected three - lastSavedCategories`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        verifyMocks()
+        assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
+        assertThat(resultLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
+    }
+
+    @Test
+    fun `onDialogDismiss - initially empty - selected two unselect one - categories`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialCategoriesState = getCurrentAdRecipeState().categories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultCategoriesState = getCurrentAdRecipeState().categories
+
+        verifyMocks()
+        assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
+        assertThat(resultCategoriesState).isEqualTo(categories.associateWith { false })
+    }
+
+    @Test
+    fun `onDialogDismiss - initially empty - selected two unselect one - lastSavedCategories`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        verifyMocks()
+        assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
+        assertThat(resultLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
+    }
+
+    @Test
+    fun `onDialogDismiss - initially empty - selected three unselect two - categories`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialCategoriesState = getCurrentAdRecipeState().categories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultCategoriesState = getCurrentAdRecipeState().categories
+
+        verifyMocks()
+        assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
+        assertThat(resultCategoriesState).isEqualTo(categories.associateWith { false })
+    }
+
+    @Test
+    fun `onDialogDismiss - initially empty - selected three unselected two - lastSavedCategories`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        verifyMocks()
+        assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
+        assertThat(resultLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
+    }
+
+    @Test
+    fun `onDialogDismiss - initially not empty - unselected one - categories`() {
+        val recipeCategories = mapOf(
+            Pair(categories[0],true),
+            Pair(categories[1],false),
+            Pair(categories[2],true),
+            Pair(categories[3],false),
+            Pair(categories[4],false),
+            Pair(categories[5],true)
+        )
+
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
+        val initialCategoriesState = getCurrentAdRecipeState().categories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultCategoriesState = getCurrentAdRecipeState().categories
+
+        verifyMocks()
+        assertThat(initialCategoriesState).isEqualTo(recipeCategories)
+        assertThat(resultCategoriesState).isEqualTo(recipeCategories)
+    }
+
+    @Test
+    fun `onDialogDismiss - initially not empty - unselected one - lastSavedCategories`() {
+        val recipeCategories = mapOf(
+            Pair(categories[0],true),
+            Pair(categories[1],false),
+            Pair(categories[2],true),
+            Pair(categories[3],false),
+            Pair(categories[4],false),
+            Pair(categories[5],true)
+        )
+
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
+        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        verifyMocks()
+        assertThat(initialLastSavedCategoriesState).isEqualTo(recipeCategories)
+        assertThat(resultLastSavedCategoriesState).isEqualTo(recipeCategories)
+    }
+
+    @Test
+    fun `onDialogDismiss - initially not empty - unselected two - categories`() {
+        val recipeCategories = mapOf(
+            Pair(categories[0],true),
+            Pair(categories[1],false),
+            Pair(categories[2],true),
+            Pair(categories[3],false),
+            Pair(categories[4],false),
+            Pair(categories[5],true)
+        )
+
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
+        val initialCategoriesState = getCurrentAdRecipeState().categories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultCategoriesState = getCurrentAdRecipeState().categories
+
+        verifyMocks()
+        assertThat(initialCategoriesState).isEqualTo(recipeCategories)
+        assertThat(resultCategoriesState).isEqualTo(recipeCategories)
+    }
+
+    @Test
+    fun `onDialogDismiss - initially not empty - unselected two - lastSavedCategories`() {
+        val recipeCategories = mapOf(
+            Pair(categories[0],true),
+            Pair(categories[1],false),
+            Pair(categories[2],true),
+            Pair(categories[3],false),
+            Pair(categories[4],false),
+            Pair(categories[5],true)
+        )
+
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
+        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        verifyMocks()
+        assertThat(initialLastSavedCategoriesState).isEqualTo(recipeCategories)
+        assertThat(resultLastSavedCategoriesState).isEqualTo(recipeCategories)
+    }
+
+    @Test
+    fun `onDialogDismiss - initially not empty - unselected all - categories`() {
+        val recipeCategories = mapOf(
+            Pair(categories[0],true),
+            Pair(categories[1],false),
+            Pair(categories[2],true),
+            Pair(categories[3],false),
+            Pair(categories[4],false),
+            Pair(categories[5],true)
+        )
+
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
+        val initialCategoriesState = getCurrentAdRecipeState().categories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultCategoriesState = getCurrentAdRecipeState().categories
+
+        verifyMocks()
+        assertThat(initialCategoriesState).isEqualTo(recipeCategories)
+        assertThat(resultCategoriesState).isEqualTo(recipeCategories)
+    }
+
+    @Test
+    fun `onDialogDismiss - initially not empty - unselected all - lastSavedCategories`() {
+        val recipeCategories = mapOf(
+            Pair(categories[0],true),
+            Pair(categories[1],false),
+            Pair(categories[2],true),
+            Pair(categories[3],false),
+            Pair(categories[4],false),
+            Pair(categories[5],true)
+        )
+
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
+        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        verifyMocks()
+        assertThat(initialLastSavedCategoriesState).isEqualTo(recipeCategories)
+        assertThat(resultLastSavedCategoriesState).isEqualTo(recipeCategories)
+    }
+
+    @Test
+    fun `onDialogDismiss - initially all selected - unselected all - categories`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
+        val initialCategoriesState = getCurrentAdRecipeState().categories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultCategoriesState = getCurrentAdRecipeState().categories
+
+        verifyMocks()
+        assertThat(initialCategoriesState).isEqualTo(categories.associateWith { true })
+        assertThat(resultCategoriesState).isEqualTo(categories.associateWith { true })
+    }
+
+    @Test
+    fun `onDialogDismiss - initially all selected - unselected all - lastSavedCategories`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
+        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+
+        verifyMocks()
+        assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { true })
+        assertThat(resultLastSavedCategoriesState).isEqualTo(categories.associateWith { true })
+    }
+
+    @Test
+    fun `onDialogDismissed - dialog is closed`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCategoriesButtonClicked)
+        val initialCategoriesDialogActivatedState = getCurrentAdRecipeState().isCategoriesDialogActivated
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
+        val resultCategoriesDialogActivatedState = getCurrentAdRecipeState().isCategoriesDialogActivated
+
+        verifyMocks()
+        assertThat(initialCategoriesDialogActivatedState).isTrue()
+        assertThat(resultCategoriesDialogActivatedState).isFalse()
     }
 }
