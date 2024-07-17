@@ -4200,4 +4200,63 @@ class AddRecipeViewModelTest {
         assertThat(initialCategoriesDialogActivatedState).isTrue()
         assertThat(resultCategoriesDialogActivatedState).isFalse()
     }
+
+    @Test
+    fun `onAddImage - image bottom sheet is opened`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        val initialImageBottomSheetState = getCurrentAdRecipeState().isImageBottomSheetOpened
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnAddImage)
+        val resultImageBottomSheetState = getCurrentAdRecipeState().isImageBottomSheetOpened
+
+        verifyMocks()
+        assertThat(initialImageBottomSheetState).isFalse()
+        assertThat(resultImageBottomSheetState).isTrue()
+    }
+
+    @Test
+    fun `onTakePhoto - image bottom sheet is closed`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnAddImage)
+        val initialImageBottomSheetState = getCurrentAdRecipeState().isImageBottomSheetOpened
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnTakePhoto)
+        val resultImageBottomSheetState = getCurrentAdRecipeState().isImageBottomSheetOpened
+
+        verifyMocks()
+        assertThat(initialImageBottomSheetState).isTrue()
+        assertThat(resultImageBottomSheetState).isFalse()
+    }
+
+    @Test
+    fun `onSelectImage - image bottom sheet is closed`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnAddImage)
+        val initialImageBottomSheetState = getCurrentAdRecipeState().isImageBottomSheetOpened
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnSelectImage)
+        val resultImageBottomSheetState = getCurrentAdRecipeState().isImageBottomSheetOpened
+
+        verifyMocks()
+        assertThat(initialImageBottomSheetState).isTrue()
+        assertThat(resultImageBottomSheetState).isFalse()
+    }
+
+    @Test
+    fun `onAddImageDismiss - image bottom sheet is closed`() {
+        setMocks()
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnAddImage)
+        val initialImageBottomSheetState = getCurrentAdRecipeState().isImageBottomSheetOpened
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnAddImageDismiss)
+        val resultImageBottomSheetState = getCurrentAdRecipeState().isImageBottomSheetOpened
+
+        verifyMocks()
+        assertThat(initialImageBottomSheetState).isTrue()
+        assertThat(resultImageBottomSheetState).isFalse()
+    }
 }
