@@ -4259,4 +4259,67 @@ class AddRecipeViewModelTest {
         assertThat(initialImageBottomSheetState).isTrue()
         assertThat(resultImageBottomSheetState).isFalse()
     }
+
+    @Test
+    fun `addImage runs successfully`() {
+        setMocks()
+        coEvery { addRecipeUseCase(any()) } returns flowOf(Resource.Success(true))
+
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("Recipe Name"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("Recipe description"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnAddRecipe)
+        val isLoading = getCurrentAdRecipeState().isLoading
+
+        coVerifySequence {
+            getIngredientsUseCase()
+            getCategoriesUseCase()
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            addRecipeUseCase(any())
+        }
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `addImage returns error`() {
+        setMocks()
+        coEvery { addRecipeUseCase(any()) } returns flowOf(Resource.Error("Error message"))
+
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("Recipe Name"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("Recipe description"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnAddRecipe)
+        val isLoading = getCurrentAdRecipeState().isLoading
+
+        coVerifySequence {
+            getIngredientsUseCase()
+            getCategoriesUseCase()
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            addRecipeUseCase(any())
+        }
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `addImage is loading`() {
+        setMocks()
+        coEvery { addRecipeUseCase(any()) } returns flowOf(Resource.Loading(true))
+
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("Recipe Name"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("Recipe description"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnAddRecipe)
+        val isLoading = getCurrentAdRecipeState().isLoading
+
+        coVerifySequence {
+            getIngredientsUseCase()
+            getCategoriesUseCase()
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            addRecipeUseCase(any())
+        }
+        assertThat(isLoading).isTrue()
+    }
 }
