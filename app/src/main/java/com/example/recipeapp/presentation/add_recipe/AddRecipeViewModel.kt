@@ -329,8 +329,6 @@ class AddRecipeViewModel @Inject constructor(
                 val description = _addRecipeState.value.description
                 val imageName = System.currentTimeMillis().toString()+"_"+UUID.randomUUID().toString()+".jpg"
 
-
-
                 if(isValidationSuccessful(title, description)) {
                     if(_addRecipeState.value.imageUri != Uri.EMPTY)
                         _addRecipeState.value.imageUri?.let { addImage(it, imageName) }

@@ -1,5 +1,6 @@
 package com.example.recipeapp.presentation.add_recipe
 
+import android.net.Uri
 import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Quantity
@@ -22,6 +23,8 @@ import io.mockk.coVerifySequence
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.slot
 import kotlinx.coroutines.flow.flowOf
 
 import org.junit.After
@@ -46,6 +49,7 @@ class AddRecipeViewModelTest {
     private lateinit var categories: List<Category>
     private lateinit var recipeWithIngredients: RecipeWithIngredients
     private lateinit var categoryMap: Map<Category, Boolean>
+    private lateinit var uriMock: Uri
 
     @Before
     fun setUp() {
@@ -56,6 +60,9 @@ class AddRecipeViewModelTest {
         getCategoriesUseCase = mockk()
         addRecipeUseCase = mockk()
         firebaseUser = mockk()
+
+        mockkStatic(Uri::class)
+        uriMock = mockk<Uri>()
 
         every { getCurrentUserUseCase() } returns firebaseUser
         every { firebaseUser.uid } returns "userUID"
@@ -121,18 +128,18 @@ class AddRecipeViewModelTest {
         )
 
         recipeWithIngredients = RecipeWithIngredients(
-            recipeId = "recipeId",
+            recipeId = "",
             name = "Recipe Name",
             ingredients = mapOf(
                 ingredients[0] to "3 g",
-                ingredients[1] to "5 g"
+                ingredients[1] to "5.6 kg"
             ),
-            prepTime = "40 min",
+            prepTime = "1 hour 40 min",
             servings = 4,
             description = "Recipe description",
-            isVegetarian = true,
+            isVegetarian = false,
             isVegan = false,
-            imageUrl = "imageUrl",
+            imageUrl = "",
             createdBy = "userUID",
             categories = listOf("category", "category2", "category4")
         )
@@ -406,10 +413,8 @@ class AddRecipeViewModelTest {
 
     @Test
     fun `onAddRecipe - all fields are correct`() {
-        val result = Resource.Success(true)
-
         setMocks()
-        coEvery { addRecipeUseCase(any()) } returns flowOf(result)
+        coEvery { addRecipeUseCase(any()) } returns flowOf(Resource.Success(true))
 
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("title"))
@@ -4261,7 +4266,7 @@ class AddRecipeViewModelTest {
     }
 
     @Test
-    fun `addImage runs successfully`() {
+    fun `addRecipe runs successfully`() {
         setMocks()
         coEvery { addRecipeUseCase(any()) } returns flowOf(Resource.Success(true))
 
@@ -4282,7 +4287,7 @@ class AddRecipeViewModelTest {
     }
 
     @Test
-    fun `addImage returns error`() {
+    fun `addRecipe returns error`() {
         setMocks()
         coEvery { addRecipeUseCase(any()) } returns flowOf(Resource.Error("Error message"))
 
@@ -4303,7 +4308,7 @@ class AddRecipeViewModelTest {
     }
 
     @Test
-    fun `addImage is loading`() {
+    fun `addRecipe is loading`() {
         setMocks()
         coEvery { addRecipeUseCase(any()) } returns flowOf(Resource.Loading(true))
 
@@ -4321,5 +4326,51 @@ class AddRecipeViewModelTest {
             addRecipeUseCase(any())
         }
         assertThat(isLoading).isTrue()
+    }
+
+    @Test
+    fun `addRecipe - passes recipe correctly`() {
+        setMocks()
+        val capturedRecipe = slot<RecipeWithIngredients>()
+        coEvery { addRecipeUseCase(capture(capturedRecipe)) } returns flowOf(Resource.Success(true))
+
+
+        addRecipeViewModel = setViewModel()
+        addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("Recipe Name"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("Recipe description"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[0].ingredientId))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("3"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[1]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[1].ingredientId))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("5"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".6"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("kg"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(4))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerSaved)
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("1 hour"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("40 min"))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
+
+        addRecipeViewModel.onEvent(AddRecipeEvent.OnAddRecipe)
+        val isLoading = getCurrentAdRecipeState().isLoading
+
+        coVerifySequence {
+            getIngredientsUseCase()
+            getCategoriesUseCase()
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            addRecipeUseCase(recipeWithIngredients)
+        }
+        assertThat(isLoading).isFalse()
+        assertThat(capturedRecipe.isCaptured).isTrue()
+        assertThat(capturedRecipe.captured).isEqualTo(recipeWithIngredients)
     }
 }
