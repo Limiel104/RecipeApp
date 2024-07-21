@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -18,7 +19,8 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 fun RowWithTextButton(
     modifier: Modifier = Modifier,
     sectionName: String,
-    buttonText: String
+    buttonText: String,
+    onClick: () -> Unit
 ) {
     Row(
         modifier = modifier
@@ -32,7 +34,10 @@ fun RowWithTextButton(
             style = MaterialTheme.typography.titleMedium
         )
 
-        TextButton(onClick = {}) {
+        TextButton(
+            onClick = { onClick() },
+            modifier = modifier.testTag("$sectionName button")
+        ) {
             Text(text = buttonText)
         }
     }
@@ -49,9 +54,12 @@ fun RowWithTextButton(
 @Composable
 fun RowWithTextButtonPreview() {
     RecipeAppTheme {
-        RowWithTextButton(
-            sectionName = "Servings",
-            buttonText = "Set servings"
-        )
+        Surface {
+            RowWithTextButton(
+                sectionName = "Servings",
+                buttonText = "Set servings",
+                onClick = {}
+            )
+        }
     }
 }

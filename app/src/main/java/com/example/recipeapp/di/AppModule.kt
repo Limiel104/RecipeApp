@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.example.recipeapp.data.local.RecipeDatabase
 import com.example.recipeapp.data.repository.AuthRepositoryImpl
 import com.example.recipeapp.data.repository.CategoryRepositoryImpl
+import com.example.recipeapp.data.repository.ImageStorageRepositoryImpl
 import com.example.recipeapp.data.repository.IngredientRepositoryImpl
 import com.example.recipeapp.data.repository.RecipeRepositoryImpl
 import com.example.recipeapp.data.repository.SavedRecipeRepositoryImpl
@@ -13,12 +14,15 @@ import com.example.recipeapp.data.repository.ShoppingListRepositoryImpl
 import com.example.recipeapp.data.repository.UserRepositoryImpl
 import com.example.recipeapp.domain.repository.AuthRepository
 import com.example.recipeapp.domain.repository.CategoryRepository
+import com.example.recipeapp.domain.repository.ImageStorageRepository
 import com.example.recipeapp.domain.repository.IngredientRepository
 import com.example.recipeapp.domain.repository.RecipeRepository
 import com.example.recipeapp.domain.repository.SavedRecipeRepository
 import com.example.recipeapp.domain.repository.SearchSuggestionRepository
 import com.example.recipeapp.domain.repository.ShoppingListRepository
 import com.example.recipeapp.domain.repository.UserRepository
+import com.example.recipeapp.domain.use_case.AddImageUseCase
+import com.example.recipeapp.domain.use_case.AddRecipeUseCase
 import com.example.recipeapp.domain.use_case.AddSearchSuggestionUseCase
 import com.example.recipeapp.domain.use_case.AddUserUseCase
 import com.example.recipeapp.domain.use_case.GetCategoriesUseCase
@@ -34,12 +38,14 @@ import com.example.recipeapp.domain.use_case.SignupUseCase
 import com.example.recipeapp.domain.use_case.UpdateUserUseCase
 import com.example.recipeapp.domain.use_case.ValidateConfirmPasswordUseCase
 import com.example.recipeapp.domain.use_case.ValidateEmailUseCase
+import com.example.recipeapp.domain.use_case.ValidateFieldUseCase
 import com.example.recipeapp.domain.use_case.ValidateLoginPasswordUseCase
 import com.example.recipeapp.domain.use_case.ValidateNameUseCase
 import com.example.recipeapp.domain.use_case.ValidateSignupPasswordUseCase
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
+import com.google.firebase.storage.storage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -121,6 +127,13 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideImageStorageRepository(): ImageStorageRepository {
+        val storage = Firebase.storage.reference
+        return ImageStorageRepositoryImpl(storage)
+    }
+
+    @Provides
+    @Singleton
     fun provideGetIngredientsUseCase(ingredientRepository: IngredientRepository): GetIngredientsUseCase {
         return GetIngredientsUseCase(ingredientRepository)
     }
@@ -181,6 +194,18 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideAddImageUseCase(imageStorageRepository: ImageStorageRepository): AddImageUseCase {
+        return AddImageUseCase(imageStorageRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAddRecipeUseCase(recipeRepository: RecipeRepository): AddRecipeUseCase {
+        return AddRecipeUseCase(recipeRepository)
+    }
+
+    @Provides
+    @Singleton
     fun provideLoginUseCase(authRepository: AuthRepository): LoginUseCase {
         return LoginUseCase(authRepository)
     }
@@ -225,5 +250,11 @@ object AppModule {
     @Singleton
     fun provideValidateNameUseCase(): ValidateNameUseCase {
         return ValidateNameUseCase()
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidateFieldUseCase(): ValidateFieldUseCase {
+        return ValidateFieldUseCase()
     }
 }

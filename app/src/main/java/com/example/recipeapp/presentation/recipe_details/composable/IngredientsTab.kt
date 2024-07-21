@@ -23,7 +23,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.recipeapp.presentation.common.composable.RecipeIngredientItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
@@ -70,7 +69,7 @@ fun IngredientsTab(
                 .padding(horizontal = 16.dp)
         ) {
             for (i in 1..7) {
-                RecipeIngredientItem()
+//                RecipeIngredientItem()
 
                 if (i != 7) {
                     HorizontalDivider()

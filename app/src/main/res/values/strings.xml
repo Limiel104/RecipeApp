@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">RecipeApp</string>
     <string name="categories">Categories</string>
-    <string name="add_photo">Add photo</string>
+    <string name="add_image">Add image</string>
     <string name="add_recipe">Add recipe</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
@@ -32,4 +32,11 @@
     <string name="no_account_text">Don\'t have an account?</string>
     <string name="not_logged_in">You are not logged in</string>
     <string name="login_or_signup">Login or Signup</string>
+    <string name="prep_time_sheet_subtext">How long does it take to prepare this recipe</string>
+    <string name="servings_sheet_subtext">Select number of portions this recipe makes</string>
+    <string name="fileprovider">com.example.recipeapp.fileprovider</string>
+    <string name="save">Save</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="select_image">Select Image</string>
+    <string name="set_categories">Set categories</string>
 </resources>
