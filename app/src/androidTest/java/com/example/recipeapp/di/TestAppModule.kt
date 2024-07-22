@@ -30,6 +30,7 @@ import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
 import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
 import com.example.recipeapp.domain.use_case.GetRecipesUseCase
 import com.example.recipeapp.domain.use_case.GetSearchSuggestionsUseCase
+import com.example.recipeapp.domain.use_case.GetUserRecipesUseCase
 import com.example.recipeapp.domain.use_case.GetUserShoppingListsUseCase
 import com.example.recipeapp.domain.use_case.GetUserUseCase
 import com.example.recipeapp.domain.use_case.LoginUseCase
@@ -196,6 +197,12 @@ object TestAppModule {
     @Singleton
     fun provideAddRecipeUseCase(recipeRepository: RecipeRepository): AddRecipeUseCase {
         return AddRecipeUseCase(recipeRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetUserRecipesUseCase(recipeRepository: RecipeRepository): GetUserRecipesUseCase {
+        return GetUserRecipesUseCase(recipeRepository)
     }
 
     @Provides

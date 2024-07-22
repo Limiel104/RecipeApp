@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Logout
@@ -31,6 +32,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.recipeapp.presentation.account.AccountState
+import com.example.recipeapp.presentation.common.composable.RecipeItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,8 +41,9 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 fun AccountContent(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
+    uiState: AccountState,
     onAddRecipe: () -> Unit,
-    onRecipeSelected: () -> Unit,
+    onRecipeSelected: (String) -> Unit,
     onLogout: () -> Unit
 ) {
     Scaffold(
@@ -109,12 +113,13 @@ fun AccountContent(
                 }
             }
 
-            items(11) {
-//                RecipeItem(
-//                    cardHorizontalPadding = 16.dp,
-//                    cardBottomPadding = 16.dp,
-//                    onClick = { onRecipeSelected() }
-//                )
+            itemsIndexed(uiState.recipes) { _, recipe ->
+                RecipeItem(
+                    recipe = recipe,
+                    cardHorizontalPadding = 16.dp,
+                    cardBottomPadding = 16.dp,
+                    onClick = { onRecipeSelected(recipe.recipeId) }
+                )
             }
         }
     }
@@ -134,6 +139,7 @@ fun AccountContentPreview() {
     RecipeAppTheme {
         AccountContent(
             scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState()),
+            uiState = AccountState(),
             onAddRecipe = {},
             onRecipeSelected = {},
             onLogout = {}

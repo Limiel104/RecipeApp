@@ -47,6 +47,7 @@ fun AccountScreen(
     if(isUserLoggedIn) {
         AccountContent(
             scrollBehavior = scrollBehavior,
+            uiState = viewModel.accountState.value,
             onAddRecipe = { navController.navigate(Screen.AddRecipeScreen.route) },
             onRecipeSelected = { navController.navigate(Screen.RecipeDetailsScreen.route) },
             onLogout = { viewModel.onEvent(AccountEvent.OnLogout) }

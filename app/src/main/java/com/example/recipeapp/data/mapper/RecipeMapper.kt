@@ -10,6 +10,21 @@ import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Recipe
 import com.example.recipeapp.domain.model.RecipeWithIngredients
 
+fun RecipeEntity.toRecipe(): Recipe {
+    return Recipe(
+        recipeId = recipeId,
+        name = name,
+        prepTime = prepTime,
+        servings = servings,
+        description = description,
+        isVegetarian = isVegetarian,
+        isVegan = isVegan,
+        imageUrl = imageUrl,
+        createdBy = createdBy,
+        categories = emptyList()
+    )
+}
+
 fun RecipeDto.toRecipeEntity(): RecipeEntity {
     return RecipeEntity(
         recipeId = recipeId,

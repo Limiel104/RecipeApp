@@ -5,7 +5,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipeapp.domain.model.Resource
 import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
+import com.example.recipeapp.domain.use_case.GetUserRecipesUseCase
 import com.example.recipeapp.domain.use_case.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -16,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AccountViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
+    private val getUserRecipesUseCase: GetUserRecipesUseCase,
     private val logoutUseCase: LogoutUseCase
 ): ViewModel() {
 
@@ -56,6 +59,10 @@ class AccountViewModel @Inject constructor(
             _accountState.value = accountState.value.copy(
                 isUserLoggedIn = currentUser != null
             )
+
+            currentUser?.let {
+                getUserRecipes(currentUser.uid)
+            }
         }
     }
 
@@ -64,5 +71,31 @@ class AccountViewModel @Inject constructor(
         _accountState.value = accountState.value.copy(
             isUserLoggedIn = false
         )
+    }
+
+    private fun getUserRecipes(userUID: String) {
+        viewModelScope.launch {
+            getUserRecipesUseCase(userUID).collect { response ->
+                when(response) {
+                    is Resource.Error -> {
+                        Log.i("TAG","Error message from getUsrRecipes: ${response.message}")
+                    }
+                    is Resource.Loading -> {
+                        Log.i("TAG","Loading user recipes: ${response.isLoading}")
+                        _accountState.value = accountState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        response.data?.let {
+                            _accountState.value = accountState.value.copy(
+                                recipes = response.data
+                            )
+                            Log.i("TAG","user recipes: ${response.data}")
+                        }
+                    }
+                }
+            }
+        }
     }
 }
