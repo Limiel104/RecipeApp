@@ -50,7 +50,8 @@ fun AccountScreen(
             uiState = viewModel.accountState.value,
             onAddRecipe = { navController.navigate(Screen.AddRecipeScreen.route) },
             onRecipeSelected = { navController.navigate(Screen.RecipeDetailsScreen.route) },
-            onLogout = { viewModel.onEvent(AccountEvent.OnLogout) }
+            onLogout = { viewModel.onEvent(AccountEvent.OnLogout) },
+            onSortRecipes = { viewModel.onEvent(AccountEvent.OnSortRecipes(it)) }
         )
     }
     else {

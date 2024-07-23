@@ -22,6 +22,7 @@ import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
@@ -30,8 +31,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.recipeapp.R
+import com.example.recipeapp.domain.util.RecipeOrder
 import com.example.recipeapp.presentation.account.AccountState
 import com.example.recipeapp.presentation.common.composable.RecipeItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
@@ -44,7 +48,8 @@ fun AccountContent(
     uiState: AccountState,
     onAddRecipe: () -> Unit,
     onRecipeSelected: (String) -> Unit,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onSortRecipes: (RecipeOrder) -> Unit
 ) {
     Scaffold(
         modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -106,10 +111,24 @@ fun AccountContent(
                         style = MaterialTheme.typography.titleMedium
                     )
 
-                    Text(
-                        text = "Newest",
-                        style = MaterialTheme.typography.labelSmall
-                    )
+                    TextButton(
+                        onClick = {
+                            onSortRecipes(
+                                if(uiState.recipesOrder == RecipeOrder.DateDescending)
+                                    RecipeOrder.DateAscending
+                                else
+                                    RecipeOrder.DateDescending
+                            )
+                        }
+                    ) {
+                        Text(
+                            text = if(uiState.recipesOrder == RecipeOrder.DateDescending)
+                                stringResource(id = R.string.newest)
+                            else
+                                stringResource(id = R.string.oldest),
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
                 }
             }
 
@@ -142,7 +161,8 @@ fun AccountContentPreview() {
             uiState = AccountState(),
             onAddRecipe = {},
             onRecipeSelected = {},
-            onLogout = {}
+            onLogout = {},
+            onSortRecipes = {}
         )
     }
 }

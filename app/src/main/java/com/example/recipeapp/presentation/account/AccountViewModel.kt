@@ -9,6 +9,7 @@ import com.example.recipeapp.domain.model.Resource
 import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
 import com.example.recipeapp.domain.use_case.GetUserRecipesUseCase
 import com.example.recipeapp.domain.use_case.LogoutUseCase
+import com.example.recipeapp.domain.use_case.SortRecipesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class AccountViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getUserRecipesUseCase: GetUserRecipesUseCase,
+    private val sortRecipesUseCase: SortRecipesUseCase,
     private val logoutUseCase: LogoutUseCase
 ): ViewModel() {
 
@@ -35,17 +37,29 @@ class AccountViewModel @Inject constructor(
 
     fun onEvent(event: AccountEvent) {
         when(event) {
+            is AccountEvent.OnSortRecipes -> {
+                _accountState.value = accountState.value.copy(
+                    recipesOrder = event.recipeOrder
+                )
+
+                _accountState.value = accountState.value.copy(
+                    recipes = sortRecipesUseCase(event.recipeOrder, _accountState.value.recipes)
+                )
+            }
+
             AccountEvent.OnLogin -> {
                 viewModelScope.launch {
                     _accountUiEventChannel.send(AccountUiEvent.NavigateToLogin)
                 }
             }
+
             AccountEvent.OnSignup -> {
                 viewModelScope.launch {
                     _accountUiEventChannel.send(AccountUiEvent.NavigateToSignup)
                 }
             }
-            is AccountEvent.OnLogout -> {
+
+            AccountEvent.OnLogout -> {
                 viewModelScope.launch {
                     logout()
                 }
@@ -89,7 +103,7 @@ class AccountViewModel @Inject constructor(
                     is Resource.Success -> {
                         response.data?.let {
                             _accountState.value = accountState.value.copy(
-                                recipes = response.data
+                                recipes = sortRecipesUseCase(_accountState.value.recipesOrder,response.data)
                             )
                             Log.i("TAG","user recipes: ${response.data}")
                         }
