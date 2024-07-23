@@ -86,7 +86,8 @@ class HomeScreenTest {
             isVegan = false,
             imageUrl = "",
             createdBy = "userId",
-            categories = listOf("Dinner")
+            categories = listOf("Dinner"),
+            date = 12345623423
         )
 
         recipe2 = Recipe(
@@ -99,7 +100,8 @@ class HomeScreenTest {
             isVegan = true,
             imageUrl = "",
             createdBy = "userId",
-            categories = listOf("Pizza","Dinner")
+            categories = listOf("Pizza","Dinner"),
+            date = 12345623423
         )
 
         recipe3 = Recipe(
@@ -112,7 +114,8 @@ class HomeScreenTest {
             isVegan = false,
             imageUrl = "",
             createdBy = "user3Id",
-            categories = listOf("Dinner")
+            categories = listOf("Dinner"),
+            date = 12345623423
         )
 
         recipe4 = Recipe(
@@ -125,7 +128,8 @@ class HomeScreenTest {
             isVegan = false,
             imageUrl = "",
             createdBy = "user2Id",
-            categories = listOf("Stew")
+            categories = listOf("Stew"),
+            date = 12345623423
         )
 
         recipe5 = Recipe(
@@ -138,7 +142,8 @@ class HomeScreenTest {
             isVegan = false,
             imageUrl = "",
             createdBy = "userId",
-            categories = listOf("Appetizer","Fish")
+            categories = listOf("Appetizer","Fish"),
+            date = 12345623423
         )
 
         recipe6 = Recipe(
@@ -151,7 +156,8 @@ class HomeScreenTest {
             isVegan = false,
             imageUrl = "",
             createdBy = "userId",
-            categories = listOf("Dinner","Pork","Stew")
+            categories = listOf("Dinner","Pork","Stew"),
+            date = 12345623423
         )
 
         recipe7 = Recipe(
@@ -164,7 +170,8 @@ class HomeScreenTest {
             isVegan = false,
             imageUrl = "",
             createdBy = "user2Id",
-            categories = listOf("Appetizer")
+            categories = listOf("Appetizer"),
+            date = 12345623423
         )
     }
 

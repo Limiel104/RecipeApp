@@ -62,7 +62,8 @@ class RecipeDaoTest {
             isVegetarian = true,
             isVegan = false,
             imageUrl = "imageUrl",
-            createdBy = "userId"
+            createdBy = "userId",
+            date = 12345623423
         )
         recipe2 = RecipeEntity(
             recipeId = "recipe2Id",
@@ -73,7 +74,8 @@ class RecipeDaoTest {
             isVegetarian = false,
             isVegan = false,
             imageUrl = "imageUrl",
-            createdBy = "user2Id"
+            createdBy = "user2Id",
+            date = 12345623423
         )
 
         recipe3 = RecipeEntity(
@@ -85,7 +87,8 @@ class RecipeDaoTest {
             isVegetarian = true,
             isVegan = true,
             imageUrl = "imageUrl",
-            createdBy = "userId"
+            createdBy = "userId",
+            date = 12345623423
         )
 
         recipeCategoryEntity = RecipeCategoryEntity(
@@ -116,7 +119,8 @@ class RecipeDaoTest {
                 isVegetarian = true,
                 isVegan = false,
                 imageUrl = "imageUrl",
-                createdBy = "userId"
+                createdBy = "userId",
+                date = 12345623423
             ),
             categories = listOf(recipeCategoryEntity, recipeCategoryEntity2)
         )
@@ -131,7 +135,8 @@ class RecipeDaoTest {
                 isVegetarian = false,
                 isVegan = false,
                 imageUrl = "imageUrl",
-                createdBy = "user2Id"
+                createdBy = "user2Id",
+                date = 12345623423
             ),
             categories = listOf(recipeCategoryEntity3)
         )

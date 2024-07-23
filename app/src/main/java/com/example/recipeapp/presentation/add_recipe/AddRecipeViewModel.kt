@@ -598,7 +598,8 @@ class AddRecipeViewModel @Inject constructor(
             isVegan = false,
             imageUrl = _addRecipeState.value.imageUrl,
             createdBy = getCurrentUserUseCase()!!.uid,
-            categories = getRecipeCategories()
+            categories = getRecipeCategories(),
+            date = System.currentTimeMillis()
         )
 
         viewModelScope.launch {

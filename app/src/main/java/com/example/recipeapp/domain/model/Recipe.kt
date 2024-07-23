@@ -12,5 +12,6 @@ data class Recipe(
     val isVegan: Boolean,
     val imageUrl: String,
     val createdBy: UserId,
-    val categories: List<String>
+    val categories: List<String>,
+    val date: Long
 )

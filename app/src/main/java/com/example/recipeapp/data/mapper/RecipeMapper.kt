@@ -21,7 +21,8 @@ fun RecipeEntity.toRecipe(): Recipe {
         isVegan = isVegan,
         imageUrl = imageUrl,
         createdBy = createdBy,
-        categories = emptyList()
+        categories = emptyList(),
+        date = date
     )
 }
 
@@ -35,7 +36,8 @@ fun RecipeDto.toRecipeEntity(): RecipeEntity {
         isVegetarian = isVegetarian,
         isVegan = isVegan,
         imageUrl = imageUrl,
-        createdBy = createdBy
+        createdBy = createdBy,
+        date = date
     )
 }
 
@@ -70,7 +72,8 @@ fun RecipeWithIngredient.toRecipeWithIngredients(ingredientList: List<Ingredient
         isVegan = recipe.isVegan,
         imageUrl = recipe.imageUrl,
         createdBy = recipe.createdBy,
-        categories = categoryList
+        categories = categoryList,
+        date = recipe.date
     )
 }
 
@@ -90,7 +93,8 @@ fun RecipeWithIngredients.toRecipeDto(documentId: String): RecipeDto {
         isVegan = isVegan,
         imageUrl = imageUrl,
         createdBy = createdBy,
-        categoryList = categories
+        categoryList = categories,
+        date = date
     )
 }
 
@@ -126,6 +130,7 @@ fun RecipeWithCategory.toRecipe(): Recipe {
         isVegan = recipe.isVegan,
         imageUrl = recipe.imageUrl,
         createdBy = recipe.createdBy,
-        categories = categoryList
+        categories = categoryList,
+        date = recipe.date
     )
 }

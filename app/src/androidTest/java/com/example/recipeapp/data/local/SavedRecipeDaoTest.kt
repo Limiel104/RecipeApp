@@ -54,7 +54,8 @@ class SavedRecipeDaoTest {
         isVegetarian = true,
         isVegan = false,
         imageUrl = "imageUrl",
-        createdBy = "userId"
+        createdBy = "userId",
+        date = 12345623423
     )
 
     private val recipe2 = RecipeEntity(
@@ -66,7 +67,8 @@ class SavedRecipeDaoTest {
         isVegetarian = false,
         isVegan = false,
         imageUrl = "imageUrl",
-        createdBy = "user2Id"
+        createdBy = "user2Id",
+        date = 12345623423
     )
 
     private val recipe3 = RecipeEntity(
@@ -78,7 +80,8 @@ class SavedRecipeDaoTest {
         isVegetarian = true,
         isVegan = true,
         imageUrl = "imageUrl",
-        createdBy = "userId"
+        createdBy = "userId",
+        date = 12345623423
     )
 
     @Before
