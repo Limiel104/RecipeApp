@@ -70,7 +70,8 @@ class AddRecipeUseCaseTest {
             isVegan = false,
             imageUrl = "imageUrl",
             createdBy = "userId",
-            categories = listOf("Category", "Category2", "Category3")
+            categories = listOf("Category", "Category2", "Category3"),
+            date = 1234324354
         )
     }
 

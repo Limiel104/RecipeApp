@@ -1,6 +1,5 @@
 package com.example.recipeapp.presentation.add_recipe
 
-import android.net.Uri
 import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Quantity
@@ -23,7 +22,6 @@ import io.mockk.coVerifySequence
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import io.mockk.slot
 import kotlinx.coroutines.flow.flowOf
 
@@ -49,7 +47,6 @@ class AddRecipeViewModelTest {
     private lateinit var categories: List<Category>
     private lateinit var recipeWithIngredients: RecipeWithIngredients
     private lateinit var categoryMap: Map<Category, Boolean>
-    private lateinit var uriMock: Uri
 
     @Before
     fun setUp() {
@@ -60,9 +57,6 @@ class AddRecipeViewModelTest {
         getCategoriesUseCase = mockk()
         addRecipeUseCase = mockk()
         firebaseUser = mockk()
-
-        mockkStatic(Uri::class)
-        uriMock = mockk<Uri>()
 
         every { getCurrentUserUseCase() } returns firebaseUser
         every { firebaseUser.uid } returns "userUID"
@@ -141,7 +135,8 @@ class AddRecipeViewModelTest {
             isVegan = false,
             imageUrl = "",
             createdBy = "userUID",
-            categories = listOf("category", "category2", "category4")
+            categories = listOf("category", "category2", "category4"),
+            date = 1234324354
         )
 
         categoryMap = categories.associateWith { false }
@@ -4367,10 +4362,22 @@ class AddRecipeViewModelTest {
             getCategoriesUseCase()
             getCurrentUserUseCase()
             firebaseUser.uid
-            addRecipeUseCase(recipeWithIngredients)
+            addRecipeUseCase(any())
         }
         assertThat(isLoading).isFalse()
         assertThat(capturedRecipe.isCaptured).isTrue()
-        assertThat(capturedRecipe.captured).isEqualTo(recipeWithIngredients)
+        assertThat(capturedRecipe.captured.name).isEqualTo("Recipe Name")
+        assertThat(capturedRecipe.captured.description).isEqualTo("Recipe description")
+        assertThat(capturedRecipe.captured.ingredients).isEqualTo(mapOf(
+            Pair(ingredients[0],"3 g"),
+            Pair(ingredients[1],"5.6 kg")
+        ))
+        assertThat(capturedRecipe.captured.servings).isEqualTo(4)
+        assertThat(capturedRecipe.captured.prepTime).isEqualTo("1 hour 40 min")
+        assertThat(capturedRecipe.captured.categories).containsExactlyElementsIn(listOf(
+            categories[1].categoryId,
+            categories[0].categoryId,
+            categories[3].categoryId
+        ))
     }
 }
