@@ -49,7 +49,12 @@ fun AccountContent(
     onAddRecipe: () -> Unit,
     onRecipeSelected: (String) -> Unit,
     onLogout: () -> Unit,
-    onSortRecipes: (RecipeOrder) -> Unit
+    onSortRecipes: (RecipeOrder) -> Unit,
+    onNameChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onConfirmPasswordChange: (String) -> Unit,
+    onDialogDismiss: () -> Unit,
+    onDialogSave: () -> Unit
 ) {
     Scaffold(
         modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -141,6 +146,22 @@ fun AccountContent(
                 )
             }
         }
+
+        if(uiState.isEditDialogActivated) {
+            EditDialog(
+                name = uiState.name,
+                nameError = uiState.nameError,
+                password = uiState.password,
+                passwordError = uiState.passwordError,
+                confirmPassword = uiState.confirmPassword,
+                confirmPasswordError = uiState.confirmPasswordError,
+                onNameChange = { onNameChange(it) },
+                onPasswordChange = { onPasswordChange(it) },
+                onConfirmPasswordChange = { onConfirmPasswordChange(it) },
+                onDismiss = { onDialogDismiss() },
+                onSave = { onDialogSave() }
+            )
+        }
     }
 }
 
@@ -162,7 +183,12 @@ fun AccountContentPreview() {
             onAddRecipe = {},
             onRecipeSelected = {},
             onLogout = {},
-            onSortRecipes = {}
+            onSortRecipes = {},
+            onNameChange = {},
+            onPasswordChange = {},
+            onConfirmPasswordChange = {},
+            onDialogDismiss = {},
+            onDialogSave = {}
         )
     }
 }

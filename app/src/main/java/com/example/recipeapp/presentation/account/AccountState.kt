@@ -8,5 +8,12 @@ data class AccountState(
     val userUID: String = "",
     val isLoading: Boolean = false,
     val recipes: List<Recipe> = emptyList(),
-    val recipesOrder: RecipeOrder = RecipeOrder.DateDescending
+    val recipesOrder: RecipeOrder = RecipeOrder.DateDescending,
+    val isEditDialogActivated: Boolean = false,
+    val name: String = "",
+    val nameError: String? = null,
+    val password: String = "",
+    val passwordError: String? = null,
+    val confirmPassword: String = "",
+    val confirmPasswordError: String? = null
 )
