@@ -51,7 +51,7 @@ fun EditDialog(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(text = "Edit") },
+                    title = { Text(text = "Edit Account") },
                     navigationIcon = {
                         IconButton(onClick = { onDismiss() }) {
                             Icon(

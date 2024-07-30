@@ -47,6 +47,24 @@ class AccountViewModel @Inject constructor(
                 )
             }
 
+            is AccountEvent.EnteredName -> {
+                _accountState.value = accountState.value.copy(
+                    name = event.name
+                )
+            }
+
+            is AccountEvent.EnteredPassword -> {
+                _accountState.value = accountState.value.copy(
+                    password = event.password
+                )
+            }
+
+            is AccountEvent.EnteredConfirmPassword -> {
+                _accountState.value = accountState.value.copy(
+                    confirmPassword = event.confirmPassword
+                )
+            }
+
             AccountEvent.OnLogin -> {
                 viewModelScope.launch {
                     _accountUiEventChannel.send(AccountUiEvent.NavigateToLogin)
@@ -63,6 +81,24 @@ class AccountViewModel @Inject constructor(
                 viewModelScope.launch {
                     logout()
                 }
+            }
+
+            AccountEvent.OnEditButtonClicked -> {
+                _accountState.value = accountState.value.copy(
+                    isEditDialogActivated = true
+                )
+            }
+
+            AccountEvent.OnDismiss -> {
+                _accountState.value = accountState.value.copy(
+                    isEditDialogActivated = false
+                )
+            }
+
+            AccountEvent.OnSave -> {
+                _accountState.value = accountState.value.copy(
+                    isEditDialogActivated = false
+                )
             }
         }
     }

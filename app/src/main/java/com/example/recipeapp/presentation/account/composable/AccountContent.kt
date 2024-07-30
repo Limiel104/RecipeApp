@@ -50,6 +50,7 @@ fun AccountContent(
     onRecipeSelected: (String) -> Unit,
     onLogout: () -> Unit,
     onSortRecipes: (RecipeOrder) -> Unit,
+    onEditButtonClicked: () -> Unit,
     onNameChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onConfirmPasswordChange: (String) -> Unit,
@@ -70,7 +71,7 @@ fun AccountContent(
                     }
                 },
                 actions = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = { onEditButtonClicked() }) {
                         Icon(
                             imageVector = Icons.Outlined.Edit,
                             contentDescription = "Edit button"
@@ -184,6 +185,7 @@ fun AccountContentPreview() {
             onRecipeSelected = {},
             onLogout = {},
             onSortRecipes = {},
+            onEditButtonClicked = {},
             onNameChange = {},
             onPasswordChange = {},
             onConfirmPasswordChange = {},

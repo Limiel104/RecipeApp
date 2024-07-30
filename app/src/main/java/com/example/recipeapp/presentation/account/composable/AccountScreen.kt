@@ -52,11 +52,12 @@ fun AccountScreen(
             onRecipeSelected = { navController.navigate(Screen.RecipeDetailsScreen.route) },
             onLogout = { viewModel.onEvent(AccountEvent.OnLogout) },
             onSortRecipes = { viewModel.onEvent(AccountEvent.OnSortRecipes(it)) },
-            onNameChange = {},
-            onPasswordChange = {},
-            onConfirmPasswordChange = {},
-            onDialogDismiss = {},
-            onDialogSave = {}
+            onEditButtonClicked = { viewModel.onEvent(AccountEvent.OnEditButtonClicked) },
+            onNameChange = { viewModel.onEvent(AccountEvent.EnteredName(it)) },
+            onPasswordChange = { viewModel.onEvent(AccountEvent.EnteredPassword(it)) },
+            onConfirmPasswordChange = { viewModel.onEvent(AccountEvent.EnteredConfirmPassword(it)) },
+            onDialogDismiss = { viewModel.onEvent(AccountEvent.OnDismiss) },
+            onDialogSave = { viewModel.onEvent(AccountEvent.OnSave) }
         )
     }
     else {
