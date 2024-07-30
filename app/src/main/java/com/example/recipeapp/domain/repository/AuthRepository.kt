@@ -10,5 +10,6 @@ interface AuthRepository {
 
     suspend fun login(email: String, password: String): Flow<Resource<FirebaseUser>>
     suspend fun signup(email: String, password: String): Flow<Resource<FirebaseUser>>
+    suspend fun updateUserPassword(password: String): Flow<Resource<Boolean>>
     fun logout()
 }

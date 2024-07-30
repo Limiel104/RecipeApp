@@ -45,6 +45,21 @@ class AuthRepositoryImpl @Inject constructor(
         emit(Resource.Loading(false))
     }.flowOn(Dispatchers.IO)
 
+    override suspend fun updateUserPassword(password: String) = flow<Resource<Boolean>> {
+
+        emit(Resource.Loading(true))
+
+        val user = firebaseAuth.currentUser
+        user?.updatePassword(password)?.await()
+        emit(Resource.Success(true))
+
+        emit(Resource.Loading(false))
+
+    }.catch {
+        emit(Resource.Error(it.localizedMessage as String))
+        emit(Resource.Loading(false))
+    }.flowOn(Dispatchers.IO)
+
     override fun logout() {
         firebaseAuth.signOut()
     }

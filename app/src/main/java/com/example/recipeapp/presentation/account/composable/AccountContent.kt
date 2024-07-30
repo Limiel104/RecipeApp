@@ -61,7 +61,7 @@ fun AccountContent(
         modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
-                title = { Text(text = "User Name") },
+                title = { Text(text = uiState.name) },
                 navigationIcon = {
                     IconButton(onClick = {}) {
                         Icon(
@@ -150,7 +150,7 @@ fun AccountContent(
 
         if(uiState.isEditDialogActivated) {
             EditDialog(
-                name = uiState.name,
+                name = uiState.editName,
                 nameError = uiState.nameError,
                 password = uiState.password,
                 passwordError = uiState.passwordError,

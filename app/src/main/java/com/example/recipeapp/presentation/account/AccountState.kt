@@ -11,6 +11,7 @@ data class AccountState(
     val recipesOrder: RecipeOrder = RecipeOrder.DateDescending,
     val isEditDialogActivated: Boolean = false,
     val name: String = "",
+    val editName: String = "",
     val nameError: String? = null,
     val password: String = "",
     val passwordError: String? = null,
