@@ -230,8 +230,10 @@ class AccountViewModel @Inject constructor(
             updateUserPasswordUseCase(password).collect { response ->
                 when(response) {
                     is Resource.Error -> {
-                        /* TODO: send error to the UI*/
-                        Log.i("TAG","Error message from updateUserPassword: ${response.message}")
+                        viewModelScope.launch {
+                            _accountUiEventChannel.send(AccountUiEvent.NavigateToSignup)
+                            Log.i("TAG","Error message from updateUserPassword: ${response.message}")
+                        }
                     }
                     is Resource.Loading -> {
                         Log.i("TAG","Loading updateUserPassword: ${response.isLoading}")
