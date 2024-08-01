@@ -14,6 +14,9 @@ import com.example.recipeapp.domain.use_case.LogoutUseCase
 import com.example.recipeapp.domain.use_case.SortRecipesUseCase
 import com.example.recipeapp.domain.use_case.UpdateUserPasswordUseCase
 import com.example.recipeapp.domain.use_case.UpdateUserUseCase
+import com.example.recipeapp.domain.use_case.ValidateConfirmPasswordUseCase
+import com.example.recipeapp.domain.use_case.ValidateNameUseCase
+import com.example.recipeapp.domain.use_case.ValidateSignupPasswordUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -27,6 +30,9 @@ class AccountViewModel @Inject constructor(
     private val getUserRecipesUseCase: GetUserRecipesUseCase,
     private val sortRecipesUseCase: SortRecipesUseCase,
     private val updateUserUseCase: UpdateUserUseCase,
+    private val validateSignupPasswordUseCase: ValidateSignupPasswordUseCase,
+    private val validateConfirmPasswordUseCase: ValidateConfirmPasswordUseCase,
+    private val validateNameUseCase: ValidateNameUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val logoutUseCase: LogoutUseCase
 ): ViewModel() {
@@ -111,20 +117,21 @@ class AccountViewModel @Inject constructor(
                         userUID = _accountState.value.userUID,
                         name = _accountState.value.editName
                     )
-                    Log.i("TAG",user.toString())
-                    updateUser(user)
+                    if(isNameValidationSuccessful(_accountState.value.editName))
+                        updateUser(user)
+                    else
+                        Log.i("TAG","Name validation not successful")
                 }
 
                 if(_accountState.value.password.isNotEmpty()) {
-                    updateUserPassword(_accountState.value.password)
-                }
+                    val password = _accountState.value.password
+                    val confirmPassword = _accountState.value.confirmPassword
 
-                _accountState.value = accountState.value.copy(
-                    isEditDialogActivated = false,
-                    editName = "",
-                    password = "",
-                    confirmPassword = "",
-                )
+                    if(isPasswordValidationSuccessful(password, confirmPassword))
+                        updateUserPassword(_accountState.value.password)
+                    else
+                        Log.i("TAG","Password validation not successful")
+                }
             }
         }
     }
@@ -204,6 +211,50 @@ class AccountViewModel @Inject constructor(
         }
     }
 
+    private fun isPasswordValidationSuccessful(
+        password: String,
+        confirmPassword: String
+    ): Boolean {
+        val passwordValidationResult = validateSignupPasswordUseCase(password)
+        val confirmPasswordValidationResult = validateConfirmPasswordUseCase(password, confirmPassword)
+
+        val hasError = listOf(
+            passwordValidationResult,
+            confirmPasswordValidationResult
+        ).any { !it.isSuccessful }
+
+        if(hasError) {
+            _accountState.value = accountState.value.copy(
+                passwordError = passwordValidationResult.errorMessage,
+                confirmPasswordError = confirmPasswordValidationResult.errorMessage,
+            )
+            return false
+        }
+
+        _accountState.value = accountState.value.copy(
+            passwordError = null,
+            confirmPasswordError = null
+        )
+        return true
+    }
+
+    private fun isNameValidationSuccessful(name: String): Boolean {
+        val nameValidationResult = validateNameUseCase(name)
+        val hasError = listOf( nameValidationResult ).any { !it.isSuccessful }
+
+        if(hasError) {
+            _accountState.value = accountState.value.copy(
+                nameError = nameValidationResult.errorMessage
+            )
+            return false
+        }
+
+        _accountState.value = accountState.value.copy(
+            nameError = null
+        )
+        return true
+    }
+
     private fun updateUser(user: User) {
         viewModelScope.launch {
             updateUserUseCase(user).collect { response ->
@@ -219,6 +270,12 @@ class AccountViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         response.data?.let { Log.i("TAG","update user: ${response.data}") }
+                        _accountState.value = accountState.value.copy(
+                            isEditDialogActivated = false,
+                            editName = "",
+                            password = "",
+                            confirmPassword = "",
+                        )
                     }
                 }
             }
@@ -231,8 +288,10 @@ class AccountViewModel @Inject constructor(
                 when(response) {
                     is Resource.Error -> {
                         viewModelScope.launch {
-                            _accountUiEventChannel.send(AccountUiEvent.NavigateToSignup)
-                            Log.i("TAG","Error message from updateUserPassword: ${response.message}")
+                            response.message?.let {
+                                _accountUiEventChannel.send(AccountUiEvent.ShowErrorMessage(response.message))
+                                Log.i("TAG","Error message from updateUserPassword: ${response.message}")
+                            }
                         }
                     }
                     is Resource.Loading -> {
@@ -243,6 +302,12 @@ class AccountViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         response.data?.let { Log.i("TAG","updateUserPassword: ${response.data}") }
+                        _accountState.value = accountState.value.copy(
+                            isEditDialogActivated = false,
+                            editName = "",
+                            password = "",
+                            confirmPassword = "",
+                        )
                     }
                 }
             }
