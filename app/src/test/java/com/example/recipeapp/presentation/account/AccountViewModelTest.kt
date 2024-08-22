@@ -2,18 +2,24 @@ package com.example.recipeapp.presentation.account
 
 import com.example.recipeapp.domain.model.Recipe
 import com.example.recipeapp.domain.model.Resource
+import com.example.recipeapp.domain.model.User
 import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
 import com.example.recipeapp.domain.use_case.GetUserRecipesUseCase
+import com.example.recipeapp.domain.use_case.GetUserUseCase
 import com.example.recipeapp.domain.use_case.LogoutUseCase
 import com.example.recipeapp.domain.use_case.SortRecipesUseCase
+import com.example.recipeapp.domain.use_case.UpdateUserPasswordUseCase
+import com.example.recipeapp.domain.use_case.UpdateUserUseCase
+import com.example.recipeapp.domain.use_case.ValidateConfirmPasswordUseCase
+import com.example.recipeapp.domain.use_case.ValidateNameUseCase
+import com.example.recipeapp.domain.use_case.ValidateSignupPasswordUseCase
 import com.example.recipeapp.domain.util.RecipeOrder
 import com.example.recipeapp.util.MainDispatcherRule
 import com.google.common.truth.Truth.assertThat
 import com.google.firebase.auth.FirebaseUser
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.coVerifySequence
+import io.mockk.coVerifyOrder
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
@@ -29,21 +35,38 @@ class AccountViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
+    private lateinit var updateUserPasswordUseCase: UpdateUserPasswordUseCase
     private lateinit var getCurrentUserUseCase: GetCurrentUserUseCase
     private lateinit var getUserRecipesUseCase: GetUserRecipesUseCase
     private lateinit var sortRecipesUseCase: SortRecipesUseCase
+    private lateinit var updateUserUseCase: UpdateUserUseCase
+    private lateinit var validateSignupPasswordUseCase: ValidateSignupPasswordUseCase
+    private lateinit var validateConfirmPasswordUseCase: ValidateConfirmPasswordUseCase
+    private lateinit var validateNameUseCase: ValidateNameUseCase
+    private lateinit var getUserUseCase: GetUserUseCase
     private lateinit var logoutUseCase: LogoutUseCase
     private lateinit var accountViewModel: AccountViewModel
     private lateinit var firebaseUser: FirebaseUser
     private lateinit var recipes: List<Recipe>
+    private lateinit var user: User
 
     @Before
     fun setUp() {
         sortRecipesUseCase = SortRecipesUseCase()
+        validateConfirmPasswordUseCase = ValidateConfirmPasswordUseCase()
+        validateSignupPasswordUseCase = ValidateSignupPasswordUseCase()
+        validateNameUseCase = ValidateNameUseCase()
+        getUserUseCase = mockk()
+        updateUserPasswordUseCase = mockk()
+        updateUserUseCase = mockk()
         getUserRecipesUseCase = mockk()
         getCurrentUserUseCase = mockk()
         logoutUseCase = mockk()
         firebaseUser = mockk()
+        user = User(
+            userUID = "userUID",
+            name = "User Name"
+        )
 
         every { getCurrentUserUseCase() } returns firebaseUser
         every { firebaseUser.uid } returns "userUID"
@@ -141,11 +164,16 @@ class AccountViewModelTest {
 
     private fun setViewModel(): AccountViewModel {
         return AccountViewModel(
+            updateUserPasswordUseCase,
             getCurrentUserUseCase,
             getUserRecipesUseCase,
             sortRecipesUseCase,
-            logoutUseCase
-        )
+            updateUserUseCase,
+            validateSignupPasswordUseCase,
+            validateConfirmPasswordUseCase,
+            validateNameUseCase,
+            getUserUseCase,
+            logoutUseCase)
     }
 
     private fun getCurrentAccountState(): AccountState {
@@ -154,13 +182,15 @@ class AccountViewModelTest {
 
 
     private fun verifyMocks() {
-        coVerifySequence {
+        coVerifyOrder {
             getCurrentUserUseCase()
+            firebaseUser.uid
             firebaseUser.uid
         }
     }
     @Test
     fun `getUserRecipes sets recipes successfully`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
         coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
 
         accountViewModel = setViewModel()
@@ -168,13 +198,17 @@ class AccountViewModelTest {
         val isLoading = getCurrentAccountState().isLoading
 
         verifyMocks()
-        coVerify(exactly =1) { getUserRecipesUseCase("userUID") }
+        coVerifyOrder {
+            getUserUseCase("userUID")
+            getUserRecipesUseCase("userUID")
+        }
         assertThat(result).containsExactlyElementsIn(recipes)
         assertThat(isLoading).isFalse()
     }
 
     @Test
     fun `getUserRecipes returns error`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
         coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Error("Error message"))
 
         accountViewModel = setViewModel()
@@ -182,7 +216,10 @@ class AccountViewModelTest {
         val isLoading = getCurrentAccountState().isLoading
 
         verifyMocks()
-        coVerify(exactly =1) { getUserRecipesUseCase("userUID") }
+        coVerifyOrder {
+            getUserUseCase("userUID")
+            getUserRecipesUseCase("userUID")
+        }
         assertThat(result).isEmpty()
         assertThat(isLoading).isFalse()
         confirmVerified(getUserRecipesUseCase)
@@ -190,6 +227,7 @@ class AccountViewModelTest {
 
     @Test
     fun `getUserRecipes is loading`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
         coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Loading(true))
 
         accountViewModel = setViewModel()
@@ -197,7 +235,10 @@ class AccountViewModelTest {
         val isLoading = getCurrentAccountState().isLoading
 
         verifyMocks()
-        coVerify(exactly =1) { getUserRecipesUseCase("userUID") }
+        coVerifyOrder {
+            getUserUseCase("userUID")
+            getUserRecipesUseCase("userUID")
+        }
         assertThat(result).isEmpty()
         assertThat(isLoading).isTrue()
         confirmVerified(getUserRecipesUseCase)
@@ -205,6 +246,7 @@ class AccountViewModelTest {
 
     @Test
     fun `getUserRecipes - recipes are sorted correctly`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
         coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
 
         accountViewModel = setViewModel()
@@ -212,13 +254,17 @@ class AccountViewModelTest {
         val isLoading = getCurrentAccountState().isLoading
 
         verifyMocks()
-        coVerify(exactly =1) { getUserRecipesUseCase("userUID") }
+        coVerifyOrder {
+            getUserUseCase("userUID")
+            getUserRecipesUseCase("userUID")
+        }
         assertThat(result).isEqualTo(recipes.sortedByDescending { it.date })
         assertThat(isLoading).isFalse()
     }
 
     @Test
     fun `OnSortRecipes - recipes are sorted in descending order`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
         coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
 
         accountViewModel = setViewModel()
@@ -226,12 +272,16 @@ class AccountViewModelTest {
         val result = getCurrentAccountState().recipes
 
         verifyMocks()
-        coVerify(exactly =1) { getUserRecipesUseCase("userUID") }
+        coVerifyOrder {
+            getUserUseCase("userUID")
+            getUserRecipesUseCase("userUID")
+        }
         assertThat(result).isEqualTo(recipes.sortedByDescending { it.date })
     }
 
     @Test
     fun `OnSortRecipes - recipes are sorted in ascending order`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
         coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
 
         accountViewModel = setViewModel()
@@ -239,7 +289,10 @@ class AccountViewModelTest {
         val result = getCurrentAccountState().recipes
 
         verifyMocks()
-        coVerify(exactly =1) { getUserRecipesUseCase("userUID") }
+        coVerifyOrder {
+            getUserUseCase("userUID")
+            getUserRecipesUseCase("userUID")
+        }
         assertThat(result).isEqualTo(recipes.sortedBy { it.date })
     }
 }

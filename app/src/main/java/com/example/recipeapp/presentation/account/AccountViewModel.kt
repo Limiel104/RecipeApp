@@ -117,6 +117,7 @@ class AccountViewModel @Inject constructor(
                         userUID = _accountState.value.userUID,
                         name = _accountState.value.editName
                     )
+
                     if(isNameValidationSuccessful(_accountState.value.editName))
                         updateUser(user)
                     else
