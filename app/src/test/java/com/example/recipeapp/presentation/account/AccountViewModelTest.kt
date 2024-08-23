@@ -424,6 +424,93 @@ class AccountViewModelTest {
     }
 
     @Test
+    fun `updateUserPassword sets recipes successfully`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
+        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+        coEvery { updateUserPasswordUseCase(any()) } returns flowOf(Resource.Success(true))
+
+        accountViewModel = setViewModel()
+        accountViewModel.onEvent(AccountEvent.EnteredPassword("newPassword1+"))
+        accountViewModel.onEvent(AccountEvent.EnteredConfirmPassword("newPassword1+"))
+        accountViewModel.onEvent(AccountEvent.OnSave)
+        val resultIsEditDialogActivated = getCurrentAccountState().isEditDialogActivated
+        val resultEditName = getCurrentAccountState().editName
+        val resultPassword = getCurrentAccountState().password
+        val resultConfirmPassword = getCurrentAccountState().confirmPassword
+        val isLoading = getCurrentAccountState().isLoading
+
+        verifyMocks()
+        coVerifyOrder {
+            getUserUseCase("userUID")
+            getUserRecipesUseCase("userUID")
+            updateUserPasswordUseCase("newPassword1+")
+        }
+        assertThat(resultIsEditDialogActivated).isFalse()
+        assertThat(resultEditName).isEmpty()
+        assertThat(resultPassword).isEmpty()
+        assertThat(resultConfirmPassword).isEmpty()
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `updateUserPassword returns error`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
+        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+        coEvery { updateUserPasswordUseCase(any()) } returns flowOf(Resource.Error("Error message"))
+
+        accountViewModel = setViewModel()
+        accountViewModel.onEvent(AccountEvent.EnteredPassword("newPassword1+"))
+        accountViewModel.onEvent(AccountEvent.EnteredConfirmPassword("newPassword1+"))
+        accountViewModel.onEvent(AccountEvent.OnSave)
+        val resultIsEditDialogActivated = getCurrentAccountState().isEditDialogActivated
+        val resultEditName = getCurrentAccountState().editName
+        val resultPassword = getCurrentAccountState().password
+        val resultConfirmPassword = getCurrentAccountState().confirmPassword
+        val isLoading = getCurrentAccountState().isLoading
+
+        verifyMocks()
+        coVerifyOrder {
+            getUserUseCase("userUID")
+            getUserRecipesUseCase("userUID")
+            updateUserPasswordUseCase("newPassword1+")
+        }
+        assertThat(resultIsEditDialogActivated).isFalse()
+        assertThat(resultEditName).isEmpty()
+        assertThat(resultPassword).isEqualTo("newPassword1+")
+        assertThat(resultConfirmPassword).isEqualTo("newPassword1+")
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `updateUserPassword is loading`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
+        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+        coEvery { updateUserPasswordUseCase(any()) } returns flowOf(Resource.Loading(true))
+
+        accountViewModel = setViewModel()
+        accountViewModel.onEvent(AccountEvent.EnteredPassword("newPassword1+"))
+        accountViewModel.onEvent(AccountEvent.EnteredConfirmPassword("newPassword1+"))
+        accountViewModel.onEvent(AccountEvent.OnSave)
+        val resultIsEditDialogActivated = getCurrentAccountState().isEditDialogActivated
+        val resultEditName = getCurrentAccountState().editName
+        val resultPassword = getCurrentAccountState().password
+        val resultConfirmPassword = getCurrentAccountState().confirmPassword
+        val isLoading = getCurrentAccountState().isLoading
+
+        verifyMocks()
+        coVerifyOrder {
+            getUserUseCase("userUID")
+            getUserRecipesUseCase("userUID")
+            updateUserPasswordUseCase("newPassword1+")
+        }
+        assertThat(resultIsEditDialogActivated).isFalse()
+        assertThat(resultEditName).isEmpty()
+        assertThat(resultPassword).isEqualTo("newPassword1+")
+        assertThat(resultConfirmPassword).isEqualTo("newPassword1+")
+        assertThat(isLoading).isTrue()
+    }
+
+    @Test
     fun `getUserRecipes - recipes are sorted correctly`() {
         coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
         coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
