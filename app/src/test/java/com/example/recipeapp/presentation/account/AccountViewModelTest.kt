@@ -23,6 +23,7 @@ import io.mockk.coVerifyOrder
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verifySequence
 import kotlinx.coroutines.flow.flowOf
 
 import org.junit.After
@@ -155,6 +156,7 @@ class AccountViewModelTest {
 
     @After
     fun tearDown() {
+        confirmVerified(getUserUseCase)
         confirmVerified(getUserRecipesUseCase)
         confirmVerified(getCurrentUserUseCase)
         confirmVerified(logoutUseCase)
@@ -188,6 +190,97 @@ class AccountViewModelTest {
             firebaseUser.uid
         }
     }
+
+    @Test
+    fun `checkIfUserLoggedIn - user is logged in`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
+        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+
+        accountViewModel = setViewModel()
+        val result = getCurrentAccountState().isUserLoggedIn
+
+        coVerifyOrder {
+            getUserUseCase("userUID")
+            getUserRecipesUseCase("userUID")
+        }
+        verifyMocks()
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `checkIfUserLoggedIn - user is not logged in`() {
+        every { getCurrentUserUseCase() } returns null
+
+        accountViewModel = setViewModel()
+        val result = getCurrentAccountState().isUserLoggedIn
+
+        verifySequence { getCurrentUserUseCase() }
+        assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `getUser sets recipes successfully`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
+        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+
+        accountViewModel = setViewModel()
+        val resultUserUID = getCurrentAccountState().userUID
+        val resultUserName = getCurrentAccountState().name
+        val isLoading = getCurrentAccountState().isLoading
+
+        verifyMocks()
+        coVerifyOrder {
+            getUserUseCase("userUID")
+            getUserRecipesUseCase("userUID")
+        }
+        assertThat(resultUserUID).isEqualTo("userUID")
+        assertThat(resultUserName).isEqualTo("User Name")
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `getUser returns error`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Error("Error message"))
+        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Error("Error message"))
+
+        accountViewModel = setViewModel()
+        val resultUserUID = getCurrentAccountState().userUID
+        val resultUserName = getCurrentAccountState().name
+        val isLoading = getCurrentAccountState().isLoading
+
+        verifyMocks()
+        coVerifyOrder {
+            getUserUseCase("userUID")
+            getUserRecipesUseCase("userUID")
+        }
+        assertThat(resultUserUID).isEqualTo("")
+        assertThat(resultUserName).isEqualTo("")
+        assertThat(isLoading).isFalse()
+        confirmVerified(
+            getUserRecipesUseCase
+        )
+    }
+
+    @Test
+    fun `getUser is loading`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Loading(true))
+        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+
+        accountViewModel = setViewModel()
+        val resultUserUID = getCurrentAccountState().userUID
+        val resultUserName = getCurrentAccountState().name
+        val isLoading = getCurrentAccountState().isLoading
+
+        verifyMocks()
+        coVerifyOrder {
+            getUserUseCase("userUID")
+            getUserRecipesUseCase("userUID")
+        }
+        assertThat(resultUserUID).isEqualTo("")
+        assertThat(resultUserName).isEqualTo("")
+        assertThat(isLoading).isTrue()
+    }
+
     @Test
     fun `getUserRecipes sets recipes successfully`() {
         coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
@@ -222,7 +315,6 @@ class AccountViewModelTest {
         }
         assertThat(result).isEmpty()
         assertThat(isLoading).isFalse()
-        confirmVerified(getUserRecipesUseCase)
     }
 
     @Test
@@ -241,7 +333,6 @@ class AccountViewModelTest {
         }
         assertThat(result).isEmpty()
         assertThat(isLoading).isTrue()
-        confirmVerified(getUserRecipesUseCase)
     }
 
     @Test
