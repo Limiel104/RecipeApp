@@ -209,11 +209,14 @@ class AccountViewModelTest {
         }
     }
 
-    @Test
-    fun `checkIfUserLoggedIn - user is logged in`() {
+    private fun setMocks() {
         coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
         coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+    }
 
+    @Test
+    fun `checkIfUserLoggedIn - user is logged in`() {
+        setMocks()
         accountViewModel = setViewModel()
         val result = getCurrentAccountState().isUserLoggedIn
 
@@ -234,9 +237,7 @@ class AccountViewModelTest {
 
     @Test
     fun `getUser sets recipes successfully`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
-
+        setMocks()
         accountViewModel = setViewModel()
         val resultUserUID = getCurrentAccountState().userUID
         val resultUserName = getCurrentAccountState().name
@@ -282,9 +283,7 @@ class AccountViewModelTest {
 
     @Test
     fun `getUserRecipes sets recipes successfully`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
-
+        setMocks()
         accountViewModel = setViewModel()
         val result = getCurrentAccountState().recipes
         val isLoading = getCurrentAccountState().isLoading
@@ -324,8 +323,7 @@ class AccountViewModelTest {
 
     @Test
     fun `updateUser sets recipes successfully`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+        setMocks()
         coEvery { updateUserUseCase(any()) } returns flowOf(Resource.Success(true))
 
         accountViewModel = setViewModel()
@@ -352,8 +350,7 @@ class AccountViewModelTest {
 
     @Test
     fun `updateUser returns error`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+        setMocks()
         coEvery { updateUserUseCase(any()) } returns flowOf(Resource.Error("Error message"))
 
         accountViewModel = setViewModel()
@@ -380,8 +377,7 @@ class AccountViewModelTest {
 
     @Test
     fun `updateUser is loading`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+        setMocks()
         coEvery { updateUserUseCase(any()) } returns flowOf(Resource.Loading(true))
 
         accountViewModel = setViewModel()
@@ -408,8 +404,7 @@ class AccountViewModelTest {
 
     @Test
     fun `updateUserPassword sets recipes successfully`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+        setMocks()
         coEvery { updateUserPasswordUseCase(any()) } returns flowOf(Resource.Success(true))
 
         accountViewModel = setViewModel()
@@ -437,8 +432,7 @@ class AccountViewModelTest {
 
     @Test
     fun `updateUserPassword returns error`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+        setMocks()
         coEvery { updateUserPasswordUseCase(any()) } returns flowOf(Resource.Error("Error message"))
 
         accountViewModel = setViewModel()
@@ -466,8 +460,7 @@ class AccountViewModelTest {
 
     @Test
     fun `updateUserPassword is loading`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+        setMocks()
         coEvery { updateUserPasswordUseCase(any()) } returns flowOf(Resource.Loading(true))
 
         accountViewModel = setViewModel()
@@ -495,9 +488,7 @@ class AccountViewModelTest {
 
     @Test
     fun `getUserRecipes - recipes are sorted correctly`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
-
+        setMocks()
         accountViewModel = setViewModel()
         val result = getCurrentAccountState().recipes
         val isLoading = getCurrentAccountState().isLoading
@@ -509,9 +500,7 @@ class AccountViewModelTest {
 
     @Test
     fun `OnSortRecipes - recipes are sorted in descending order`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
-
+        setMocks()
         accountViewModel = setViewModel()
         accountViewModel.onEvent(AccountEvent.OnSortRecipes(RecipeOrder.DateDescending))
         val result = getCurrentAccountState().recipes
@@ -522,9 +511,7 @@ class AccountViewModelTest {
 
     @Test
     fun `OnSortRecipes - recipes are sorted in ascending order`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
-
+        setMocks()
         accountViewModel = setViewModel()
         accountViewModel.onEvent(AccountEvent.OnSortRecipes(RecipeOrder.DateAscending))
         val result = getCurrentAccountState().recipes
@@ -535,9 +522,7 @@ class AccountViewModelTest {
 
     @Test
     fun `EnteredName - initially empty`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
-
+        setMocks()
         accountViewModel = setViewModel()
         accountViewModel.onEvent(AccountEvent.OnEditButtonClicked)
         val initialNameState = getCurrentAccountState().editName
@@ -552,9 +537,7 @@ class AccountViewModelTest {
 
     @Test
     fun `EnteredName - initially not empty - changed string`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
-
+        setMocks()
         accountViewModel = setViewModel()
         accountViewModel.onEvent(AccountEvent.OnEditButtonClicked)
         accountViewModel.onEvent(AccountEvent.EnteredName("name"))
@@ -570,9 +553,7 @@ class AccountViewModelTest {
 
     @Test
     fun `EnteredName - initially not empty - result empty`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
-
+        setMocks()
         accountViewModel = setViewModel()
         accountViewModel.onEvent(AccountEvent.OnEditButtonClicked)
         accountViewModel.onEvent(AccountEvent.EnteredName("name"))
@@ -588,9 +569,7 @@ class AccountViewModelTest {
 
     @Test
     fun `EnteredPassword - initially empty`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
-
+        setMocks()
         accountViewModel = setViewModel()
         accountViewModel.onEvent(AccountEvent.OnEditButtonClicked)
         val initialPasswordState = getCurrentAccountState().password
@@ -605,9 +584,7 @@ class AccountViewModelTest {
 
     @Test
     fun `EnteredPassword - initially not empty - changed string`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
-
+        setMocks()
         accountViewModel = setViewModel()
         accountViewModel.onEvent(AccountEvent.OnEditButtonClicked)
         accountViewModel.onEvent(AccountEvent.EnteredPassword("password"))
@@ -623,9 +600,7 @@ class AccountViewModelTest {
 
     @Test
     fun `EnteredPassword - initially not empty - result empty`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
-
+        setMocks()
         accountViewModel = setViewModel()
         accountViewModel.onEvent(AccountEvent.OnEditButtonClicked)
         accountViewModel.onEvent(AccountEvent.EnteredPassword("password"))
@@ -641,9 +616,7 @@ class AccountViewModelTest {
 
     @Test
     fun `EnteredConfirmPassword - initially empty`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
-
+        setMocks()
         accountViewModel = setViewModel()
         accountViewModel.onEvent(AccountEvent.OnEditButtonClicked)
         val initialConfirmPasswordState = getCurrentAccountState().confirmPassword
@@ -658,9 +631,7 @@ class AccountViewModelTest {
 
     @Test
     fun `EnteredConfirmPassword - initially not empty - changed string`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
-
+        setMocks()
         accountViewModel = setViewModel()
         accountViewModel.onEvent(AccountEvent.OnEditButtonClicked)
         accountViewModel.onEvent(AccountEvent.EnteredConfirmPassword("password"))
@@ -676,9 +647,7 @@ class AccountViewModelTest {
 
     @Test
     fun `EnteredConfirmPassword - initially not empty - result empty`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
-
+        setMocks()
         accountViewModel = setViewModel()
         accountViewModel.onEvent(AccountEvent.OnEditButtonClicked)
         accountViewModel.onEvent(AccountEvent.EnteredConfirmPassword("password"))
@@ -694,9 +663,7 @@ class AccountViewModelTest {
 
     @Test
     fun `OnEditButtonClicked - edit dialog is opened`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
-
+        setMocks()
         accountViewModel = setViewModel()
         val initialEditDialogState = getCurrentAccountState().isEditDialogActivated
 
@@ -710,9 +677,7 @@ class AccountViewModelTest {
 
     @Test
     fun `OnDismiss - edit dialog is closed`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
-
+        setMocks()
         accountViewModel = setViewModel()
         accountViewModel.onEvent(AccountEvent.OnEditButtonClicked)
         val initialEditDialogState = getCurrentAccountState().isEditDialogActivated
@@ -727,9 +692,7 @@ class AccountViewModelTest {
 
     @Test
     fun `OnDismiss - state is reset`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
-
+        setMocks()
         accountViewModel = setViewModel()
         accountViewModel.onEvent(AccountEvent.OnEditButtonClicked)
         accountViewModel.onEvent(AccountEvent.EnteredName("name"))
@@ -755,8 +718,7 @@ class AccountViewModelTest {
 
     @Test
     fun `OnSave - name field is filled - edit dialog is closed`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+        setMocks()
         coEvery { updateUserUseCase(any()) } returns flowOf(Resource.Success(true))
 
         accountViewModel = setViewModel()
@@ -779,8 +741,7 @@ class AccountViewModelTest {
 
     @Test
     fun `OnSave - name field is filled - state is reset`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+        setMocks()
         coEvery { updateUserUseCase(any()) } returns flowOf(Resource.Success(true))
 
         accountViewModel = setViewModel()
@@ -803,8 +764,7 @@ class AccountViewModelTest {
 
     @Test
     fun `OnSave - password fields are filled - edit dialog is closed`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+        setMocks()
         coEvery { updateUserPasswordUseCase(any()) } returns flowOf(Resource.Success(true))
 
         accountViewModel = setViewModel()
@@ -828,8 +788,7 @@ class AccountViewModelTest {
 
     @Test
     fun `OnSave - password fields are filled - state is reset`() {
-        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+        setMocks()
         coEvery { updateUserPasswordUseCase(any()) } returns flowOf(Resource.Success(true))
 
         accountViewModel = setViewModel()
@@ -853,5 +812,142 @@ class AccountViewModelTest {
         assertThat(initialConfirmPasswordState).isEqualTo("newPassword1+")
         assertThat(resultPasswordState).isEmpty()
         assertThat(resultConfirmPasswordState).isEmpty()
+    }
+
+    @Test
+    fun `OnSave - password is too short`() {
+        setMocks()
+        accountViewModel = setViewModel()
+        accountViewModel.onEvent(AccountEvent.EnteredConfirmPassword("Qwe"))
+        val initialPasswordErrorState = getCurrentAccountState().passwordError
+
+        accountViewModel.onEvent(AccountEvent.EnteredPassword("Qwe"))
+        accountViewModel.onEvent(AccountEvent.OnSave)
+        val resultPasswordErrorState = getCurrentAccountState().passwordError
+
+        verifyAllMocks()
+        assertThat(initialPasswordErrorState).isNull()
+        assertThat(resultPasswordErrorState).isEqualTo("Password is too short")
+    }
+
+    @Test
+    fun `OnSave - password does not have at least one digit`() {
+        setMocks()
+        accountViewModel = setViewModel()
+        accountViewModel.onEvent(AccountEvent.EnteredConfirmPassword("Qwerty++"))
+        val initialPasswordErrorState = getCurrentAccountState().passwordError
+
+        accountViewModel.onEvent(AccountEvent.EnteredPassword("Qwerty++"))
+        accountViewModel.onEvent(AccountEvent.OnSave)
+        val resultPasswordErrorState = getCurrentAccountState().passwordError
+
+        verifyAllMocks()
+        assertThat(initialPasswordErrorState).isNull()
+        assertThat(resultPasswordErrorState).isEqualTo("Password should have at least one digit")
+    }
+
+    @Test
+    fun `OnSave - password does not have at least one capital letter`() {
+        setMocks()
+        accountViewModel = setViewModel()
+        accountViewModel.onEvent(AccountEvent.EnteredConfirmPassword("qwerty1+"))
+        val initialPasswordErrorState = getCurrentAccountState().passwordError
+
+        accountViewModel.onEvent(AccountEvent.EnteredPassword("qwerty1+"))
+        accountViewModel.onEvent(AccountEvent.OnSave)
+        val resultPasswordErrorState = getCurrentAccountState().passwordError
+
+        verifyAllMocks()
+        assertThat(initialPasswordErrorState).isNull()
+        assertThat(resultPasswordErrorState).isEqualTo("Password should have at least one capital letter")
+    }
+
+    @Test
+    fun `OnSave - password does not have at least one special character`() {
+        setMocks()
+        accountViewModel = setViewModel()
+        accountViewModel.onEvent(AccountEvent.EnteredConfirmPassword("Qwerty11"))
+        val initialPasswordErrorState = getCurrentAccountState().passwordError
+
+        accountViewModel.onEvent(AccountEvent.EnteredPassword("Qwerty11"))
+        accountViewModel.onEvent(AccountEvent.OnSave)
+        val resultPasswordErrorState = getCurrentAccountState().passwordError
+
+        verifyAllMocks()
+        assertThat(initialPasswordErrorState).isNull()
+        assertThat(resultPasswordErrorState).isEqualTo("Password should have at least one special character")
+    }
+
+    @Test
+    fun `OnSave - confirm password does not match`() {
+        setMocks()
+        accountViewModel = setViewModel()
+        accountViewModel.onEvent(AccountEvent.EnteredPassword("Qwerty11"))
+        val initialConfirmPasswordErrorState = getCurrentAccountState().confirmPasswordError
+
+        accountViewModel.onEvent(AccountEvent.EnteredConfirmPassword("Qwerty1+"))
+        accountViewModel.onEvent(AccountEvent.OnSave)
+        val resultConfirmPasswordErrorState = getCurrentAccountState().confirmPasswordError
+
+        verifyAllMocks()
+        assertThat(initialConfirmPasswordErrorState).isNull()
+        assertThat(resultConfirmPasswordErrorState).isEqualTo("Passwords don't mach")
+    }
+
+    @Test
+    fun `OnSave - name is too short`() {
+        setMocks()
+        accountViewModel = setViewModel()
+        val initialNameErrorState = getCurrentAccountState().nameError
+
+        accountViewModel.onEvent(AccountEvent.EnteredName("John4"))
+        accountViewModel.onEvent(AccountEvent.OnSave)
+        val resultNameErrorState = getCurrentAccountState().nameError
+
+        verifyAllMocks()
+        assertThat(initialNameErrorState).isNull()
+        assertThat(resultNameErrorState).isEqualTo("Name is too short")
+    }
+
+    @Test
+    fun `OnSave - name has at least one not allowed character`() {
+        setMocks()
+        accountViewModel = setViewModel()
+        val initialNameErrorState = getCurrentAccountState().nameError
+
+        accountViewModel.onEvent(AccountEvent.EnteredName("John@Smith4"))
+        accountViewModel.onEvent(AccountEvent.OnSave)
+        val resultNameErrorState = getCurrentAccountState().nameError
+
+        verifyAllMocks()
+        assertThat(initialNameErrorState).isNull()
+        assertThat(resultNameErrorState).isEqualTo("At least one character in name is not allowed")
+    }
+
+    @Test
+    fun `OnSave - all fields empty - state doesn't change`() {
+        setMocks()
+        accountViewModel = setViewModel()
+        accountViewModel.onEvent(AccountEvent.OnEditButtonClicked)
+        val initialState = getCurrentAccountState()
+
+        accountViewModel.onEvent(AccountEvent.OnSave)
+        val resultState = getCurrentAccountState()
+
+        verifyAllMocks()
+        assertThat(initialState.isEditDialogActivated).isTrue()
+        assertThat(initialState.editName).isEmpty()
+        assertThat(initialState.nameError).isNull()
+        assertThat(initialState.password).isEmpty()
+        assertThat(initialState.passwordError).isNull()
+        assertThat(initialState.confirmPassword).isEmpty()
+        assertThat(initialState.confirmPasswordError).isNull()
+        assertThat(resultState.isEditDialogActivated).isTrue()
+        assertThat(resultState.editName).isEmpty()
+        assertThat(resultState.nameError).isNull()
+        assertThat(resultState.password).isEmpty()
+        assertThat(resultState.passwordError).isNull()
+        assertThat(resultState.confirmPassword).isEmpty()
+        assertThat(resultState.confirmPasswordError).isNull()
     }
 }
