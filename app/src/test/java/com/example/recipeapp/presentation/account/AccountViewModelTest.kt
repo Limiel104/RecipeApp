@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerifyOrder
+import io.mockk.coVerifySequence
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
@@ -198,6 +199,16 @@ class AccountViewModelTest {
         }
     }
 
+    private fun verifyAllMocks() {
+        coVerifySequence {
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            firebaseUser.uid
+            getUserUseCase("userUID")
+            getUserRecipesUseCase("userUID")
+        }
+    }
+
     @Test
     fun `checkIfUserLoggedIn - user is logged in`() {
         coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
@@ -206,11 +217,7 @@ class AccountViewModelTest {
         accountViewModel = setViewModel()
         val result = getCurrentAccountState().isUserLoggedIn
 
-        verifyMocks()
-        coVerifyOrder {
-            getUserUseCase("userUID")
-            getUserRecipesUseCase("userUID")
-        }
+        verifyAllMocks()
         assertThat(result).isTrue()
     }
 
@@ -235,11 +242,7 @@ class AccountViewModelTest {
         val resultUserName = getCurrentAccountState().name
         val isLoading = getCurrentAccountState().isLoading
 
-        verifyMocks()
-        coVerifyOrder {
-            getUserUseCase("userUID")
-            getUserRecipesUseCase("userUID")
-        }
+        verifyAllMocks()
         assertThat(resultUserUID).isEqualTo("userUID")
         assertThat(resultUserName).isEqualTo("User Name")
         assertThat(isLoading).isFalse()
@@ -255,11 +258,7 @@ class AccountViewModelTest {
         val resultUserName = getCurrentAccountState().name
         val isLoading = getCurrentAccountState().isLoading
 
-        verifyMocks()
-        coVerifyOrder {
-            getUserUseCase("userUID")
-            getUserRecipesUseCase("userUID")
-        }
+        verifyAllMocks()
         assertThat(resultUserUID).isEqualTo("")
         assertThat(resultUserName).isEqualTo("")
         assertThat(isLoading).isFalse()
@@ -275,11 +274,7 @@ class AccountViewModelTest {
         val resultUserName = getCurrentAccountState().name
         val isLoading = getCurrentAccountState().isLoading
 
-        verifyMocks()
-        coVerifyOrder {
-            getUserUseCase("userUID")
-            getUserRecipesUseCase("userUID")
-        }
+        verifyAllMocks()
         assertThat(resultUserUID).isEqualTo("")
         assertThat(resultUserName).isEqualTo("")
         assertThat(isLoading).isTrue()
@@ -294,11 +289,7 @@ class AccountViewModelTest {
         val result = getCurrentAccountState().recipes
         val isLoading = getCurrentAccountState().isLoading
 
-        verifyMocks()
-        coVerifyOrder {
-            getUserUseCase("userUID")
-            getUserRecipesUseCase("userUID")
-        }
+        verifyAllMocks()
         assertThat(result).containsExactlyElementsIn(recipes)
         assertThat(isLoading).isFalse()
     }
@@ -312,11 +303,7 @@ class AccountViewModelTest {
         val result = getCurrentAccountState().recipes
         val isLoading = getCurrentAccountState().isLoading
 
-        verifyMocks()
-        coVerifyOrder {
-            getUserUseCase("userUID")
-            getUserRecipesUseCase("userUID")
-        }
+        verifyAllMocks()
         assertThat(result).isEmpty()
         assertThat(isLoading).isFalse()
     }
@@ -330,11 +317,7 @@ class AccountViewModelTest {
         val result = getCurrentAccountState().recipes
         val isLoading = getCurrentAccountState().isLoading
 
-        verifyMocks()
-        coVerifyOrder {
-            getUserUseCase("userUID")
-            getUserRecipesUseCase("userUID")
-        }
+        verifyAllMocks()
         assertThat(result).isEmpty()
         assertThat(isLoading).isTrue()
     }
@@ -519,11 +502,7 @@ class AccountViewModelTest {
         val result = getCurrentAccountState().recipes
         val isLoading = getCurrentAccountState().isLoading
 
-        verifyMocks()
-        coVerifyOrder {
-            getUserUseCase("userUID")
-            getUserRecipesUseCase("userUID")
-        }
+        verifyAllMocks()
         assertThat(result).isEqualTo(recipes.sortedByDescending { it.date })
         assertThat(isLoading).isFalse()
     }
@@ -537,11 +516,7 @@ class AccountViewModelTest {
         accountViewModel.onEvent(AccountEvent.OnSortRecipes(RecipeOrder.DateDescending))
         val result = getCurrentAccountState().recipes
 
-        verifyMocks()
-        coVerifyOrder {
-            getUserUseCase("userUID")
-            getUserRecipesUseCase("userUID")
-        }
+        verifyAllMocks()
         assertThat(result).isEqualTo(recipes.sortedByDescending { it.date })
     }
 
@@ -554,11 +529,166 @@ class AccountViewModelTest {
         accountViewModel.onEvent(AccountEvent.OnSortRecipes(RecipeOrder.DateAscending))
         val result = getCurrentAccountState().recipes
 
-        verifyMocks()
-        coVerifyOrder {
-            getUserUseCase("userUID")
-            getUserRecipesUseCase("userUID")
-        }
+        verifyAllMocks()
         assertThat(result).isEqualTo(recipes.sortedBy { it.date })
+    }
+
+    @Test
+    fun `enteredName - initially empty`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
+        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+
+        accountViewModel = setViewModel()
+        accountViewModel.onEvent(AccountEvent.OnEditButtonClicked)
+        val initialNameState = getCurrentAccountState().editName
+
+        accountViewModel.onEvent(AccountEvent.EnteredName("name"))
+        val resultNameState = getCurrentAccountState().editName
+
+        verifyAllMocks()
+        assertThat(initialNameState).isEmpty()
+        assertThat(resultNameState).isEqualTo("name")
+    }
+
+    @Test
+    fun `enteredName - initially not empty - changed string`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
+        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+
+        accountViewModel = setViewModel()
+        accountViewModel.onEvent(AccountEvent.OnEditButtonClicked)
+        accountViewModel.onEvent(AccountEvent.EnteredName("name"))
+        val initialNameState = getCurrentAccountState().editName
+
+        accountViewModel.onEvent(AccountEvent.EnteredName("John4"))
+        val resultNameState = getCurrentAccountState().editName
+
+        verifyAllMocks()
+        assertThat(initialNameState).isEqualTo("name")
+        assertThat(resultNameState).isEqualTo("John4")
+    }
+
+    @Test
+    fun `enteredName - initially not empty - result empty`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
+        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+
+        accountViewModel = setViewModel()
+        accountViewModel.onEvent(AccountEvent.OnEditButtonClicked)
+        accountViewModel.onEvent(AccountEvent.EnteredName("name"))
+        val initialNameState = getCurrentAccountState().editName
+
+        accountViewModel.onEvent(AccountEvent.EnteredName(""))
+        val resultNameState = getCurrentAccountState().editName
+
+        verifyAllMocks()
+        assertThat(initialNameState).isEqualTo("name")
+        assertThat(resultNameState).isEmpty()
+    }
+
+    @Test
+    fun `enteredPassword - initially empty`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
+        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+
+        accountViewModel = setViewModel()
+        accountViewModel.onEvent(AccountEvent.OnEditButtonClicked)
+        val initialPasswordState = getCurrentAccountState().password
+
+        accountViewModel.onEvent(AccountEvent.EnteredPassword("password"))
+        val resultPasswordState = getCurrentAccountState().password
+
+        verifyAllMocks()
+        assertThat(initialPasswordState).isEmpty()
+        assertThat(resultPasswordState).isEqualTo("password")
+    }
+
+    @Test
+    fun `enteredPassword - initially not empty - changed string`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
+        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+
+        accountViewModel = setViewModel()
+        accountViewModel.onEvent(AccountEvent.OnEditButtonClicked)
+        accountViewModel.onEvent(AccountEvent.EnteredPassword("password"))
+        val initialPasswordState = getCurrentAccountState().password
+
+        accountViewModel.onEvent(AccountEvent.EnteredPassword("Qwerty1+"))
+        val resultPasswordState = getCurrentAccountState().password
+
+        verifyAllMocks()
+        assertThat(initialPasswordState).isEqualTo("password")
+        assertThat(resultPasswordState).isEqualTo("Qwerty1+")
+    }
+
+    @Test
+    fun `enteredPassword - initially not empty - result empty`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
+        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+
+        accountViewModel = setViewModel()
+        accountViewModel.onEvent(AccountEvent.OnEditButtonClicked)
+        accountViewModel.onEvent(AccountEvent.EnteredPassword("password"))
+        val initialPasswordState = getCurrentAccountState().password
+
+        accountViewModel.onEvent(AccountEvent.EnteredPassword(""))
+        val resultPasswordState = getCurrentAccountState().password
+
+        verifyAllMocks()
+        assertThat(initialPasswordState).isEqualTo("password")
+        assertThat(resultPasswordState).isEmpty()
+    }
+
+    @Test
+    fun `enteredConfirmPassword - initially empty`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
+        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+
+        accountViewModel = setViewModel()
+        accountViewModel.onEvent(AccountEvent.OnEditButtonClicked)
+        val initialConfirmPasswordState = getCurrentAccountState().confirmPassword
+
+        accountViewModel.onEvent(AccountEvent.EnteredConfirmPassword("password"))
+        val resultConfirmPasswordState = getCurrentAccountState().confirmPassword
+
+        verifyAllMocks()
+        assertThat(initialConfirmPasswordState).isEmpty()
+        assertThat(resultConfirmPasswordState).isEqualTo("password")
+    }
+
+    @Test
+    fun `enteredConfirmPassword - initially not empty - changed string`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
+        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+
+        accountViewModel = setViewModel()
+        accountViewModel.onEvent(AccountEvent.OnEditButtonClicked)
+        accountViewModel.onEvent(AccountEvent.EnteredConfirmPassword("password"))
+        val initialConfirmPasswordState = getCurrentAccountState().confirmPassword
+
+        accountViewModel.onEvent(AccountEvent.EnteredConfirmPassword("Qwerty1+"))
+        val resultConfirmPasswordState = getCurrentAccountState().confirmPassword
+
+        verifyAllMocks()
+        assertThat(initialConfirmPasswordState).isEqualTo("password")
+        assertThat(resultConfirmPasswordState).isEqualTo("Qwerty1+")
+    }
+
+    @Test
+    fun `enteredConfirmPassword - initially not empty - result empty`() {
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
+        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+
+        accountViewModel = setViewModel()
+        accountViewModel.onEvent(AccountEvent.OnEditButtonClicked)
+        accountViewModel.onEvent(AccountEvent.EnteredConfirmPassword("password"))
+        val initialConfirmPasswordState = getCurrentAccountState().confirmPassword
+
+        accountViewModel.onEvent(AccountEvent.EnteredConfirmPassword(""))
+        val resultConfirmPasswordState = getCurrentAccountState().confirmPassword
+
+        verifyAllMocks()
+        assertThat(initialConfirmPasswordState).isEqualTo("password")
+        assertThat(resultConfirmPasswordState).isEmpty()
     }
 }
