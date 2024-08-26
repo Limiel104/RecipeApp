@@ -6,4 +6,6 @@ sealed class AddRecipeUiEvent {
     data class LaunchCamera(val tempUri: Uri?): AddRecipeUiEvent()
     object LaunchGetPermission: AddRecipeUiEvent()
     object LaunchGallery: AddRecipeUiEvent()
+    object NavigateBack: AddRecipeUiEvent()
+    object NavigateToAccount: AddRecipeUiEvent()
 }

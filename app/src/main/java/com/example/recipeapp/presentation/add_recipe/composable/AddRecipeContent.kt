@@ -99,6 +99,7 @@ fun AddRecipeContent(
     onCheckBoxToggled: (Category) -> Unit,
     onDialogDismiss: () -> Unit,
     onDialogSave: () -> Unit,
+    onGoBack: () -> Unit,
     onAddRecipe: () -> Unit
 ) {
     Scaffold(
@@ -107,7 +108,7 @@ fun AddRecipeContent(
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.add_recipe)) },
                 navigationIcon = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = { onGoBack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back button"
@@ -499,6 +500,7 @@ fun AddRecipeContentPreview() {
             onCheckBoxToggled = {},
             onDialogDismiss = {},
             onDialogSave = {},
+            onGoBack = {},
             onAddRecipe = {}
         )
     }
@@ -552,6 +554,7 @@ fun AddRecipeContentPreviewErrorsShown() {
             onCheckBoxToggled = {},
             onDialogDismiss = {},
             onDialogSave = {},
+            onGoBack = {},
             onAddRecipe = {},
         )
     }
@@ -606,6 +609,7 @@ fun AddRecipeContentPreviewBottomSheetOpen() {
             onCheckBoxToggled = {},
             onDialogDismiss = {},
             onDialogSave = {},
+            onGoBack = {},
             onAddRecipe = {}
         )
     }
@@ -660,6 +664,7 @@ fun AddRecipeContentPreviewCategoriesDialog() {
             onCheckBoxToggled = {},
             onDialogDismiss = {},
             onDialogSave = {},
+            onGoBack = {},
             onAddRecipe = {}
         )
     }
