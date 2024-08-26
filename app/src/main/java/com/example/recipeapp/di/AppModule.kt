@@ -30,11 +30,14 @@ import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
 import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
 import com.example.recipeapp.domain.use_case.GetSearchSuggestionsUseCase
 import com.example.recipeapp.domain.use_case.GetRecipesUseCase
+import com.example.recipeapp.domain.use_case.GetUserRecipesUseCase
 import com.example.recipeapp.domain.use_case.GetUserShoppingListsUseCase
 import com.example.recipeapp.domain.use_case.GetUserUseCase
 import com.example.recipeapp.domain.use_case.LoginUseCase
 import com.example.recipeapp.domain.use_case.LogoutUseCase
 import com.example.recipeapp.domain.use_case.SignupUseCase
+import com.example.recipeapp.domain.use_case.SortRecipesUseCase
+import com.example.recipeapp.domain.use_case.UpdateUserPasswordUseCase
 import com.example.recipeapp.domain.use_case.UpdateUserUseCase
 import com.example.recipeapp.domain.use_case.ValidateConfirmPasswordUseCase
 import com.example.recipeapp.domain.use_case.ValidateEmailUseCase
@@ -202,6 +205,25 @@ object AppModule {
     @Singleton
     fun provideAddRecipeUseCase(recipeRepository: RecipeRepository): AddRecipeUseCase {
         return AddRecipeUseCase(recipeRepository)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideGetUserRecipesUseCase(recipeRepository: RecipeRepository): GetUserRecipesUseCase {
+        return GetUserRecipesUseCase(recipeRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSortRecipesUseCase(): SortRecipesUseCase {
+        return SortRecipesUseCase()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUpdateUserPasswordUseCase(authRepository: AuthRepository): UpdateUserPasswordUseCase {
+        return UpdateUserPasswordUseCase(authRepository)
     }
 
     @Provides

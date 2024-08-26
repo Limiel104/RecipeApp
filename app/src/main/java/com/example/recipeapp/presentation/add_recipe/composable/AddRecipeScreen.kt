@@ -28,6 +28,7 @@ import com.example.recipeapp.R
 import com.example.recipeapp.presentation.add_recipe.AddRecipeEvent
 import com.example.recipeapp.presentation.add_recipe.AddRecipeUiEvent
 import com.example.recipeapp.presentation.add_recipe.AddRecipeViewModel
+import com.example.recipeapp.presentation.navigation.Screen
 import kotlinx.coroutines.flow.collectLatest
 import java.io.File
 
@@ -116,6 +117,14 @@ fun AddRecipeScreen(
                             )
                         )
                     }
+
+                    AddRecipeUiEvent.NavigateBack -> {
+                        navController.popBackStack()
+                    }
+
+                    AddRecipeUiEvent.NavigateToAccount -> {
+                        navController.popBackStack(Screen.AccountScreen.route, true)
+                    }
                 }
             }
         }
@@ -158,6 +167,7 @@ fun AddRecipeScreen(
         onCheckBoxToggled = { viewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(it)) },
         onDialogDismiss = { viewModel.onEvent(AddRecipeEvent.OnDialogDismiss) },
         onDialogSave = { viewModel.onEvent(AddRecipeEvent.OnDialogSave) },
+        onGoBack = { viewModel.onEvent(AddRecipeEvent.OnGoBack) },
         onAddRecipe = { viewModel.onEvent(AddRecipeEvent.OnAddRecipe) },
     )
 }

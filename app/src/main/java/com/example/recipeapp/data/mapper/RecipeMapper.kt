@@ -10,6 +10,22 @@ import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Recipe
 import com.example.recipeapp.domain.model.RecipeWithIngredients
 
+fun RecipeEntity.toRecipe(): Recipe {
+    return Recipe(
+        recipeId = recipeId,
+        name = name,
+        prepTime = prepTime,
+        servings = servings,
+        description = description,
+        isVegetarian = isVegetarian,
+        isVegan = isVegan,
+        imageUrl = imageUrl,
+        createdBy = createdBy,
+        categories = emptyList(),
+        date = date
+    )
+}
+
 fun RecipeDto.toRecipeEntity(): RecipeEntity {
     return RecipeEntity(
         recipeId = recipeId,
@@ -20,7 +36,8 @@ fun RecipeDto.toRecipeEntity(): RecipeEntity {
         isVegetarian = isVegetarian,
         isVegan = isVegan,
         imageUrl = imageUrl,
-        createdBy = createdBy
+        createdBy = createdBy,
+        date = date
     )
 }
 
@@ -55,7 +72,8 @@ fun RecipeWithIngredient.toRecipeWithIngredients(ingredientList: List<Ingredient
         isVegan = recipe.isVegan,
         imageUrl = recipe.imageUrl,
         createdBy = recipe.createdBy,
-        categories = categoryList
+        categories = categoryList,
+        date = recipe.date
     )
 }
 
@@ -75,7 +93,8 @@ fun RecipeWithIngredients.toRecipeDto(documentId: String): RecipeDto {
         isVegan = isVegan,
         imageUrl = imageUrl,
         createdBy = createdBy,
-        categoryList = categories
+        categoryList = categories,
+        date = date
     )
 }
 
@@ -111,6 +130,7 @@ fun RecipeWithCategory.toRecipe(): Recipe {
         isVegan = recipe.isVegan,
         imageUrl = recipe.imageUrl,
         createdBy = recipe.createdBy,
-        categories = categoryList
+        categories = categoryList,
+        date = recipe.date
     )
 }

@@ -95,6 +95,18 @@ class RecipeRepositoryImpl @Inject constructor(
         emit(Resource.Error(it.localizedMessage as String))
     }.flowOn(Dispatchers.IO)
 
+    override suspend fun getUserRecipes(userUID: String) = flow<Resource<List<Recipe>>> {
+        emit(Resource.Loading(true))
+
+        emit(Resource.Success(dao.getUserRecipes(userUID).map { it.toRecipe() }))
+
+        Log.i("TAG","User recipes")
+        emit(Resource.Loading(false))
+
+    }.catch {
+        emit(Resource.Error(it.localizedMessage as String))
+    }.flowOn(Dispatchers.IO)
+
     override suspend fun deleteRecipe(recipeId: String) = flow<Resource<Boolean>> {
         emit(Resource.Loading(true))
 

@@ -18,11 +18,11 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class GetRecipesUseCaseTest {
+class GetUserRecipesUseCaseTest {
 
     @MockK
     private lateinit var recipeRepository: RecipeRepository
-    private lateinit var getRecipesUseCase: GetRecipesUseCase
+    private lateinit var getUserRecipesUseCase: GetUserRecipesUseCase
     private lateinit var recipe: Recipe
     private lateinit var recipe2: Recipe
     private lateinit var recipe3: Recipe
@@ -30,7 +30,7 @@ class GetRecipesUseCaseTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        getRecipesUseCase = GetRecipesUseCase(recipeRepository)
+        getUserRecipesUseCase = GetUserRecipesUseCase(recipeRepository)
 
         recipe = Recipe(
             recipeId = "recipeId",
@@ -38,7 +38,7 @@ class GetRecipesUseCaseTest {
             prepTime = "40 min",
             servings = 4,
             description = "Recipe description",
-            isVegetarian = false,
+            isVegetarian = true,
             isVegan = false,
             imageUrl = "imageUrl",
             createdBy = "userId",
@@ -66,8 +66,8 @@ class GetRecipesUseCaseTest {
             prepTime = "1 h",
             servings = 6,
             description = "Recipe 3 description",
-            isVegetarian = false,
-            isVegan = false,
+            isVegetarian = true,
+            isVegan = true,
             imageUrl = "image3Url",
             createdBy = "userId",
             categories = listOf("Category4"),
@@ -84,11 +84,11 @@ class GetRecipesUseCaseTest {
     @Test
     fun `return list of recipes`() {
         val result = Resource.Success(listOf(recipe, recipe2, recipe3))
-        coEvery { recipeRepository.getRecipes(any(),any(),any()) } returns flowOf(result)
+        coEvery { recipeRepository.getUserRecipes(any()) } returns flowOf(result)
 
-        val response = runBlocking { getRecipesUseCase(false, "", "").first() }
+        val response = runBlocking { getUserRecipesUseCase("userUID").first() }
 
-        coVerify(exactly = 1) { recipeRepository.getRecipes(false, "", "") }
+        coVerify(exactly = 1) { recipeRepository.getUserRecipes("userUID") }
         assertThat(response).isEqualTo(result)
         assertThat(response).isInstanceOf(Resource.Success::class.java)
         assertThat(response.data).isInstanceOf(List::class.java)
@@ -99,11 +99,11 @@ class GetRecipesUseCaseTest {
     @Test
     fun `return list of recipes - only one recipe in the list`() {
         val result = Resource.Success(listOf(recipe))
-        coEvery { recipeRepository.getRecipes(any(),any(),any()) } returns flowOf(result)
+        coEvery { recipeRepository.getUserRecipes(any()) } returns flowOf(result)
 
-        val response = runBlocking { getRecipesUseCase(false, "", "").first() }
+        val response = runBlocking { getUserRecipesUseCase("userUID").first() }
 
-        coVerify(exactly = 1) { recipeRepository.getRecipes(false, "", "") }
+        coVerify(exactly = 1) { recipeRepository.getUserRecipes("userUID") }
         assertThat(response).isEqualTo(result)
         assertThat(response).isInstanceOf(Resource.Success::class.java)
         assertThat(response.data).isInstanceOf(List::class.java)
@@ -114,11 +114,12 @@ class GetRecipesUseCaseTest {
     @Test
     fun `return list of recipes - no recipes returned`() {
         val result = Resource.Success(emptyList<Recipe>())
-        coEvery { recipeRepository.getRecipes(any(),any(),any()) } returns flowOf(result)
 
-        val response = runBlocking { getRecipesUseCase(false, "", "").first() }
+        coEvery { recipeRepository.getUserRecipes(any()) } returns flowOf(result)
 
-        coVerify(exactly = 1) { recipeRepository.getRecipes(false, "", "") }
+        val response = runBlocking { getUserRecipesUseCase("userUID").first() }
+
+        coVerify(exactly = 1) { recipeRepository.getUserRecipes("userUID") }
         assertThat(response).isEqualTo(result)
         assertThat(response).isInstanceOf(Resource.Success::class.java)
         assertThat(response.data).isInstanceOf(List::class.java)
@@ -129,12 +130,12 @@ class GetRecipesUseCaseTest {
     @Test
     fun `return error`() {
         coEvery {
-            recipeRepository.getRecipes(any(),any(),any())
+            recipeRepository.getUserRecipes(any())
         } returns flowOf(Resource.Error("Error message"))
 
-        val response = runBlocking { getRecipesUseCase(false, "", "").first() }
+        val response = runBlocking { getUserRecipesUseCase("userUID").first() }
 
-        coVerify(exactly = 1) { recipeRepository.getRecipes(false, "", "") }
+        coVerify(exactly = 1) { recipeRepository.getUserRecipes("userUID") }
         assertThat(response).isInstanceOf(Resource.Error::class.java)
         assertThat(response.data).isNull()
         assertThat(response.message).isEqualTo("Error message")
@@ -143,12 +144,12 @@ class GetRecipesUseCaseTest {
     @Test
     fun `getRecipes is loading`() {
         coEvery {
-            recipeRepository.getRecipes(any(),any(),any())
+            recipeRepository.getUserRecipes(any())
         } returns flowOf(Resource.Loading(true))
 
-        val response = runBlocking { getRecipesUseCase(false, "", "").first() }
+        val response = runBlocking { getUserRecipesUseCase("userUID").first() }
 
-        coVerify(exactly = 1) { recipeRepository.getRecipes(false, "", "") }
+        coVerify(exactly = 1) { recipeRepository.getUserRecipes("userUID") }
         assertThat(response).isInstanceOf(Resource.Loading::class.java)
         assertThat(response.data).isNull()
         assertThat(response.message).isNull()

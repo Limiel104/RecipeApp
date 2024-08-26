@@ -41,4 +41,5 @@ sealed class AddRecipeEvent {
     object OnDialogDismiss: AddRecipeEvent()
     object OnDialogSave: AddRecipeEvent()
     object OnAddRecipe: AddRecipeEvent()
+    object OnGoBack: AddRecipeEvent()
 }

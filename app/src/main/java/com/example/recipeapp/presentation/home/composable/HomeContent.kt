@@ -123,7 +123,8 @@ private fun getRecipes(): List<Recipe> {
         isVegan = false,
         imageUrl = "imageUrl",
         createdBy = "userId",
-        categories = emptyList()
+        categories = emptyList(),
+        date = 1231234
     )
 
     return listOf(recipe, recipe, recipe, recipe, recipe, recipe)

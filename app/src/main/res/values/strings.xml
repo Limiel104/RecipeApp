@@ -21,6 +21,7 @@
     <string name="list">List</string>
     <string name="account">Account</string>
     <string name="newest">Newest</string>
+    <string name="oldest">Oldest</string>
     <string name="shopping_list">Shopping List</string>
     <string name="quantity">Quantity</string>
     <string name="login">Login</string>

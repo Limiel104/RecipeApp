@@ -66,7 +66,8 @@ class HomeViewModelTest {
                 isVegan = false,
                 imageUrl = "imageUrl",
                 createdBy = "userId",
-                categories = listOf("Category", "Category2", "Category3")
+                categories = listOf("Category", "Category2", "Category3"),
+                date = 1234324354
             ),
             Recipe(
                 recipeId = "recipe2Id",
@@ -78,7 +79,8 @@ class HomeViewModelTest {
                 isVegan = false,
                 imageUrl = "image2Url",
                 createdBy = "userId",
-                categories = listOf("Category", "Category3")
+                categories = listOf("Category", "Category3"),
+                date = 1234324354
             ),
             Recipe(
                 recipeId = "recipe3Id",
@@ -90,7 +92,8 @@ class HomeViewModelTest {
                 isVegan = true,
                 imageUrl = "image3Url",
                 createdBy = "userId",
-                categories = listOf("Category4")
+                categories = listOf("Category4"),
+                date = 1234324354
             )
         )
 

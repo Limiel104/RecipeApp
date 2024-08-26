@@ -338,6 +338,10 @@ class AddRecipeViewModel @Inject constructor(
                 else
                     Log.i("TAG", "Form validation error")
             }
+
+            AddRecipeEvent.OnGoBack -> {
+                viewModelScope.launch { _addRecipeUiEventChannel.send(AddRecipeUiEvent.NavigateBack) }
+            }
         }
     }
 
@@ -598,7 +602,8 @@ class AddRecipeViewModel @Inject constructor(
             isVegan = false,
             imageUrl = _addRecipeState.value.imageUrl,
             createdBy = getCurrentUserUseCase()!!.uid,
-            categories = getRecipeCategories()
+            categories = getRecipeCategories(),
+            date = System.currentTimeMillis()
         )
 
         viewModelScope.launch {
@@ -615,6 +620,7 @@ class AddRecipeViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         Log.i("TAG", response.data.toString())
+                        _addRecipeUiEventChannel.send(AddRecipeUiEvent.NavigateToAccount)
                     }
                 }
             }

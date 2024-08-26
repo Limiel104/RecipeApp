@@ -51,6 +51,7 @@ class UserRepositoryImpl @Inject constructor(
                 "name" to user.name
             )
         ).await()
+        emit(Resource.Success(true))
 
         emit(Resource.Loading(false))
 

@@ -1,11 +1,13 @@
 package com.example.recipeapp.presentation.account.composable
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -26,6 +28,7 @@ fun AccountScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     val isUserLoggedIn = viewModel.accountState.value.isUserLoggedIn
+    val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(lifecycleOwner.lifecycle) {
@@ -33,6 +36,9 @@ fun AccountScreen(
             viewModel.accountUiEventChannelFlow.collectLatest { event ->
                 Log.i("TAG", "Account Screen LE")
                 when (event) {
+                    is AccountUiEvent.ShowErrorMessage -> {
+                        Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                    }
                     AccountUiEvent.NavigateToLogin -> {
                         navController.navigate(Screen.LoginScreen.route + "lastDestination=" + Screen.AccountScreen.route)
                     }
@@ -47,9 +53,17 @@ fun AccountScreen(
     if(isUserLoggedIn) {
         AccountContent(
             scrollBehavior = scrollBehavior,
+            uiState = viewModel.accountState.value,
             onAddRecipe = { navController.navigate(Screen.AddRecipeScreen.route) },
             onRecipeSelected = { navController.navigate(Screen.RecipeDetailsScreen.route) },
-            onLogout = { viewModel.onEvent(AccountEvent.OnLogout) }
+            onLogout = { viewModel.onEvent(AccountEvent.OnLogout) },
+            onSortRecipes = { viewModel.onEvent(AccountEvent.OnSortRecipes(it)) },
+            onEditButtonClicked = { viewModel.onEvent(AccountEvent.OnEditButtonClicked) },
+            onNameChange = { viewModel.onEvent(AccountEvent.EnteredName(it)) },
+            onPasswordChange = { viewModel.onEvent(AccountEvent.EnteredPassword(it)) },
+            onConfirmPasswordChange = { viewModel.onEvent(AccountEvent.EnteredConfirmPassword(it)) },
+            onDialogDismiss = { viewModel.onEvent(AccountEvent.OnDismiss) },
+            onDialogSave = { viewModel.onEvent(AccountEvent.OnSave) }
         )
     }
     else {

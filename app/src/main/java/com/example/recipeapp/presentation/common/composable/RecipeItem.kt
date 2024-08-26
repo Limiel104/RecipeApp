@@ -90,7 +90,8 @@ private fun getRecipe(name: String = "Recipe Name"): Recipe {
         isVegan = false,
         imageUrl = "imageUrl",
         createdBy = "userId",
-        categories = emptyList()
+        categories = emptyList(),
+        date = 123234
     )
 }
 

@@ -63,7 +63,8 @@ class RecipeMapperTest {
                 isVegetarian = true,
                 isVegan = false,
                 imageUrl = "imageUrl",
-                createdBy = "userId"
+                createdBy = "userId",
+                date = 1234324354
             ),
             categories = listOf(recipeCategoryEntity, recipeCategoryEntity2, recipeCategoryEntity3)
         )
@@ -78,7 +79,8 @@ class RecipeMapperTest {
             isVegan = false,
             imageUrl = "imageUrl",
             createdBy = "userId",
-            categories = listOf("Category", "Category2", "Category3")
+            categories = listOf("Category", "Category2", "Category3"),
+            date = 1234324354
         )
 
         recipeEntity = RecipeEntity(
@@ -90,7 +92,8 @@ class RecipeMapperTest {
             isVegetarian = true,
             isVegan = false,
             imageUrl = "imageUrl",
-            createdBy = "userId"
+            createdBy = "userId",
+            date = 1234324354
         )
 
         recipeDto = RecipeDto(
@@ -107,7 +110,8 @@ class RecipeMapperTest {
             isVegan = false,
             imageUrl = "imageUrl",
             createdBy = "userId",
-            categoryList = listOf("Category", "Category2", "Category3")
+            categoryList = listOf("Category", "Category2", "Category3"),
+            date = 1234324354
         )
 
         recipeIngredientEntity = RecipeIngredientEntity(
@@ -171,7 +175,8 @@ class RecipeMapperTest {
             isVegan = false,
             imageUrl = "imageUrl",
             createdBy = "userId",
-            categories = listOf("Category", "Category2", "Category3")
+            categories = listOf("Category", "Category2", "Category3"),
+            date = 1234324354
         )
 
         categoryList = listOf(
