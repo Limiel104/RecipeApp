@@ -45,7 +45,14 @@ fun ShoppingListScreen(
     }
     if(isUserLoggedIn) {
         ShoppingListContent(
-            scrollBehavior = scrollBehavior
+            scrollBehavior = scrollBehavior,
+            uiState = viewModel.shoppingListState.value,
+            onIngredientSuggestionClick = { viewModel.onEvent(ShoppingListEvent.SelectedIngredient(it)) },
+            onDropDownMenuExpandedChange = { viewModel.onEvent(ShoppingListEvent.OnDropDownMenuExpandChange) },
+            onIngredientChange = { viewModel.onEvent(ShoppingListEvent.EnteredIngredient(it)) },
+            onAddIngredientsDialogDismiss = { viewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogDismiss) },
+            onAddIngredientsSave = {},
+            onAddButtonClick = { viewModel.onEvent(ShoppingListEvent.OnAddButtonClicked) }
         )
     }
     else {

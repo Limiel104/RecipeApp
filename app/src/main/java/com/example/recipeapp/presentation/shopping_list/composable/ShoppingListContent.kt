@@ -27,13 +27,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.R
+import com.example.recipeapp.domain.model.Ingredient
+import com.example.recipeapp.presentation.shopping_list.ShoppingListState
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShoppingListContent(
     modifier: Modifier = Modifier,
-    scrollBehavior: TopAppBarScrollBehavior
+    scrollBehavior: TopAppBarScrollBehavior,
+    uiState: ShoppingListState,
+    onIngredientSuggestionClick: (Ingredient) -> Unit,
+    onDropDownMenuExpandedChange: () -> Unit,
+    onIngredientChange: (String) -> Unit,
+    onAddIngredientsDialogDismiss: () -> Unit,
+    onAddIngredientsSave: () -> Unit,
+    onAddButtonClick: () -> Unit
 ) {
     Scaffold(
         modifier = modifier
@@ -54,7 +63,7 @@ fun ShoppingListContent(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = {}) {
+            FloatingActionButton(onClick = { onAddButtonClick() }) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Add button"
@@ -82,6 +91,20 @@ fun ShoppingListContent(
                 ShoppingListCategoryItem()
             }
         }
+
+        if(uiState.isAddIngredientsDialogOpened) {
+            AddIngredientsDialog(
+                ingredient = uiState.ingredient,
+                isDropDownMenuExpanded = uiState.isDropDownMenuExpanded,
+                ingredientsToSelect = uiState.ingredientsToSelect,
+                selectedIngredients = uiState.selectedIngredients.keys.toList(),
+                onIngredientSuggestionClick = { onIngredientSuggestionClick(it) },
+                onDropDownMenuExpandedChange = { onDropDownMenuExpandedChange() },
+                onIngredientChange = { onIngredientChange(it) },
+                onDismiss = { onAddIngredientsDialogDismiss() },
+                onSave = { onAddIngredientsSave() }
+            )
+        }
     }
 }
 
@@ -98,7 +121,39 @@ fun ShoppingListContent(
 fun ShoppingListContentPreview() {
     RecipeAppTheme {
         ShoppingListContent(
-            scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+            scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState()),
+            uiState = ShoppingListState(),
+            onIngredientSuggestionClick = {},
+            onDropDownMenuExpandedChange = {},
+            onIngredientChange = {},
+            onAddIngredientsDialogDismiss = {},
+            onAddIngredientsSave = {},
+            onAddButtonClick = {}
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(
+    name = "Light Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun ShoppingListContentPreviewDialog() {
+    RecipeAppTheme {
+        ShoppingListContent(
+            scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState()),
+            uiState = ShoppingListState(isAddIngredientsDialogOpened = true),
+            onIngredientSuggestionClick = {},
+            onDropDownMenuExpandedChange = {},
+            onIngredientChange = {},
+            onAddIngredientsDialogDismiss = {},
+            onAddIngredientsSave = {},
+            onAddButtonClick = {}
         )
     }
 }
