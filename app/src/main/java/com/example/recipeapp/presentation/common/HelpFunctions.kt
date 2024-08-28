@@ -19,7 +19,7 @@ fun getIngredientsWithQuantity(): Map<Ingredient, Quantity> {
                 ingredientId = "ingredient2Id",
                 name = "Ingredient2 Name",
                 imageUrl = "imageUrl",
-                category = "category"
+                category = "category2"
             ),
             "5.0 kg"
         ),

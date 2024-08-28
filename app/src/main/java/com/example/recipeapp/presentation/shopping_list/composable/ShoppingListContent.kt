@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
@@ -88,9 +89,11 @@ fun ShoppingListContent(
                 )
             }
 
-            items(5) {
+            val categories = uiState.shoppingListIngredients.keys.groupBy { it.category }.keys.toList()
+            itemsIndexed(categories) { _, category ->
                 ShoppingListCategoryItem(
-                    ingredients = uiState.shoppingListIngredients
+                    categoryName = category,
+                    ingredients = uiState.shoppingListIngredients.filter { it.key.category == category }
                 )
             }
         }

@@ -21,6 +21,7 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 @Composable
 fun ShoppingListCategoryItem(
     modifier: Modifier = Modifier,
+    categoryName: String,
     ingredients: Map<Ingredient, Quantity>
 ) {
     var i = 0
@@ -37,7 +38,7 @@ fun ShoppingListCategoryItem(
                 .padding(top = 8.dp)
         ) {
             Text(
-                text = "Category Name",
+                text = categoryName,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = modifier.padding(bottom = 8.dp)
             )
@@ -70,6 +71,7 @@ fun ShoppingListCategoryItem(
 fun ShoppingListCategoryItemPreview() {
     RecipeAppTheme {
         ShoppingListCategoryItem(
+            categoryName = "Category Name",
             ingredients = getIngredientsWithQuantity()
         )
     }
