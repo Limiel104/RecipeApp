@@ -49,6 +49,13 @@ class ShoppingListViewModel @Inject constructor(
                     isDropDownMenuExpanded = false,
                     selectedIngredients = tempList
                 )
+
+                val tempList2 = getTempList(shoppingListState.value.shoppingListIngredients.keys.toList())
+                tempList2.addAll(_shoppingListState.value.selectedIngredients)
+
+                _shoppingListState.value = shoppingListState.value.copy(
+                    ingredientsToSelect = getCurrentIngredients(tempList2.associateWith { "" })
+                )
             }
 
             ShoppingListEvent.OnAddButtonClicked -> {
@@ -66,7 +73,8 @@ class ShoppingListViewModel @Inject constructor(
             ShoppingListEvent.OnAddIngredientsDialogDismiss -> {
                 _shoppingListState.value = shoppingListState.value.copy(
                     isAddIngredientsDialogOpened = false,
-                    selectedIngredients = emptyList()
+                    selectedIngredients = emptyList(),
+                    ingredientsToSelect = getCurrentIngredients(getTempMap(_shoppingListState.value.shoppingListIngredients))
                 )
             }
 
