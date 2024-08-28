@@ -51,7 +51,7 @@ fun ShoppingListScreen(
             onDropDownMenuExpandedChange = { viewModel.onEvent(ShoppingListEvent.OnDropDownMenuExpandChange) },
             onIngredientChange = { viewModel.onEvent(ShoppingListEvent.EnteredIngredient(it)) },
             onAddIngredientsDialogDismiss = { viewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogDismiss) },
-            onAddIngredientsSave = {},
+            onAddIngredientsSave = { viewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave) },
             onAddButtonClick = { viewModel.onEvent(ShoppingListEvent.OnAddButtonClicked) }
         )
     }

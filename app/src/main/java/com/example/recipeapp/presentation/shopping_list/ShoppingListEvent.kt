@@ -8,6 +8,7 @@ sealed class ShoppingListEvent {
     object OnAddButtonClicked: ShoppingListEvent()
     object OnDropDownMenuExpandChange: ShoppingListEvent()
     object OnAddIngredientsDialogDismiss: ShoppingListEvent()
+    object OnAddIngredientsDialogSave: ShoppingListEvent()
     object OnLogin: ShoppingListEvent()
     object OnSignup: ShoppingListEvent()
 }

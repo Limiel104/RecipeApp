@@ -13,12 +13,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.recipeapp.domain.model.Ingredient
+import com.example.recipeapp.domain.model.Quantity
+import com.example.recipeapp.presentation.common.getIngredientsWithQuantity
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
 fun ShoppingListCategoryItem(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    ingredients: Map<Ingredient, Quantity>
 ) {
+    var i = 0
+
     Card(
         shape = RoundedCornerShape(10.dp),
         modifier = modifier
@@ -37,12 +43,15 @@ fun ShoppingListCategoryItem(
             )
 
             Column() {
-                for (i in 1..3) {
-                    ShoppingListIngredientItem()
+                for (ingredient in ingredients) {
+                    ShoppingListIngredientItem(
+                        ingredient = ingredient.key,
+                        quantity = ingredient.value
+                    )
 
-                    if (i != 3) {
+                    i += 1
+                    if (i<ingredients.size)
                         HorizontalDivider()
-                    }
                 }
             }
         }
@@ -60,6 +69,8 @@ fun ShoppingListCategoryItem(
 @Composable
 fun ShoppingListCategoryItemPreview() {
     RecipeAppTheme {
-        ShoppingListCategoryItem()
+        ShoppingListCategoryItem(
+            ingredients = getIngredientsWithQuantity()
+        )
     }
 }

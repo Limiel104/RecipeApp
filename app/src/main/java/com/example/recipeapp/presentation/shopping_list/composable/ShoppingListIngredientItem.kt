@@ -15,18 +15,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.recipeapp.R
+import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.presentation.common.composable.ImageItem
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
 fun ShoppingListIngredientItem(
     modifier: Modifier = Modifier,
+    ingredient: Ingredient,
+    quantity: String,
     note: String = "Note",
     isChecked: Boolean = false
 ) {
@@ -38,7 +39,7 @@ fun ShoppingListIngredientItem(
     ) {
         ImageItem(
             modifier = modifier.size(40.dp),
-            imageUrl = ""
+            imageUrl = ingredient.imageUrl
         )
 
         Column(
@@ -53,7 +54,7 @@ fun ShoppingListIngredientItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = stringResource(id = R.string.ingredient),
+                    text = ingredient.name,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -61,7 +62,7 @@ fun ShoppingListIngredientItem(
                 )
 
                 Text(
-                    text = stringResource(id = R.string.quantity),
+                    text = quantity,
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Light,
                     maxLines = 1
@@ -95,7 +96,10 @@ fun ShoppingListIngredientItem(
 fun ShoppingListIngredientItemPreview() {
     RecipeAppTheme {
         Surface {
-            ShoppingListIngredientItem()
+            ShoppingListIngredientItem(
+                ingredient = Ingredient("3","Ingredient","","category2"),
+                quantity = "300 g"
+            )
         }
     }
 }
@@ -113,6 +117,13 @@ fun ShoppingListIngredientItemPreviewChecked() {
     RecipeAppTheme {
         Surface {
             ShoppingListIngredientItem(
+                ingredient = Ingredient(
+                    ingredientId = "ingredientId",
+                    name = "Ingredient Name",
+                    imageUrl = "imageUrl",
+                    category = "category"
+                ),
+                quantity = "300.0 g",
                 isChecked = true
             )
         }
@@ -132,6 +143,13 @@ fun ShoppingListIngredientItemPreviewLongNote() {
     RecipeAppTheme {
         Surface {
             ShoppingListIngredientItem(
+                ingredient = Ingredient(
+                    ingredientId = "ingredientId",
+                    name = "Ingredient Name",
+                    imageUrl = "imageUrl",
+                    category = "category"
+                ),
+                quantity = "300.0 g",
                 note = "This is a very, very long note to see how the composable looks in this state."
             )
         }

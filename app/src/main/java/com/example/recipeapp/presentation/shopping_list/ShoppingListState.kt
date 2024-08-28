@@ -8,8 +8,9 @@ data class ShoppingListState(
     val isAddIngredientsDialogOpened: Boolean = false,
     val ingredientsToSelect: List<Ingredient> = emptyList(),
     val allIngredients: List<Ingredient> = emptyList(),
-    val selectedIngredients: Map<Ingredient, Quantity> = emptyMap(),
+    val shoppingListIngredients: Map<Ingredient, Quantity> = emptyMap(),
     val isDropDownMenuExpanded: Boolean = false,
     val ingredient: String = "",
+    val selectedIngredients: List<Ingredient> = emptyList(),
     val isLoading: Boolean = false
 )

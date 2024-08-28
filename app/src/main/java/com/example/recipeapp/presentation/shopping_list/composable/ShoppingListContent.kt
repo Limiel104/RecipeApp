@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.R
 import com.example.recipeapp.domain.model.Ingredient
+import com.example.recipeapp.presentation.common.getIngredientsWithQuantity
 import com.example.recipeapp.presentation.shopping_list.ShoppingListState
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
@@ -88,7 +89,9 @@ fun ShoppingListContent(
             }
 
             items(5) {
-                ShoppingListCategoryItem()
+                ShoppingListCategoryItem(
+                    ingredients = uiState.shoppingListIngredients
+                )
             }
         }
 
@@ -97,7 +100,7 @@ fun ShoppingListContent(
                 ingredient = uiState.ingredient,
                 isDropDownMenuExpanded = uiState.isDropDownMenuExpanded,
                 ingredientsToSelect = uiState.ingredientsToSelect,
-                selectedIngredients = uiState.selectedIngredients.keys.toList(),
+                selectedIngredients = uiState.selectedIngredients,
                 onIngredientSuggestionClick = { onIngredientSuggestionClick(it) },
                 onDropDownMenuExpandedChange = { onDropDownMenuExpandedChange() },
                 onIngredientChange = { onIngredientChange(it) },
@@ -122,7 +125,7 @@ fun ShoppingListContentPreview() {
     RecipeAppTheme {
         ShoppingListContent(
             scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState()),
-            uiState = ShoppingListState(),
+            uiState = ShoppingListState(shoppingListIngredients = getIngredientsWithQuantity()),
             onIngredientSuggestionClick = {},
             onDropDownMenuExpandedChange = {},
             onIngredientChange = {},

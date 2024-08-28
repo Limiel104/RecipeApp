@@ -54,10 +54,10 @@ import androidx.compose.ui.unit.dp
 import com.example.recipeapp.R
 import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.domain.model.Ingredient
-import com.example.recipeapp.domain.model.Quantity
 import com.example.recipeapp.presentation.add_recipe.AddRecipeState
 import com.example.recipeapp.presentation.common.composable.AutoComplete
 import com.example.recipeapp.presentation.common.composable.RecipeIngredientItem
+import com.example.recipeapp.presentation.common.getIngredientsWithQuantity
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -392,38 +392,6 @@ fun AddRecipeContent(
     }
 }
 
-private fun getRecipeIngredients(): Map<Ingredient, Quantity> {
-    return mapOf(
-        Pair(
-            Ingredient(
-                ingredientId = "ingredientId",
-                name = "Ingredient Name",
-                imageUrl = "imageUrl",
-                category = "category"
-            ),
-            "200.0 g"
-        ),
-        Pair(
-            Ingredient(
-                ingredientId = "ingredient2Id",
-                name = "Ingredient2 Name",
-                imageUrl = "imageUrl",
-                category = "category"
-            ),
-            "5.0 kg"
-        ),
-        Pair(
-            Ingredient(
-                ingredientId = "ingredient3Id",
-                name = "Ingredient3 Name",
-                imageUrl = "imageUrl",
-                category = "category"
-            ),
-            "1 cup"
-        )
-    )
-}
-
 private fun getUiState(): AddRecipeState {
     return AddRecipeState(
         isServingsBottomSheetOpened = false,
@@ -439,7 +407,7 @@ private fun getUiState(): AddRecipeState {
         descriptionError = null,
         ingredient = "ingredient",
         ingredientsToSelect = emptyList(),
-        recipeIngredients = getRecipeIngredients(),
+        recipeIngredients = getIngredientsWithQuantity(),
         isDropDownMenuExpanded = false,
         isImageBottomSheetOpened = false,
         imageUri = Uri.EMPTY,

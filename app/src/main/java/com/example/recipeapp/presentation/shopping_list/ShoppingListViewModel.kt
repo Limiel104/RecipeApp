@@ -42,11 +42,13 @@ class ShoppingListViewModel @Inject constructor(
             }
 
             is ShoppingListEvent.SelectedIngredient -> {
-                _shoppingListState.value = shoppingListState.value.copy(
-                    isDropDownMenuExpanded = false
-                )
+                val tempList = getTempList(_shoppingListState.value.selectedIngredients)
+                tempList.add(event.selectedIngredient)
 
-                addIngredientToShoppingList(event.selectedIngredient)
+                _shoppingListState.value = shoppingListState.value.copy(
+                    isDropDownMenuExpanded = false,
+                    selectedIngredients = tempList
+                )
             }
 
             ShoppingListEvent.OnAddButtonClicked -> {
@@ -63,8 +65,13 @@ class ShoppingListViewModel @Inject constructor(
 
             ShoppingListEvent.OnAddIngredientsDialogDismiss -> {
                 _shoppingListState.value = shoppingListState.value.copy(
-                    isAddIngredientsDialogOpened = false
+                    isAddIngredientsDialogOpened = false,
+                    selectedIngredients = emptyList()
                 )
+            }
+
+            ShoppingListEvent.OnAddIngredientsDialogSave -> {
+                addIngredientsToShoppingList(_shoppingListState.value.selectedIngredients)
             }
 
             ShoppingListEvent.OnLogin -> {
@@ -94,6 +101,14 @@ class ShoppingListViewModel @Inject constructor(
         }
     }
 
+    private fun getTempList(selectedIngredients: List<Ingredient>): MutableList<Ingredient> {
+        val tempList = mutableListOf<Ingredient>()
+        for(ingredient in selectedIngredients) {
+            tempList.add(ingredient)
+        }
+        return  tempList
+    }
+
     private fun getTempMap(shoppingListIngredients: Map<Ingredient, Quantity>): MutableMap<Ingredient, Quantity> {
         val tempMap = mutableMapOf<Ingredient, Quantity>()
         for(shoppingListIngredient in shoppingListIngredients) {
@@ -108,14 +123,17 @@ class ShoppingListViewModel @Inject constructor(
         return allIngredients.filter { ingredient -> shoppingListIngredients.all { shoppingListIngredient ->  shoppingListIngredient.key.ingredientId != ingredient.ingredientId}  }
     }
 
-    private fun addIngredientToShoppingList(newIngredient: Ingredient) {
-        val shoppingListIngredients = getTempMap(_shoppingListState.value.selectedIngredients)
+    private fun addIngredientsToShoppingList(newIngredients: List<Ingredient>) {
+        val shoppingListIngredients = getTempMap(_shoppingListState.value.shoppingListIngredients)
 
-        shoppingListIngredients[newIngredient] = ""
+        for(newIngredient in newIngredients)
+            shoppingListIngredients[newIngredient] = ""
 
         _shoppingListState.value = shoppingListState.value.copy(
             ingredientsToSelect = getCurrentIngredients(shoppingListIngredients),
-            selectedIngredients = shoppingListIngredients
+            shoppingListIngredients = shoppingListIngredients,
+            selectedIngredients = emptyList(),
+            isAddIngredientsDialogOpened = false
         )
     }
 
