@@ -160,4 +160,899 @@ class ShoppingListViewModelTest {
         assertThat(result).isEmpty()
         assertThat(isLoading).isTrue()
     }
+
+    @Test
+    fun `enteredIngredient - initially empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        val initialIngredientState = getCurrentShoppingListState().ingredient
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.EnteredIngredient("ingredient"))
+        val resultIngredientState = getCurrentShoppingListState().ingredient
+
+        verifyMocks()
+        assertThat(initialIngredientState).isEmpty()
+        assertThat(resultIngredientState).isEqualTo("ingredient")
+    }
+
+    @Test
+    fun `enteredIngredient - initially not empty - changed string`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.EnteredIngredient("old ingredient"))
+        val initialIngredientState = getCurrentShoppingListState().ingredient
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.EnteredIngredient("new ingredient"))
+        val resultIngredientState = getCurrentShoppingListState().ingredient
+
+        verifyMocks()
+        assertThat(initialIngredientState).isEqualTo("old ingredient")
+        assertThat(resultIngredientState).isEqualTo("new ingredient")
+    }
+
+    @Test
+    fun `enteredIngredient - initially not empty - result empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.EnteredIngredient("ingredient"))
+        val initialIngredientState = getCurrentShoppingListState().ingredient
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.EnteredIngredient(""))
+        val resultIngredientState = getCurrentShoppingListState().ingredient
+
+        verifyMocks()
+        assertThat(initialIngredientState).isEqualTo("ingredient")
+        assertThat(resultIngredientState).isEqualTo("")
+    }
+
+    @Test
+    fun `onServingsButtonClicked - state is set correctly`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        val initialAddIngredientsDialogState = getCurrentShoppingListState().isAddIngredientsDialogOpened
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddButtonClicked)
+        val resultAddIngredientsDialogState = getCurrentShoppingListState().isAddIngredientsDialogOpened
+
+        verifyMocks()
+        assertThat(initialAddIngredientsDialogState).isFalse()
+        assertThat(resultAddIngredientsDialogState).isTrue()
+    }
+
+    @Test
+    fun `onDropDownMenuExpandChange - initially false`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        val initialDropDownMenuExpandState = getCurrentShoppingListState().isDropDownMenuExpanded
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnDropDownMenuExpandChange)
+        val resultDropDownMenuExpandState = getCurrentShoppingListState().isDropDownMenuExpanded
+
+        verifyMocks()
+        assertThat(initialDropDownMenuExpandState).isFalse()
+        assertThat(resultDropDownMenuExpandState).isTrue()
+    }
+
+    @Test
+    fun `onDropDownMenuExpandChange - initially true`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnDropDownMenuExpandChange)
+        val initialDropDownMenuExpandState = getCurrentShoppingListState().isDropDownMenuExpanded
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnDropDownMenuExpandChange)
+        val resultDropDownMenuExpandState = getCurrentShoppingListState().isDropDownMenuExpanded
+
+        verifyMocks()
+        assertThat(initialDropDownMenuExpandState).isTrue()
+        assertThat(resultDropDownMenuExpandState).isFalse()
+    }
+
+    @Test
+    fun `selectedIngredient - no ingredients selected - shopping list ingredients`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        val initialShoppingListIngredientsState = getCurrentShoppingListState().shoppingListIngredients
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        val resultShoppingListIngredientsState = getCurrentShoppingListState().shoppingListIngredients
+
+        verifyMocks()
+        assertThat(initialShoppingListIngredientsState).isEmpty()
+        assertThat(resultShoppingListIngredientsState).isEqualTo(
+            mapOf(
+                Pair(ingredients[2],"")
+            )
+        )
+    }
+
+    @Test
+    fun `selectedIngredient - no ingredients selected - ingredients to select`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        val initialIngredientsState = getCurrentShoppingListState().ingredientsToSelect
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        val resultIngredientsState = getCurrentShoppingListState().ingredientsToSelect
+
+        verifyMocks()
+        assertThat(initialIngredientsState).isEqualTo(ingredients)
+        assertThat(resultIngredientsState).isEqualTo(
+            listOf(
+                ingredients[0],
+                ingredients[1],
+                ingredients[3],
+                ingredients[4]
+            )
+        )
+    }
+
+    @Test
+    fun `selectedIngredient - 2 out of 5 ingredients selected initially - shopping list ingredients`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[1]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        val initialShoppingListIngredientsState = getCurrentShoppingListState().shoppingListIngredients
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        val resultShoppingListIngredientsState = getCurrentShoppingListState().shoppingListIngredients
+
+        verifyMocks()
+        assertThat(initialShoppingListIngredientsState).isEqualTo(
+            mapOf(
+                Pair(ingredients[4],""),
+                Pair(ingredients[1],"")
+            )
+        )
+        assertThat(resultShoppingListIngredientsState).isEqualTo(
+            mapOf(
+                Pair(ingredients[4],""),
+                Pair(ingredients[1],""),
+                Pair(ingredients[2],"")
+            )
+        )
+    }
+
+    @Test
+    fun `selectedIngredient - 2 out of 5 ingredients selected initially - ingredients to select`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[1]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        val initialIngredientsState = getCurrentShoppingListState().ingredientsToSelect
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        val resultIngredientsState = getCurrentShoppingListState().ingredientsToSelect
+
+        verifyMocks()
+        assertThat(initialIngredientsState).isEqualTo(
+            listOf(
+                ingredients[0],
+                ingredients[2],
+                ingredients[3]
+            )
+        )
+        assertThat(resultIngredientsState).isEqualTo(
+            listOf(
+                ingredients[0],
+                ingredients[3]
+            )
+        )
+    }
+
+    @Test
+    fun `selectedIngredient - 4 out of 5 ingredients selected initially - shopping list ingredients`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[0]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[1]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        val initialShoppingListIngredientsState = getCurrentShoppingListState().shoppingListIngredients
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        val resultShoppingListIngredientsState = getCurrentShoppingListState().shoppingListIngredients
+
+        verifyMocks()
+        assertThat(initialShoppingListIngredientsState).isEqualTo(
+            mapOf(
+                Pair(ingredients[0],""),
+                Pair(ingredients[4],""),
+                Pair(ingredients[1],""),
+                Pair(ingredients[3],"")
+            )
+        )
+        assertThat(resultShoppingListIngredientsState).isEqualTo(
+            mapOf(
+                Pair(ingredients[0],""),
+                Pair(ingredients[4],""),
+                Pair(ingredients[1],""),
+                Pair(ingredients[3],""),
+                Pair(ingredients[2],"")
+            )
+        )
+    }
+
+    @Test
+    fun `selectedIngredient - 4 out of 5 ingredients selected initially - ingredients to select`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[0]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[1]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        val initialIngredientsState = getCurrentShoppingListState().ingredientsToSelect
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        val resultIngredientsState = getCurrentShoppingListState().ingredientsToSelect
+
+        verifyMocks()
+        assertThat(initialIngredientsState).isEqualTo(
+            listOf(
+                ingredients[2]
+            )
+        )
+        assertThat(resultIngredientsState).isEqualTo(emptyList<Ingredient>())
+    }
+
+    @Test
+    fun `onIngredientClicked - initially not selected - selected ingredient`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        val initialSelectedIngredientIdState = getCurrentShoppingListState().clickedIngredientId
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        val resultSelectedIngredientIdState = getCurrentShoppingListState().clickedIngredientId
+
+        verifyMocks()
+        assertThat(initialSelectedIngredientIdState).isEqualTo("")
+        assertThat(resultSelectedIngredientIdState).isEqualTo(ingredients[2].ingredientId)
+    }
+
+
+    @Test
+    fun `onIngredientClicked - initially selected - selected ingredient`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[1].ingredientId))
+        val initialSelectedIngredientIdState = getCurrentShoppingListState().clickedIngredientId
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        val resultSelectedIngredientIdState = getCurrentShoppingListState().clickedIngredientId
+
+        verifyMocks()
+        assertThat(initialSelectedIngredientIdState).isEqualTo(ingredients[1].ingredientId)
+        assertThat(resultSelectedIngredientIdState).isEqualTo(ingredients[2].ingredientId)
+    }
+
+    @Test
+    fun `onIngredientClicked - is quantity bottom sheet opened after click`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        val initialQuantityBottomSheetState = getCurrentShoppingListState().isQuantityBottomSheetOpened
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        val resultQuantityBottomSheetState = getCurrentShoppingListState().isQuantityBottomSheetOpened
+
+        verifyMocks()
+        assertThat(initialQuantityBottomSheetState).isFalse()
+        assertThat(resultQuantityBottomSheetState).isTrue()
+    }
+
+    @Test
+    fun `selectedWholeQuantity - initially empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        val initialWholeQuantityState = getCurrentShoppingListState().selectedWholeQuantity
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("350"))
+        val resultWholeQuantityState = getCurrentShoppingListState().selectedWholeQuantity
+
+        verifyMocks()
+        assertThat(initialWholeQuantityState).isEqualTo("")
+        assertThat(resultWholeQuantityState).isEqualTo("350")
+    }
+
+    @Test
+    fun `selectedWholeQuantity - initially not empty - changed value`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("350"))
+        val initialWholeQuantityState = getCurrentShoppingListState().selectedWholeQuantity
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("45"))
+        val resultWholeQuantityState = getCurrentShoppingListState().selectedWholeQuantity
+
+        verifyMocks()
+        assertThat(initialWholeQuantityState).isEqualTo("350")
+        assertThat(resultWholeQuantityState).isEqualTo("45")
+    }
+
+    @Test
+    fun `selectedWholeQuantity - initially not empty - result empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("350"))
+        val initialWholeQuantityState = getCurrentShoppingListState().selectedWholeQuantity
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("0"))
+        val resultWholeQuantityState = getCurrentShoppingListState().selectedWholeQuantity
+
+        verifyMocks()
+        assertThat(initialWholeQuantityState).isEqualTo("350")
+        assertThat(resultWholeQuantityState).isEqualTo("0")
+    }
+
+    @Test
+    fun `selectedDecimalQuantity - initially empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        val initialDecimalQuantityState = getCurrentShoppingListState().selectedDecimalQuantity
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".7"))
+        val resultDecimalQuantityState = getCurrentShoppingListState().selectedDecimalQuantity
+
+        verifyMocks()
+        assertThat(initialDecimalQuantityState).isEqualTo("")
+        assertThat(resultDecimalQuantityState).isEqualTo(".7")
+    }
+
+    @Test
+    fun `selectedDecimalQuantity - initially not empty - changed value`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".7"))
+        val initialDecimalQuantityState = getCurrentShoppingListState().selectedDecimalQuantity
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".3"))
+        val resultDecimalQuantityState = getCurrentShoppingListState().selectedDecimalQuantity
+
+        verifyMocks()
+        assertThat(initialDecimalQuantityState).isEqualTo(".7")
+        assertThat(resultDecimalQuantityState).isEqualTo(".3")
+    }
+
+    @Test
+    fun `selectedDecimalQuantity - initially not empty - result empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".7"))
+        val initialDecimalQuantityState = getCurrentShoppingListState().selectedDecimalQuantity
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".0"))
+        val resultDecimalQuantityState = getCurrentShoppingListState().selectedDecimalQuantity
+
+        verifyMocks()
+        assertThat(initialDecimalQuantityState).isEqualTo(".7")
+        assertThat(resultDecimalQuantityState).isEqualTo(".0")
+    }
+
+    @Test
+    fun `selectedTypeQuantity - initially empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        val initialTypeQuantityState = getCurrentShoppingListState().selectedTypeQuantity
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("bowl"))
+        val resultTypeQuantityState = getCurrentShoppingListState().selectedTypeQuantity
+
+        verifyMocks()
+        assertThat(initialTypeQuantityState).isEqualTo("")
+        assertThat(resultTypeQuantityState).isEqualTo("bowl")
+    }
+
+    @Test
+    fun `selectedTypeQuantity - initially not empty - changed value`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("bowl"))
+        val initialTypeQuantityState = getCurrentShoppingListState().selectedTypeQuantity
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("handful"))
+        val resultTypeQuantityState = getCurrentShoppingListState().selectedTypeQuantity
+
+        verifyMocks()
+        assertThat(initialTypeQuantityState).isEqualTo("bowl")
+        assertThat(resultTypeQuantityState).isEqualTo("handful")
+    }
+
+    @Test
+    fun `selectedTypeQuantity - initially not empty - result empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("bowl"))
+        val initialTypeQuantityState = getCurrentShoppingListState().selectedTypeQuantity
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("-"))
+        val resultTypeQuantityState = getCurrentShoppingListState().selectedTypeQuantity
+
+        verifyMocks()
+        assertThat(initialTypeQuantityState).isEqualTo("bowl")
+        assertThat(resultTypeQuantityState).isEqualTo("-")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - isQuantityBottomSheetOpened state is set correctly`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        val initialQuantityBottomSheetState = getCurrentShoppingListState().isQuantityBottomSheetOpened
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val resultQuantityBottomSheetState = getCurrentShoppingListState().isQuantityBottomSheetOpened
+
+        verifyMocks()
+        assertThat(initialQuantityBottomSheetState).isTrue()
+        assertThat(resultQuantityBottomSheetState).isFalse()
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - quantity is not selected`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        val initialIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("")
+        assertThat(resultIngredientQuantityState).isEqualTo("")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - quantity is selected - initially empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("30"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".5"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("g"))
+        val initialIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("")
+        assertThat(resultIngredientQuantityState).isEqualTo("30.5 g")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - whole and decimal quantity is selected - initially empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("30"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".5"))
+        val initialIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("")
+        assertThat(resultIngredientQuantityState).isEqualTo("30.5")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - whole and type quantity is selected - initially empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("30"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("g"))
+        val initialIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("")
+        assertThat(resultIngredientQuantityState).isEqualTo("30 g")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - decimal and type quantity is selected - initially empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".5"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("g"))
+        val initialIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("")
+        assertThat(resultIngredientQuantityState).isEqualTo(".5 g")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - only whole quantity is selected - initially empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("30"))
+        val initialIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("")
+        assertThat(resultIngredientQuantityState).isEqualTo("30")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - only decimal quantity is selected - initially empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".5"))
+        val initialIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("")
+        assertThat(resultIngredientQuantityState).isEqualTo(".5")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - only type quantity is selected - initially empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("g"))
+        val initialIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("")
+        assertThat(resultIngredientQuantityState).isEqualTo("g")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - quantity is selected - initially not empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("30"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".5"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("g"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val initialIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("12"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".0"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("kg"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
+        assertThat(resultIngredientQuantityState).isEqualTo("12.0 kg")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - whole and decimal quantity is selected - initially not empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("30"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".5"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("g"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val initialIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("12"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".0"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
+        assertThat(resultIngredientQuantityState).isEqualTo("12.0")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - whole and type quantity is selected - initially not empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("30"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".5"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("g"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val initialIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("12"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("kg"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
+        assertThat(resultIngredientQuantityState).isEqualTo("12 kg")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - decimal and type quantity is selected - initially not empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("30"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".5"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("g"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val initialIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".0"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("kg"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
+        assertThat(resultIngredientQuantityState).isEqualTo(".0 kg")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - only whole quantity is selected - initially not empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("30"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".5"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("g"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val initialIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("12"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
+        assertThat(resultIngredientQuantityState).isEqualTo("12")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - only decimal quantity is selected - initially not empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("30"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".5"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("g"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val initialIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".0"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
+        assertThat(resultIngredientQuantityState).isEqualTo(".0")
+    }
+
+    @Test
+    fun `onQuantityPickerSaved - only type quantity is selected - initially not empty`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("30"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".5"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("g"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val initialIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("kg"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
+        assertThat(resultIngredientQuantityState).isEqualTo("kg")
+    }
+
+    @Test
+    fun `onQuantityPickerDismissed - ingredient quantity not set - still default`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        val initialIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerDismissed)
+        val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("")
+        assertThat(resultIngredientQuantityState).isEqualTo("")
+    }
+
+    @Test
+    fun `onQuantityPickerDismissed - ingredient quantity set - value not changed`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("30"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".5"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("g"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val initialIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerDismissed)
+        val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
+        assertThat(resultIngredientQuantityState).isEqualTo("30.5 g")
+    }
+
+    @Test
+    fun `onQuantityPickerDismissed - ingredient quantity not set and then changed - still default`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        val initialIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("15"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".0"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("kg"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerDismissed)
+        val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("")
+        assertThat(resultIngredientQuantityState).isEqualTo("")
+    }
+
+    @Test
+    fun `onQuantityPickerDismissed - ingredient quantity set and then changed - value not changed`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("30"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".5"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("g"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved)
+        val initialIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("15"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".0"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("kg"))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerDismissed)
+        val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
+
+        verifyMocks()
+        assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
+        assertThat(resultIngredientQuantityState).isEqualTo("30.5 g")
+    }
+
+    @Test
+    fun `onQuantityPickerDismissed - quantity bottom sheet is closed`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
+        val initialQuantityBottomSheetState = getCurrentShoppingListState().isQuantityBottomSheetOpened
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnQuantityPickerDismissed)
+        val resultIngredientQuantityState = getCurrentShoppingListState().isQuantityBottomSheetOpened
+
+        verifyMocks()
+        assertThat(initialQuantityBottomSheetState).isTrue()
+        assertThat(resultIngredientQuantityState).isFalse()
+    }
 }
