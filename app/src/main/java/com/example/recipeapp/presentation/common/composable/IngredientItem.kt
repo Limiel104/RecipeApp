@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DragHandle
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -23,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draganddrop.DragAndDropTransferData
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,12 +34,15 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun RecipeIngredientItem(
+fun IngredientItem(
     modifier: Modifier = Modifier,
     ingredient: Ingredient,
     quantity: String,
-    dragIndex: String,
-    isReorderModeActivated: Boolean,
+    dragIndex: String = "",
+    color: Color = MaterialTheme.colorScheme.background,
+    isReorderModeActivated: Boolean = false,
+    isShoppingListModeActivated: Boolean = false,
+    isChecked: Boolean = false,
     onClick: (String) -> Unit
 ) {
     Row(
@@ -63,7 +68,7 @@ fun RecipeIngredientItem(
             .height(IntrinsicSize.Max)
             .background(
                 if(dragIndex == ingredient.ingredientId) MaterialTheme.colorScheme.secondary
-                else MaterialTheme.colorScheme.background
+                else color
             )
             .testTag("Recipe Ingredient Item ${ingredient.name}"),
         verticalAlignment = Alignment.CenterVertically
@@ -96,6 +101,13 @@ fun RecipeIngredientItem(
                 modifier = modifier
             )
         }
+
+        if(isShoppingListModeActivated) {
+            Checkbox(
+                checked = isChecked,
+                onCheckedChange = {}
+            )
+        }
     }
 }
 
@@ -108,10 +120,10 @@ fun RecipeIngredientItem(
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
-fun RecipeIngredientItemPreview() {
+fun IngredientItemPreview() {
     RecipeAppTheme {
         Surface {
-            RecipeIngredientItem(
+            IngredientItem(
                 ingredient = Ingredient(
                     ingredientId = "ingredientId",
                     name = "Ingredient Name",
@@ -119,8 +131,6 @@ fun RecipeIngredientItemPreview() {
                     category = "category"
                 ),
                 quantity = "200 g",
-                dragIndex = "",
-                isReorderModeActivated = false,
                 onClick = {}
             )
         }
@@ -136,10 +146,10 @@ fun RecipeIngredientItemPreview() {
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
-fun RecipeIngredientItemDragIndexEqualToItemId() {
+fun IngredientItemDragIndexEqualToItemId() {
     RecipeAppTheme {
         Surface {
-            RecipeIngredientItem(
+            IngredientItem(
                 ingredient = Ingredient(
                     ingredientId = "ingredientId",
                     name = "Ingredient Name",
@@ -148,7 +158,6 @@ fun RecipeIngredientItemDragIndexEqualToItemId() {
                 ),
                 quantity = "200 g",
                 dragIndex = "ingredientId",
-                isReorderModeActivated = false,
                 onClick = {}
             )
         }
@@ -164,10 +173,10 @@ fun RecipeIngredientItemDragIndexEqualToItemId() {
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
-fun RecipeIngredientItemPreviewReorderActivated() {
+fun IngredientItemPreviewReorderActivated() {
     RecipeAppTheme {
         Surface {
-            RecipeIngredientItem(
+            IngredientItem(
                 ingredient = Ingredient(
                     ingredientId = "ingredientId",
                     name = "Ingredient Name",
@@ -175,8 +184,62 @@ fun RecipeIngredientItemPreviewReorderActivated() {
                     category = "category"
                 ),
                 quantity = "200 g",
-                dragIndex = "",
                 isReorderModeActivated = true,
+                onClick = {}
+            )
+        }
+    }
+}
+
+@Preview(
+    name = "Light Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun IngredientItemPreviewCheckboxFalse() {
+    RecipeAppTheme {
+        Surface {
+            IngredientItem(
+                ingredient = Ingredient(
+                    ingredientId = "ingredientId",
+                    name = "Ingredient Name",
+                    imageUrl = "imageUrl",
+                    category = "category"
+                ),
+                quantity = "200 g",
+                isShoppingListModeActivated = true,
+                onClick = {}
+            )
+        }
+    }
+}
+
+@Preview(
+    name = "Light Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun IngredientItemPreviewCheckboxTrue() {
+    RecipeAppTheme {
+        Surface {
+            IngredientItem(
+                ingredient = Ingredient(
+                    ingredientId = "ingredientId",
+                    name = "Ingredient Name",
+                    imageUrl = "imageUrl",
+                    category = "category"
+                ),
+                quantity = "200 g",
+                isShoppingListModeActivated = true,
+                isChecked = true,
                 onClick = {}
             )
         }

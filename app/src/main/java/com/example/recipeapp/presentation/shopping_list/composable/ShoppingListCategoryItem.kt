@@ -11,10 +11,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Quantity
+import com.example.recipeapp.presentation.common.composable.IngredientItem
 import com.example.recipeapp.presentation.common.getIngredientsWithQuantity
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
@@ -46,9 +48,11 @@ fun ShoppingListCategoryItem(
 
             Column() {
                 for (ingredient in ingredients) {
-                    ShoppingListIngredientItem(
+                    IngredientItem(
                         ingredient = ingredient.key,
                         quantity = ingredient.value,
+                        isShoppingListModeActivated = true,
+                        color = Color.Transparent,
                         onClick = { onIngredientClick(it) }
                     )
 

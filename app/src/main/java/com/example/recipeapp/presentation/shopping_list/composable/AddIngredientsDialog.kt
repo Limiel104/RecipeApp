@@ -26,7 +26,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.example.recipeapp.R
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.presentation.common.composable.AutoComplete
-import com.example.recipeapp.presentation.common.composable.RecipeIngredientItem
+import com.example.recipeapp.presentation.common.composable.IngredientItem
 import com.example.recipeapp.presentation.common.getIngredientsWithQuantity
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
@@ -91,7 +91,7 @@ fun AddIngredientsDialog(
                     modifier = modifier.testTag("Selected ingredients list")
                 ) {
                     itemsIndexed(selectedIngredients) { _, selectedIngredient ->
-                        RecipeIngredientItem(
+                        IngredientItem(
                             ingredient = selectedIngredient,
                             quantity = "",
                             dragIndex = "",
