@@ -56,6 +56,7 @@ import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.presentation.add_recipe.AddRecipeState
 import com.example.recipeapp.presentation.common.composable.AutoComplete
+import com.example.recipeapp.presentation.common.composable.QuantityPicker
 import com.example.recipeapp.presentation.common.composable.RecipeIngredientItem
 import com.example.recipeapp.presentation.common.getIngredientsWithQuantity
 import com.example.recipeapp.ui.theme.RecipeAppTheme

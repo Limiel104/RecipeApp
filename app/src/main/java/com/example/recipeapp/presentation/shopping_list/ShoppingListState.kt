@@ -12,5 +12,11 @@ data class ShoppingListState(
     val isDropDownMenuExpanded: Boolean = false,
     val ingredient: String = "",
     val selectedIngredients: List<Ingredient> = emptyList(),
+    val isQuantityBottomSheetOpened: Boolean = false,
+    val clickedIngredientId: String = "",
+    val selectedWholeQuantity: String = "",
+    val selectedDecimalQuantity: String = "",
+    val selectedTypeQuantity: String = "",
+    val selectedIngredientId: String = "",
     val isLoading: Boolean = false
 )

@@ -22,7 +22,8 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 fun ShoppingListCategoryItem(
     modifier: Modifier = Modifier,
     categoryName: String,
-    ingredients: Map<Ingredient, Quantity>
+    ingredients: Map<Ingredient, Quantity>,
+    onIngredientClick: (String) -> Unit
 ) {
     var i = 0
 
@@ -47,7 +48,8 @@ fun ShoppingListCategoryItem(
                 for (ingredient in ingredients) {
                     ShoppingListIngredientItem(
                         ingredient = ingredient.key,
-                        quantity = ingredient.value
+                        quantity = ingredient.value,
+                        onClick = { onIngredientClick(it) }
                     )
 
                     i += 1
@@ -72,7 +74,8 @@ fun ShoppingListCategoryItemPreview() {
     RecipeAppTheme {
         ShoppingListCategoryItem(
             categoryName = "Category Name",
-            ingredients = getIngredientsWithQuantity()
+            ingredients = getIngredientsWithQuantity(),
+            onIngredientClick = {}
         )
     }
 }

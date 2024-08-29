@@ -1,6 +1,7 @@
 package com.example.recipeapp.presentation.shopping_list.composable
 
 import android.content.res.Configuration
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -29,12 +30,14 @@ fun ShoppingListIngredientItem(
     ingredient: Ingredient,
     quantity: String,
     note: String = "Note",
-    isChecked: Boolean = false
+    isChecked: Boolean = false,
+    onClick: (String) -> Unit
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(IntrinsicSize.Max),
+            .height(IntrinsicSize.Max)
+            .clickable { onClick(ingredient.ingredientId) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         ImageItem(
@@ -98,7 +101,8 @@ fun ShoppingListIngredientItemPreview() {
         Surface {
             ShoppingListIngredientItem(
                 ingredient = Ingredient("3","Ingredient","","category2"),
-                quantity = "300 g"
+                quantity = "300 g",
+                onClick = {}
             )
         }
     }
@@ -124,7 +128,8 @@ fun ShoppingListIngredientItemPreviewChecked() {
                     category = "category"
                 ),
                 quantity = "300.0 g",
-                isChecked = true
+                isChecked = true,
+                onClick = {}
             )
         }
     }
@@ -150,7 +155,8 @@ fun ShoppingListIngredientItemPreviewLongNote() {
                     category = "category"
                 ),
                 quantity = "300.0 g",
-                note = "This is a very, very long note to see how the composable looks in this state."
+                note = "This is a very, very long note to see how the composable looks in this state.",
+                onClick = {}
             )
         }
     }

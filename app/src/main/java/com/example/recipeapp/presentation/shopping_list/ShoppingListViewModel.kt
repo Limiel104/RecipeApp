@@ -58,6 +58,31 @@ class ShoppingListViewModel @Inject constructor(
                 )
             }
 
+            is ShoppingListEvent.OnIngredientClicked -> {
+                _shoppingListState.value = shoppingListState.value.copy(
+                    clickedIngredientId = event.ingredientId,
+                    isQuantityBottomSheetOpened = true
+                )
+            }
+
+            is ShoppingListEvent.SelectedWholeQuantity -> {
+                _shoppingListState.value = shoppingListState.value.copy(
+                    selectedWholeQuantity = event.whole
+                )
+            }
+
+            is ShoppingListEvent.SelectedDecimalQuantity -> {
+                _shoppingListState.value = shoppingListState.value.copy(
+                    selectedDecimalQuantity = event.decimal
+                )
+            }
+
+            is ShoppingListEvent.SelectedTypeQuantity -> {
+                _shoppingListState.value = shoppingListState.value.copy(
+                    selectedTypeQuantity = event.type
+                )
+            }
+
             ShoppingListEvent.OnAddButtonClicked -> {
                 _shoppingListState.value = shoppingListState.value.copy(
                     isAddIngredientsDialogOpened = true
@@ -80,6 +105,44 @@ class ShoppingListViewModel @Inject constructor(
 
             ShoppingListEvent.OnAddIngredientsDialogSave -> {
                 addIngredientsToShoppingList(_shoppingListState.value.selectedIngredients)
+            }
+
+            ShoppingListEvent.OnQuantityPickerDismissed -> {
+                _shoppingListState.value = shoppingListState.value.copy(
+                    selectedWholeQuantity = "",
+                    selectedDecimalQuantity = "",
+                    selectedTypeQuantity = "",
+                    isQuantityBottomSheetOpened = false
+                )
+            }
+
+            ShoppingListEvent.OnQuantityPickerSaved -> {
+                val ingredient = _shoppingListState.value.shoppingListIngredients.keys.find { ingredient ->
+                    ingredient.ingredientId == _shoppingListState.value.clickedIngredientId
+                }
+
+                val quantity = getIngredientQuantity(
+                    _shoppingListState.value.selectedWholeQuantity,
+                    _shoppingListState.value.selectedDecimalQuantity,
+                    _shoppingListState.value.selectedTypeQuantity
+                )
+
+                val shoppingListIngredients = getTempMap(_shoppingListState.value.shoppingListIngredients)
+
+                ingredient?.let {
+                    if(shoppingListIngredients.keys.contains(ingredient))
+                        shoppingListIngredients.replace(it, quantity)
+                    else
+                        shoppingListIngredients.put(it, quantity)
+                }
+
+                _shoppingListState.value = shoppingListState.value.copy(
+                    shoppingListIngredients = shoppingListIngredients,
+                    selectedWholeQuantity = "",
+                    selectedDecimalQuantity = "",
+                    selectedTypeQuantity = "",
+                    isQuantityBottomSheetOpened = false
+                )
             }
 
             ShoppingListEvent.OnLogin -> {
@@ -143,6 +206,17 @@ class ShoppingListViewModel @Inject constructor(
             selectedIngredients = emptyList(),
             isAddIngredientsDialogOpened = false
         )
+    }
+
+    private fun getIngredientQuantity(whole: String, decimal: String, type: String): String {
+        return if (whole != "" && decimal != "" && type != "") "$whole$decimal $type"
+        else if(whole != "" && decimal != "") "$whole$decimal"
+        else if(whole != "" && type != "") "$whole $type"
+        else if(decimal != "" && type != "") "$decimal $type"
+        else if(whole != "" ) whole
+        else if(decimal != "") decimal
+        else if(type != "") type
+        else ""
     }
 
     private fun getIngredients() {

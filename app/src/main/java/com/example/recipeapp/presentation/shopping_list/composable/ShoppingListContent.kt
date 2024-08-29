@@ -15,9 +15,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -29,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.R
 import com.example.recipeapp.domain.model.Ingredient
+import com.example.recipeapp.presentation.common.composable.QuantityPicker
 import com.example.recipeapp.presentation.common.getIngredientsWithQuantity
 import com.example.recipeapp.presentation.shopping_list.ShoppingListState
 import com.example.recipeapp.ui.theme.RecipeAppTheme
@@ -38,13 +41,20 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 fun ShoppingListContent(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
+    modalBottomSheetState: SheetState,
     uiState: ShoppingListState,
     onIngredientSuggestionClick: (Ingredient) -> Unit,
     onDropDownMenuExpandedChange: () -> Unit,
     onIngredientChange: (String) -> Unit,
     onAddIngredientsDialogDismiss: () -> Unit,
     onAddIngredientsSave: () -> Unit,
-    onAddButtonClick: () -> Unit
+    onAddButtonClick: () -> Unit,
+    onIngredientClick: (String) -> Unit,
+    onSelectedWholeQuantity: (String) -> Unit,
+    onSelectedDecimalQuantity: (String) -> Unit,
+    onSelectedTypeQuantity: (String) -> Unit,
+    onQuantityPickerDismiss: () -> Unit,
+    onQuantityPickerSave: () -> Unit
 ) {
     Scaffold(
         modifier = modifier
@@ -93,7 +103,8 @@ fun ShoppingListContent(
             itemsIndexed(categories) { _, category ->
                 ShoppingListCategoryItem(
                     categoryName = category,
-                    ingredients = uiState.shoppingListIngredients.filter { it.key.category == category }
+                    ingredients = uiState.shoppingListIngredients.filter { it.key.category == category },
+                    onIngredientClick = { onIngredientClick(it) }
                 )
             }
         }
@@ -109,6 +120,20 @@ fun ShoppingListContent(
                 onIngredientChange = { onIngredientChange(it) },
                 onDismiss = { onAddIngredientsDialogDismiss() },
                 onSave = { onAddIngredientsSave() }
+            )
+        }
+
+        if(uiState.isQuantityBottomSheetOpened) {
+            QuantityPicker(
+                modalSheetState = modalBottomSheetState,
+                selectedWholeQuantity = uiState.selectedWholeQuantity,
+                selectedDecimalQuantity = uiState.selectedDecimalQuantity,
+                selectedTypeQuantity = uiState.selectedTypeQuantity,
+                onSelectedWholeQuantity = { onSelectedWholeQuantity(it) },
+                onSelectedDecimalQuantity = { onSelectedDecimalQuantity(it) },
+                onSelectedTypeQuantity = { onSelectedTypeQuantity(it) },
+                onDismiss = { onQuantityPickerDismiss() },
+                onSave = { onQuantityPickerSave() }
             )
         }
     }
@@ -128,13 +153,20 @@ fun ShoppingListContentPreview() {
     RecipeAppTheme {
         ShoppingListContent(
             scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState()),
+            modalBottomSheetState = rememberModalBottomSheetState(),
             uiState = ShoppingListState(shoppingListIngredients = getIngredientsWithQuantity()),
             onIngredientSuggestionClick = {},
             onDropDownMenuExpandedChange = {},
             onIngredientChange = {},
             onAddIngredientsDialogDismiss = {},
             onAddIngredientsSave = {},
-            onAddButtonClick = {}
+            onAddButtonClick = {},
+            onIngredientClick = {},
+            onSelectedWholeQuantity = {},
+            onSelectedDecimalQuantity = {},
+            onSelectedTypeQuantity = {},
+            onQuantityPickerDismiss = {},
+            onQuantityPickerSave = {}
         )
     }
 }
@@ -153,13 +185,20 @@ fun ShoppingListContentPreviewDialog() {
     RecipeAppTheme {
         ShoppingListContent(
             scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState()),
+            modalBottomSheetState = rememberModalBottomSheetState(),
             uiState = ShoppingListState(isAddIngredientsDialogOpened = true),
             onIngredientSuggestionClick = {},
             onDropDownMenuExpandedChange = {},
             onIngredientChange = {},
             onAddIngredientsDialogDismiss = {},
             onAddIngredientsSave = {},
-            onAddButtonClick = {}
+            onAddButtonClick = {},
+            onIngredientClick = {},
+            onSelectedWholeQuantity = {},
+            onSelectedDecimalQuantity = {},
+            onSelectedTypeQuantity = {},
+            onQuantityPickerDismiss = {},
+            onQuantityPickerSave = {}
         )
     }
 }
