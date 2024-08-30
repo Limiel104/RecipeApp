@@ -26,6 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draganddrop.DragAndDropTransferData
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -81,14 +83,19 @@ fun IngredientItem(
 
         Text(
             text = ingredient.name,
-            style = MaterialTheme.typography.bodyMedium,
+            style =
+                if(isChecked)
+                    MaterialTheme.typography.bodyMedium.plus(TextStyle(textDecoration = TextDecoration.LineThrough))
+                else MaterialTheme.typography.bodyMedium,
             overflow = TextOverflow.Ellipsis,
             modifier = modifier.padding(horizontal = 8.dp)
         )
 
         Text(
             text = quantity,
-            style = MaterialTheme.typography.bodySmall,
+            style = if(isChecked)
+                MaterialTheme.typography.bodySmall.plus(TextStyle(textDecoration = TextDecoration.LineThrough))
+            else MaterialTheme.typography.bodySmall,
             overflow = TextOverflow.Ellipsis,
             modifier = modifier
                 .weight(1F)
