@@ -1249,5 +1249,157 @@ class ShoppingListViewModelTest {
         assertThat(resultIngredientQuantityState).isFalse()
     }
 
+    @Test
+    fun `onCheckBoxToggled - one item`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
 
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        val initialCheckState = getCurrentShoppingListState().checkedIngredients
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(ingredients[2]))
+        val resultCheckState = getCurrentShoppingListState().checkedIngredients
+
+        verifyMocks()
+        assertThat(initialCheckState).isEqualTo(
+            mapOf(
+                Pair(ingredients[0],false),
+                Pair(ingredients[1],false),
+                Pair(ingredients[2],false),
+                Pair(ingredients[3],false),
+                Pair(ingredients[4],false)
+            )
+        )
+        assertThat(resultCheckState).isEqualTo(
+            mapOf(
+                Pair(ingredients[0],false),
+                Pair(ingredients[1],false),
+                Pair(ingredients[2],true),
+                Pair(ingredients[3],false),
+                Pair(ingredients[4],false)
+            )
+        )
+    }
+
+    @Test
+    fun `onCheckBoxToggled - one item - unchecked`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(ingredients[2]))
+        val initialCheckState = getCurrentShoppingListState().checkedIngredients
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(ingredients[2]))
+        val resultCheckState = getCurrentShoppingListState().checkedIngredients
+
+        verifyMocks()
+        assertThat(initialCheckState).isEqualTo(
+            mapOf(
+                Pair(ingredients[0],false),
+                Pair(ingredients[1],false),
+                Pair(ingredients[2],true),
+                Pair(ingredients[3],false),
+                Pair(ingredients[4],false)
+            )
+        )
+        assertThat(resultCheckState).isEqualTo(
+            mapOf(
+                Pair(ingredients[0],false),
+                Pair(ingredients[1],false),
+                Pair(ingredients[2],false),
+                Pair(ingredients[3],false),
+                Pair(ingredients[4],false)
+            )
+        )
+    }
+
+    @Test
+    fun `onCheckBoxToggled - all items`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[1]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[0]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        val initialCheckState = getCurrentShoppingListState().checkedIngredients
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(ingredients[4]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(ingredients[0]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(ingredients[1]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(ingredients[3]))
+        val resultCheckState = getCurrentShoppingListState().checkedIngredients
+
+        verifyMocks()
+        assertThat(initialCheckState).isEqualTo(
+            mapOf(
+                Pair(ingredients[0],false),
+                Pair(ingredients[1],false),
+                Pair(ingredients[2],false),
+                Pair(ingredients[3],false),
+                Pair(ingredients[4],false)
+            )
+        )
+        assertThat(resultCheckState).isEqualTo(
+            mapOf(
+                Pair(ingredients[0],true),
+                Pair(ingredients[1],true),
+                Pair(ingredients[2],true),
+                Pair(ingredients[3],true),
+                Pair(ingredients[4],true)
+            )
+        )
+    }
+
+    @Test
+    fun `onCheckBoxToggled - all items - unchecked`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[1]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[0]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(ingredients[1]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(ingredients[3]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(ingredients[0]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(ingredients[4]))
+        val initialCheckState = getCurrentShoppingListState().checkedIngredients
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(ingredients[4]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(ingredients[0]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(ingredients[1]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(ingredients[3]))
+        val resultCheckState = getCurrentShoppingListState().checkedIngredients
+
+        verifyMocks()
+        assertThat(initialCheckState).isEqualTo(
+            mapOf(
+                Pair(ingredients[0],true),
+                Pair(ingredients[1],true),
+                Pair(ingredients[2],true),
+                Pair(ingredients[3],true),
+                Pair(ingredients[4],true)
+            )
+        )
+        assertThat(resultCheckState).isEqualTo(
+            mapOf(
+                Pair(ingredients[0],false),
+                Pair(ingredients[1],false),
+                Pair(ingredients[2],false),
+                Pair(ingredients[3],false),
+                Pair(ingredients[4],false)
+            )
+        )
+    }
 }
