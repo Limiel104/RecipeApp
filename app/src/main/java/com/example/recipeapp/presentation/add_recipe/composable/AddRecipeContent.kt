@@ -273,6 +273,7 @@ fun AddRecipeContent(
                                     quantity = recipeIngredient.value,
                                     dragIndex = uiState.dragIndex,
                                     isReorderModeActivated = uiState.isReorderModeActivated,
+                                    onCheckedChange = {},
                                     onClick = { onIngredientClicked(it) },
                                     modifier = modifier
                                         .testTag("Recipe Ingredient Item")

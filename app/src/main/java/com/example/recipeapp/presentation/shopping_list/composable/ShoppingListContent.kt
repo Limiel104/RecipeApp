@@ -54,7 +54,8 @@ fun ShoppingListContent(
     onSelectedDecimalQuantity: (String) -> Unit,
     onSelectedTypeQuantity: (String) -> Unit,
     onQuantityPickerDismiss: () -> Unit,
-    onQuantityPickerSave: () -> Unit
+    onQuantityPickerSave: () -> Unit,
+    onCheckedChange: (Ingredient) -> Unit
 ) {
     Scaffold(
         modifier = modifier
@@ -90,7 +91,8 @@ fun ShoppingListContent(
         ) {
             item {
                 Text(
-                    text = "123 items",
+                    text = uiState.shoppingListIngredients.keys.size.toString()
+                            + if(uiState.shoppingListIngredients.keys.size == 1) " item" else " items",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Light,
                     modifier = modifier
@@ -104,6 +106,8 @@ fun ShoppingListContent(
                 ShoppingListCategoryItem(
                     categoryName = category,
                     ingredients = uiState.shoppingListIngredients.filter { it.key.category == category },
+                    checkedIngredients = uiState.checkedIngredients,
+                    onCheckedChange = { onCheckedChange(it) },
                     onIngredientClick = { onIngredientClick(it) }
                 )
             }
@@ -166,7 +170,8 @@ fun ShoppingListContentPreview() {
             onSelectedDecimalQuantity = {},
             onSelectedTypeQuantity = {},
             onQuantityPickerDismiss = {},
-            onQuantityPickerSave = {}
+            onQuantityPickerSave = {},
+            onCheckedChange = {}
         )
     }
 }
@@ -198,7 +203,50 @@ fun ShoppingListContentPreviewDialog() {
             onSelectedDecimalQuantity = {},
             onSelectedTypeQuantity = {},
             onQuantityPickerDismiss = {},
-            onQuantityPickerSave = {}
+            onQuantityPickerSave = {},
+            onCheckedChange = {}
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(
+    name = "Light Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun ShoppingListContentPreviewOneItem() {
+    RecipeAppTheme {
+        ShoppingListContent(
+            scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState()),
+            modalBottomSheetState = rememberModalBottomSheetState(),
+            uiState = ShoppingListState(shoppingListIngredients = mapOf(
+                Pair(
+                    Ingredient(
+                        ingredientId = "ingredientId",
+                        name = "Ingredient Name",
+                        imageUrl = "imageUrl",
+                        category = "category"
+                    ),
+                "200.0 g"
+            ))),
+            onIngredientSuggestionClick = {},
+            onDropDownMenuExpandedChange = {},
+            onIngredientChange = {},
+            onAddIngredientsDialogDismiss = {},
+            onAddIngredientsSave = {},
+            onAddButtonClick = {},
+            onIngredientClick = {},
+            onSelectedWholeQuantity = {},
+            onSelectedDecimalQuantity = {},
+            onSelectedTypeQuantity = {},
+            onQuantityPickerDismiss = {},
+            onQuantityPickerSave = {},
+            onCheckedChange = {}
         )
     }
 }

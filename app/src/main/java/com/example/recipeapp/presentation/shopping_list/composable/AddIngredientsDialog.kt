@@ -96,6 +96,7 @@ fun AddIngredientsDialog(
                             quantity = "",
                             dragIndex = "",
                             isReorderModeActivated = false,
+                            onCheckedChange = {},
                             onClick = {}
                         )
                     }

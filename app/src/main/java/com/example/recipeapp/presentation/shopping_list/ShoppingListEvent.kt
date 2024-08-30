@@ -9,6 +9,7 @@ sealed class ShoppingListEvent {
     data class SelectedWholeQuantity(val whole: String): ShoppingListEvent()
     data class SelectedDecimalQuantity(val decimal: String): ShoppingListEvent()
     data class SelectedTypeQuantity(val type: String): ShoppingListEvent()
+    data class OnCheckBoxToggled(val ingredient: Ingredient): ShoppingListEvent()
     object OnAddButtonClicked: ShoppingListEvent()
     object OnDropDownMenuExpandChange: ShoppingListEvent()
     object OnAddIngredientsDialogDismiss: ShoppingListEvent()

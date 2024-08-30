@@ -34,3 +34,35 @@ fun getIngredientsWithQuantity(): Map<Ingredient, Quantity> {
         )
     )
 }
+
+fun getIngredientsWithBoolean(): Map<Ingredient, Boolean> {
+    return mapOf(
+        Pair(
+            Ingredient(
+                ingredientId = "ingredientId",
+                name = "Ingredient Name",
+                imageUrl = "imageUrl",
+                category = "category"
+            ),
+            false
+        ),
+        Pair(
+            Ingredient(
+                ingredientId = "ingredient2Id",
+                name = "Ingredient2 Name",
+                imageUrl = "imageUrl",
+                category = "category2"
+            ),
+            true
+        ),
+        Pair(
+            Ingredient(
+                ingredientId = "ingredient3Id",
+                name = "Ingredient3 Name",
+                imageUrl = "imageUrl",
+                category = "category"
+            ),
+            false
+        )
+    )
+}

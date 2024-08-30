@@ -61,7 +61,8 @@ fun ShoppingListScreen(
             onSelectedDecimalQuantity = { viewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(it)) },
             onSelectedTypeQuantity = { viewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity(it)) },
             onQuantityPickerDismiss = { viewModel.onEvent(ShoppingListEvent.OnQuantityPickerDismissed) },
-            onQuantityPickerSave = { viewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved) }
+            onQuantityPickerSave = { viewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved) },
+            onCheckedChange = { viewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(it)) }
         )
     }
     else {

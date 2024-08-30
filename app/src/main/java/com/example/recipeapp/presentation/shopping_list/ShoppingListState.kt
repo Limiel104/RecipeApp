@@ -17,5 +17,6 @@ data class ShoppingListState(
     val selectedWholeQuantity: String = "",
     val selectedDecimalQuantity: String = "",
     val selectedTypeQuantity: String = "",
+    val checkedIngredients: Map<Ingredient, Boolean> = emptyMap(),
     val isLoading: Boolean = false
 )

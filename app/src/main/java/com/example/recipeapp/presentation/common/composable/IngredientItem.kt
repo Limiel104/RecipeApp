@@ -43,6 +43,7 @@ fun IngredientItem(
     isReorderModeActivated: Boolean = false,
     isShoppingListModeActivated: Boolean = false,
     isChecked: Boolean = false,
+    onCheckedChange: (Ingredient) -> Unit,
     onClick: (String) -> Unit
 ) {
     Row(
@@ -105,7 +106,7 @@ fun IngredientItem(
         if(isShoppingListModeActivated) {
             Checkbox(
                 checked = isChecked,
-                onCheckedChange = {}
+                onCheckedChange = { onCheckedChange(ingredient) }
             )
         }
     }
@@ -131,6 +132,7 @@ fun IngredientItemPreview() {
                     category = "category"
                 ),
                 quantity = "200 g",
+                onCheckedChange = {},
                 onClick = {}
             )
         }
@@ -158,6 +160,7 @@ fun IngredientItemDragIndexEqualToItemId() {
                 ),
                 quantity = "200 g",
                 dragIndex = "ingredientId",
+                onCheckedChange = {},
                 onClick = {}
             )
         }
@@ -185,6 +188,7 @@ fun IngredientItemPreviewReorderActivated() {
                 ),
                 quantity = "200 g",
                 isReorderModeActivated = true,
+                onCheckedChange = {},
                 onClick = {}
             )
         }
@@ -212,6 +216,7 @@ fun IngredientItemPreviewCheckboxFalse() {
                 ),
                 quantity = "200 g",
                 isShoppingListModeActivated = true,
+                onCheckedChange = {},
                 onClick = {}
             )
         }
@@ -240,6 +245,7 @@ fun IngredientItemPreviewCheckboxTrue() {
                 quantity = "200 g",
                 isShoppingListModeActivated = true,
                 isChecked = true,
+                onCheckedChange = {},
                 onClick = {}
             )
         }

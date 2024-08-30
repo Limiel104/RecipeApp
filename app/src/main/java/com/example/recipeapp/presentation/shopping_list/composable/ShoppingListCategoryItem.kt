@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Quantity
 import com.example.recipeapp.presentation.common.composable.IngredientItem
+import com.example.recipeapp.presentation.common.getIngredientsWithBoolean
 import com.example.recipeapp.presentation.common.getIngredientsWithQuantity
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
@@ -25,6 +26,8 @@ fun ShoppingListCategoryItem(
     modifier: Modifier = Modifier,
     categoryName: String,
     ingredients: Map<Ingredient, Quantity>,
+    checkedIngredients: Map<Ingredient, Boolean>,
+    onCheckedChange: (Ingredient) -> Unit,
     onIngredientClick: (String) -> Unit
 ) {
     var i = 0
@@ -48,13 +51,17 @@ fun ShoppingListCategoryItem(
 
             Column() {
                 for (ingredient in ingredients) {
-                    IngredientItem(
-                        ingredient = ingredient.key,
-                        quantity = ingredient.value,
-                        isShoppingListModeActivated = true,
-                        color = Color.Transparent,
-                        onClick = { onIngredientClick(it) }
-                    )
+                    checkedIngredients[ingredient.key]?.let {
+                        IngredientItem(
+                            ingredient = ingredient.key,
+                            quantity = ingredient.value,
+                            color = Color.Transparent,
+                            isShoppingListModeActivated = true,
+                            isChecked = it,
+                            onCheckedChange = { onCheckedChange(it) },
+                            onClick = { onIngredientClick(it) }
+                        )
+                    }
 
                     i += 1
                     if (i<ingredients.size)
@@ -79,6 +86,8 @@ fun ShoppingListCategoryItemPreview() {
         ShoppingListCategoryItem(
             categoryName = "Category Name",
             ingredients = getIngredientsWithQuantity(),
+            checkedIngredients = getIngredientsWithBoolean(),
+            onCheckedChange = {},
             onIngredientClick = {}
         )
     }

@@ -83,6 +83,15 @@ class ShoppingListViewModel @Inject constructor(
                 )
             }
 
+            is ShoppingListEvent.OnCheckBoxToggled -> {
+                val tempMap = getTempMapBoolean(_shoppingListState.value.checkedIngredients)
+                tempMap[event.ingredient] = !_shoppingListState.value.checkedIngredients[event.ingredient]!!
+
+                _shoppingListState.value = shoppingListState.value.copy(
+                    checkedIngredients = tempMap
+                )
+            }
+
             ShoppingListEvent.OnAddButtonClicked -> {
                 _shoppingListState.value = shoppingListState.value.copy(
                     isAddIngredientsDialogOpened = true
@@ -188,6 +197,14 @@ class ShoppingListViewModel @Inject constructor(
         return tempMap
     }
 
+    private fun getTempMapBoolean(checkedIngredients: Map<Ingredient, Boolean>): MutableMap<Ingredient, Boolean> {
+        val tempMap = mutableMapOf<Ingredient, Boolean>()
+        for(checkedIngredient in checkedIngredients) {
+            tempMap[checkedIngredient.key] = checkedIngredient.value
+        }
+        return tempMap
+    }
+
     private fun getCurrentIngredients(shoppingListIngredients: Map<Ingredient, Quantity>): List<Ingredient> {
         val allIngredients = _shoppingListState.value.allIngredients
 
@@ -237,7 +254,8 @@ class ShoppingListViewModel @Inject constructor(
                         response.data?.let {
                             _shoppingListState.value = shoppingListState.value.copy(
                                 ingredientsToSelect = response.data,
-                                allIngredients = response.data
+                                allIngredients = response.data,
+                                checkedIngredients = response.data.associateWith { false }
                             )
                         }
                     }
