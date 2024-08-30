@@ -64,7 +64,7 @@ fun IngredientItem(
                         )
                     }
                 } else {
-                    modifier.clickable { onClick(ingredient.ingredientId) }
+                    if(!isChecked) modifier.clickable { onClick(ingredient.ingredientId) } else modifier
                 }
             )
             .fillMaxWidth()
