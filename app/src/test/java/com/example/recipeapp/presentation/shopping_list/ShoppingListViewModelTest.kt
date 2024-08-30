@@ -209,7 +209,7 @@ class ShoppingListViewModelTest {
     }
 
     @Test
-    fun `onServingsButtonClicked - state is set correctly`() {
+    fun `onAddButtonClicked - state is set correctly`() {
         coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
 
         shoppingListViewModel = setViewModel()
@@ -221,6 +221,199 @@ class ShoppingListViewModelTest {
         verifyMocks()
         assertThat(initialAddIngredientsDialogState).isFalse()
         assertThat(resultAddIngredientsDialogState).isTrue()
+    }
+
+    @Test
+    fun `onAddIngredientDialogDismiss - no selected ingredients - state is set correctly`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddButtonClicked)
+        val initialAddIngredientsDialogState = getCurrentShoppingListState().isAddIngredientsDialogOpened
+        val initialSelectedIngredientsState = getCurrentShoppingListState().selectedIngredients
+        val initialIngredientsToSelect = getCurrentShoppingListState().ingredientsToSelect
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogDismiss)
+        val resultAddIngredientsDialogState = getCurrentShoppingListState().isAddIngredientsDialogOpened
+        val resultSelectedIngredientsState = getCurrentShoppingListState().selectedIngredients
+        val resultIngredientsToSelect = getCurrentShoppingListState().ingredientsToSelect
+
+        verifyMocks()
+        assertThat(initialAddIngredientsDialogState).isTrue()
+        assertThat(initialSelectedIngredientsState).isEmpty()
+        assertThat(initialIngredientsToSelect).isEqualTo(ingredients)
+        assertThat(resultAddIngredientsDialogState).isFalse()
+        assertThat(resultSelectedIngredientsState).isEmpty()
+        assertThat(resultIngredientsToSelect).isEqualTo(ingredients)
+    }
+
+    @Test
+    fun `onAddIngredientDialogDismiss - selected ingredients - state is set correctly`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddButtonClicked)
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        val initialAddIngredientsDialogState = getCurrentShoppingListState().isAddIngredientsDialogOpened
+        val initialSelectedIngredientsState = getCurrentShoppingListState().selectedIngredients
+        val initialIngredientsToSelect = getCurrentShoppingListState().ingredientsToSelect
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogDismiss)
+        val resultAddIngredientsDialogState = getCurrentShoppingListState().isAddIngredientsDialogOpened
+        val resultSelectedIngredientsState = getCurrentShoppingListState().selectedIngredients
+        val resultIngredientsToSelect = getCurrentShoppingListState().ingredientsToSelect
+
+        verifyMocks()
+        assertThat(initialAddIngredientsDialogState).isTrue()
+        assertThat(initialSelectedIngredientsState).isEqualTo(listOf(ingredients[3],ingredients[2]))
+        assertThat(initialIngredientsToSelect).isEqualTo(listOf(
+            ingredients[0],
+            ingredients[1],
+            ingredients[4]
+        ))
+        assertThat(resultAddIngredientsDialogState).isFalse()
+        assertThat(resultSelectedIngredientsState).isEmpty()
+        assertThat(resultIngredientsToSelect).isEqualTo(ingredients)
+    }
+
+    @Test
+    fun `onAddIngredientDialogDismiss - selected ingredients before - state is set correctly`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddButtonClicked)
+        val initialAddIngredientsDialogState = getCurrentShoppingListState().isAddIngredientsDialogOpened
+        val initialSelectedIngredientsState = getCurrentShoppingListState().selectedIngredients
+        val initialIngredientsToSelect = getCurrentShoppingListState().ingredientsToSelect
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogDismiss)
+        val resultAddIngredientsDialogState = getCurrentShoppingListState().isAddIngredientsDialogOpened
+        val resultSelectedIngredientsState = getCurrentShoppingListState().selectedIngredients
+        val resultIngredientsToSelect = getCurrentShoppingListState().ingredientsToSelect
+
+        verifyMocks()
+        assertThat(initialAddIngredientsDialogState).isTrue()
+        assertThat(initialSelectedIngredientsState).isEmpty()
+        assertThat(initialIngredientsToSelect).isEqualTo(listOf(
+            ingredients[0],
+            ingredients[1],
+            ingredients[4]
+        ))
+        assertThat(resultAddIngredientsDialogState).isFalse()
+        assertThat(resultSelectedIngredientsState).isEmpty()
+        assertThat(resultIngredientsToSelect).isEqualTo(listOf(
+            ingredients[0],
+            ingredients[1],
+            ingredients[4]
+        ))
+    }
+
+    @Test
+    fun `onAddIngredientDialogDismiss - selected ingredients before and after - state is set correctly`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddButtonClicked)
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
+        val initialAddIngredientsDialogState = getCurrentShoppingListState().isAddIngredientsDialogOpened
+        val initialSelectedIngredientsState = getCurrentShoppingListState().selectedIngredients
+        val initialIngredientsToSelect = getCurrentShoppingListState().ingredientsToSelect
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogDismiss)
+        val resultAddIngredientsDialogState = getCurrentShoppingListState().isAddIngredientsDialogOpened
+        val resultSelectedIngredientsState = getCurrentShoppingListState().selectedIngredients
+        val resultIngredientsToSelect = getCurrentShoppingListState().ingredientsToSelect
+
+        verifyMocks()
+        assertThat(initialAddIngredientsDialogState).isTrue()
+        assertThat(initialSelectedIngredientsState).isEqualTo(listOf(ingredients[4]))
+        assertThat(initialIngredientsToSelect).isEqualTo(listOf(
+            ingredients[0],
+            ingredients[1]
+        ))
+        assertThat(resultAddIngredientsDialogState).isFalse()
+        assertThat(resultSelectedIngredientsState).isEmpty()
+        assertThat(resultIngredientsToSelect).isEqualTo(listOf(
+            ingredients[0],
+            ingredients[1],
+            ingredients[4]
+        ))
+    }
+
+    @Test
+    fun `onAddIngredientDialogDismiss - selected ingredients - shopping list ingredients`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddButtonClicked)
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        val initialIngredientsState = getCurrentShoppingListState().shoppingListIngredients
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogDismiss)
+        val resultIngredientsState = getCurrentShoppingListState().shoppingListIngredients
+
+        verifyMocks()
+        assertThat(initialIngredientsState).isEmpty()
+        assertThat(resultIngredientsState).isEmpty()
+    }
+
+    @Test
+    fun `onAddIngredientDialogDismiss - selected ingredients before - shopping list ingredients`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddButtonClicked)
+        val initialIngredientsState = getCurrentShoppingListState().shoppingListIngredients
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogDismiss)
+        val resultIngredientsState = getCurrentShoppingListState().shoppingListIngredients
+
+        verifyMocks()
+        assertThat(initialIngredientsState).isEqualTo(mapOf(
+            Pair(ingredients[3],""),
+            Pair(ingredients[2],"")
+        ))
+        assertThat(resultIngredientsState).isEqualTo(mapOf(
+            Pair(ingredients[3],""),
+            Pair(ingredients[2],"")
+        ))
+    }
+
+    @Test
+    fun `onAddIngredientDialogDismiss - selected ingredients before and after - shopping list ingredients`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddButtonClicked)
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
+        val initialIngredientsState = getCurrentShoppingListState().shoppingListIngredients
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogDismiss)
+        val resultIngredientsState = getCurrentShoppingListState().shoppingListIngredients
+
+        verifyMocks()
+        assertThat(initialIngredientsState).isEqualTo(mapOf(
+            Pair(ingredients[3],""),
+            Pair(ingredients[2],"")
+        ))
+        assertThat(resultIngredientsState).isEqualTo(mapOf(
+            Pair(ingredients[3],""),
+            Pair(ingredients[2],"")
+        ))
     }
 
     @Test
@@ -1055,4 +1248,6 @@ class ShoppingListViewModelTest {
         assertThat(initialQuantityBottomSheetState).isTrue()
         assertThat(resultIngredientQuantityState).isFalse()
     }
+
+
 }
