@@ -12,6 +12,10 @@ import com.example.recipeapp.domain.model.ShoppingListWithIngredients
 import com.example.recipeapp.domain.use_case.AddShoppingListUseCase
 import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
 import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
+import com.example.recipeapp.domain.use_case.GetShoppingListUseCase
+import com.example.recipeapp.domain.use_case.GetUserShoppingListsUseCase
+import com.example.recipeapp.presentation.common.getIngredientsWithBoolean
+import com.example.recipeapp.presentation.common.getIngredientsWithQuantity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -22,7 +26,9 @@ import javax.inject.Inject
 class ShoppingListViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getIngredientsUseCase: GetIngredientsUseCase,
-    private val addShoppingListUseCase: AddShoppingListUseCase
+    private val addShoppingListUseCase: AddShoppingListUseCase,
+    private val getUserShoppingListsUseCase: GetUserShoppingListsUseCase,
+    private val getShoppingListUseCase: GetShoppingListUseCase
 ): ViewModel() {
     
     private val _shoppingListState = mutableStateOf(ShoppingListState())
@@ -94,6 +100,11 @@ class ShoppingListViewModel @Inject constructor(
                     checkedIngredients = tempMap
                 )
             }
+
+            is ShoppingListEvent.SelectedShoppingList -> {
+                getShoppingList(event.shoppingListId)
+            }
+
 
             ShoppingListEvent.OnAddButtonClicked -> {
                 _shoppingListState.value = shoppingListState.value.copy(
@@ -183,7 +194,12 @@ class ShoppingListViewModel @Inject constructor(
             )
 
             currentUser?.let {
+                _shoppingListState.value = shoppingListState.value.copy(
+                    userUID = currentUser.uid
+                )
                 getIngredients()
+                getUserShoppingLists(currentUser.uid)
+                addShoppingList()
             }
         }
     }
@@ -272,13 +288,16 @@ class ShoppingListViewModel @Inject constructor(
     }
 
     private fun addShoppingList() {
-
         val shoppingListWithIngredients = ShoppingListWithIngredients(
             shoppingListId = "",
             name = "Some name",
-            createdBy = getCurrentUserUseCase()!!.uid,
-            ingredients = _shoppingListState.value.shoppingListIngredients
+            createdBy = _shoppingListState.value.userUID,
+            ingredients = getIngredientsWithQuantity(),
+            checkedIngredients = getIngredientsWithBoolean(),
+            date = System.currentTimeMillis()
         )
+
+        Log.i("TAG", shoppingListWithIngredients.date.toString())
 
         viewModelScope.launch {
             addShoppingListUseCase(shoppingListWithIngredients).collect { response ->
@@ -294,6 +313,58 @@ class ShoppingListViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         Log.i("TAG",response.data.toString() + " addShoppingList")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getUserShoppingLists(userUID: String) {
+        viewModelScope.launch {
+            getUserShoppingListsUseCase(userUID, true).collect { response ->
+                when(response) {
+                    is Resource.Error -> {
+                        Log.i("TAG","Error message from getUserShoppingLists: ${response.message}")
+                    }
+                    is Resource.Loading -> {
+                        Log.i("TAG","Loading get getUserShoppingLists: ${response.isLoading}")
+                        _shoppingListState.value = shoppingListState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i("TAG user shl: ",response.data.toString())
+                        response.data?.let {
+                            _shoppingListState.value = shoppingListState.value.copy(
+                                userShoppingLists = response.data
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getShoppingList(shoppingListId: String) {
+        viewModelScope.launch {
+            getShoppingListUseCase(shoppingListId).collect { response ->
+                when(response) {
+                    is Resource.Error -> {
+                        Log.i("TAG","Error message from getShoppingList: ${response.message}")
+                    }
+                    is Resource.Loading -> {
+                        Log.i("TAG","Loading get getShoppingList: ${response.isLoading}")
+                        _shoppingListState.value = shoppingListState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i("TAG displayed:",response.data.toString())
+                        response.data?.let {
+                            _shoppingListState.value = shoppingListState.value.copy(
+                                displayedShoppingList = response.data
+                            )
+                        }
                     }
                 }
             }

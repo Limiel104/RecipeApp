@@ -2,14 +2,19 @@ package com.example.recipeapp.presentation.shopping_list
 
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Resource
+import com.example.recipeapp.domain.model.ShoppingList
+import com.example.recipeapp.domain.model.ShoppingListWithIngredients
 import com.example.recipeapp.domain.use_case.AddShoppingListUseCase
 import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
 import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
+import com.example.recipeapp.domain.use_case.GetShoppingListUseCase
+import com.example.recipeapp.domain.use_case.GetUserShoppingListsUseCase
 import com.example.recipeapp.util.MainDispatcherRule
 import com.google.common.truth.Truth.assertThat
 import com.google.firebase.auth.FirebaseUser
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.coVerifyOrder
 import io.mockk.coVerifySequence
 import io.mockk.confirmVerified
@@ -31,8 +36,13 @@ class ShoppingListViewModelTest {
     private lateinit var getIngredientsUseCase: GetIngredientsUseCase
     private lateinit var getCurrentUserUseCase: GetCurrentUserUseCase
     private lateinit var addShoppingListUseCase: AddShoppingListUseCase
+    private lateinit var getUserShoppingListsUseCase: GetUserShoppingListsUseCase
+    private lateinit var getShoppingListUseCase: GetShoppingListUseCase
     private lateinit var shoppingListViewModel: ShoppingListViewModel
     private lateinit var ingredients: List<Ingredient>
+    private lateinit var shoppingLists: List<ShoppingList>
+    private lateinit var emptyShoppingListWithIngredients: ShoppingListWithIngredients
+    private lateinit var displayedShoppingList: ShoppingListWithIngredients
     private lateinit var firebaseUser: FirebaseUser
 
     @Before
@@ -40,6 +50,8 @@ class ShoppingListViewModelTest {
         getIngredientsUseCase = mockk()
         getCurrentUserUseCase = mockk()
         addShoppingListUseCase = mockk()
+        getUserShoppingListsUseCase = mockk()
+        getShoppingListUseCase = mockk()
         firebaseUser = mockk()
 
         every { getCurrentUserUseCase() } returns firebaseUser
@@ -77,6 +89,63 @@ class ShoppingListViewModelTest {
                 category = "category5"
             )
         )
+
+        shoppingLists = listOf(
+            ShoppingList(
+                shoppingListId = "shoppingListId",
+                name = "Shopping List Name",
+                createdBy = "userUID",
+                date = 1234564398
+            ),
+            ShoppingList(
+                shoppingListId = "shoppingList2Id",
+                name = "Shopping List 2 Name",
+                createdBy = "userUID",
+                date = 1234345349
+            ),
+            ShoppingList(
+                shoppingListId = "shoppingList3Id",
+                name = "Shopping List 3 Name",
+                createdBy = "userUID",
+                date = 1234324345
+            ),
+            ShoppingList(
+                shoppingListId = "shoppingList4Id",
+                name = "Shopping List 4 Name",
+                createdBy = "userUID",
+                date = 1234324357
+            ),
+            ShoppingList(
+                shoppingListId = "shoppingList5Id",
+                name = "Shopping List 5 Name",
+                createdBy = "userUID",
+                date = 1234824354
+            )
+        )
+
+        emptyShoppingListWithIngredients = ShoppingListWithIngredients(
+            shoppingListId = "",
+            name = "",
+            createdBy = "",
+            ingredients = emptyMap(),
+            checkedIngredients = emptyMap(),
+            date = 0
+        )
+
+        displayedShoppingList = ShoppingListWithIngredients(
+            shoppingListId = "shoppingListId",
+            name = "Shopping List Name",
+            createdBy = "userUID",
+            ingredients = mapOf(
+                ingredients[2] to "3 g",
+                ingredients[1] to "5 g"
+            ),
+            checkedIngredients = mapOf(
+                ingredients[2] to false,
+                ingredients[1] to true
+            ),
+            date = 1234324354
+        )
     }
 
     @After
@@ -84,6 +153,7 @@ class ShoppingListViewModelTest {
         confirmVerified(getIngredientsUseCase)
         confirmVerified(getCurrentUserUseCase)
         confirmVerified(addShoppingListUseCase)
+        confirmVerified(getUserShoppingListsUseCase)
         clearAllMocks()
     }
 
@@ -91,7 +161,9 @@ class ShoppingListViewModelTest {
         return ShoppingListViewModel(
             getCurrentUserUseCase,
             getIngredientsUseCase,
-            addShoppingListUseCase
+            addShoppingListUseCase,
+            getUserShoppingListsUseCase,
+            getShoppingListUseCase
         )
     }
 
@@ -99,17 +171,22 @@ class ShoppingListViewModelTest {
         return shoppingListViewModel.shoppingListState.value
     }
 
+    private fun setMocks() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        coEvery { getUserShoppingListsUseCase(any(), any()) } returns flowOf(Resource.Success(shoppingLists))
+    }
+
     private fun verifyMocks() {
         coVerifySequence {
             getCurrentUserUseCase()
             getIngredientsUseCase()
+            getUserShoppingListsUseCase("userUID",any())
         }
     }
 
     @Test
     fun `checkIfUserLoggedIn - user is logged in`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         val result = getCurrentShoppingListState().isUserLoggedIn
 
@@ -130,8 +207,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `getIngredients runs successfully`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         val result = getCurrentShoppingListState().ingredientsToSelect
         val isLoading = getCurrentShoppingListState().isLoading
@@ -169,8 +245,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `enteredIngredient - initially empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         val initialIngredientState = getCurrentShoppingListState().ingredient
 
@@ -184,8 +259,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `enteredIngredient - initially not empty - changed string`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.EnteredIngredient("old ingredient"))
         val initialIngredientState = getCurrentShoppingListState().ingredient
@@ -200,8 +274,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `enteredIngredient - initially not empty - result empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.EnteredIngredient("ingredient"))
         val initialIngredientState = getCurrentShoppingListState().ingredient
@@ -216,8 +289,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onAddButtonClicked - state is set correctly`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         val initialAddIngredientsDialogState = getCurrentShoppingListState().isAddIngredientsDialogOpened
 
@@ -231,8 +303,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onAddIngredientDialogDismiss - no selected ingredients - state is set correctly`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddButtonClicked)
         val initialAddIngredientsDialogState = getCurrentShoppingListState().isAddIngredientsDialogOpened
@@ -255,8 +326,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onAddIngredientDialogDismiss - selected ingredients - state is set correctly`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddButtonClicked)
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
@@ -285,8 +355,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onAddIngredientDialogDismiss - selected ingredients before - state is set correctly`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
@@ -320,8 +389,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onAddIngredientDialogDismiss - selected ingredients before and after - state is set correctly`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
@@ -355,8 +423,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onAddIngredientDialogDismiss - selected ingredients - shopping list ingredients`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddButtonClicked)
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
@@ -373,8 +440,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onAddIngredientDialogDismiss - selected ingredients before - shopping list ingredients`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
@@ -398,8 +464,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onAddIngredientDialogDismiss - selected ingredients before and after - shopping list ingredients`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
@@ -424,8 +489,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onDropDownMenuExpandChange - initially false`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         val initialDropDownMenuExpandState = getCurrentShoppingListState().isDropDownMenuExpanded
 
@@ -439,8 +503,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onDropDownMenuExpandChange - initially true`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.OnDropDownMenuExpandChange)
         val initialDropDownMenuExpandState = getCurrentShoppingListState().isDropDownMenuExpanded
@@ -455,8 +518,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `selectedIngredient - no ingredients selected - shopping list ingredients`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         val initialShoppingListIngredientsState = getCurrentShoppingListState().shoppingListIngredients
 
@@ -475,8 +537,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `selectedIngredient - no ingredients selected - ingredients to select`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         val initialIngredientsState = getCurrentShoppingListState().ingredientsToSelect
 
@@ -498,8 +559,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `selectedIngredient - 2 out of 5 ingredients selected initially - shopping list ingredients`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[1]))
@@ -528,8 +588,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `selectedIngredient - 2 out of 5 ingredients selected initially - ingredients to select`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[1]))
@@ -558,8 +617,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `selectedIngredient - 4 out of 5 ingredients selected initially - shopping list ingredients`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[0]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
@@ -594,8 +652,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `selectedIngredient - 4 out of 5 ingredients selected initially - ingredients to select`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[0]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
@@ -619,8 +676,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onIngredientClicked - initially not selected - selected ingredient`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         val initialSelectedIngredientIdState = getCurrentShoppingListState().clickedIngredientId
 
@@ -635,8 +691,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onIngredientClicked - initially selected - selected ingredient`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[1].ingredientId))
         val initialSelectedIngredientIdState = getCurrentShoppingListState().clickedIngredientId
@@ -651,8 +706,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onIngredientClicked - is quantity bottom sheet opened after click`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         val initialQuantityBottomSheetState = getCurrentShoppingListState().isQuantityBottomSheetOpened
 
@@ -666,8 +720,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `selectedWholeQuantity - initially empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         val initialWholeQuantityState = getCurrentShoppingListState().selectedWholeQuantity
 
@@ -681,8 +734,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `selectedWholeQuantity - initially not empty - changed value`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("350"))
         val initialWholeQuantityState = getCurrentShoppingListState().selectedWholeQuantity
@@ -697,8 +749,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `selectedWholeQuantity - initially not empty - result empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity("350"))
         val initialWholeQuantityState = getCurrentShoppingListState().selectedWholeQuantity
@@ -713,8 +764,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `selectedDecimalQuantity - initially empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         val initialDecimalQuantityState = getCurrentShoppingListState().selectedDecimalQuantity
 
@@ -728,8 +778,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `selectedDecimalQuantity - initially not empty - changed value`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".7"))
         val initialDecimalQuantityState = getCurrentShoppingListState().selectedDecimalQuantity
@@ -744,8 +793,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `selectedDecimalQuantity - initially not empty - result empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(".7"))
         val initialDecimalQuantityState = getCurrentShoppingListState().selectedDecimalQuantity
@@ -760,8 +808,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `selectedTypeQuantity - initially empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         val initialTypeQuantityState = getCurrentShoppingListState().selectedTypeQuantity
 
@@ -775,8 +822,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `selectedTypeQuantity - initially not empty - changed value`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("bowl"))
         val initialTypeQuantityState = getCurrentShoppingListState().selectedTypeQuantity
@@ -791,8 +837,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `selectedTypeQuantity - initially not empty - result empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity("bowl"))
         val initialTypeQuantityState = getCurrentShoppingListState().selectedTypeQuantity
@@ -807,8 +852,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onQuantityPickerSaved - isQuantityBottomSheetOpened state is set correctly`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
         val initialQuantityBottomSheetState = getCurrentShoppingListState().isQuantityBottomSheetOpened
@@ -823,8 +867,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onQuantityPickerSaved - quantity is not selected`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -840,8 +883,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onQuantityPickerSaved - quantity is selected - initially empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -861,8 +903,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onQuantityPickerSaved - whole and decimal quantity is selected - initially empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -881,8 +922,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onQuantityPickerSaved - whole and type quantity is selected - initially empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -901,8 +941,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onQuantityPickerSaved - decimal and type quantity is selected - initially empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -921,8 +960,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onQuantityPickerSaved - only whole quantity is selected - initially empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -940,8 +978,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onQuantityPickerSaved - only decimal quantity is selected - initially empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -959,8 +996,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onQuantityPickerSaved - only type quantity is selected - initially empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -978,8 +1014,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onQuantityPickerSaved - quantity is selected - initially not empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1004,8 +1039,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onQuantityPickerSaved - whole and decimal quantity is selected - initially not empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1029,8 +1063,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onQuantityPickerSaved - whole and type quantity is selected - initially not empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1054,8 +1087,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onQuantityPickerSaved - decimal and type quantity is selected - initially not empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1079,8 +1111,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onQuantityPickerSaved - only whole quantity is selected - initially not empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1103,8 +1134,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onQuantityPickerSaved - only decimal quantity is selected - initially not empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1127,8 +1157,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onQuantityPickerSaved - only type quantity is selected - initially not empty`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1151,8 +1180,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onQuantityPickerDismissed - ingredient quantity not set - still default`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1169,8 +1197,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onQuantityPickerDismissed - ingredient quantity set - value not changed`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1191,8 +1218,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onQuantityPickerDismissed - ingredient quantity not set and then changed - still default`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1213,8 +1239,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onQuantityPickerDismissed - ingredient quantity set and then changed - value not changed`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1239,8 +1264,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onQuantityPickerDismissed - quantity bottom sheet is closed`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1257,8 +1281,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onCheckBoxToggled - one item`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1290,8 +1313,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onCheckBoxToggled - one item - unchecked`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1324,8 +1346,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onCheckBoxToggled - all items`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
@@ -1365,8 +1386,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onCheckBoxToggled - all items - unchecked`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
-
+        setMocks()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
@@ -1411,7 +1431,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `addShoppingList runs successfully`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        setMocks()
         coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
 
         shoppingListViewModel = setViewModel()
@@ -1421,7 +1441,7 @@ class ShoppingListViewModelTest {
         coVerifyOrder {
             getCurrentUserUseCase()
             getIngredientsUseCase()
-            getCurrentUserUseCase()
+            getUserShoppingListsUseCase("userUID",true)
             addShoppingListUseCase(any())
         }
         assertThat(isLoading).isFalse()
@@ -1429,7 +1449,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `addShoppingList returns error`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        setMocks()
         coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Error("Error message"))
 
         shoppingListViewModel = setViewModel()
@@ -1439,7 +1459,7 @@ class ShoppingListViewModelTest {
         coVerifyOrder {
             getCurrentUserUseCase()
             getIngredientsUseCase()
-            getCurrentUserUseCase()
+            getUserShoppingListsUseCase("userUID",true)
             addShoppingListUseCase(any())
         }
         assertThat(isLoading).isFalse()
@@ -1447,7 +1467,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `addShoppingList is loading`() {
-        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        setMocks()
         coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Loading(true))
 
         shoppingListViewModel = setViewModel()
@@ -1457,9 +1477,97 @@ class ShoppingListViewModelTest {
         coVerifyOrder {
             getCurrentUserUseCase()
             getIngredientsUseCase()
-            getCurrentUserUseCase()
+            getUserShoppingListsUseCase("userUID",true)
             addShoppingListUseCase(any())
         }
+        assertThat(isLoading).isTrue()
+    }
+
+    @Test
+    fun `getUserShoppingLists runs successfully`() {
+        setMocks()
+        shoppingListViewModel = setViewModel()
+        val result = getCurrentShoppingListState().userShoppingLists
+        val isLoading = getCurrentShoppingListState().isLoading
+
+        verifyMocks()
+        assertThat(result).isEqualTo(shoppingLists)
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `getUserShoppingLists returns error`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        coEvery { getUserShoppingListsUseCase(any(), any()) } returns flowOf(Resource.Error("Error message"))
+
+        shoppingListViewModel = setViewModel()
+        val result = getCurrentShoppingListState().userShoppingLists
+        val isLoading = getCurrentShoppingListState().isLoading
+
+        verifyMocks()
+        assertThat(result).isEmpty()
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `getUserShoppingLists is loading`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        coEvery { getUserShoppingListsUseCase(any(), any()) } returns flowOf(Resource.Loading(true))
+
+        shoppingListViewModel = setViewModel()
+        val result = getCurrentShoppingListState().userShoppingLists
+        val isLoading = getCurrentShoppingListState().isLoading
+
+        verifyMocks()
+        assertThat(result).isEmpty()
+        assertThat(isLoading).isTrue()
+    }
+
+    @Test
+    fun `getShoppingList runs successfully`() {
+        setMocks()
+        coEvery { getShoppingListUseCase(any()) } returns flowOf(Resource.Success(displayedShoppingList))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedShoppingList("shoppingListId"))
+        val result = getCurrentShoppingListState().displayedShoppingList
+        val isLoading = getCurrentShoppingListState().isLoading
+
+        verifyMocks()
+        coVerify(exactly = 1) { getShoppingListUseCase("shoppingListId") }
+        assertThat(result).isEqualTo(displayedShoppingList)
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `getShoppingList returns error`() {
+        setMocks()
+        coEvery { getShoppingListUseCase(any()) } returns flowOf(Resource.Error("Error message"))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedShoppingList("shoppingListId"))
+        val result = getCurrentShoppingListState().displayedShoppingList
+        val isLoading = getCurrentShoppingListState().isLoading
+
+        verifyMocks()
+        coVerify(exactly = 1) { getShoppingListUseCase("shoppingListId") }
+        assertThat(result).isEqualTo(emptyShoppingListWithIngredients)
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `getShoppingList is loading`() {
+        setMocks()
+        coEvery { getShoppingListUseCase(any()) } returns flowOf(Resource.Loading(true))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedShoppingList("shoppingListId"))
+        val result = getCurrentShoppingListState().displayedShoppingList
+        val isLoading = getCurrentShoppingListState().isLoading
+
+        verifyMocks()
+        coVerify(exactly = 1) { getShoppingListUseCase("shoppingListId") }
+        assertThat(result).isEqualTo(emptyShoppingListWithIngredients)
         assertThat(isLoading).isTrue()
     }
 }

@@ -2,7 +2,7 @@ package com.example.recipeapp.data.repository
 
 import android.util.Log
 import com.example.recipeapp.data.local.ShoppingListDao
-import com.example.recipeapp.data.mapper.getShoppingListIngredientsList
+import com.example.recipeapp.data.mapper.getShoppingListIngredientsEntityList
 import com.example.recipeapp.data.mapper.toIngredient
 import com.example.recipeapp.data.mapper.toShoppingList
 import com.example.recipeapp.data.mapper.toShoppingListDto
@@ -76,7 +76,7 @@ class ShoppingListRepositoryImpl @Inject constructor(
             for(shoppingList in shoppingListsList) {
                 dao.insertShoppingListWithIngredients(
                     shoppingList.toShoppingListEntity(),
-                    shoppingList.getShoppingListIngredientsList()
+                    shoppingList.getShoppingListIngredientsEntityList()
                 )
             }
         }

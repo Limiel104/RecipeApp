@@ -31,6 +31,7 @@ import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
 import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
 import com.example.recipeapp.domain.use_case.GetSearchSuggestionsUseCase
 import com.example.recipeapp.domain.use_case.GetRecipesUseCase
+import com.example.recipeapp.domain.use_case.GetShoppingListUseCase
 import com.example.recipeapp.domain.use_case.GetUserRecipesUseCase
 import com.example.recipeapp.domain.use_case.GetUserShoppingListsUseCase
 import com.example.recipeapp.domain.use_case.GetUserUseCase
@@ -231,6 +232,12 @@ object AppModule {
     @Singleton
     fun provideAddShoppingListUseCase(shoppingListRepository: ShoppingListRepository): AddShoppingListUseCase {
         return AddShoppingListUseCase(shoppingListRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetShoppingListUseCase(shoppingListRepository: ShoppingListRepository): GetShoppingListUseCase {
+        return GetShoppingListUseCase(shoppingListRepository)
     }
 
     @Provides

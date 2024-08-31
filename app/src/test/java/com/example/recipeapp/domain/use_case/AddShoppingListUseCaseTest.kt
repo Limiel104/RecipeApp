@@ -3,6 +3,7 @@ package com.example.recipeapp.domain.use_case
 import com.example.recipeapp.domain.model.Resource
 import com.example.recipeapp.domain.model.ShoppingListWithIngredients
 import com.example.recipeapp.domain.repository.ShoppingListRepository
+import com.example.recipeapp.presentation.common.getIngredientsWithBoolean
 import com.example.recipeapp.presentation.common.getIngredientsWithQuantity
 import com.google.common.truth.Truth
 import io.mockk.MockKAnnotations
@@ -34,8 +35,10 @@ class AddShoppingListUseCaseTest {
         shoppingListWithIngredients = ShoppingListWithIngredients(
             shoppingListId = "shoppingListId",
             name = "Shopping List Name",
+            createdBy = "userUID",
             ingredients = getIngredientsWithQuantity(),
-            createdBy = "userUID"
+            checkedIngredients = getIngredientsWithBoolean(),
+            date = 1234324354
         )
     }
 

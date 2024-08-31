@@ -31,47 +31,54 @@ class ShoppingListDaoTest {
     private val shoppingList = ShoppingListEntity(
         shoppingListId = "shoppingListId",
         name = "Shopping List Name",
-        createdBy = "userId"
+        createdBy = "userId",
+        date = 1234324354
     )
 
     private val shoppingList2 = ShoppingListEntity(
         shoppingListId = "shoppingList2Id",
         name = "Shopping List 2 Name",
-        createdBy = "userId"
+        createdBy = "userId",
+        date = 1234324354
     )
 
     private val shoppingList3 = ShoppingListEntity(
         shoppingListId = "shoppingList3Id",
         name = "Shopping List 3 Name",
-        createdBy = "userId"
+        createdBy = "userId",
+        date = 1234324354
     )
 
     private val shoppingListIngredient = ShoppingListIngredientEntity(
         shoppingListIngredientId = 9836583604,
         ingredientId = "ingredientId",
         shoppingListId = "shoppingListId",
-        quantity = "15 g"
+        quantity = "15 g",
+        isChecked = false
     )
 
     private val shoppingListIngredient2 = ShoppingListIngredientEntity(
         shoppingListIngredientId = 4829563965,
         ingredientId = "ingredient2Id",
         shoppingListId = "shoppingListId",
-        quantity = "4 kg"
+        quantity = "4 kg",
+        isChecked = true
     )
 
     private val shoppingListIngredient3 = ShoppingListIngredientEntity(
         shoppingListIngredientId = 8376409365,
         ingredientId = "ingredient3Id",
         shoppingListId = "shoppingList2Id",
-        quantity = "3 cans"
+        quantity = "3 cans",
+        isChecked = false
     )
 
     private val shoppingListIngredient4 = ShoppingListIngredientEntity(
         shoppingListIngredientId = 4736585798,
         ingredientId = "ingredient4Id",
         shoppingListId = "shoppingListId",
-        quantity = "28 dag"
+        quantity = "28 dag",
+        isChecked = false
     )
 
     private val ingredient = IngredientEntity(
