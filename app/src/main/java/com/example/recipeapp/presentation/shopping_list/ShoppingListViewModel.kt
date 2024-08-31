@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Quantity
 import com.example.recipeapp.domain.model.Resource
+import com.example.recipeapp.domain.model.ShoppingListWithIngredients
+import com.example.recipeapp.domain.use_case.AddShoppingListUseCase
 import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
 import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ShoppingListViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
-    private val getIngredientsUseCase: GetIngredientsUseCase
+    private val getIngredientsUseCase: GetIngredientsUseCase,
+    private val addShoppingListUseCase: AddShoppingListUseCase
 ): ViewModel() {
     
     private val _shoppingListState = mutableStateOf(ShoppingListState())
@@ -154,6 +157,10 @@ class ShoppingListViewModel @Inject constructor(
                 )
             }
 
+            ShoppingListEvent.OnAddShoppingList -> {
+                addShoppingList()
+            }
+
             ShoppingListEvent.OnLogin -> {
                 viewModelScope.launch {
                     _shoppingListUiEventChannel.send(ShoppingListUiEvent.NavigateToLogin)
@@ -258,6 +265,35 @@ class ShoppingListViewModel @Inject constructor(
                                 checkedIngredients = response.data.associateWith { false }
                             )
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun addShoppingList() {
+
+        val shoppingListWithIngredients = ShoppingListWithIngredients(
+            shoppingListId = "",
+            name = "Some name",
+            createdBy = getCurrentUserUseCase()!!.uid,
+            ingredients = _shoppingListState.value.shoppingListIngredients
+        )
+
+        viewModelScope.launch {
+            addShoppingListUseCase(shoppingListWithIngredients).collect { response ->
+                when(response) {
+                    is Resource.Error -> {
+                        Log.i("TAG","Error message from addShoppingList: ${response.message}")
+                    }
+                    is Resource.Loading -> {
+                        Log.i("TAG","Loading get addShoppingList: ${response.isLoading}")
+                        _shoppingListState.value = shoppingListState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i("TAG",response.data.toString() + " addShoppingList")
                     }
                 }
             }

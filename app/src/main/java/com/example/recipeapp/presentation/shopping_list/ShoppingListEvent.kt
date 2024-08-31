@@ -16,6 +16,7 @@ sealed class ShoppingListEvent {
     object OnAddIngredientsDialogSave: ShoppingListEvent()
     object OnQuantityPickerDismissed: ShoppingListEvent()
     object OnQuantityPickerSaved: ShoppingListEvent()
+    object OnAddShoppingList: ShoppingListEvent()
     object OnLogin: ShoppingListEvent()
     object OnSignup: ShoppingListEvent()
 }

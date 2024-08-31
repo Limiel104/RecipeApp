@@ -2,6 +2,7 @@ package com.example.recipeapp.presentation.shopping_list
 
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Resource
+import com.example.recipeapp.domain.use_case.AddShoppingListUseCase
 import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
 import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
 import com.example.recipeapp.util.MainDispatcherRule
@@ -9,6 +10,7 @@ import com.google.common.truth.Truth.assertThat
 import com.google.firebase.auth.FirebaseUser
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
+import io.mockk.coVerifyOrder
 import io.mockk.coVerifySequence
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -28,6 +30,7 @@ class ShoppingListViewModelTest {
 
     private lateinit var getIngredientsUseCase: GetIngredientsUseCase
     private lateinit var getCurrentUserUseCase: GetCurrentUserUseCase
+    private lateinit var addShoppingListUseCase: AddShoppingListUseCase
     private lateinit var shoppingListViewModel: ShoppingListViewModel
     private lateinit var ingredients: List<Ingredient>
     private lateinit var firebaseUser: FirebaseUser
@@ -36,6 +39,7 @@ class ShoppingListViewModelTest {
     fun setUp() {
         getIngredientsUseCase = mockk()
         getCurrentUserUseCase = mockk()
+        addShoppingListUseCase = mockk()
         firebaseUser = mockk()
 
         every { getCurrentUserUseCase() } returns firebaseUser
@@ -79,13 +83,15 @@ class ShoppingListViewModelTest {
     fun tearDown() {
         confirmVerified(getIngredientsUseCase)
         confirmVerified(getCurrentUserUseCase)
+        confirmVerified(addShoppingListUseCase)
         clearAllMocks()
     }
 
     private fun setViewModel(): ShoppingListViewModel {
         return ShoppingListViewModel(
             getCurrentUserUseCase,
-            getIngredientsUseCase
+            getIngredientsUseCase,
+            addShoppingListUseCase
         )
     }
 
@@ -1401,5 +1407,59 @@ class ShoppingListViewModelTest {
                 Pair(ingredients[4],false)
             )
         )
+    }
+
+    @Test
+    fun `addShoppingList runs successfully`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddShoppingList)
+        val isLoading = getCurrentShoppingListState().isLoading
+
+        coVerifyOrder {
+            getCurrentUserUseCase()
+            getIngredientsUseCase()
+            getCurrentUserUseCase()
+            addShoppingListUseCase(any())
+        }
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `addShoppingList returns error`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Error("Error message"))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddShoppingList)
+        val isLoading = getCurrentShoppingListState().isLoading
+
+        coVerifyOrder {
+            getCurrentUserUseCase()
+            getIngredientsUseCase()
+            getCurrentUserUseCase()
+            addShoppingListUseCase(any())
+        }
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `addShoppingList is loading`() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Loading(true))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddShoppingList)
+        val isLoading = getCurrentShoppingListState().isLoading
+
+        coVerifyOrder {
+            getCurrentUserUseCase()
+            getIngredientsUseCase()
+            getCurrentUserUseCase()
+            addShoppingListUseCase(any())
+        }
+        assertThat(isLoading).isTrue()
     }
 }

@@ -28,7 +28,10 @@ class ShoppingListRepositoryImpl @Inject constructor(
     override suspend fun addShoppingList(shoppingListWithIngredients: ShoppingListWithIngredients) = flow<Resource<Boolean>> {
         emit(Resource.Loading(true))
 
-        val documentId = shoppingListsRef.document().id
+        val documentId =
+            if(shoppingListWithIngredients.shoppingListId != "") shoppingListWithIngredients.shoppingListId
+            else shoppingListsRef.document().id
+
         shoppingListsRef.document(documentId).set(shoppingListWithIngredients.toShoppingListDto(documentId)).await()
         emit(Resource.Success(true))
 
