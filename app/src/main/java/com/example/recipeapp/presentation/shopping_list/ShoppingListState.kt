@@ -30,5 +30,8 @@ data class ShoppingListState(
         checkedIngredients = emptyMap(),
         date = 0
     ),
+    val isMenuOpened: Boolean = false,
+    val isOtherShoppingListsMenuOpened: Boolean = false,
+    val isRenameShoppingListDialogOpened: Boolean = false,
     val isLoading: Boolean = false
 )

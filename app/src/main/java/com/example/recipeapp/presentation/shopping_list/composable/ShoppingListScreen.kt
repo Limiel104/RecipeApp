@@ -62,7 +62,15 @@ fun ShoppingListScreen(
             onSelectedTypeQuantity = { viewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity(it)) },
             onQuantityPickerDismiss = { viewModel.onEvent(ShoppingListEvent.OnQuantityPickerDismissed) },
             onQuantityPickerSave = { viewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved) },
-            onCheckedChange = { viewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(it)) }
+            onCheckedChange = { viewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(it)) },
+            onMenuButtonClicked = { viewModel.onEvent(ShoppingListEvent.OnMenuButtonClicked) },
+            onMenuDismissed = { viewModel.onEvent(ShoppingListEvent.OnMenuDismissed) },
+            onOpenRenameShoppingListDialog = { viewModel.onEvent(ShoppingListEvent.OnOpenRenameShoppingListDialog) },
+            onRenameShoppingListDialogDismissed = { viewModel.onEvent(ShoppingListEvent.OnRenameShoppingListDialogDismissed) },
+            onDeleteAllIngredients = { viewModel.onEvent(ShoppingListEvent.OnDeleteAllIngredients) },
+            onDeleteShoppingList = { viewModel.onEvent(ShoppingListEvent.OnDeleteShoppingList) },
+            onOpenOtherShoppingListsMenu = { viewModel.onEvent(ShoppingListEvent.OnOpenOtherShoppingListsMenu) },
+            onOtherShoppingListsMenuDismiss = { viewModel.onEvent(ShoppingListEvent.OnOtherShoppingListsMenuDismissed) }
         )
     }
     else {

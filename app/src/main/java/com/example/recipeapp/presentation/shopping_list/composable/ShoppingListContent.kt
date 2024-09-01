@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -55,7 +55,15 @@ fun ShoppingListContent(
     onSelectedTypeQuantity: (String) -> Unit,
     onQuantityPickerDismiss: () -> Unit,
     onQuantityPickerSave: () -> Unit,
-    onCheckedChange: (Ingredient) -> Unit
+    onCheckedChange: (Ingredient) -> Unit,
+    onMenuButtonClicked: () -> Unit,
+    onMenuDismissed: () -> Unit,
+    onOpenRenameShoppingListDialog: () -> Unit,
+    onRenameShoppingListDialogDismissed: () -> Unit,
+    onDeleteAllIngredients: () -> Unit,
+    onDeleteShoppingList: () -> Unit,
+    onOpenOtherShoppingListsMenu: () -> Unit,
+    onOtherShoppingListsMenuDismiss: () -> Unit
 ) {
     Scaffold(
         modifier = modifier
@@ -64,10 +72,10 @@ fun ShoppingListContent(
         topBar = {
             LargeTopAppBar(
                 title = { Text(text = stringResource(id = R.string.shopping_list)) },
-                navigationIcon = {
-                    IconButton(onClick = {}) {
+                actions = {
+                    IconButton(onClick = { onMenuButtonClicked() }) {
                         Icon(
-                            imageVector = Icons.Default.Menu,
+                            imageVector = Icons.Default.MoreVert,
                             contentDescription = "Menu button"
                         )
                     }
@@ -140,6 +148,36 @@ fun ShoppingListContent(
                 onSave = { onQuantityPickerSave() }
             )
         }
+
+        if(uiState.isMenuOpened) {
+            ShoppingListMenu(
+                modalSheetState = modalBottomSheetState,
+                onRename = { onOpenRenameShoppingListDialog() },
+                onDeleteAllIngredients = { onDeleteAllIngredients() },
+                onDeleteList = { onDeleteShoppingList() },
+                onOpenOtherListsMenu = { onOpenOtherShoppingListsMenu() },
+                onDismiss = { onMenuDismissed() }
+            )
+        }
+
+        if(uiState.isOtherShoppingListsMenuOpened) {
+            OtherShoppingListsMenu(
+                modalSheetState = modalBottomSheetState,
+                shoppingLists = uiState.userShoppingLists,
+                onDismiss = { onOtherShoppingListsMenuDismiss() },
+                onClick = {  }
+            )
+        }
+
+        if(uiState.isRenameShoppingListDialogOpened) {
+            RenameShoppingListDialog(
+                name = uiState.displayedShoppingList.name,
+                nameError = null,
+                onNameChange = {},
+                onDismiss = { onRenameShoppingListDialogDismissed() },
+                onSave = {  }
+            )
+        }
     }
 }
 
@@ -171,7 +209,15 @@ fun ShoppingListContentPreview() {
             onSelectedTypeQuantity = {},
             onQuantityPickerDismiss = {},
             onQuantityPickerSave = {},
-            onCheckedChange = {}
+            onCheckedChange = {},
+            onMenuButtonClicked = {},
+            onMenuDismissed = {},
+            onOpenRenameShoppingListDialog = {},
+            onRenameShoppingListDialogDismissed = {},
+            onDeleteAllIngredients = {},
+            onDeleteShoppingList = {},
+            onOpenOtherShoppingListsMenu = {},
+            onOtherShoppingListsMenuDismiss = {}
         )
     }
 }
@@ -204,7 +250,15 @@ fun ShoppingListContentPreviewDialog() {
             onSelectedTypeQuantity = {},
             onQuantityPickerDismiss = {},
             onQuantityPickerSave = {},
-            onCheckedChange = {}
+            onCheckedChange = {},
+            onMenuButtonClicked = {},
+            onMenuDismissed = {},
+            onOpenRenameShoppingListDialog = {},
+            onRenameShoppingListDialogDismissed = {},
+            onDeleteAllIngredients = {},
+            onDeleteShoppingList = {},
+            onOpenOtherShoppingListsMenu = {},
+            onOtherShoppingListsMenuDismiss = {}
         )
     }
 }
@@ -246,7 +300,15 @@ fun ShoppingListContentPreviewOneItem() {
             onSelectedTypeQuantity = {},
             onQuantityPickerDismiss = {},
             onQuantityPickerSave = {},
-            onCheckedChange = {}
+            onCheckedChange = {},
+            onMenuButtonClicked = {},
+            onMenuDismissed = {},
+            onOpenRenameShoppingListDialog = {},
+            onRenameShoppingListDialogDismissed = {},
+            onDeleteAllIngredients = {},
+            onDeleteShoppingList = {},
+            onOpenOtherShoppingListsMenu = {},
+            onOtherShoppingListsMenuDismiss = {}
         )
     }
 }

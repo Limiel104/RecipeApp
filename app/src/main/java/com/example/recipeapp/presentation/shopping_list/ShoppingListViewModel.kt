@@ -172,6 +172,56 @@ class ShoppingListViewModel @Inject constructor(
                 addShoppingList()
             }
 
+            ShoppingListEvent.OnMenuButtonClicked -> {
+                _shoppingListState.value = shoppingListState.value.copy(
+                    isMenuOpened = true
+                )
+            }
+
+            ShoppingListEvent.OnMenuDismissed -> {
+                _shoppingListState.value = shoppingListState.value.copy(
+                    isMenuOpened = false
+                )
+            }
+
+            ShoppingListEvent.OnOpenRenameShoppingListDialog -> {
+                _shoppingListState.value = shoppingListState.value.copy(
+                    isRenameShoppingListDialogOpened = true
+                )
+            }
+
+            ShoppingListEvent.OnRenameShoppingListDialogDismissed -> {
+                _shoppingListState.value = shoppingListState.value.copy(
+                    isRenameShoppingListDialogOpened = false
+                )
+            }
+
+            ShoppingListEvent.OnDeleteAllIngredients -> {
+                _shoppingListState.value = _shoppingListState.value.copy(
+                    selectedIngredients = emptyList(),
+                    ingredientsToSelect = _shoppingListState.value.allIngredients,
+                    shoppingListIngredients = emptyMap(),
+                    checkedIngredients = emptyMap()
+                )
+            }
+
+            ShoppingListEvent.OnDeleteShoppingList -> {
+
+            }
+
+            ShoppingListEvent.OnOpenOtherShoppingListsMenu -> {
+                _shoppingListState.value = shoppingListState.value.copy(
+                    isMenuOpened = false,
+                    isOtherShoppingListsMenuOpened = true
+                )
+            }
+
+            ShoppingListEvent.OnOtherShoppingListsMenuDismissed -> {
+                _shoppingListState.value = shoppingListState.value.copy(
+                    isOtherShoppingListsMenuOpened = false
+                )
+            }
+
             ShoppingListEvent.OnLogin -> {
                 viewModelScope.launch {
                     _shoppingListUiEventChannel.send(ShoppingListUiEvent.NavigateToLogin)
@@ -199,7 +249,6 @@ class ShoppingListViewModel @Inject constructor(
                 )
                 getIngredients()
                 getUserShoppingLists(currentUser.uid)
-                addShoppingList()
             }
         }
     }
