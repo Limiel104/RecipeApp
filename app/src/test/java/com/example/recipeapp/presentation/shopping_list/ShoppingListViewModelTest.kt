@@ -5,10 +5,12 @@ import com.example.recipeapp.domain.model.Resource
 import com.example.recipeapp.domain.model.ShoppingList
 import com.example.recipeapp.domain.model.ShoppingListWithIngredients
 import com.example.recipeapp.domain.use_case.AddShoppingListUseCase
+import com.example.recipeapp.domain.use_case.DeleteShoppingListUseCase
 import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
 import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
 import com.example.recipeapp.domain.use_case.GetShoppingListUseCase
 import com.example.recipeapp.domain.use_case.GetUserShoppingListsUseCase
+import com.example.recipeapp.domain.use_case.ValidateNameUseCase
 import com.example.recipeapp.util.MainDispatcherRule
 import com.google.common.truth.Truth.assertThat
 import com.google.firebase.auth.FirebaseUser
@@ -38,6 +40,8 @@ class ShoppingListViewModelTest {
     private lateinit var addShoppingListUseCase: AddShoppingListUseCase
     private lateinit var getUserShoppingListsUseCase: GetUserShoppingListsUseCase
     private lateinit var getShoppingListUseCase: GetShoppingListUseCase
+    private lateinit var deleteShoppingListUseCase: DeleteShoppingListUseCase
+    private lateinit var validateNameUseCase: ValidateNameUseCase
     private lateinit var shoppingListViewModel: ShoppingListViewModel
     private lateinit var ingredients: List<Ingredient>
     private lateinit var shoppingLists: List<ShoppingList>
@@ -47,11 +51,14 @@ class ShoppingListViewModelTest {
 
     @Before
     fun setUp() {
+        validateNameUseCase = ValidateNameUseCase()
+
         getIngredientsUseCase = mockk()
         getCurrentUserUseCase = mockk()
         addShoppingListUseCase = mockk()
         getUserShoppingListsUseCase = mockk()
         getShoppingListUseCase = mockk()
+        deleteShoppingListUseCase = mockk()
         firebaseUser = mockk()
 
         every { getCurrentUserUseCase() } returns firebaseUser
@@ -163,7 +170,9 @@ class ShoppingListViewModelTest {
             getIngredientsUseCase,
             addShoppingListUseCase,
             getUserShoppingListsUseCase,
-            getShoppingListUseCase
+            getShoppingListUseCase,
+            deleteShoppingListUseCase,
+            validateNameUseCase
         )
     }
 

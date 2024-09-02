@@ -4,10 +4,11 @@ package com.example.recipeapp.presentation.shopping_list.composable
 
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,28 +38,26 @@ fun OtherShoppingListsMenu(
     onDismiss: () -> Unit,
     onClick: (String) -> Unit
 ) {
-    var i = 0
-
     ModalBottomSheet(
         onDismissRequest = { onDismiss() },
         sheetState = modalSheetState,
         modifier = modifier.testTag("Image picker")
     ) {
-        Column(
+        LazyColumn(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.Start
         ) {
-            for(shoppingList in shoppingLists) {
-                i += 1
-
+            itemsIndexed(shoppingLists) { index, shoppingList ->
                 Row(
                     modifier = modifier
                         .fillMaxWidth()
                         .then(
-                            if (i == shoppingLists.size) modifier.padding(bottom = 36.dp)
-                            else modifier
+                            when (index) {
+                                shoppingLists.size-1 -> modifier.padding(bottom = 36.dp)
+                                else -> modifier
+                            }
                         )
                         .clickable { onClick(shoppingList.shoppingListId) }
                         .padding(vertical = 12.dp),

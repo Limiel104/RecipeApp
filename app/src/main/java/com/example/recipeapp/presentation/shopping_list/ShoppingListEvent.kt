@@ -4,6 +4,7 @@ import com.example.recipeapp.domain.model.Ingredient
 
 sealed class ShoppingListEvent {
     data class EnteredIngredient(val ingredient: String): ShoppingListEvent()
+    data class EnteredName(val name: String): ShoppingListEvent()
     data class SelectedIngredient(val selectedIngredient: Ingredient): ShoppingListEvent()
     data class OnIngredientClicked(val ingredientId: String): ShoppingListEvent()
     data class SelectedWholeQuantity(val whole: String): ShoppingListEvent()
@@ -21,6 +22,7 @@ sealed class ShoppingListEvent {
     object OnMenuButtonClicked: ShoppingListEvent()
     object OnMenuDismissed: ShoppingListEvent()
     object OnOpenRenameShoppingListDialog: ShoppingListEvent()
+    object OnRenameShoppingListDialogSaved: ShoppingListEvent()
     object OnRenameShoppingListDialogDismissed: ShoppingListEvent()
     object OnDeleteAllIngredients: ShoppingListEvent()
     object OnDeleteShoppingList: ShoppingListEvent()

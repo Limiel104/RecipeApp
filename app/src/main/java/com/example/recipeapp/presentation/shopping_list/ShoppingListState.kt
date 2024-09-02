@@ -33,5 +33,7 @@ data class ShoppingListState(
     val isMenuOpened: Boolean = false,
     val isOtherShoppingListsMenuOpened: Boolean = false,
     val isRenameShoppingListDialogOpened: Boolean = false,
+    val shoppingListName: String = "",
+    val nameError: String? = null,
     val isLoading: Boolean = false
 )

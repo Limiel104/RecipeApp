@@ -25,11 +25,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.recipeapp.R
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.presentation.common.composable.QuantityPicker
 import com.example.recipeapp.presentation.common.getIngredientsWithQuantity
@@ -58,7 +56,9 @@ fun ShoppingListContent(
     onCheckedChange: (Ingredient) -> Unit,
     onMenuButtonClicked: () -> Unit,
     onMenuDismissed: () -> Unit,
+    onNameChange: (String) -> Unit,
     onOpenRenameShoppingListDialog: () -> Unit,
+    onRenameShoppingListDialogSaved: () -> Unit,
     onRenameShoppingListDialogDismissed: () -> Unit,
     onDeleteAllIngredients: () -> Unit,
     onDeleteShoppingList: () -> Unit,
@@ -71,7 +71,7 @@ fun ShoppingListContent(
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
-                title = { Text(text = stringResource(id = R.string.shopping_list)) },
+                title = { Text(text = uiState.shoppingListName) },
                 actions = {
                     IconButton(onClick = { onMenuButtonClicked() }) {
                         Icon(
@@ -171,11 +171,11 @@ fun ShoppingListContent(
 
         if(uiState.isRenameShoppingListDialogOpened) {
             RenameShoppingListDialog(
-                name = uiState.displayedShoppingList.name,
-                nameError = null,
-                onNameChange = {},
+                name = uiState.shoppingListName,
+                nameError = uiState.nameError,
+                onNameChange = { onNameChange(it) },
                 onDismiss = { onRenameShoppingListDialogDismissed() },
-                onSave = {  }
+                onSave = { onRenameShoppingListDialogSaved() }
             )
         }
     }
@@ -212,7 +212,9 @@ fun ShoppingListContentPreview() {
             onCheckedChange = {},
             onMenuButtonClicked = {},
             onMenuDismissed = {},
+            onNameChange = {},
             onOpenRenameShoppingListDialog = {},
+            onRenameShoppingListDialogSaved = {},
             onRenameShoppingListDialogDismissed = {},
             onDeleteAllIngredients = {},
             onDeleteShoppingList = {},
@@ -253,7 +255,9 @@ fun ShoppingListContentPreviewDialog() {
             onCheckedChange = {},
             onMenuButtonClicked = {},
             onMenuDismissed = {},
+            onNameChange = {},
             onOpenRenameShoppingListDialog = {},
+            onRenameShoppingListDialogSaved = {},
             onRenameShoppingListDialogDismissed = {},
             onDeleteAllIngredients = {},
             onDeleteShoppingList = {},
@@ -278,16 +282,19 @@ fun ShoppingListContentPreviewOneItem() {
         ShoppingListContent(
             scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState()),
             modalBottomSheetState = rememberModalBottomSheetState(),
-            uiState = ShoppingListState(shoppingListIngredients = mapOf(
-                Pair(
-                    Ingredient(
-                        ingredientId = "ingredientId",
-                        name = "Ingredient Name",
-                        imageUrl = "imageUrl",
-                        category = "category"
-                    ),
-                "200.0 g"
-            ))),
+            uiState = ShoppingListState(
+                shoppingListIngredients = mapOf(
+                    Pair(
+                        Ingredient(
+                            ingredientId = "ingredientId",
+                            name = "Ingredient Name",
+                            imageUrl = "imageUrl",
+                            category = "category"
+                        ),
+                    "200.0 g"
+                )),
+                shoppingListName = "ShoppingList Name"
+            ),
             onIngredientSuggestionClick = {},
             onDropDownMenuExpandedChange = {},
             onIngredientChange = {},
@@ -303,7 +310,9 @@ fun ShoppingListContentPreviewOneItem() {
             onCheckedChange = {},
             onMenuButtonClicked = {},
             onMenuDismissed = {},
+            onNameChange = {},
             onOpenRenameShoppingListDialog = {},
+            onRenameShoppingListDialogSaved = {},
             onRenameShoppingListDialogDismissed = {},
             onDeleteAllIngredients = {},
             onDeleteShoppingList = {},
