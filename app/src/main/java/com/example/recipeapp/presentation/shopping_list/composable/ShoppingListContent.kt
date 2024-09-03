@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.presentation.common.composable.QuantityPicker
+import com.example.recipeapp.presentation.common.getIngredientsWithBoolean
 import com.example.recipeapp.presentation.common.getIngredientsWithQuantity
 import com.example.recipeapp.presentation.shopping_list.ShoppingListState
 import com.example.recipeapp.ui.theme.RecipeAppTheme
@@ -196,7 +197,10 @@ fun ShoppingListContentPreview() {
         ShoppingListContent(
             scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState()),
             modalBottomSheetState = rememberModalBottomSheetState(),
-            uiState = ShoppingListState(shoppingListIngredients = getIngredientsWithQuantity()),
+            uiState = ShoppingListState(
+                shoppingListIngredients = getIngredientsWithQuantity(),
+                checkedIngredients = getIngredientsWithBoolean()
+            ),
             onIngredientSuggestionClick = {},
             onDropDownMenuExpandedChange = {},
             onIngredientChange = {},
@@ -293,7 +297,17 @@ fun ShoppingListContentPreviewOneItem() {
                         ),
                     "200.0 g"
                 )),
-                shoppingListName = "ShoppingList Name"
+                shoppingListName = "ShoppingList Name",
+                checkedIngredients = mapOf(
+                    Pair(
+                        Ingredient(
+                            ingredientId = "ingredientId",
+                            name = "Ingredient Name",
+                            imageUrl = "imageUrl",
+                            category = "category"
+                        ),
+                        true
+                    )),
             ),
             onIngredientSuggestionClick = {},
             onDropDownMenuExpandedChange = {},

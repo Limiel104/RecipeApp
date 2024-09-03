@@ -63,9 +63,12 @@ fun ShoppingListWithIngredient.toShoppingListWithIngredients(ingredientList: Lis
 fun ShoppingListWithIngredients.toShoppingListDto(documentId: String): ShoppingListDto {
     val ingredientIds = ingredients.keys.map { it.ingredientId }
     val quantities = ingredients.values
-    val isCheckedList = checkedIngredients.values
-    val ingredientMap: Map<String,String> = ingredientIds.zip(quantities).toMap()
-    val checkedIngredientMap: Map<String, Boolean> = ingredientIds.zip(isCheckedList).toMap()
+    val ingredientMap: Map<String, String> = ingredientIds.zip(quantities).toMap()
+    val checkedIngredientMap = emptyMap<String, Boolean>().toMutableMap()
+
+    for(ingredient in ingredients.keys){
+        checkedIngredientMap[ingredient.ingredientId] = checkedIngredients[ingredient]!!
+    }
 
     return ShoppingListDto(
         shoppingListId = documentId,

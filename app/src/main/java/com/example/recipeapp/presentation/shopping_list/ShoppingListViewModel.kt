@@ -16,8 +16,6 @@ import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
 import com.example.recipeapp.domain.use_case.GetShoppingListUseCase
 import com.example.recipeapp.domain.use_case.GetUserShoppingListsUseCase
 import com.example.recipeapp.domain.use_case.ValidateNameUseCase
-import com.example.recipeapp.presentation.common.getIngredientsWithBoolean
-import com.example.recipeapp.presentation.common.getIngredientsWithQuantity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -220,12 +218,12 @@ class ShoppingListViewModel @Inject constructor(
                     selectedIngredients = emptyList(),
                     ingredientsToSelect = _shoppingListState.value.allIngredients,
                     shoppingListIngredients = emptyMap(),
-                    checkedIngredients = emptyMap()
+                    checkedIngredients = _shoppingListState.value.allIngredients.associateWith { false }
                 )
             }
 
             ShoppingListEvent.OnDeleteShoppingList -> {
-                deleteShoppingList("")
+                deleteShoppingList(_shoppingListState.value.displayedShoppingListId)
             }
 
             ShoppingListEvent.OnOpenOtherShoppingListsMenu -> {
@@ -327,6 +325,14 @@ class ShoppingListViewModel @Inject constructor(
         else ""
     }
 
+    private fun getCheckedIngredients(remoteCheckedIngredients: Map<Ingredient, Boolean>): Map<Ingredient, Boolean> {
+        val checkedIngredients = _shoppingListState.value.allIngredients.associateWith { false }.toMutableMap()
+        for(ingredient in remoteCheckedIngredients) {
+            checkedIngredients[ingredient.key] = ingredient.value
+        }
+        return checkedIngredients
+    }
+
     private fun isValidationSuccessful(name: String): Boolean {
         val nameValidationResult = validateNameUseCase(name)
 
@@ -375,15 +381,13 @@ class ShoppingListViewModel @Inject constructor(
 
     private fun addShoppingList() {
         val shoppingListWithIngredients = ShoppingListWithIngredients(
-            shoppingListId = "",
+            shoppingListId = _shoppingListState.value.displayedShoppingListId,
             name = _shoppingListState.value.shoppingListName,
             createdBy = _shoppingListState.value.userUID,
-            ingredients = getIngredientsWithQuantity(),
-            checkedIngredients = getIngredientsWithBoolean(),
+            ingredients = _shoppingListState.value.shoppingListIngredients,
+            checkedIngredients = _shoppingListState.value.checkedIngredients,
             date = System.currentTimeMillis()
         )
-
-        Log.i("TAG", shoppingListWithIngredients.date.toString())
 
         viewModelScope.launch {
             addShoppingListUseCase(shoppingListWithIngredients).collect { response ->
@@ -425,6 +429,17 @@ class ShoppingListViewModel @Inject constructor(
                                 userShoppingLists = response.data
                             )
                         }
+
+                        if(_shoppingListState.value.userShoppingLists.isNotEmpty()) {
+                            val recentShoppingList = _shoppingListState.value.userShoppingLists.sortedByDescending { it.date }[0]
+                            getShoppingList(recentShoppingList.shoppingListId)
+                        }
+                        else {
+                            Log.i("TAG", "User has no shopping lists")
+                            _shoppingListState.value = shoppingListState.value.copy(
+                                shoppingListName = "New Shopping List"
+                            )
+                        }
                     }
                 }
             }
@@ -448,7 +463,14 @@ class ShoppingListViewModel @Inject constructor(
                         Log.i("TAG displayed:",response.data.toString())
                         response.data?.let {
                             _shoppingListState.value = shoppingListState.value.copy(
-                                displayedShoppingList = response.data
+                                displayedShoppingListId = response.data.shoppingListId,
+                                shoppingListIngredients = response.data.ingredients,
+                                shoppingListName = response.data.name,
+                                checkedIngredients = getCheckedIngredients(response.data.checkedIngredients)
+                            )
+
+                            _shoppingListState.value = shoppingListState.value.copy(
+                                ingredientsToSelect = getCurrentIngredients(_shoppingListState.value.shoppingListIngredients)
                             )
                         }
                     }
@@ -471,7 +493,7 @@ class ShoppingListViewModel @Inject constructor(
                         )
                     }
                     is Resource.Success -> {
-                        Log.i("TAG deleted:",response.data.toString())
+                        getUserShoppingLists(_shoppingListState.value.userUID)
                     }
                 }
             }

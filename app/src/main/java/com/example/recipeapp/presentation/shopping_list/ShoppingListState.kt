@@ -3,7 +3,6 @@ package com.example.recipeapp.presentation.shopping_list
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Quantity
 import com.example.recipeapp.domain.model.ShoppingList
-import com.example.recipeapp.domain.model.ShoppingListWithIngredients
 
 data class ShoppingListState(
     val isUserLoggedIn: Boolean = false,
@@ -22,18 +21,11 @@ data class ShoppingListState(
     val selectedTypeQuantity: String = "",
     val checkedIngredients: Map<Ingredient, Boolean> = emptyMap(),
     val userShoppingLists: List<ShoppingList> = emptyList(),
-    val displayedShoppingList: ShoppingListWithIngredients = ShoppingListWithIngredients(
-        shoppingListId = "",
-        name = "",
-        createdBy = "",
-        ingredients = emptyMap(),
-        checkedIngredients = emptyMap(),
-        date = 0
-    ),
     val isMenuOpened: Boolean = false,
     val isOtherShoppingListsMenuOpened: Boolean = false,
     val isRenameShoppingListDialogOpened: Boolean = false,
     val shoppingListName: String = "",
     val nameError: String? = null,
+    val displayedShoppingListId: String = "",
     val isLoading: Boolean = false
 )
