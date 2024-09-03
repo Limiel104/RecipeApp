@@ -63,6 +63,7 @@ fun ShoppingListContent(
     onRenameShoppingListDialogDismissed: () -> Unit,
     onDeleteAllIngredients: () -> Unit,
     onDeleteShoppingList: () -> Unit,
+    onSelectedShoppingList: (String) -> Unit,
     onOpenOtherShoppingListsMenu: () -> Unit,
     onOtherShoppingListsMenuDismiss: () -> Unit
 ) {
@@ -166,7 +167,7 @@ fun ShoppingListContent(
                 modalSheetState = modalBottomSheetState,
                 shoppingLists = uiState.userShoppingLists,
                 onDismiss = { onOtherShoppingListsMenuDismiss() },
-                onClick = {  }
+                onClick = { onSelectedShoppingList(it) }
             )
         }
 
@@ -222,6 +223,7 @@ fun ShoppingListContentPreview() {
             onRenameShoppingListDialogDismissed = {},
             onDeleteAllIngredients = {},
             onDeleteShoppingList = {},
+            onSelectedShoppingList = {},
             onOpenOtherShoppingListsMenu = {},
             onOtherShoppingListsMenuDismiss = {}
         )
@@ -265,6 +267,7 @@ fun ShoppingListContentPreviewDialog() {
             onRenameShoppingListDialogDismissed = {},
             onDeleteAllIngredients = {},
             onDeleteShoppingList = {},
+            onSelectedShoppingList = {},
             onOpenOtherShoppingListsMenu = {},
             onOtherShoppingListsMenuDismiss = {}
         )
@@ -330,6 +333,7 @@ fun ShoppingListContentPreviewOneItem() {
             onRenameShoppingListDialogDismissed = {},
             onDeleteAllIngredients = {},
             onDeleteShoppingList = {},
+            onSelectedShoppingList = {},
             onOpenOtherShoppingListsMenu = {},
             onOtherShoppingListsMenuDismiss = {}
         )

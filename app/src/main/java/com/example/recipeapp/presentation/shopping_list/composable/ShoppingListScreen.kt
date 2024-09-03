@@ -71,6 +71,7 @@ fun ShoppingListScreen(
             onRenameShoppingListDialogDismissed = { viewModel.onEvent(ShoppingListEvent.OnRenameShoppingListDialogDismissed) },
             onDeleteAllIngredients = { viewModel.onEvent(ShoppingListEvent.OnDeleteAllIngredients) },
             onDeleteShoppingList = { viewModel.onEvent(ShoppingListEvent.OnDeleteShoppingList) },
+            onSelectedShoppingList = { viewModel.onEvent(ShoppingListEvent.SelectedShoppingList(it)) },
             onOpenOtherShoppingListsMenu = { viewModel.onEvent(ShoppingListEvent.OnOpenOtherShoppingListsMenu) },
             onOtherShoppingListsMenuDismiss = { viewModel.onEvent(ShoppingListEvent.OnOtherShoppingListsMenuDismissed) }
         )
