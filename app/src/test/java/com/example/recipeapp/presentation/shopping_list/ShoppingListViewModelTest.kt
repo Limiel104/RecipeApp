@@ -1,6 +1,7 @@
 package com.example.recipeapp.presentation.shopping_list
 
 import com.example.recipeapp.domain.model.Ingredient
+import com.example.recipeapp.domain.model.Quantity
 import com.example.recipeapp.domain.model.Resource
 import com.example.recipeapp.domain.model.ShoppingList
 import com.example.recipeapp.domain.model.ShoppingListWithIngredients
@@ -186,6 +187,13 @@ class ShoppingListViewModelTest {
     private fun setMocks() {
         coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
         coEvery { getUserShoppingListsUseCase(any(), any()) } returns flowOf(Resource.Success(shoppingLists))
+        coEvery { getShoppingListUseCase(any()) } returns flowOf(Resource.Success(displayedShoppingList))
+    }
+
+    private fun setMocksWithEmptyShoppingList() {
+        coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(ingredients))
+        coEvery { getUserShoppingListsUseCase(any(), any()) } returns flowOf(Resource.Success(shoppingLists))
+        coEvery { getShoppingListUseCase(any()) } returns flowOf(Resource.Success(emptyShoppingListWithIngredients))
     }
 
     private fun verifyMocks() {
@@ -219,7 +227,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `getIngredients runs successfully`() {
-        setMocks()
+        setMocksWithEmptyShoppingList()
         shoppingListViewModel = setViewModel()
         val result = getCurrentShoppingListState().ingredientsToSelect
         val isLoading = getCurrentShoppingListState().isLoading
@@ -232,6 +240,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `getIngredients returns error`() {
         coEvery { getIngredientsUseCase() } returns flowOf(Resource.Error("Error message"))
+        coEvery { getUserShoppingListsUseCase(any(), any()) } returns flowOf(Resource.Success(shoppingLists))
+        coEvery { getShoppingListUseCase(any()) } returns flowOf(Resource.Success(displayedShoppingList))
 
         shoppingListViewModel = setViewModel()
         val result = getCurrentShoppingListState().ingredientsToSelect
@@ -245,6 +255,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `getIngredients is loading`() {
         coEvery { getIngredientsUseCase() } returns flowOf(Resource.Loading(true))
+        coEvery { getUserShoppingListsUseCase(any(), any()) } returns flowOf(Resource.Success(shoppingLists))
+        coEvery { getShoppingListUseCase(any()) } returns flowOf(Resource.Success(displayedShoppingList))
 
         shoppingListViewModel = setViewModel()
         val result = getCurrentShoppingListState().ingredientsToSelect
@@ -315,7 +327,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onAddIngredientDialogDismiss - no selected ingredients - state is set correctly`() {
-        setMocks()
+        setMocksWithEmptyShoppingList()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddButtonClicked)
         val initialAddIngredientsDialogState = getCurrentShoppingListState().isAddIngredientsDialogOpened
@@ -338,7 +350,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onAddIngredientDialogDismiss - selected ingredients - state is set correctly`() {
-        setMocks()
+        setMocksWithEmptyShoppingList()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddButtonClicked)
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
@@ -367,7 +379,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onAddIngredientDialogDismiss - selected ingredients before - state is set correctly`() {
-        setMocks()
+        setMocksWithEmptyShoppingList()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
@@ -401,7 +413,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onAddIngredientDialogDismiss - selected ingredients before and after - state is set correctly`() {
-        setMocks()
+        setMocksWithEmptyShoppingList()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
@@ -435,7 +447,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onAddIngredientDialogDismiss - selected ingredients - shopping list ingredients`() {
-        setMocks()
+        setMocksWithEmptyShoppingList()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddButtonClicked)
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
@@ -452,7 +464,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onAddIngredientDialogDismiss - selected ingredients before - shopping list ingredients`() {
-        setMocks()
+        setMocksWithEmptyShoppingList()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
@@ -476,7 +488,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onAddIngredientDialogDismiss - selected ingredients before and after - shopping list ingredients`() {
-        setMocks()
+        setMocksWithEmptyShoppingList()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
@@ -530,7 +542,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `selectedIngredient - no ingredients selected - shopping list ingredients`() {
-        setMocks()
+        setMocksWithEmptyShoppingList()
         shoppingListViewModel = setViewModel()
         val initialShoppingListIngredientsState = getCurrentShoppingListState().shoppingListIngredients
 
@@ -549,7 +561,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `selectedIngredient - no ingredients selected - ingredients to select`() {
-        setMocks()
+        setMocksWithEmptyShoppingList()
         shoppingListViewModel = setViewModel()
         val initialIngredientsState = getCurrentShoppingListState().ingredientsToSelect
 
@@ -571,7 +583,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `selectedIngredient - 2 out of 5 ingredients selected initially - shopping list ingredients`() {
-        setMocks()
+        setMocksWithEmptyShoppingList()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[1]))
@@ -600,7 +612,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `selectedIngredient - 2 out of 5 ingredients selected initially - ingredients to select`() {
-        setMocks()
+        setMocksWithEmptyShoppingList()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[1]))
@@ -629,7 +641,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `selectedIngredient - 4 out of 5 ingredients selected initially - shopping list ingredients`() {
-        setMocks()
+        setMocksWithEmptyShoppingList()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[0]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
@@ -664,7 +676,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `selectedIngredient - 4 out of 5 ingredients selected initially - ingredients to select`() {
-        setMocks()
+        setMocksWithEmptyShoppingList()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[0]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
@@ -1293,7 +1305,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onCheckBoxToggled - one item`() {
-        setMocks()
+        setMocksWithEmptyShoppingList()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1325,7 +1337,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onCheckBoxToggled - one item - unchecked`() {
-        setMocks()
+        setMocksWithEmptyShoppingList()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1358,7 +1370,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onCheckBoxToggled - all items`() {
-        setMocks()
+        setMocksWithEmptyShoppingList()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
@@ -1398,7 +1410,7 @@ class ShoppingListViewModelTest {
 
     @Test
     fun `onCheckBoxToggled - all items - unchecked`() {
-        setMocks()
+        setMocksWithEmptyShoppingList()
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
@@ -1590,5 +1602,234 @@ class ShoppingListViewModelTest {
         assertThat(result.checkedIngredients).isEqualTo(getCurrentShoppingListState().allIngredients.associateWith { false })
         assertThat(result.shoppingListName).isEmpty()
         assertThat(isLoading).isTrue()
+    }
+
+    @Test
+    fun `deleteShoppingList runs successfully`() {
+        setMocks()
+        coEvery { deleteShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnDeleteShoppingList)
+        val isLoading = getCurrentShoppingListState().isLoading
+
+        coVerifyOrder {
+            getCurrentUserUseCase()
+            getIngredientsUseCase()
+            getUserShoppingListsUseCase("userUID", true)
+            deleteShoppingListUseCase("shoppingListId")
+            getUserShoppingListsUseCase("userUID", true)
+        }
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `deleteShoppingList returns error`() {
+        setMocks()
+        coEvery { deleteShoppingListUseCase(any()) } returns flowOf(Resource.Error("Error message"))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnDeleteShoppingList)
+        val isLoading = getCurrentShoppingListState().isLoading
+
+        coVerifyOrder {
+            getCurrentUserUseCase()
+            getIngredientsUseCase()
+            getUserShoppingListsUseCase("userUID", true)
+            deleteShoppingListUseCase("shoppingListId")
+        }
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `deleteShoppingList is loading`() {
+        setMocks()
+        coEvery { deleteShoppingListUseCase(any()) } returns flowOf(Resource.Loading(true))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnDeleteShoppingList)
+        val isLoading = getCurrentShoppingListState().isLoading
+
+        coVerifyOrder {
+            getCurrentUserUseCase()
+            getIngredientsUseCase()
+            getUserShoppingListsUseCase("userUID", true)
+            deleteShoppingListUseCase("shoppingListId")
+        }
+        assertThat(isLoading).isTrue()
+    }
+
+    @Test
+    fun `EnteredName - changed string`() {
+        setMocks()
+        shoppingListViewModel = setViewModel()
+        val initialNameState = getCurrentShoppingListState().shoppingListName
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.EnteredName("New Name"))
+        val resultNameState = getCurrentShoppingListState().shoppingListName
+
+        verifyMocks()
+        assertThat(initialNameState).isEqualTo("Shopping List Name")
+        assertThat(resultNameState).isEqualTo("New Name")
+    }
+
+    @Test
+    fun `EnteredName - result empty`() {
+        setMocks()
+        shoppingListViewModel = setViewModel()
+        val initialNameState = getCurrentShoppingListState().shoppingListName
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.EnteredName(""))
+        val resultNameState = getCurrentShoppingListState().shoppingListName
+
+        verifyMocks()
+        assertThat(initialNameState).isEqualTo("Shopping List Name")
+        assertThat(resultNameState).isEmpty()
+    }
+
+    @Test
+    fun `OnMenuButtonClicked - menu is opened`() {
+        setMocks()
+        shoppingListViewModel = setViewModel()
+        val initialMenuState = getCurrentShoppingListState().isMenuOpened
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnMenuButtonClicked)
+        val resultMenuState = getCurrentShoppingListState().isMenuOpened
+
+        verifyMocks()
+        assertThat(initialMenuState).isFalse()
+        assertThat(resultMenuState).isTrue()
+    }
+
+    @Test
+    fun `OnMenuDismissed - menu is closed`() {
+        setMocks()
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnMenuButtonClicked)
+        val initialMenuState = getCurrentShoppingListState().isMenuOpened
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnMenuDismissed)
+        val resultMenuState = getCurrentShoppingListState().isMenuOpened
+
+        verifyMocks()
+        assertThat(initialMenuState).isTrue()
+        assertThat(resultMenuState).isFalse()
+    }
+
+    @Test
+    fun `OnOpenRenameShoppingListDialog - dialog is opened`() {
+        setMocks()
+        shoppingListViewModel = setViewModel()
+        val initialRenameDialogState = getCurrentShoppingListState().isRenameShoppingListDialogOpened
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnOpenRenameShoppingListDialog)
+        val resultRenameDialogState = getCurrentShoppingListState().isRenameShoppingListDialogOpened
+
+        verifyMocks()
+        assertThat(initialRenameDialogState).isFalse()
+        assertThat(resultRenameDialogState).isTrue()
+    }
+
+    @Test
+    fun `OnRenameShoppingListDialogSaved - dialog is closed`() {
+        setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnOpenRenameShoppingListDialog)
+        val initialRenameDialogState = getCurrentShoppingListState().isRenameShoppingListDialogOpened
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnRenameShoppingListDialogSaved)
+        val resultRenameDialogState = getCurrentShoppingListState().isRenameShoppingListDialogOpened
+
+        coVerifyOrder {
+            getCurrentUserUseCase()
+            getIngredientsUseCase()
+            getUserShoppingListsUseCase("userUID",true)
+            addShoppingListUseCase(any())
+        }
+        assertThat(initialRenameDialogState).isTrue()
+        assertThat(resultRenameDialogState).isFalse()
+    }
+
+    @Test
+    fun `OnRenameShoppingListDialogDismissed - dialog is closed`() {
+        setMocks()
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnOpenRenameShoppingListDialog)
+        val initialRenameDialogState = getCurrentShoppingListState().isRenameShoppingListDialogOpened
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnRenameShoppingListDialogDismissed)
+        val resultRenameDialogState = getCurrentShoppingListState().isRenameShoppingListDialogOpened
+
+        verifyMocks()
+        assertThat(initialRenameDialogState).isTrue()
+        assertThat(resultRenameDialogState).isFalse()
+    }
+
+    @Test
+    fun `OnDeleteAllIngredients - state is set correctly`() {
+        setMocks()
+        shoppingListViewModel = setViewModel()
+        val initialShoppingListIngredientsState = getCurrentShoppingListState().shoppingListIngredients
+        val initialIngredientsToSelectState = getCurrentShoppingListState().ingredientsToSelect
+        val initialCheckedIngredientsState = getCurrentShoppingListState().checkedIngredients
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnDeleteAllIngredients)
+        val resultShoppingListIngredientsState = getCurrentShoppingListState().shoppingListIngredients
+        val resultIngredientsToSelectState = getCurrentShoppingListState().ingredientsToSelect
+        val resultCheckedIngredientsState = getCurrentShoppingListState().checkedIngredients
+
+        verifyMocks()
+        assertThat(initialShoppingListIngredientsState).isEqualTo(displayedShoppingList.ingredients)
+        assertThat(initialIngredientsToSelectState).isEqualTo(
+            listOf(
+                ingredients[0],
+                ingredients[3],
+                ingredients[4]
+            )
+        )
+        assertThat(initialCheckedIngredientsState).isEqualTo(displayedShoppingList.checkedIngredients)
+        assertThat(resultShoppingListIngredientsState).isEqualTo(emptyMap<Ingredient, Quantity>())
+        assertThat(resultIngredientsToSelectState).isEqualTo(ingredients)
+        assertThat(resultCheckedIngredientsState).isEqualTo(ingredients.associateWith { false })
+    }
+
+    @Test
+    fun `OnOpenOtherShoppingListsMenu - other lists menu is opened - menu is closed`() {
+        setMocks()
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnMenuButtonClicked)
+        val initialMenuState = getCurrentShoppingListState().isMenuOpened
+        val initialOtherListsMenuState = getCurrentShoppingListState().isOtherShoppingListsMenuOpened
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnOpenOtherShoppingListsMenu)
+        val resultMenuState = getCurrentShoppingListState().isMenuOpened
+        val resultOtherListsMenuState = getCurrentShoppingListState().isOtherShoppingListsMenuOpened
+
+        verifyMocks()
+        assertThat(initialMenuState).isTrue()
+        assertThat(initialOtherListsMenuState).isFalse()
+        assertThat(resultMenuState).isFalse()
+        assertThat(resultOtherListsMenuState).isTrue()
+    }
+
+    @Test
+    fun `OnOtherShoppingListsMenuDismissed - other lists menu is closed - menu is closed`() {
+        setMocks()
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnOpenOtherShoppingListsMenu)
+        val initialMenuState = getCurrentShoppingListState().isMenuOpened
+        val initialOtherListsMenuState = getCurrentShoppingListState().isOtherShoppingListsMenuOpened
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnOtherShoppingListsMenuDismissed)
+        val resultMenuState = getCurrentShoppingListState().isMenuOpened
+        val resultOtherListsMenuState = getCurrentShoppingListState().isOtherShoppingListsMenuOpened
+
+        verifyMocks()
+        assertThat(initialMenuState).isFalse()
+        assertThat(initialOtherListsMenuState).isTrue()
+        assertThat(resultMenuState).isFalse()
+        assertThat(resultOtherListsMenuState).isFalse()
     }
 }
