@@ -148,8 +148,11 @@ class ShoppingListViewModelTest {
                 ingredients[1] to "5 g"
             ),
             checkedIngredients = mapOf(
+                ingredients[0] to false,
+                ingredients[1] to true,
                 ingredients[2] to false,
-                ingredients[1] to true
+                ingredients[3] to false,
+                ingredients[4] to true
             ),
             date = 1234324354
         )
@@ -1539,12 +1542,15 @@ class ShoppingListViewModelTest {
 
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedShoppingList("shoppingListId"))
-        val result = getCurrentShoppingListState().displayedShoppingList
+        val result = getCurrentShoppingListState()
         val isLoading = getCurrentShoppingListState().isLoading
 
         verifyMocks()
         coVerify(exactly = 1) { getShoppingListUseCase("shoppingListId") }
-        assertThat(result).isEqualTo(displayedShoppingList)
+        assertThat(result.shoppingListIngredients).isEqualTo(displayedShoppingList.ingredients)
+        assertThat(result.displayedShoppingListId).isEqualTo(displayedShoppingList.shoppingListId)
+        assertThat(result.checkedIngredients).isEqualTo(displayedShoppingList.checkedIngredients)
+        assertThat(result.shoppingListName).isEqualTo(displayedShoppingList.name)
         assertThat(isLoading).isFalse()
     }
 
@@ -1555,12 +1561,15 @@ class ShoppingListViewModelTest {
 
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedShoppingList("shoppingListId"))
-        val result = getCurrentShoppingListState().displayedShoppingList
+        val result = getCurrentShoppingListState()
         val isLoading = getCurrentShoppingListState().isLoading
 
         verifyMocks()
         coVerify(exactly = 1) { getShoppingListUseCase("shoppingListId") }
-        assertThat(result).isEqualTo(emptyShoppingListWithIngredients)
+        assertThat(result.shoppingListIngredients).isEmpty()
+        assertThat(result.displayedShoppingListId).isEmpty()
+        assertThat(result.checkedIngredients).isEqualTo(getCurrentShoppingListState().allIngredients.associateWith { false })
+        assertThat(result.shoppingListName).isEmpty()
         assertThat(isLoading).isFalse()
     }
 
@@ -1571,12 +1580,15 @@ class ShoppingListViewModelTest {
 
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedShoppingList("shoppingListId"))
-        val result = getCurrentShoppingListState().displayedShoppingList
+        val result = getCurrentShoppingListState()
         val isLoading = getCurrentShoppingListState().isLoading
 
         verifyMocks()
         coVerify(exactly = 1) { getShoppingListUseCase("shoppingListId") }
-        assertThat(result).isEqualTo(emptyShoppingListWithIngredients)
+        assertThat(result.shoppingListIngredients).isEmpty()
+        assertThat(result.displayedShoppingListId).isEmpty()
+        assertThat(result.checkedIngredients).isEqualTo(getCurrentShoppingListState().allIngredients.associateWith { false })
+        assertThat(result.shoppingListName).isEmpty()
         assertThat(isLoading).isTrue()
     }
 }
