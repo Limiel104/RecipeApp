@@ -380,6 +380,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onAddIngredientDialogDismiss - selected ingredients before - state is set correctly`() {
         setMocksWithEmptyShoppingList()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
@@ -395,6 +397,7 @@ class ShoppingListViewModelTest {
         val resultIngredientsToSelect = getCurrentShoppingListState().ingredientsToSelect
 
         verifyMocks()
+        coVerify(exactly = 1) { addShoppingListUseCase(any()) }
         assertThat(initialAddIngredientsDialogState).isTrue()
         assertThat(initialSelectedIngredientsState).isEmpty()
         assertThat(initialIngredientsToSelect).isEqualTo(listOf(
@@ -414,6 +417,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onAddIngredientDialogDismiss - selected ingredients before and after - state is set correctly`() {
         setMocksWithEmptyShoppingList()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
@@ -430,6 +435,7 @@ class ShoppingListViewModelTest {
         val resultIngredientsToSelect = getCurrentShoppingListState().ingredientsToSelect
 
         verifyMocks()
+        coVerify(exactly = 1) { addShoppingListUseCase(any()) }
         assertThat(initialAddIngredientsDialogState).isTrue()
         assertThat(initialSelectedIngredientsState).isEqualTo(listOf(ingredients[4]))
         assertThat(initialIngredientsToSelect).isEqualTo(listOf(
@@ -465,6 +471,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onAddIngredientDialogDismiss - selected ingredients before - shopping list ingredients`() {
         setMocksWithEmptyShoppingList()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
@@ -476,6 +484,7 @@ class ShoppingListViewModelTest {
         val resultIngredientsState = getCurrentShoppingListState().shoppingListIngredients
 
         verifyMocks()
+        coVerify(exactly = 1) { addShoppingListUseCase(any()) }
         assertThat(initialIngredientsState).isEqualTo(mapOf(
             Pair(ingredients[3],""),
             Pair(ingredients[2],"")
@@ -489,6 +498,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onAddIngredientDialogDismiss - selected ingredients before and after - shopping list ingredients`() {
         setMocksWithEmptyShoppingList()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
@@ -501,6 +512,7 @@ class ShoppingListViewModelTest {
         val resultIngredientsState = getCurrentShoppingListState().shoppingListIngredients
 
         verifyMocks()
+        coVerify(exactly = 1) { addShoppingListUseCase(any()) }
         assertThat(initialIngredientsState).isEqualTo(mapOf(
             Pair(ingredients[3],""),
             Pair(ingredients[2],"")
@@ -543,6 +555,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `selectedIngredient - no ingredients selected - shopping list ingredients`() {
         setMocksWithEmptyShoppingList()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         val initialShoppingListIngredientsState = getCurrentShoppingListState().shoppingListIngredients
 
@@ -551,6 +565,7 @@ class ShoppingListViewModelTest {
         val resultShoppingListIngredientsState = getCurrentShoppingListState().shoppingListIngredients
 
         verifyMocks()
+        coVerify(exactly = 1) { addShoppingListUseCase(any()) }
         assertThat(initialShoppingListIngredientsState).isEmpty()
         assertThat(resultShoppingListIngredientsState).isEqualTo(
             mapOf(
@@ -562,6 +577,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `selectedIngredient - no ingredients selected - ingredients to select`() {
         setMocksWithEmptyShoppingList()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         val initialIngredientsState = getCurrentShoppingListState().ingredientsToSelect
 
@@ -570,6 +587,7 @@ class ShoppingListViewModelTest {
         val resultIngredientsState = getCurrentShoppingListState().ingredientsToSelect
 
         verifyMocks()
+        coVerify(exactly = 1) { addShoppingListUseCase(any()) }
         assertThat(initialIngredientsState).isEqualTo(ingredients)
         assertThat(resultIngredientsState).isEqualTo(
             listOf(
@@ -584,6 +602,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `selectedIngredient - 2 out of 5 ingredients selected initially - shopping list ingredients`() {
         setMocksWithEmptyShoppingList()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[1]))
@@ -595,6 +615,7 @@ class ShoppingListViewModelTest {
         val resultShoppingListIngredientsState = getCurrentShoppingListState().shoppingListIngredients
 
         verifyMocks()
+        coVerify(exactly = 2) { addShoppingListUseCase(any()) }
         assertThat(initialShoppingListIngredientsState).isEqualTo(
             mapOf(
                 Pair(ingredients[4],""),
@@ -613,6 +634,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `selectedIngredient - 2 out of 5 ingredients selected initially - ingredients to select`() {
         setMocksWithEmptyShoppingList()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[1]))
@@ -624,6 +647,7 @@ class ShoppingListViewModelTest {
         val resultIngredientsState = getCurrentShoppingListState().ingredientsToSelect
 
         verifyMocks()
+        coVerify(exactly = 2) { addShoppingListUseCase(any()) }
         assertThat(initialIngredientsState).isEqualTo(
             listOf(
                 ingredients[0],
@@ -642,6 +666,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `selectedIngredient - 4 out of 5 ingredients selected initially - shopping list ingredients`() {
         setMocksWithEmptyShoppingList()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[0]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
@@ -655,6 +681,7 @@ class ShoppingListViewModelTest {
         val resultShoppingListIngredientsState = getCurrentShoppingListState().shoppingListIngredients
 
         verifyMocks()
+        coVerify(exactly = 2) { addShoppingListUseCase(any()) }
         assertThat(initialShoppingListIngredientsState).isEqualTo(
             mapOf(
                 Pair(ingredients[0],""),
@@ -677,6 +704,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `selectedIngredient - 4 out of 5 ingredients selected initially - ingredients to select`() {
         setMocksWithEmptyShoppingList()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[0]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
@@ -690,6 +719,7 @@ class ShoppingListViewModelTest {
         val resultIngredientsState = getCurrentShoppingListState().ingredientsToSelect
 
         verifyMocks()
+        coVerify(exactly = 2) { addShoppingListUseCase(any()) }
         assertThat(initialIngredientsState).isEqualTo(
             listOf(
                 ingredients[2]
@@ -877,6 +907,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onQuantityPickerSaved - isQuantityBottomSheetOpened state is set correctly`() {
         setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.OnIngredientClicked(ingredients[2].ingredientId))
         val initialQuantityBottomSheetState = getCurrentShoppingListState().isQuantityBottomSheetOpened
@@ -885,6 +917,7 @@ class ShoppingListViewModelTest {
         val resultQuantityBottomSheetState = getCurrentShoppingListState().isQuantityBottomSheetOpened
 
         verifyMocks()
+        coVerify(exactly = 1) { addShoppingListUseCase(any()) }
         assertThat(initialQuantityBottomSheetState).isTrue()
         assertThat(resultQuantityBottomSheetState).isFalse()
     }
@@ -892,6 +925,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onQuantityPickerSaved - quantity is not selected`() {
         setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -901,6 +936,7 @@ class ShoppingListViewModelTest {
         val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
 
         verifyMocks()
+        coVerify(exactly = 2) { addShoppingListUseCase(any()) }
         assertThat(initialIngredientQuantityState).isEqualTo("")
         assertThat(resultIngredientQuantityState).isEqualTo("")
     }
@@ -908,6 +944,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onQuantityPickerSaved - quantity is selected - initially empty`() {
         setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -921,6 +959,7 @@ class ShoppingListViewModelTest {
         val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
 
         verifyMocks()
+        coVerify(exactly = 2) { addShoppingListUseCase(any()) }
         assertThat(initialIngredientQuantityState).isEqualTo("")
         assertThat(resultIngredientQuantityState).isEqualTo("30.5 g")
     }
@@ -928,6 +967,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onQuantityPickerSaved - whole and decimal quantity is selected - initially empty`() {
         setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -940,6 +981,7 @@ class ShoppingListViewModelTest {
         val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
 
         verifyMocks()
+        coVerify(exactly = 2) { addShoppingListUseCase(any()) }
         assertThat(initialIngredientQuantityState).isEqualTo("")
         assertThat(resultIngredientQuantityState).isEqualTo("30.5")
     }
@@ -947,6 +989,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onQuantityPickerSaved - whole and type quantity is selected - initially empty`() {
         setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -959,6 +1003,7 @@ class ShoppingListViewModelTest {
         val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
 
         verifyMocks()
+        coVerify(exactly = 2) { addShoppingListUseCase(any()) }
         assertThat(initialIngredientQuantityState).isEqualTo("")
         assertThat(resultIngredientQuantityState).isEqualTo("30 g")
     }
@@ -966,6 +1011,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onQuantityPickerSaved - decimal and type quantity is selected - initially empty`() {
         setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -978,6 +1025,7 @@ class ShoppingListViewModelTest {
         val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
 
         verifyMocks()
+        coVerify(exactly = 2) { addShoppingListUseCase(any()) }
         assertThat(initialIngredientQuantityState).isEqualTo("")
         assertThat(resultIngredientQuantityState).isEqualTo(".5 g")
     }
@@ -985,6 +1033,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onQuantityPickerSaved - only whole quantity is selected - initially empty`() {
         setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -996,6 +1046,7 @@ class ShoppingListViewModelTest {
         val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
 
         verifyMocks()
+        coVerify(exactly = 2) { addShoppingListUseCase(any()) }
         assertThat(initialIngredientQuantityState).isEqualTo("")
         assertThat(resultIngredientQuantityState).isEqualTo("30")
     }
@@ -1003,6 +1054,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onQuantityPickerSaved - only decimal quantity is selected - initially empty`() {
         setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1014,6 +1067,7 @@ class ShoppingListViewModelTest {
         val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
 
         verifyMocks()
+        coVerify(exactly = 2) { addShoppingListUseCase(any()) }
         assertThat(initialIngredientQuantityState).isEqualTo("")
         assertThat(resultIngredientQuantityState).isEqualTo(".5")
     }
@@ -1021,6 +1075,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onQuantityPickerSaved - only type quantity is selected - initially empty`() {
         setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1032,6 +1088,7 @@ class ShoppingListViewModelTest {
         val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
 
         verifyMocks()
+        coVerify(exactly = 2) { addShoppingListUseCase(any()) }
         assertThat(initialIngredientQuantityState).isEqualTo("")
         assertThat(resultIngredientQuantityState).isEqualTo("g")
     }
@@ -1039,6 +1096,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onQuantityPickerSaved - quantity is selected - initially not empty`() {
         setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1057,6 +1116,7 @@ class ShoppingListViewModelTest {
         val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
 
         verifyMocks()
+        coVerify(exactly = 3) { addShoppingListUseCase(any()) }
         assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
         assertThat(resultIngredientQuantityState).isEqualTo("12.0 kg")
     }
@@ -1064,6 +1124,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onQuantityPickerSaved - whole and decimal quantity is selected - initially not empty`() {
         setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1081,6 +1143,7 @@ class ShoppingListViewModelTest {
         val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
 
         verifyMocks()
+        coVerify { addShoppingListUseCase(any()) }
         assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
         assertThat(resultIngredientQuantityState).isEqualTo("12.0")
     }
@@ -1088,6 +1151,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onQuantityPickerSaved - whole and type quantity is selected - initially not empty`() {
         setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1105,6 +1170,7 @@ class ShoppingListViewModelTest {
         val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
 
         verifyMocks()
+        coVerify { addShoppingListUseCase(any()) }
         assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
         assertThat(resultIngredientQuantityState).isEqualTo("12 kg")
     }
@@ -1112,6 +1178,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onQuantityPickerSaved - decimal and type quantity is selected - initially not empty`() {
         setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1129,6 +1197,7 @@ class ShoppingListViewModelTest {
         val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
 
         verifyMocks()
+        coVerify { addShoppingListUseCase(any()) }
         assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
         assertThat(resultIngredientQuantityState).isEqualTo(".0 kg")
     }
@@ -1136,6 +1205,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onQuantityPickerSaved - only whole quantity is selected - initially not empty`() {
         setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1152,6 +1223,7 @@ class ShoppingListViewModelTest {
         val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
 
         verifyMocks()
+        coVerify { addShoppingListUseCase(any()) }
         assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
         assertThat(resultIngredientQuantityState).isEqualTo("12")
     }
@@ -1159,6 +1231,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onQuantityPickerSaved - only decimal quantity is selected - initially not empty`() {
         setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1175,6 +1249,7 @@ class ShoppingListViewModelTest {
         val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
 
         verifyMocks()
+        coVerify { addShoppingListUseCase(any()) }
         assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
         assertThat(resultIngredientQuantityState).isEqualTo(".0")
     }
@@ -1182,6 +1257,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onQuantityPickerSaved - only type quantity is selected - initially not empty`() {
         setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1198,6 +1275,7 @@ class ShoppingListViewModelTest {
         val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
 
         verifyMocks()
+        coVerify { addShoppingListUseCase(any()) }
         assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
         assertThat(resultIngredientQuantityState).isEqualTo("kg")
     }
@@ -1205,6 +1283,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onQuantityPickerDismissed - ingredient quantity not set - still default`() {
         setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1215,6 +1295,7 @@ class ShoppingListViewModelTest {
         val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
 
         verifyMocks()
+        coVerify { addShoppingListUseCase(any()) }
         assertThat(initialIngredientQuantityState).isEqualTo("")
         assertThat(resultIngredientQuantityState).isEqualTo("")
     }
@@ -1222,6 +1303,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onQuantityPickerDismissed - ingredient quantity set - value not changed`() {
         setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1236,6 +1319,7 @@ class ShoppingListViewModelTest {
         val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
 
         verifyMocks()
+        coVerify { addShoppingListUseCase(any()) }
         assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
         assertThat(resultIngredientQuantityState).isEqualTo("30.5 g")
     }
@@ -1243,6 +1327,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onQuantityPickerDismissed - ingredient quantity not set and then changed - still default`() {
         setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1257,6 +1343,7 @@ class ShoppingListViewModelTest {
         val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
 
         verifyMocks()
+        coVerify { addShoppingListUseCase(any()) }
         assertThat(initialIngredientQuantityState).isEqualTo("")
         assertThat(resultIngredientQuantityState).isEqualTo("")
     }
@@ -1264,6 +1351,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onQuantityPickerDismissed - ingredient quantity set and then changed - value not changed`() {
         setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1282,6 +1371,7 @@ class ShoppingListViewModelTest {
         val resultIngredientQuantityState = getCurrentShoppingListState().shoppingListIngredients[ingredients[2]]
 
         verifyMocks()
+        coVerify { addShoppingListUseCase(any()) }
         assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
         assertThat(resultIngredientQuantityState).isEqualTo("30.5 g")
     }
@@ -1289,6 +1379,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onQuantityPickerDismissed - quantity bottom sheet is closed`() {
         setMocks()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1299,6 +1391,7 @@ class ShoppingListViewModelTest {
         val resultIngredientQuantityState = getCurrentShoppingListState().isQuantityBottomSheetOpened
 
         verifyMocks()
+        coVerify { addShoppingListUseCase(any()) }
         assertThat(initialQuantityBottomSheetState).isTrue()
         assertThat(resultIngredientQuantityState).isFalse()
     }
@@ -1306,6 +1399,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onCheckBoxToggled - one item`() {
         setMocksWithEmptyShoppingList()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1315,6 +1410,7 @@ class ShoppingListViewModelTest {
         val resultCheckState = getCurrentShoppingListState().checkedIngredients
 
         verifyMocks()
+        coVerify { addShoppingListUseCase(any()) }
         assertThat(initialCheckState).isEqualTo(
             mapOf(
                 Pair(ingredients[0],false),
@@ -1338,6 +1434,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onCheckBoxToggled - one item - unchecked`() {
         setMocksWithEmptyShoppingList()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
@@ -1348,6 +1446,7 @@ class ShoppingListViewModelTest {
         val resultCheckState = getCurrentShoppingListState().checkedIngredients
 
         verifyMocks()
+        coVerify { addShoppingListUseCase(any()) }
         assertThat(initialCheckState).isEqualTo(
             mapOf(
                 Pair(ingredients[0],false),
@@ -1371,6 +1470,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onCheckBoxToggled - all items`() {
         setMocksWithEmptyShoppingList()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
@@ -1388,6 +1489,7 @@ class ShoppingListViewModelTest {
         val resultCheckState = getCurrentShoppingListState().checkedIngredients
 
         verifyMocks()
+        coVerify { addShoppingListUseCase(any()) }
         assertThat(initialCheckState).isEqualTo(
             mapOf(
                 Pair(ingredients[0],false),
@@ -1411,6 +1513,8 @@ class ShoppingListViewModelTest {
     @Test
     fun `onCheckBoxToggled - all items - unchecked`() {
         setMocksWithEmptyShoppingList()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
         shoppingListViewModel = setViewModel()
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
         shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
@@ -1433,6 +1537,7 @@ class ShoppingListViewModelTest {
         val resultCheckState = getCurrentShoppingListState().checkedIngredients
 
         verifyMocks()
+        coVerify { addShoppingListUseCase(any()) }
         assertThat(initialCheckState).isEqualTo(
             mapOf(
                 Pair(ingredients[0],true),
@@ -1459,7 +1564,7 @@ class ShoppingListViewModelTest {
         coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
 
         shoppingListViewModel = setViewModel()
-        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddShoppingList)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddNewShoppingList)
         val isLoading = getCurrentShoppingListState().isLoading
 
         coVerifyOrder {
@@ -1477,7 +1582,7 @@ class ShoppingListViewModelTest {
         coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Error("Error message"))
 
         shoppingListViewModel = setViewModel()
-        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddShoppingList)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddNewShoppingList)
         val isLoading = getCurrentShoppingListState().isLoading
 
         coVerifyOrder {
@@ -1495,7 +1600,7 @@ class ShoppingListViewModelTest {
         coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Loading(true))
 
         shoppingListViewModel = setViewModel()
-        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddShoppingList)
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddNewShoppingList)
         val isLoading = getCurrentShoppingListState().isLoading
 
         coVerifyOrder {

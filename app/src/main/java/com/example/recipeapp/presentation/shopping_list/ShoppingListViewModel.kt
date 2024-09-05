@@ -107,10 +107,16 @@ class ShoppingListViewModel @Inject constructor(
                 _shoppingListState.value = shoppingListState.value.copy(
                     checkedIngredients = tempMap
                 )
+
+                addShoppingList()
             }
 
             is ShoppingListEvent.SelectedShoppingList -> {
                 getShoppingList(event.shoppingListId)
+
+                _shoppingListState.value = shoppingListState.value.copy(
+                    isOtherShoppingListsMenuOpened = false
+                )
             }
 
 
@@ -136,6 +142,7 @@ class ShoppingListViewModel @Inject constructor(
 
             ShoppingListEvent.OnAddIngredientsDialogSave -> {
                 addIngredientsToShoppingList(_shoppingListState.value.selectedIngredients)
+                addShoppingList()
             }
 
             ShoppingListEvent.OnQuantityPickerDismissed -> {
@@ -174,9 +181,7 @@ class ShoppingListViewModel @Inject constructor(
                     selectedTypeQuantity = "",
                     isQuantityBottomSheetOpened = false
                 )
-            }
 
-            ShoppingListEvent.OnAddShoppingList -> {
                 addShoppingList()
             }
 
@@ -202,6 +207,7 @@ class ShoppingListViewModel @Inject constructor(
                 if(isValidationSuccessful(_shoppingListState.value.shoppingListName)) {
                     _shoppingListState.value = shoppingListState.value.copy(
                         isRenameShoppingListDialogOpened = false,
+                        isMenuOpened = false
                     )
                     addShoppingList()
                 }
@@ -215,6 +221,7 @@ class ShoppingListViewModel @Inject constructor(
 
             ShoppingListEvent.OnDeleteAllIngredients -> {
                 _shoppingListState.value = _shoppingListState.value.copy(
+                    isMenuOpened = false,
                     selectedIngredients = emptyList(),
                     ingredientsToSelect = _shoppingListState.value.allIngredients,
                     shoppingListIngredients = emptyMap(),
@@ -223,7 +230,23 @@ class ShoppingListViewModel @Inject constructor(
             }
 
             ShoppingListEvent.OnDeleteShoppingList -> {
+                _shoppingListState.value = _shoppingListState.value.copy(
+                    isMenuOpened = false
+                )
                 deleteShoppingList(_shoppingListState.value.displayedShoppingListId)
+            }
+
+            ShoppingListEvent.OnAddNewShoppingList -> {
+                _shoppingListState.value = _shoppingListState.value.copy(
+                    isMenuOpened = false,
+                    selectedIngredients = emptyList(),
+                    ingredientsToSelect = _shoppingListState.value.allIngredients,
+                    shoppingListIngredients = emptyMap(),
+                    checkedIngredients = _shoppingListState.value.allIngredients.associateWith { false },
+                    shoppingListName = "New Shopping List",
+                    displayedShoppingListId = ""
+                )
+                addShoppingList()
             }
 
             ShoppingListEvent.OnOpenOtherShoppingListsMenu -> {

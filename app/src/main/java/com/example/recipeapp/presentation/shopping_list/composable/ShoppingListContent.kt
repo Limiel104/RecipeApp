@@ -63,6 +63,7 @@ fun ShoppingListContent(
     onRenameShoppingListDialogDismissed: () -> Unit,
     onDeleteAllIngredients: () -> Unit,
     onDeleteShoppingList: () -> Unit,
+    onAddNewShoppingList: () -> Unit,
     onSelectedShoppingList: (String) -> Unit,
     onOpenOtherShoppingListsMenu: () -> Unit,
     onOtherShoppingListsMenuDismiss: () -> Unit
@@ -157,6 +158,7 @@ fun ShoppingListContent(
                 onRename = { onOpenRenameShoppingListDialog() },
                 onDeleteAllIngredients = { onDeleteAllIngredients() },
                 onDeleteList = { onDeleteShoppingList() },
+                onAdd = { onAddNewShoppingList() },
                 onOpenOtherListsMenu = { onOpenOtherShoppingListsMenu() },
                 onDismiss = { onMenuDismissed() }
             )
@@ -223,6 +225,7 @@ fun ShoppingListContentPreview() {
             onRenameShoppingListDialogDismissed = {},
             onDeleteAllIngredients = {},
             onDeleteShoppingList = {},
+            onAddNewShoppingList = {},
             onSelectedShoppingList = {},
             onOpenOtherShoppingListsMenu = {},
             onOtherShoppingListsMenuDismiss = {}
@@ -267,6 +270,7 @@ fun ShoppingListContentPreviewDialog() {
             onRenameShoppingListDialogDismissed = {},
             onDeleteAllIngredients = {},
             onDeleteShoppingList = {},
+            onAddNewShoppingList = {},
             onSelectedShoppingList = {},
             onOpenOtherShoppingListsMenu = {},
             onOtherShoppingListsMenuDismiss = {}
@@ -333,6 +337,7 @@ fun ShoppingListContentPreviewOneItem() {
             onRenameShoppingListDialogDismissed = {},
             onDeleteAllIngredients = {},
             onDeleteShoppingList = {},
+            onAddNewShoppingList = {},
             onSelectedShoppingList = {},
             onOpenOtherShoppingListsMenu = {},
             onOtherShoppingListsMenuDismiss = {}

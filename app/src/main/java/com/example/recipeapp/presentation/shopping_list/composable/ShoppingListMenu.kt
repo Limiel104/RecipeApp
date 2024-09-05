@@ -31,6 +31,7 @@ fun ShoppingListMenu(
     onRename: () -> Unit,
     onDeleteAllIngredients: () -> Unit,
     onDeleteList: () -> Unit,
+    onAdd: () -> Unit,
     onOpenOtherListsMenu: () -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -63,6 +64,12 @@ fun ShoppingListMenu(
             )
 
             MenuItem(
+                icon = Icons.Default.Edit,
+                text = "Add new list",
+                onClick = { onAdd() }
+            )
+
+            MenuItem(
                 icon = Icons.Default.Menu,
                 text = "View other lists",
                 onClick = { onOpenOtherListsMenu() },
@@ -89,6 +96,7 @@ fun ShoppingListMenuPreview() {
                 onRename = {},
                 onDeleteAllIngredients = {},
                 onDeleteList = {},
+                onAdd = {},
                 onOpenOtherListsMenu = {},
                 onDismiss = {}
             )
