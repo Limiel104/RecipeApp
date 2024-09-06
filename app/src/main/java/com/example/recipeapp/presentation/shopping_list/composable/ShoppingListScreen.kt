@@ -74,7 +74,8 @@ fun ShoppingListScreen(
             onAddNewShoppingList = { viewModel.onEvent(ShoppingListEvent.OnAddNewShoppingList) },
             onSelectedShoppingList = { viewModel.onEvent(ShoppingListEvent.SelectedShoppingList(it)) },
             onOpenOtherShoppingListsMenu = { viewModel.onEvent(ShoppingListEvent.OnOpenOtherShoppingListsMenu) },
-            onOtherShoppingListsMenuDismiss = { viewModel.onEvent(ShoppingListEvent.OnOtherShoppingListsMenuDismissed) }
+            onOtherShoppingListsMenuDismiss = { viewModel.onEvent(ShoppingListEvent.OnOtherShoppingListsMenuDismissed) },
+            onSwipeToDelete = { viewModel.onEvent(ShoppingListEvent.OnSwipeToDelete(it)) }
         )
     }
     else {

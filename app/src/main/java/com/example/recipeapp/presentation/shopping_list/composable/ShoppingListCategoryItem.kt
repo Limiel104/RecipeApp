@@ -1,15 +1,29 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.recipeapp.presentation.shopping_list.composable
 
 import android.content.res.Configuration
+import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,10 +42,9 @@ fun ShoppingListCategoryItem(
     ingredients: Map<Ingredient, Quantity>,
     checkedIngredients: Map<Ingredient, Boolean>,
     onCheckedChange: (Ingredient) -> Unit,
-    onIngredientClick: (String) -> Unit
+    onIngredientClick: (String) -> Unit,
+    onSwipeToDelete: (Ingredient) -> Unit
 ) {
-    var i = 0
-
     Card(
         shape = RoundedCornerShape(10.dp),
         modifier = modifier
@@ -50,21 +63,58 @@ fun ShoppingListCategoryItem(
             )
 
             Column() {
-                for (ingredient in ingredients) {
+                for(ingredient in ingredients) {
                     checkedIngredients[ingredient.key]?.let {
-                        IngredientItem(
-                            ingredient = ingredient.key,
-                            quantity = ingredient.value,
-                            color = Color.Transparent,
-                            isShoppingListModeActivated = true,
-                            isChecked = it,
-                            onCheckedChange = { onCheckedChange(it) },
-                            onClick = { onIngredientClick(it) }
+                        val dismissState = rememberSwipeToDismissBoxState(
+                            confirmValueChange = { value ->
+                                if (value == SwipeToDismissBoxValue.EndToStart) {
+                                    onSwipeToDelete(ingredient.key)
+                                    false
+                                } else true
+                            }
+                        )
+
+                        SwipeToDismissBox(
+                            state = dismissState,
+                            enableDismissFromStartToEnd = false,
+                            backgroundContent = {
+                                val color =
+                                    if (dismissState.dismissDirection == SwipeToDismissBoxValue.EndToStart) {
+                                        Color.Red
+                                    } else Color.Transparent
+
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(color)
+                                        .padding(16.dp),
+                                    contentAlignment = Alignment.CenterEnd
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Delete,
+                                        contentDescription = "Delete icon",
+                                        tint = if(dismissState.dismissDirection == SwipeToDismissBoxValue.EndToStart) Color.White
+                                                else Color.Transparent
+                                    )
+                                }
+                            },
+                            content = {
+                                Log.i("TAG","Swipe $ingredient")
+
+                                IngredientItem(
+                                    ingredient = ingredient.key,
+                                    quantity = ingredient.value,
+                                    color = Color.Transparent,
+                                    isShoppingListModeActivated = true,
+                                    isChecked = it,
+                                    onCheckedChange = { onCheckedChange(it) },
+                                    onClick = { onIngredientClick(it) }
+                                )
+                            }
                         )
                     }
 
-                    i += 1
-                    if (i<ingredients.size)
+                    if(ingredients.keys.indexOf(ingredient.key) != ingredients.keys.toList().lastIndex)
                         HorizontalDivider()
                 }
             }
@@ -88,7 +138,8 @@ fun ShoppingListCategoryItemPreview() {
             ingredients = getIngredientsWithQuantity(),
             checkedIngredients = getIngredientsWithBoolean(),
             onCheckedChange = {},
-            onIngredientClick = {}
+            onIngredientClick = {},
+            onSwipeToDelete = {}
         )
     }
 }

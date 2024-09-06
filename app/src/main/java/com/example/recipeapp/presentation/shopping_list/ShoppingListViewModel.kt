@@ -119,6 +119,10 @@ class ShoppingListViewModel @Inject constructor(
                 )
             }
 
+            is ShoppingListEvent.OnSwipeToDelete -> {
+                deleteIngredientFromShoppingListIngredientsList(event.ingredient)
+                addShoppingList()
+            }
 
             ShoppingListEvent.OnAddButtonClicked -> {
                 _shoppingListState.value = shoppingListState.value.copy(
@@ -354,6 +358,20 @@ class ShoppingListViewModel @Inject constructor(
             checkedIngredients[ingredient.key] = ingredient.value
         }
         return checkedIngredients
+    }
+
+    private fun deleteIngredientFromShoppingListIngredientsList(ingredient: Ingredient) {
+        val shoppingListIngredients = getTempMap(_shoppingListState.value.shoppingListIngredients)
+
+        shoppingListIngredients.remove(ingredient)
+
+        _shoppingListState.value = shoppingListState.value.copy(
+            ingredientsToSelect = getCurrentIngredients(shoppingListIngredients)
+        )
+
+        _shoppingListState.value = shoppingListState.value.copy(
+            shoppingListIngredients = shoppingListIngredients
+        )
     }
 
     private fun isValidationSuccessful(name: String): Boolean {

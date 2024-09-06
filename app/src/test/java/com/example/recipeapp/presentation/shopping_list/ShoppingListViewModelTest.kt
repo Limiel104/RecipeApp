@@ -1937,4 +1937,128 @@ class ShoppingListViewModelTest {
         assertThat(resultMenuState).isFalse()
         assertThat(resultOtherListsMenuState).isFalse()
     }
+
+    @Test
+    fun `OnSwipeToDelete - ingredient is deleted form the shopping list`() {
+        setMocksWithEmptyShoppingList()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddButtonClicked)
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        val initialShoppingListIngredientsState = getCurrentShoppingListState().shoppingListIngredients
+        val initialIngredientsToSelect = getCurrentShoppingListState().ingredientsToSelect
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnSwipeToDelete(ingredients[2]))
+        val resultShoppingListIngredientsState = getCurrentShoppingListState().shoppingListIngredients
+        val resultIngredientsToSelect = getCurrentShoppingListState().ingredientsToSelect
+
+        verifyMocks()
+        coVerify(exactly = 2) { addShoppingListUseCase(any()) }
+        assertThat(initialShoppingListIngredientsState).isEqualTo(mapOf(
+            Pair(ingredients[3],""),
+            Pair(ingredients[2],"")
+        ))
+        assertThat(initialIngredientsToSelect).isEqualTo(listOf(
+            ingredients[0],
+            ingredients[1],
+            ingredients[4]
+        ))
+        assertThat(resultShoppingListIngredientsState).isEqualTo(mapOf(
+            Pair(ingredients[3],"")
+        ))
+        assertThat(resultIngredientsToSelect).isEqualTo(listOf(
+            ingredients[0],
+            ingredients[1],
+            ingredients[2],
+            ingredients[4]
+        ))
+    }
+
+    @Test
+    fun `OnSwipeToDelete - 2 out of 3 ingredients are deleted form the shopping list`() {
+        setMocksWithEmptyShoppingList()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddButtonClicked)
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[0]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[1]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        val initialShoppingListIngredientsState = getCurrentShoppingListState().shoppingListIngredients
+        val initialIngredientsToSelect = getCurrentShoppingListState().ingredientsToSelect
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnSwipeToDelete(ingredients[0]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnSwipeToDelete(ingredients[1]))
+        val resultShoppingListIngredientsState = getCurrentShoppingListState().shoppingListIngredients
+        val resultIngredientsToSelect = getCurrentShoppingListState().ingredientsToSelect
+
+        verifyMocks()
+        coVerify(exactly = 3) { addShoppingListUseCase(any()) }
+        assertThat(initialShoppingListIngredientsState).isEqualTo(mapOf(
+            Pair(ingredients[0],""),
+            Pair(ingredients[4],""),
+            Pair(ingredients[1],"")
+        ))
+        assertThat(initialIngredientsToSelect).isEqualTo(listOf(
+            ingredients[2],
+            ingredients[3]
+        ))
+        assertThat(resultShoppingListIngredientsState).isEqualTo(mapOf(
+            Pair(ingredients[4],"")
+        ))
+        assertThat(resultIngredientsToSelect).isEqualTo(listOf(
+            ingredients[0],
+            ingredients[1],
+            ingredients[2],
+            ingredients[3]
+        ))
+    }
+
+    @Test
+    fun `OnSwipeToDelete - all ingredients are deleted form the shopping list`() {
+        setMocksWithEmptyShoppingList()
+        coEvery { addShoppingListUseCase(any()) } returns flowOf(Resource.Success(true))
+
+        shoppingListViewModel = setViewModel()
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddButtonClicked)
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[0]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[1]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[4]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[3]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.SelectedIngredient(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave)
+        val initialShoppingListIngredientsState = getCurrentShoppingListState().shoppingListIngredients
+        val initialIngredientsToSelect = getCurrentShoppingListState().ingredientsToSelect
+
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnSwipeToDelete(ingredients[2]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnSwipeToDelete(ingredients[4]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnSwipeToDelete(ingredients[1]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnSwipeToDelete(ingredients[0]))
+        shoppingListViewModel.onEvent(ShoppingListEvent.OnSwipeToDelete(ingredients[3]))
+        val resultShoppingListIngredientsState = getCurrentShoppingListState().shoppingListIngredients
+        val resultIngredientsToSelect = getCurrentShoppingListState().ingredientsToSelect
+
+        verifyMocks()
+        coVerify(exactly = 6) { addShoppingListUseCase(any()) }
+        assertThat(initialShoppingListIngredientsState).isEqualTo(mapOf(
+            Pair(ingredients[0],""),
+            Pair(ingredients[1],""),
+            Pair(ingredients[4],""),
+            Pair(ingredients[3],""),
+            Pair(ingredients[2],"")
+        ))
+        assertThat(initialIngredientsToSelect).isEqualTo(emptyList<Ingredient>())
+        assertThat(resultShoppingListIngredientsState).isEqualTo(emptyMap<Ingredient, Quantity>())
+        assertThat(resultIngredientsToSelect).isEqualTo(listOf(
+            ingredients[0],
+            ingredients[1],
+            ingredients[2],
+            ingredients[3],
+            ingredients[4]
+        ))
+    }
 }

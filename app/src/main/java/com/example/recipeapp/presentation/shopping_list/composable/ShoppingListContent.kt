@@ -66,7 +66,8 @@ fun ShoppingListContent(
     onAddNewShoppingList: () -> Unit,
     onSelectedShoppingList: (String) -> Unit,
     onOpenOtherShoppingListsMenu: () -> Unit,
-    onOtherShoppingListsMenuDismiss: () -> Unit
+    onOtherShoppingListsMenuDismiss: () -> Unit,
+    onSwipeToDelete: (Ingredient) -> Unit
 ) {
     Scaffold(
         modifier = modifier
@@ -119,7 +120,8 @@ fun ShoppingListContent(
                     ingredients = uiState.shoppingListIngredients.filter { it.key.category == category },
                     checkedIngredients = uiState.checkedIngredients,
                     onCheckedChange = { onCheckedChange(it) },
-                    onIngredientClick = { onIngredientClick(it) }
+                    onIngredientClick = { onIngredientClick(it) },
+                    onSwipeToDelete = { onSwipeToDelete(it) }
                 )
             }
         }
@@ -228,7 +230,8 @@ fun ShoppingListContentPreview() {
             onAddNewShoppingList = {},
             onSelectedShoppingList = {},
             onOpenOtherShoppingListsMenu = {},
-            onOtherShoppingListsMenuDismiss = {}
+            onOtherShoppingListsMenuDismiss = {},
+            onSwipeToDelete = {}
         )
     }
 }
@@ -273,7 +276,8 @@ fun ShoppingListContentPreviewDialog() {
             onAddNewShoppingList = {},
             onSelectedShoppingList = {},
             onOpenOtherShoppingListsMenu = {},
-            onOtherShoppingListsMenuDismiss = {}
+            onOtherShoppingListsMenuDismiss = {},
+            onSwipeToDelete = {}
         )
     }
 }
@@ -340,7 +344,8 @@ fun ShoppingListContentPreviewOneItem() {
             onAddNewShoppingList = {},
             onSelectedShoppingList = {},
             onOpenOtherShoppingListsMenu = {},
-            onOtherShoppingListsMenuDismiss = {}
+            onOtherShoppingListsMenuDismiss = {},
+            onSwipeToDelete = {}
         )
     }
 }
