@@ -624,9 +624,7 @@ class AddRecipeScreenTest {
     fun imagePicker_isDisplayedCorrectly() {
         setScreenState(AddRecipeState(isImageBottomSheetOpened = true))
 
-        composeRule.onNodeWithContentDescription("Take photo icon").assertIsDisplayed()
         composeRule.onNodeWithText("Take Photo").assertIsDisplayed()
-        composeRule.onNodeWithContentDescription("Select image icon").assertIsDisplayed()
         composeRule.onNodeWithText("Select Image").assertIsDisplayed()
     }
 

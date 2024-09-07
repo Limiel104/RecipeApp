@@ -73,7 +73,7 @@ fun IngredientItem(
                 if(dragIndex == ingredient.ingredientId) MaterialTheme.colorScheme.secondary
                 else color
             )
-            .testTag("Recipe Ingredient Item ${ingredient.name}"),
+            .testTag("Ingredient Item ${ingredient.name}"),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ImageItem(

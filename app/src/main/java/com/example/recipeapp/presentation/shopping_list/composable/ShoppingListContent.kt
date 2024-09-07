@@ -203,6 +203,7 @@ fun ShoppingListContentPreview() {
             scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState()),
             modalBottomSheetState = rememberModalBottomSheetState(),
             uiState = ShoppingListState(
+                shoppingListName = "Shopping List Name",
                 shoppingListIngredients = getIngredientsWithQuantity(),
                 checkedIngredients = getIngredientsWithBoolean()
             ),
@@ -251,7 +252,10 @@ fun ShoppingListContentPreviewDialog() {
         ShoppingListContent(
             scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState()),
             modalBottomSheetState = rememberModalBottomSheetState(),
-            uiState = ShoppingListState(isAddIngredientsDialogOpened = true),
+            uiState = ShoppingListState(
+                shoppingListName = "Shopping List Name",
+                isAddIngredientsDialogOpened = true
+            ),
             onIngredientSuggestionClick = {},
             onDropDownMenuExpandedChange = {},
             onIngredientChange = {},

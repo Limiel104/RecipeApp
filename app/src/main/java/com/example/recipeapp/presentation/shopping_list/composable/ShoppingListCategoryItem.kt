@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.domain.model.Ingredient
@@ -50,6 +51,7 @@ fun ShoppingListCategoryItem(
         modifier = modifier
             .fillMaxWidth()
             .padding(bottom = 8.dp)
+            .testTag("Shopping List Category $categoryName")
     ) {
         Column(
             modifier = modifier
@@ -62,7 +64,9 @@ fun ShoppingListCategoryItem(
                 modifier = modifier.padding(bottom = 8.dp)
             )
 
-            Column() {
+            Column(
+                modifier = modifier.testTag("$categoryName column")
+            ) {
                 for(ingredient in ingredients) {
                     checkedIngredients[ingredient.key]?.let {
                         val dismissState = rememberSwipeToDismissBoxState(
