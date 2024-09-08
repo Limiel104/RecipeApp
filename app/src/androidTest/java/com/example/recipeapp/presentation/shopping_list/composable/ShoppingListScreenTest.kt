@@ -7,10 +7,15 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.assertIsOff
+import androidx.compose.ui.test.assertIsOn
+import androidx.compose.ui.test.assertIsToggleable
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -25,6 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.recipeapp.di.AppModule
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Quantity
+import com.example.recipeapp.domain.model.ShoppingList
 import com.example.recipeapp.presentation.MainActivity
 import com.example.recipeapp.presentation.shopping_list.ShoppingListState
 import com.example.recipeapp.ui.theme.RecipeAppTheme
@@ -45,6 +51,9 @@ class ShoppingListScreenTest {
     private lateinit var emptyShoppingListIngredients: Map<Ingredient, Quantity>
     private lateinit var shoppingListIngredientsWithOneItem: List<Ingredient>
     private lateinit var allIngredients: List<Ingredient>
+    private lateinit var shoppingList: ShoppingList
+    private lateinit var shoppingList2: ShoppingList
+    private lateinit var shoppingList3: ShoppingList
 
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
@@ -152,8 +161,28 @@ class ShoppingListScreenTest {
         )
 
         emptyShoppingListIngredients = emptyMap<Ingredient, Quantity>()
-
         shoppingListIngredientsWithOneItem = listOf(allIngredients[1])
+
+        shoppingList = ShoppingList(
+            shoppingListId = "ShoppingListId",
+            name = "ShoppingList Name",
+            createdBy = "userUID",
+            date = 123456789
+        )
+
+        shoppingList2 = ShoppingList(
+            shoppingListId = "ShoppingList2Id",
+            name = "ShoppingList2 Name",
+            createdBy = "userUID",
+            date = 123456789
+        )
+
+        shoppingList3 = ShoppingList(
+            shoppingListId = "ShoppingList3Id",
+            name = "ShoppingList3 Name",
+            createdBy = "userUID",
+            date = 123456789
+        )
     }
 
     private fun setScreen() {
@@ -216,8 +245,7 @@ class ShoppingListScreenTest {
                 shoppingListName = "Shopping List Name",
                 shoppingListIngredients = shoppingListIngredients.associateWith { "" },
                 checkedIngredients = allIngredients.associateWith { false }
-            )
-        )
+        ))
 
         menuButtonIsDisplayed()
         nameIsDisplayed()
@@ -312,7 +340,7 @@ class ShoppingListScreenTest {
             ShoppingListState(
                 shoppingListIngredients = shoppingListIngredientsWithOneItem.associateWith { "" },
                 checkedIngredients = allIngredients.associateWith { false }
-            ))
+        ))
 
         val categoryName = composeRule.onNodeWithTag("Shopping List Category category3")
             .fetchSemanticsNode()
@@ -352,7 +380,7 @@ class ShoppingListScreenTest {
             ShoppingListState(
                 shoppingListIngredients = shoppingListIngredientsWithOneItem.associateWith { "" },
                 checkedIngredients = allIngredients.associateWith { false }
-            ))
+        ))
 
         var numberOfImages = 0
         val children = composeRule.onNodeWithTag("category3 column")
@@ -360,7 +388,6 @@ class ShoppingListScreenTest {
             .children
 
         for(child in children) {
-            println("AAAAAA ${child.config}")
             val role = child.config.getOrElse(SemanticsProperties.Role) { Role.RadioButton }
             if(role == Role.Image)
                 numberOfImages += 1
@@ -375,7 +402,7 @@ class ShoppingListScreenTest {
             ShoppingListState(
                 shoppingListIngredients = allIngredients.associateWith { "" },
                 checkedIngredients = allIngredients.associateWith { false }
-            ))
+        ))
 
         var numberOfIngredients = 0
         val children = composeRule.onNodeWithTag("category3 column")
@@ -397,7 +424,7 @@ class ShoppingListScreenTest {
             ShoppingListState(
                 shoppingListIngredients = allIngredients.associateWith { "" },
                 checkedIngredients = allIngredients.associateWith { false }
-            ))
+        ))
 
         var numberOfImages = 0
         val children = composeRule.onNodeWithTag("category3 column")
@@ -411,6 +438,98 @@ class ShoppingListScreenTest {
         }
 
         Truth.assertThat(numberOfImages).isEqualTo(3)
+    }
+
+    @Test
+    fun categoryItem_checkBoxIsNotChecked() {
+        setScreenState(
+            ShoppingListState(
+                shoppingListIngredients = shoppingListIngredientsWithOneItem.associateWith { "" },
+                checkedIngredients = allIngredients.associateWith { false }
+        ))
+
+        val checkBox = SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Checkbox)
+        composeRule.onNode(checkBox).assertIsDisplayed()
+        composeRule.onNode(checkBox).assertIsToggleable()
+        composeRule.onNode(checkBox).assertIsOff()
+    }
+
+    @Test
+    fun categoryItem_checkBoxIsChecked() {
+        setScreenState(
+            ShoppingListState(
+                shoppingListIngredients = shoppingListIngredientsWithOneItem.associateWith { "" },
+                checkedIngredients = allIngredients.associateWith { true }
+        ))
+
+        val checkBox = SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Checkbox)
+        composeRule.onNode(checkBox).assertIsDisplayed()
+        composeRule.onNode(checkBox).assertIsToggleable()
+        composeRule.onNode(checkBox).assertIsOn()
+    }
+
+    @Test
+    fun categoryItem_ingredientNameIsDisplayedCorrectly() {
+        setScreenState(
+            ShoppingListState(
+                shoppingListIngredients = shoppingListIngredientsWithOneItem.associateWith { "1.5 kg" },
+                checkedIngredients = allIngredients.associateWith { false }
+            ))
+
+        composeRule.onNode(hasText("Ingredient2 Name")).assertIsDisplayed()
+    }
+
+    @Test
+    fun categoryItem_quantityIsDisplayedCorrectly() {
+        setScreenState(
+            ShoppingListState(
+                shoppingListIngredients = shoppingListIngredientsWithOneItem.associateWith { "1.5 kg" },
+                checkedIngredients = allIngredients.associateWith { false }
+        ))
+
+        composeRule.onNode(hasText("1.5 kg")).assertIsDisplayed()
+    }
+
+    @Test
+    fun menu_isDisplayedCorrectly() {
+        setScreenState(ShoppingListState(isMenuOpened = true))
+
+        composeRule.onNodeWithTag("Shopping list menu").assertIsDisplayed()
+
+        composeRule.onNode(hasText("Rename")).assertIsDisplayed()
+        composeRule.onNode(hasText("Rename")).assertHasClickAction()
+
+        composeRule.onNode(hasText("Remove all items")).assertIsDisplayed()
+        composeRule.onNode(hasText("Remove all items")).assertHasClickAction()
+
+        composeRule.onNode(hasText("Delete list")).assertIsDisplayed()
+        composeRule.onNode(hasText("Delete list")).assertHasClickAction()
+
+        composeRule.onNode(hasText("Add new list")).assertIsDisplayed()
+        composeRule.onNode(hasText("Add new list")).assertHasClickAction()
+
+        composeRule.onNode(hasText("View other lists")).assertIsDisplayed()
+        composeRule.onNode(hasText("View other lists")).assertHasClickAction()
+    }
+
+    @Test
+    fun otherShoppingListMenu_quantityIsDisplayedCorrectly() {
+        setScreenState(
+            ShoppingListState(
+                isOtherShoppingListsMenuOpened = true,
+                userShoppingLists = listOf(shoppingList,shoppingList2,shoppingList3)
+            ))
+
+        composeRule.onNodeWithTag("Other shopping lists menu").assertIsDisplayed()
+
+        composeRule.onNode(hasText(shoppingList.name)).assertIsDisplayed()
+        composeRule.onNode(hasText(shoppingList.name)).assertHasClickAction()
+
+        composeRule.onNode(hasText(shoppingList2.name)).assertIsDisplayed()
+        composeRule.onNode(hasText(shoppingList2.name)).assertHasClickAction()
+
+        composeRule.onNode(hasText(shoppingList3.name)).assertIsDisplayed()
+        composeRule.onNode(hasText(shoppingList3.name)).assertHasClickAction()
     }
 
     private fun menuButtonIsDisplayed() = composeRule

@@ -41,7 +41,7 @@ fun OtherShoppingListsMenu(
     ModalBottomSheet(
         onDismissRequest = { onDismiss() },
         sheetState = modalSheetState,
-        modifier = modifier.testTag("Image picker")
+        modifier = modifier.testTag("Other shopping lists menu")
     ) {
         LazyColumn(
             modifier = modifier
