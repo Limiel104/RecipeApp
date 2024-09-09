@@ -24,12 +24,15 @@ import com.example.recipeapp.domain.repository.UserRepository
 import com.example.recipeapp.domain.use_case.AddImageUseCase
 import com.example.recipeapp.domain.use_case.AddRecipeUseCase
 import com.example.recipeapp.domain.use_case.AddSearchSuggestionUseCase
+import com.example.recipeapp.domain.use_case.AddShoppingListUseCase
 import com.example.recipeapp.domain.use_case.AddUserUseCase
+import com.example.recipeapp.domain.use_case.DeleteShoppingListUseCase
 import com.example.recipeapp.domain.use_case.GetCategoriesUseCase
 import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
 import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
 import com.example.recipeapp.domain.use_case.GetRecipesUseCase
 import com.example.recipeapp.domain.use_case.GetSearchSuggestionsUseCase
+import com.example.recipeapp.domain.use_case.GetShoppingListUseCase
 import com.example.recipeapp.domain.use_case.GetUserRecipesUseCase
 import com.example.recipeapp.domain.use_case.GetUserShoppingListsUseCase
 import com.example.recipeapp.domain.use_case.GetUserUseCase
@@ -217,6 +220,24 @@ object TestAppModule {
     @Singleton
     fun provideUpdateUserPasswordUseCase(authRepository: AuthRepository): UpdateUserPasswordUseCase {
         return UpdateUserPasswordUseCase(authRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAddShoppingListUseCase(shoppingListRepository: ShoppingListRepository): AddShoppingListUseCase {
+        return AddShoppingListUseCase(shoppingListRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetShoppingListUseCase(shoppingListRepository: ShoppingListRepository): GetShoppingListUseCase {
+        return GetShoppingListUseCase(shoppingListRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeleteShoppingListUseCase(shoppingListRepository: ShoppingListRepository): DeleteShoppingListUseCase {
+        return DeleteShoppingListUseCase(shoppingListRepository)
     }
 
     @Provides

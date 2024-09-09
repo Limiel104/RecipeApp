@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.recipeapp.presentation.add_recipe.composable
+package com.example.recipeapp.presentation.common.composable
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column

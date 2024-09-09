@@ -122,17 +122,20 @@ class HomeViewModelTest {
             ShoppingList(
                 shoppingListId = "shoppingListId",
                 name = "Shopping List Name",
-                createdBy = "userId"
+                createdBy = "userId",
+                date = 1234324354
             ),
             ShoppingList(
                 shoppingListId = "shoppingList2Id",
                 name = "Shopping List 2 Name",
-                createdBy = "userId"
+                createdBy = "userId",
+                date = 1234324356
             ),
             ShoppingList(
                 shoppingListId = "shoppingList3Id",
                 name = "Shopping List 3 Name",
-                createdBy = "userId"
+                createdBy = "userId",
+                date = 1234324358
             )
         )
         searchSuggestions = listOf(

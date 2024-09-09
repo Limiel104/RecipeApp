@@ -9,5 +9,6 @@ data class ShoppingListIngredientEntity(
     val shoppingListIngredientId: Long,
     val ingredientId: String,
     val shoppingListId: String,
-    val quantity: String
+    val quantity: String,
+    val isChecked: Boolean
 )

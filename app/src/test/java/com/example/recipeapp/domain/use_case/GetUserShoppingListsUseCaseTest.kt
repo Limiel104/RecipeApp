@@ -36,19 +36,22 @@ class GetUserShoppingListsUseCaseTest {
         shoppingList = ShoppingList(
             shoppingListId = "shoppingListId",
             name = "Shopping List Name",
-            createdBy = "userId"
+            createdBy = "userId",
+            date = 1234324254
         )
 
         shoppingList2 = ShoppingList(
             shoppingListId = "shoppingList2Id",
             name = "Shopping List 2 Name",
-            createdBy = "userId"
+            createdBy = "userId",
+            date = 1234324374
         )
 
         shoppingList3 = ShoppingList(
             shoppingListId = "shoppingList3Id",
             name = "Shopping List 3 Name",
-            createdBy = "userId"
+            createdBy = "userId",
+            date = 1234324354
         )
     }
 

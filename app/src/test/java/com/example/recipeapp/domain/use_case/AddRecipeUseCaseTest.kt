@@ -1,9 +1,9 @@
 package com.example.recipeapp.domain.use_case
 
-import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.RecipeWithIngredients
 import com.example.recipeapp.domain.model.Resource
 import com.example.recipeapp.domain.repository.RecipeRepository
+import com.example.recipeapp.presentation.common.getIngredientsWithQuantity
 import com.google.common.truth.Truth
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
@@ -34,35 +34,7 @@ class AddRecipeUseCaseTest {
         recipeWithIngredients = RecipeWithIngredients(
             recipeId = "recipeId",
             name = "Recipe Name",
-            ingredients = mapOf(
-                Pair(
-                    Ingredient(
-                        ingredientId = "ingredientId",
-                        name = "Ingredient Name",
-                        imageUrl = "imageUrl",
-                        category = "category"
-                    ),
-                    "200.0 g"
-                ),
-                Pair(
-                    Ingredient(
-                        ingredientId = "ingredient2Id",
-                        name = "Ingredient2 Name",
-                        imageUrl = "imageUrl",
-                        category = "category"
-                    ),
-                    "5.0 kg"
-                ),
-                Pair(
-                    Ingredient(
-                        ingredientId = "ingredient3Id",
-                        name = "Ingredient3 Name",
-                        imageUrl = "imageUrl",
-                        category = "category"
-                    ),
-                    "1 cup"
-                )
-            ),
+            ingredients = getIngredientsWithQuantity(),
             prepTime = "40 min",
             servings = 4,
             description = "Recipe description",

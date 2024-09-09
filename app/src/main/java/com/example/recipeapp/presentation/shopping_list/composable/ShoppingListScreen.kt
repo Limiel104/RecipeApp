@@ -3,6 +3,7 @@ package com.example.recipeapp.presentation.shopping_list.composable
 import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,6 +27,7 @@ fun ShoppingListScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     val isUserLoggedIn = viewModel.shoppingListState.value.isUserLoggedIn
+    val modalBottomSheetState = rememberModalBottomSheetState()
     val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(lifecycleOwner.lifecycle) {
@@ -45,7 +47,35 @@ fun ShoppingListScreen(
     }
     if(isUserLoggedIn) {
         ShoppingListContent(
-            scrollBehavior = scrollBehavior
+            scrollBehavior = scrollBehavior,
+            modalBottomSheetState = modalBottomSheetState,
+            uiState = viewModel.shoppingListState.value,
+            onIngredientSuggestionClick = { viewModel.onEvent(ShoppingListEvent.SelectedIngredient(it)) },
+            onDropDownMenuExpandedChange = { viewModel.onEvent(ShoppingListEvent.OnDropDownMenuExpandChange) },
+            onIngredientChange = { viewModel.onEvent(ShoppingListEvent.EnteredIngredient(it)) },
+            onAddIngredientsDialogDismiss = { viewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogDismiss) },
+            onAddIngredientsSave = { viewModel.onEvent(ShoppingListEvent.OnAddIngredientsDialogSave) },
+            onAddButtonClick = { viewModel.onEvent(ShoppingListEvent.OnAddButtonClicked) },
+            onIngredientClick = { viewModel.onEvent(ShoppingListEvent.OnIngredientClicked(it)) },
+            onSelectedWholeQuantity = { viewModel.onEvent(ShoppingListEvent.SelectedWholeQuantity(it)) },
+            onSelectedDecimalQuantity = { viewModel.onEvent(ShoppingListEvent.SelectedDecimalQuantity(it)) },
+            onSelectedTypeQuantity = { viewModel.onEvent(ShoppingListEvent.SelectedTypeQuantity(it)) },
+            onQuantityPickerDismiss = { viewModel.onEvent(ShoppingListEvent.OnQuantityPickerDismissed) },
+            onQuantityPickerSave = { viewModel.onEvent(ShoppingListEvent.OnQuantityPickerSaved) },
+            onCheckedChange = { viewModel.onEvent(ShoppingListEvent.OnCheckBoxToggled(it)) },
+            onMenuButtonClicked = { viewModel.onEvent(ShoppingListEvent.OnMenuButtonClicked) },
+            onMenuDismissed = { viewModel.onEvent(ShoppingListEvent.OnMenuDismissed) },
+            onNameChange = { viewModel.onEvent(ShoppingListEvent.EnteredName(it)) },
+            onOpenRenameShoppingListDialog = { viewModel.onEvent(ShoppingListEvent.OnOpenRenameShoppingListDialog) },
+            onRenameShoppingListDialogSaved = { viewModel.onEvent(ShoppingListEvent.OnRenameShoppingListDialogSaved) },
+            onRenameShoppingListDialogDismissed = { viewModel.onEvent(ShoppingListEvent.OnRenameShoppingListDialogDismissed) },
+            onDeleteAllIngredients = { viewModel.onEvent(ShoppingListEvent.OnDeleteAllIngredients) },
+            onDeleteShoppingList = { viewModel.onEvent(ShoppingListEvent.OnDeleteShoppingList) },
+            onAddNewShoppingList = { viewModel.onEvent(ShoppingListEvent.OnAddNewShoppingList) },
+            onSelectedShoppingList = { viewModel.onEvent(ShoppingListEvent.SelectedShoppingList(it)) },
+            onOpenOtherShoppingListsMenu = { viewModel.onEvent(ShoppingListEvent.OnOpenOtherShoppingListsMenu) },
+            onOtherShoppingListsMenuDismiss = { viewModel.onEvent(ShoppingListEvent.OnOtherShoppingListsMenuDismissed) },
+            onSwipeToDelete = { viewModel.onEvent(ShoppingListEvent.OnSwipeToDelete(it)) }
         )
     }
     else {

@@ -1,4 +1,4 @@
-package com.example.recipeapp.presentation.add_recipe.composable
+package com.example.recipeapp.presentation.common.composable
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -42,7 +42,7 @@ fun AutoComplete(
         onExpandedChange = { onExpandedChange() },
         modifier = modifier
             .padding(bottom = 24.dp)
-            .testTag("Add recipe type ingredient name EDDM")
+            .testTag("Add ingredient name EDDM")
     ) {
         OutlinedTextField(
             value = ingredient,

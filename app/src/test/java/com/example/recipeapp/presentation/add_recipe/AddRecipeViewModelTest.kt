@@ -164,7 +164,7 @@ class AddRecipeViewModelTest {
         )
     }
 
-    private fun getCurrentAdRecipeState(): AddRecipeState {
+    private fun getCurrentAddRecipeState(): AddRecipeState {
         return addRecipeViewModel.addRecipeState.value
     }
 
@@ -184,10 +184,10 @@ class AddRecipeViewModelTest {
     fun `enteredTitle - initially empty`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialTitleState = getCurrentAdRecipeState().title
+        val initialTitleState = getCurrentAddRecipeState().title
 
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("title"))
-        val resultTitleState = getCurrentAdRecipeState().title
+        val resultTitleState = getCurrentAddRecipeState().title
 
         verifyMocks()
         assertThat(initialTitleState).isEmpty()
@@ -199,10 +199,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("old title"))
-        val initialTitleState = getCurrentAdRecipeState().title
+        val initialTitleState = getCurrentAddRecipeState().title
 
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("new title"))
-        val resultTitleState = getCurrentAdRecipeState().title
+        val resultTitleState = getCurrentAddRecipeState().title
 
         verifyMocks()
         assertThat(initialTitleState).isEqualTo("old title")
@@ -214,10 +214,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("title"))
-        val initialTitleState = getCurrentAdRecipeState().title
+        val initialTitleState = getCurrentAddRecipeState().title
 
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle(""))
-        val resultTitleState = getCurrentAdRecipeState().title
+        val resultTitleState = getCurrentAddRecipeState().title
 
         verifyMocks()
         assertThat(initialTitleState).isEqualTo("title")
@@ -228,10 +228,10 @@ class AddRecipeViewModelTest {
     fun `enteredDescription - initially empty`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialDescriptionState = getCurrentAdRecipeState().description
+        val initialDescriptionState = getCurrentAddRecipeState().description
 
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("description"))
-        val resultDescriptionState = getCurrentAdRecipeState().description
+        val resultDescriptionState = getCurrentAddRecipeState().description
 
         verifyMocks()
         assertThat(initialDescriptionState).isEmpty()
@@ -243,10 +243,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("old description"))
-        val initialDescriptionState = getCurrentAdRecipeState().description
+        val initialDescriptionState = getCurrentAddRecipeState().description
 
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("new description"))
-        val resultDescriptionState = getCurrentAdRecipeState().description
+        val resultDescriptionState = getCurrentAddRecipeState().description
 
         verifyMocks()
         assertThat(initialDescriptionState).isEqualTo("old description")
@@ -258,10 +258,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("description"))
-        val initialDescriptionState = getCurrentAdRecipeState().description
+        val initialDescriptionState = getCurrentAddRecipeState().description
 
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription(""))
-        val resultDescriptionState = getCurrentAdRecipeState().description
+        val resultDescriptionState = getCurrentAddRecipeState().description
 
         verifyMocks()
         assertThat(initialDescriptionState).isEqualTo("description")
@@ -272,10 +272,10 @@ class AddRecipeViewModelTest {
     fun `enteredIngredient - initially empty`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialIngredientState = getCurrentAdRecipeState().ingredient
+        val initialIngredientState = getCurrentAddRecipeState().ingredient
 
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredIngredient("ingredient"))
-        val resultIngredientState = getCurrentAdRecipeState().ingredient
+        val resultIngredientState = getCurrentAddRecipeState().ingredient
 
         verifyMocks()
         assertThat(initialIngredientState).isEmpty()
@@ -287,10 +287,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredIngredient("old ingredient"))
-        val initialIngredientState = getCurrentAdRecipeState().ingredient
+        val initialIngredientState = getCurrentAddRecipeState().ingredient
 
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredIngredient("new ingredient"))
-        val resultIngredientState = getCurrentAdRecipeState().ingredient
+        val resultIngredientState = getCurrentAddRecipeState().ingredient
 
         verifyMocks()
         assertThat(initialIngredientState).isEqualTo("old ingredient")
@@ -302,10 +302,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredIngredient("ingredient"))
-        val initialIngredientState = getCurrentAdRecipeState().ingredient
+        val initialIngredientState = getCurrentAddRecipeState().ingredient
 
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredIngredient(""))
-        val resultIngredientState = getCurrentAdRecipeState().ingredient
+        val resultIngredientState = getCurrentAddRecipeState().ingredient
 
         verifyMocks()
         assertThat(initialIngredientState).isEqualTo("ingredient")
@@ -317,10 +317,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("description"))
-        val initialTitleErrorState = getCurrentAdRecipeState().titleError
+        val initialTitleErrorState = getCurrentAddRecipeState().titleError
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddRecipe)
-        val resultTitleErrorState = getCurrentAdRecipeState().titleError
+        val resultTitleErrorState = getCurrentAddRecipeState().titleError
 
         verifyMocks()
         assertThat(initialTitleErrorState).isNull()
@@ -333,10 +333,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("ti"))
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("description"))
-        val initialTitleErrorState = getCurrentAdRecipeState().titleError
+        val initialTitleErrorState = getCurrentAddRecipeState().titleError
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddRecipe)
-        val resultTitleErrorState = getCurrentAdRecipeState().titleError
+        val resultTitleErrorState = getCurrentAddRecipeState().titleError
 
         verifyMocks()
         assertThat(initialTitleErrorState).isNull()
@@ -349,10 +349,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("title%"))
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("description"))
-        val initialTitleErrorState = getCurrentAdRecipeState().titleError
+        val initialTitleErrorState = getCurrentAddRecipeState().titleError
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddRecipe)
-        val resultTitleErrorState = getCurrentAdRecipeState().titleError
+        val resultTitleErrorState = getCurrentAddRecipeState().titleError
 
         verifyMocks()
         assertThat(initialTitleErrorState).isNull()
@@ -364,10 +364,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("title"))
-        val initialDescriptionErrorState = getCurrentAdRecipeState().descriptionError
+        val initialDescriptionErrorState = getCurrentAddRecipeState().descriptionError
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddRecipe)
-        val resultDescriptionErrorState = getCurrentAdRecipeState().descriptionError
+        val resultDescriptionErrorState = getCurrentAddRecipeState().descriptionError
 
         verifyMocks()
         assertThat(initialDescriptionErrorState).isNull()
@@ -380,10 +380,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("title"))
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("des"))
-        val initialDescriptionErrorState = getCurrentAdRecipeState().descriptionError
+        val initialDescriptionErrorState = getCurrentAddRecipeState().descriptionError
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddRecipe)
-        val resultDescriptionErrorState = getCurrentAdRecipeState().descriptionError
+        val resultDescriptionErrorState = getCurrentAddRecipeState().descriptionError
 
         verifyMocks()
         assertThat(initialDescriptionErrorState).isNull()
@@ -396,10 +396,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("title"))
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("desc_ription"))
-        val initialDescriptionErrorState = getCurrentAdRecipeState().descriptionError
+        val initialDescriptionErrorState = getCurrentAddRecipeState().descriptionError
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddRecipe)
-        val resultDescriptionErrorState = getCurrentAdRecipeState().descriptionError
+        val resultDescriptionErrorState = getCurrentAddRecipeState().descriptionError
 
         verifyMocks()
         assertThat(initialDescriptionErrorState).isNull()
@@ -414,12 +414,12 @@ class AddRecipeViewModelTest {
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("title"))
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("description"))
-        val initialTitleErrorState = getCurrentAdRecipeState().titleError
-        val initialDescriptionErrorState = getCurrentAdRecipeState().descriptionError
+        val initialTitleErrorState = getCurrentAddRecipeState().titleError
+        val initialDescriptionErrorState = getCurrentAddRecipeState().descriptionError
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddRecipe)
-        val resultTitleErrorState = getCurrentAdRecipeState().titleError
-        val resultDescriptionErrorState = getCurrentAdRecipeState().descriptionError
+        val resultTitleErrorState = getCurrentAddRecipeState().titleError
+        val resultDescriptionErrorState = getCurrentAddRecipeState().descriptionError
 
         coVerifySequence {
             getIngredientsUseCase()
@@ -440,8 +440,8 @@ class AddRecipeViewModelTest {
         coExcludeRecords { getCategoriesUseCase() }
 
         addRecipeViewModel = setViewModel()
-        val result = getCurrentAdRecipeState().ingredientsToSelect
-        val isLoading = getCurrentAdRecipeState().isLoading
+        val result = getCurrentAddRecipeState().ingredientsToSelect
+        val isLoading = getCurrentAddRecipeState().isLoading
 
         coVerify(exactly = 1) { getIngredientsUseCase() }
         assertThat(result).isEqualTo(ingredients)
@@ -455,8 +455,8 @@ class AddRecipeViewModelTest {
         coExcludeRecords { getCategoriesUseCase() }
 
         addRecipeViewModel = setViewModel()
-        val result = getCurrentAdRecipeState().ingredientsToSelect
-        val isLoading = getCurrentAdRecipeState().isLoading
+        val result = getCurrentAddRecipeState().ingredientsToSelect
+        val isLoading = getCurrentAddRecipeState().isLoading
 
         coVerify(exactly = 1) { getIngredientsUseCase() }
         assertThat(result).isEmpty()
@@ -470,8 +470,8 @@ class AddRecipeViewModelTest {
         coExcludeRecords { getCategoriesUseCase() }
 
         addRecipeViewModel = setViewModel()
-        val result = getCurrentAdRecipeState().ingredientsToSelect
-        val isLoading = getCurrentAdRecipeState().isLoading
+        val result = getCurrentAddRecipeState().ingredientsToSelect
+        val isLoading = getCurrentAddRecipeState().isLoading
 
         coVerify(exactly = 1) { getIngredientsUseCase() }
         assertThat(result).isEmpty()
@@ -484,8 +484,8 @@ class AddRecipeViewModelTest {
         coExcludeRecords { getIngredientsUseCase() }
 
         addRecipeViewModel = setViewModel()
-        val result = getCurrentAdRecipeState().categories
-        val isLoading = getCurrentAdRecipeState().isLoading
+        val result = getCurrentAddRecipeState().categories
+        val isLoading = getCurrentAddRecipeState().isLoading
 
         coVerify(exactly = 1) { getCategoriesUseCase() }
         assertThat(result).isEqualTo(categoryMap)
@@ -499,8 +499,8 @@ class AddRecipeViewModelTest {
         coExcludeRecords { getIngredientsUseCase() }
 
         addRecipeViewModel = setViewModel()
-        val result = getCurrentAdRecipeState().categories
-        val isLoading = getCurrentAdRecipeState().isLoading
+        val result = getCurrentAddRecipeState().categories
+        val isLoading = getCurrentAddRecipeState().isLoading
 
         coVerify(exactly = 1) { getCategoriesUseCase() }
         assertThat(result).isEmpty()
@@ -514,8 +514,8 @@ class AddRecipeViewModelTest {
         coExcludeRecords { getIngredientsUseCase() }
 
         addRecipeViewModel = setViewModel()
-        val result = getCurrentAdRecipeState().categories
-        val isLoading = getCurrentAdRecipeState().isLoading
+        val result = getCurrentAddRecipeState().categories
+        val isLoading = getCurrentAddRecipeState().isLoading
 
         coVerify(exactly = 1) { getCategoriesUseCase() }
         assertThat(result).isEmpty()
@@ -526,10 +526,10 @@ class AddRecipeViewModelTest {
     fun `onServingsButtonClicked - state is set correctly`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialServingsSheetState = getCurrentAdRecipeState().isServingsBottomSheetOpened
+        val initialServingsSheetState = getCurrentAddRecipeState().isServingsBottomSheetOpened
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsButtonClicked)
-        val resultServingsSheetState = getCurrentAdRecipeState().isServingsBottomSheetOpened
+        val resultServingsSheetState = getCurrentAddRecipeState().isServingsBottomSheetOpened
 
         verifyMocks()
         assertThat(initialServingsSheetState).isFalse()
@@ -540,10 +540,10 @@ class AddRecipeViewModelTest {
     fun `selectedServings - initially empty`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialServingsState = getCurrentAdRecipeState().selectedServings
+        val initialServingsState = getCurrentAddRecipeState().selectedServings
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(2))
-        val resultServingsState = getCurrentAdRecipeState().selectedServings
+        val resultServingsState = getCurrentAddRecipeState().selectedServings
 
         verifyMocks()
         assertThat(initialServingsState).isEqualTo(0)
@@ -555,10 +555,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(2))
-        val initialServingsState = getCurrentAdRecipeState().selectedServings
+        val initialServingsState = getCurrentAddRecipeState().selectedServings
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(5))
-        val resultServingsState = getCurrentAdRecipeState().selectedServings
+        val resultServingsState = getCurrentAddRecipeState().selectedServings
 
         verifyMocks()
         assertThat(initialServingsState).isEqualTo(2)
@@ -570,10 +570,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(2))
-        val initialServingsState = getCurrentAdRecipeState().selectedServings
+        val initialServingsState = getCurrentAddRecipeState().selectedServings
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(0))
-        val resultServingsState = getCurrentAdRecipeState().selectedServings
+        val resultServingsState = getCurrentAddRecipeState().selectedServings
 
         verifyMocks()
         assertThat(initialServingsState).isEqualTo(2)
@@ -585,10 +585,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsButtonClicked)
-        val initialServingsBottomSheetState = getCurrentAdRecipeState().isServingsBottomSheetOpened
+        val initialServingsBottomSheetState = getCurrentAddRecipeState().isServingsBottomSheetOpened
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerSaved)
-        val resultServingsBottomSheetState = getCurrentAdRecipeState().isServingsBottomSheetOpened
+        val resultServingsBottomSheetState = getCurrentAddRecipeState().isServingsBottomSheetOpened
 
         verifyMocks()
         assertThat(initialServingsBottomSheetState).isTrue()
@@ -599,10 +599,10 @@ class AddRecipeViewModelTest {
     fun `onServingsPickerSaved - servings are not selected`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedServingsState = getCurrentAdRecipeState().lastSavedServings
+        val initialLastSavedServingsState = getCurrentAddRecipeState().lastSavedServings
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerSaved)
-        val resultLastSavedServingsState = getCurrentAdRecipeState().lastSavedServings
+        val resultLastSavedServingsState = getCurrentAddRecipeState().lastSavedServings
 
         verifyMocks()
         assertThat(initialLastSavedServingsState).isEqualTo(0)
@@ -614,10 +614,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(3))
-        val initialLastSavedServingsState = getCurrentAdRecipeState().lastSavedServings
+        val initialLastSavedServingsState = getCurrentAddRecipeState().lastSavedServings
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerSaved)
-        val resultLastSavedServingsState = getCurrentAdRecipeState().lastSavedServings
+        val resultLastSavedServingsState = getCurrentAddRecipeState().lastSavedServings
 
         verifyMocks()
         assertThat(initialLastSavedServingsState).isEqualTo(0)
@@ -628,10 +628,10 @@ class AddRecipeViewModelTest {
     fun `onServingsPickerDismissed - lastSavedServings is 0 - reset to default`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialServingsState = getCurrentAdRecipeState().selectedServings
+        val initialServingsState = getCurrentAddRecipeState().selectedServings
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerDismissed)
-        val resultServingsState = getCurrentAdRecipeState().selectedServings
+        val resultServingsState = getCurrentAddRecipeState().selectedServings
 
         verifyMocks()
         assertThat(initialServingsState).isEqualTo(0)
@@ -643,10 +643,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(2))
-        val initialServingsState = getCurrentAdRecipeState().selectedServings
+        val initialServingsState = getCurrentAddRecipeState().selectedServings
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerDismissed)
-        val resultServingsState = getCurrentAdRecipeState().selectedServings
+        val resultServingsState = getCurrentAddRecipeState().selectedServings
 
         verifyMocks()
         assertThat(initialServingsState).isEqualTo(2)
@@ -658,10 +658,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsButtonClicked)
-        val initialServingsBottomSheetState = getCurrentAdRecipeState().isServingsBottomSheetOpened
+        val initialServingsBottomSheetState = getCurrentAddRecipeState().isServingsBottomSheetOpened
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerSaved)
-        val resultServingsBottomSheetState = getCurrentAdRecipeState().isServingsBottomSheetOpened
+        val resultServingsBottomSheetState = getCurrentAddRecipeState().isServingsBottomSheetOpened
 
         verifyMocks()
         assertThat(initialServingsBottomSheetState).isTrue()
@@ -674,11 +674,11 @@ class AddRecipeViewModelTest {
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(3))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerSaved)
-        val initialServingsState = getCurrentAdRecipeState().selectedServings
-        val initialLastSavedServingsState = getCurrentAdRecipeState().lastSavedServings
+        val initialServingsState = getCurrentAddRecipeState().selectedServings
+        val initialLastSavedServingsState = getCurrentAddRecipeState().lastSavedServings
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerDismissed)
-        val resultServingsState = getCurrentAdRecipeState().selectedServings
+        val resultServingsState = getCurrentAddRecipeState().selectedServings
 
         verifyMocks()
         assertThat(initialServingsState).isEqualTo(3)
@@ -693,11 +693,11 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(3))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerSaved)
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(6))
-        val initialServingsState = getCurrentAdRecipeState().selectedServings
-        val initialLastSavedServingsState = getCurrentAdRecipeState().lastSavedServings
+        val initialServingsState = getCurrentAddRecipeState().selectedServings
+        val initialLastSavedServingsState = getCurrentAddRecipeState().lastSavedServings
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerDismissed)
-        val resultServingsState = getCurrentAdRecipeState().selectedServings
+        val resultServingsState = getCurrentAddRecipeState().selectedServings
 
         verifyMocks()
         assertThat(initialServingsState).isEqualTo(6)
@@ -712,10 +712,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedServings(3))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerSaved)
         addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsButtonClicked)
-        val initialServingsBottomSheetState = getCurrentAdRecipeState().isServingsBottomSheetOpened
+        val initialServingsBottomSheetState = getCurrentAddRecipeState().isServingsBottomSheetOpened
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerSaved)
-        val resultServingsBottomSheetState = getCurrentAdRecipeState().isServingsBottomSheetOpened
+        val resultServingsBottomSheetState = getCurrentAddRecipeState().isServingsBottomSheetOpened
 
         verifyMocks()
         assertThat(initialServingsBottomSheetState).isTrue()
@@ -726,10 +726,10 @@ class AddRecipeViewModelTest {
     fun `onPrepTimeButtonClicked - state is set correctly`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialPrepTimeSheetState = getCurrentAdRecipeState().isPrepTimeBottomSheetOpened
+        val initialPrepTimeSheetState = getCurrentAddRecipeState().isPrepTimeBottomSheetOpened
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimeButtonClicked)
-        val resultPrepTimeSheetState = getCurrentAdRecipeState().isPrepTimeBottomSheetOpened
+        val resultPrepTimeSheetState = getCurrentAddRecipeState().isPrepTimeBottomSheetOpened
 
         verifyMocks()
         assertThat(initialPrepTimeSheetState).isFalse()
@@ -740,10 +740,10 @@ class AddRecipeViewModelTest {
     fun `selectedPrepTimeHours - initially empty`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val initialPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("2 hours"))
-        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val resultPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
 
         verifyMocks()
         assertThat(initialPrepTimeHoursState).isEqualTo("")
@@ -755,10 +755,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("2 hours"))
-        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val initialPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("3 hours"))
-        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val resultPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
 
         verifyMocks()
         assertThat(initialPrepTimeHoursState).isEqualTo("2 hours")
@@ -770,10 +770,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("2 hours"))
-        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val initialPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours(""))
-        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
+        val resultPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
 
         verifyMocks()
         assertThat(initialPrepTimeHoursState).isEqualTo("2 hours")
@@ -784,10 +784,10 @@ class AddRecipeViewModelTest {
     fun `selectedPrepTimeMinutes - initially empty`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val initialPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("15 min"))
-        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val resultPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
 
         verifyMocks()
         assertThat(initialPrepTimeMinutesState).isEqualTo("")
@@ -799,10 +799,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("15 min"))
-        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val initialPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("35 min"))
-        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val resultPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
 
         verifyMocks()
         assertThat(initialPrepTimeMinutesState).isEqualTo("15 min")
@@ -814,10 +814,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("15 min"))
-        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val initialPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes(""))
-        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val resultPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
 
         verifyMocks()
         assertThat(initialPrepTimeMinutesState).isEqualTo("15 min")
@@ -829,10 +829,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimeButtonClicked)
-        val initialPrepTimeBottomSheetState = getCurrentAdRecipeState().isPrepTimeBottomSheetOpened
+        val initialPrepTimeBottomSheetState = getCurrentAddRecipeState().isPrepTimeBottomSheetOpened
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
-        val resultPrepTimeBottomSheetState = getCurrentAdRecipeState().isPrepTimeBottomSheetOpened
+        val resultPrepTimeBottomSheetState = getCurrentAddRecipeState().isPrepTimeBottomSheetOpened
 
         verifyMocks()
         assertThat(initialPrepTimeBottomSheetState).isTrue()
@@ -843,12 +843,12 @@ class AddRecipeViewModelTest {
     fun `onPrepTimePickerSaved - hours and minutes are not selected`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
-        val initialLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+        val initialLastSavedPrepTimeHoursState = getCurrentAddRecipeState().lastSavedPrepTimeHours
+        val initialLastSavedPrepTimeMinutesState = getCurrentAddRecipeState().lastSavedPrepTimeMinutes
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
-        val resultLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
-        val resultLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+        val resultLastSavedPrepTimeHoursState = getCurrentAddRecipeState().lastSavedPrepTimeHours
+        val resultLastSavedPrepTimeMinutesState = getCurrentAddRecipeState().lastSavedPrepTimeMinutes
 
         verifyMocks()
         assertThat(initialLastSavedPrepTimeHoursState).isEqualTo("")
@@ -861,14 +861,14 @@ class AddRecipeViewModelTest {
     fun `onPrepTimePickerSaved - hours and minutes are selected`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
-        val initialLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+        val initialLastSavedPrepTimeHoursState = getCurrentAddRecipeState().lastSavedPrepTimeHours
+        val initialLastSavedPrepTimeMinutesState = getCurrentAddRecipeState().lastSavedPrepTimeMinutes
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("1 hour"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("20 min"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
-        val resultLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
-        val resultLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+        val resultLastSavedPrepTimeHoursState = getCurrentAddRecipeState().lastSavedPrepTimeHours
+        val resultLastSavedPrepTimeMinutesState = getCurrentAddRecipeState().lastSavedPrepTimeMinutes
 
         verifyMocks()
         assertThat(initialLastSavedPrepTimeHoursState).isEqualTo("")
@@ -881,13 +881,13 @@ class AddRecipeViewModelTest {
     fun `onPrepTimePickerSaved - hours are selected`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
-        val initialLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+        val initialLastSavedPrepTimeHoursState = getCurrentAddRecipeState().lastSavedPrepTimeHours
+        val initialLastSavedPrepTimeMinutesState = getCurrentAddRecipeState().lastSavedPrepTimeMinutes
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("1 hour"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
-        val resultLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
-        val resultLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+        val resultLastSavedPrepTimeHoursState = getCurrentAddRecipeState().lastSavedPrepTimeHours
+        val resultLastSavedPrepTimeMinutesState = getCurrentAddRecipeState().lastSavedPrepTimeMinutes
 
         verifyMocks()
         assertThat(initialLastSavedPrepTimeHoursState).isEqualTo("")
@@ -900,13 +900,13 @@ class AddRecipeViewModelTest {
     fun `onPrepTimePickerSaved - minutes are selected`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
-        val initialLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+        val initialLastSavedPrepTimeHoursState = getCurrentAddRecipeState().lastSavedPrepTimeHours
+        val initialLastSavedPrepTimeMinutesState = getCurrentAddRecipeState().lastSavedPrepTimeMinutes
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("20 min"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
-        val resultLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
-        val resultLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+        val resultLastSavedPrepTimeHoursState = getCurrentAddRecipeState().lastSavedPrepTimeHours
+        val resultLastSavedPrepTimeMinutesState = getCurrentAddRecipeState().lastSavedPrepTimeMinutes
 
         verifyMocks()
         assertThat(initialLastSavedPrepTimeHoursState).isEqualTo("")
@@ -919,10 +919,10 @@ class AddRecipeViewModelTest {
     fun `onPrepTimePickerSaved - hours and minutes are not selected - lastSavedPrepTime string`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedPrepTimeState = getCurrentAdRecipeState().lastSavedPrepTime
+        val initialLastSavedPrepTimeState = getCurrentAddRecipeState().lastSavedPrepTime
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
-        val resultLastSavedPrepTimeState = getCurrentAdRecipeState().lastSavedPrepTime
+        val resultLastSavedPrepTimeState = getCurrentAddRecipeState().lastSavedPrepTime
 
         verifyMocks()
         assertThat(initialLastSavedPrepTimeState).isEqualTo("")
@@ -933,12 +933,12 @@ class AddRecipeViewModelTest {
     fun `onPrepTimePickerSaved - hours and minutes are selected - lastSavedPrepTime string`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedPrepTimeState = getCurrentAdRecipeState().lastSavedPrepTime
+        val initialLastSavedPrepTimeState = getCurrentAddRecipeState().lastSavedPrepTime
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("1 hour"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("20 min"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
-        val resultLastSavedPrepTimeState = getCurrentAdRecipeState().lastSavedPrepTime
+        val resultLastSavedPrepTimeState = getCurrentAddRecipeState().lastSavedPrepTime
 
         verifyMocks()
         assertThat(initialLastSavedPrepTimeState).isEqualTo("")
@@ -949,11 +949,11 @@ class AddRecipeViewModelTest {
     fun `onPrepTimePickerSaved - hours are selected - lastSavedPrepTime string`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedPrepTimeState = getCurrentAdRecipeState().lastSavedPrepTime
+        val initialLastSavedPrepTimeState = getCurrentAddRecipeState().lastSavedPrepTime
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("1 hour"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
-        val resultLastSavedPrepTimeState = getCurrentAdRecipeState().lastSavedPrepTime
+        val resultLastSavedPrepTimeState = getCurrentAddRecipeState().lastSavedPrepTime
 
         verifyMocks()
         assertThat(initialLastSavedPrepTimeState).isEqualTo("")
@@ -964,11 +964,11 @@ class AddRecipeViewModelTest {
     fun `onPrepTimePickerSaved - minutes are selected - lastSavedPrepTime string`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedPrepTimeState = getCurrentAdRecipeState().lastSavedPrepTime
+        val initialLastSavedPrepTimeState = getCurrentAddRecipeState().lastSavedPrepTime
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("20 min"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
-        val resultLastSavedPrepTimeState = getCurrentAdRecipeState().lastSavedPrepTime
+        val resultLastSavedPrepTimeState = getCurrentAddRecipeState().lastSavedPrepTime
 
         verifyMocks()
         assertThat(initialLastSavedPrepTimeState).isEqualTo("")
@@ -979,12 +979,12 @@ class AddRecipeViewModelTest {
     fun `onPrepTimePickerDismissed - lastSavedPrepTime is empty - reset to default`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
-        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val initialPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
+        val initialPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnServingsPickerDismissed)
-        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
-        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val resultPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
+        val resultPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
 
         verifyMocks()
         assertThat(initialPrepTimeHoursState).isEqualTo("")
@@ -999,13 +999,13 @@ class AddRecipeViewModelTest {
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("1 hour"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("20 min"))
-        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
-        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val initialPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
+        val initialPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
 
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerDismissed)
-        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
-        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val resultPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
+        val resultPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
 
         verifyMocks()
         assertThat(initialPrepTimeHoursState).isEqualTo("1 hour")
@@ -1019,13 +1019,13 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("1 hour"))
-        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
-        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val initialPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
+        val initialPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
 
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerDismissed)
-        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
-        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val resultPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
+        val resultPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
 
         verifyMocks()
         assertThat(initialPrepTimeHoursState).isEqualTo("1 hour")
@@ -1039,13 +1039,13 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("20 min"))
-        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
-        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val initialPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
+        val initialPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
 
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerDismissed)
-        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
-        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val resultPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
+        val resultPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
 
         verifyMocks()
         assertThat(initialPrepTimeHoursState).isEqualTo("")
@@ -1059,10 +1059,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimeButtonClicked)
-        val initialPrepTimeBottomSheetState = getCurrentAdRecipeState().isPrepTimeBottomSheetOpened
+        val initialPrepTimeBottomSheetState = getCurrentAddRecipeState().isPrepTimeBottomSheetOpened
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
-        val resultPrepTimeBottomSheetState = getCurrentAdRecipeState().isPrepTimeBottomSheetOpened
+        val resultPrepTimeBottomSheetState = getCurrentAddRecipeState().isPrepTimeBottomSheetOpened
 
         verifyMocks()
         assertThat(initialPrepTimeBottomSheetState).isTrue()
@@ -1076,14 +1076,14 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("1 hour"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("20 min"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
-        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
-        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
-        val initialLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
-        val initialLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+        val initialPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
+        val initialPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
+        val initialLastSavedPrepTimeHoursState = getCurrentAddRecipeState().lastSavedPrepTimeHours
+        val initialLastSavedPrepTimeMinutesState = getCurrentAddRecipeState().lastSavedPrepTimeMinutes
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerDismissed)
-        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
-        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val resultPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
+        val resultPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
 
         verifyMocks()
         assertThat(initialPrepTimeHoursState).isEqualTo("1 hour")
@@ -1103,14 +1103,14 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("3 hours"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("5 min"))
-        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
-        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
-        val initialLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
-        val initialLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+        val initialPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
+        val initialPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
+        val initialLastSavedPrepTimeHoursState = getCurrentAddRecipeState().lastSavedPrepTimeHours
+        val initialLastSavedPrepTimeMinutesState = getCurrentAddRecipeState().lastSavedPrepTimeMinutes
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerDismissed)
-        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
-        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val resultPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
+        val resultPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
 
         verifyMocks()
         assertThat(initialPrepTimeHoursState).isEqualTo("3 hours")
@@ -1129,14 +1129,14 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("20 min"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("5 min"))
-        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
-        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
-        val initialLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
-        val initialLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+        val initialPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
+        val initialPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
+        val initialLastSavedPrepTimeHoursState = getCurrentAddRecipeState().lastSavedPrepTimeHours
+        val initialLastSavedPrepTimeMinutesState = getCurrentAddRecipeState().lastSavedPrepTimeMinutes
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerDismissed)
-        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
-        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val resultPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
+        val resultPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
 
         verifyMocks()
         assertThat(initialPrepTimeHoursState).isEqualTo("1 hour")
@@ -1155,14 +1155,14 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("20 min"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeHours("3 hours"))
-        val initialPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
-        val initialPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
-        val initialLastSavedPrepTimeHoursState = getCurrentAdRecipeState().lastSavedPrepTimeHours
-        val initialLastSavedPrepTimeMinutesState = getCurrentAdRecipeState().lastSavedPrepTimeMinutes
+        val initialPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
+        val initialPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
+        val initialLastSavedPrepTimeHoursState = getCurrentAddRecipeState().lastSavedPrepTimeHours
+        val initialLastSavedPrepTimeMinutesState = getCurrentAddRecipeState().lastSavedPrepTimeMinutes
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerDismissed)
-        val resultPrepTimeHoursState = getCurrentAdRecipeState().selectedPrepTimeHours
-        val resultPrepTimeMinutesState = getCurrentAdRecipeState().selectedPrepTimeMinutes
+        val resultPrepTimeHoursState = getCurrentAddRecipeState().selectedPrepTimeHours
+        val resultPrepTimeMinutesState = getCurrentAddRecipeState().selectedPrepTimeMinutes
 
         verifyMocks()
         assertThat(initialPrepTimeHoursState).isEqualTo("3 hours")
@@ -1181,10 +1181,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedPrepTimeMinutes("20 min"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimeButtonClicked)
-        val initialPrepTimeBottomSheetState = getCurrentAdRecipeState().isPrepTimeBottomSheetOpened
+        val initialPrepTimeBottomSheetState = getCurrentAddRecipeState().isPrepTimeBottomSheetOpened
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnPrepTimePickerSaved)
-        val resultPrepTimeBottomSheetState = getCurrentAdRecipeState().isPrepTimeBottomSheetOpened
+        val resultPrepTimeBottomSheetState = getCurrentAddRecipeState().isPrepTimeBottomSheetOpened
 
         verifyMocks()
         assertThat(initialPrepTimeBottomSheetState).isTrue()
@@ -1195,10 +1195,10 @@ class AddRecipeViewModelTest {
     fun `onDropDownMenuExpandChange - initially false`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialDropDownMenuExpandState = getCurrentAdRecipeState().isDropDownMenuExpanded
+        val initialDropDownMenuExpandState = getCurrentAddRecipeState().isDropDownMenuExpanded
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDropDownMenuExpandChange)
-        val resultDropDownMenuExpandState = getCurrentAdRecipeState().isDropDownMenuExpanded
+        val resultDropDownMenuExpandState = getCurrentAddRecipeState().isDropDownMenuExpanded
 
         verifyMocks()
         assertThat(initialDropDownMenuExpandState).isFalse()
@@ -1210,10 +1210,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDropDownMenuExpandChange)
-        val initialDropDownMenuExpandState = getCurrentAdRecipeState().isDropDownMenuExpanded
+        val initialDropDownMenuExpandState = getCurrentAddRecipeState().isDropDownMenuExpanded
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDropDownMenuExpandChange)
-        val resultDropDownMenuExpandState = getCurrentAdRecipeState().isDropDownMenuExpanded
+        val resultDropDownMenuExpandState = getCurrentAddRecipeState().isDropDownMenuExpanded
 
         verifyMocks()
         assertThat(initialDropDownMenuExpandState).isTrue()
@@ -1224,10 +1224,10 @@ class AddRecipeViewModelTest {
     fun `selectedIngredient - no recipe ingredients selected - recipe ingredients`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+        val initialRecipeIngredientsState = getCurrentAddRecipeState().recipeIngredients
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
-        val resultRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+        val resultRecipeIngredientsState = getCurrentAddRecipeState().recipeIngredients
 
         verifyMocks()
         assertThat(initialRecipeIngredientsState).isEmpty()
@@ -1242,10 +1242,10 @@ class AddRecipeViewModelTest {
     fun `selectedIngredient - no recipe ingredients selected - ingredients to select`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
+        val initialIngredientsState = getCurrentAddRecipeState().ingredientsToSelect
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
-        val resultIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
+        val resultIngredientsState = getCurrentAddRecipeState().ingredientsToSelect
 
         verifyMocks()
         assertThat(initialIngredientsState).isEqualTo(ingredients)
@@ -1265,10 +1265,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[1]))
-        val initialRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+        val initialRecipeIngredientsState = getCurrentAddRecipeState().recipeIngredients
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
-        val resultRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+        val resultRecipeIngredientsState = getCurrentAddRecipeState().recipeIngredients
 
         verifyMocks()
         assertThat(initialRecipeIngredientsState).isEqualTo(
@@ -1292,10 +1292,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[1]))
-        val initialIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
+        val initialIngredientsState = getCurrentAddRecipeState().ingredientsToSelect
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
-        val resultIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
+        val resultIngredientsState = getCurrentAddRecipeState().ingredientsToSelect
 
         verifyMocks()
         assertThat(initialIngredientsState).isEqualTo(
@@ -1321,10 +1321,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[3]))
-        val initialRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+        val initialRecipeIngredientsState = getCurrentAddRecipeState().recipeIngredients
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
-        val resultRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+        val resultRecipeIngredientsState = getCurrentAddRecipeState().recipeIngredients
 
         verifyMocks()
         assertThat(initialRecipeIngredientsState).isEqualTo(
@@ -1354,10 +1354,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[3]))
-        val initialIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
+        val initialIngredientsState = getCurrentAddRecipeState().ingredientsToSelect
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
-        val resultIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
+        val resultIngredientsState = getCurrentAddRecipeState().ingredientsToSelect
 
         verifyMocks()
         assertThat(initialIngredientsState).isEqualTo(
@@ -1373,10 +1373,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[4]))
-        val initialRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+        val initialRecipeIngredientsState = getCurrentAddRecipeState().recipeIngredients
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnSwipeToDelete(ingredients[4]))
-        val resultRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+        val resultRecipeIngredientsState = getCurrentAddRecipeState().recipeIngredients
 
         verifyMocks()
         assertThat(initialRecipeIngredientsState).isEqualTo(
@@ -1392,10 +1392,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[4]))
-        val initialIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
+        val initialIngredientsState = getCurrentAddRecipeState().ingredientsToSelect
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnSwipeToDelete(ingredients[4]))
-        val resultIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
+        val resultIngredientsState = getCurrentAddRecipeState().ingredientsToSelect
 
         verifyMocks()
         assertThat(initialIngredientsState).isEqualTo(
@@ -1424,10 +1424,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[3]))
-        val initialRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+        val initialRecipeIngredientsState = getCurrentAddRecipeState().recipeIngredients
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnSwipeToDelete(ingredients[4]))
-        val resultRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+        val resultRecipeIngredientsState = getCurrentAddRecipeState().recipeIngredients
 
         verifyMocks()
         assertThat(initialRecipeIngredientsState).isEqualTo(
@@ -1452,10 +1452,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[3]))
-        val initialIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
+        val initialIngredientsState = getCurrentAddRecipeState().ingredientsToSelect
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnSwipeToDelete(ingredients[4]))
-        val resultIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
+        val resultIngredientsState = getCurrentAddRecipeState().ingredientsToSelect
 
         verifyMocks()
         assertThat(initialIngredientsState).isEqualTo(
@@ -1482,10 +1482,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[1]))
-        val initialRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+        val initialRecipeIngredientsState = getCurrentAddRecipeState().recipeIngredients
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnSwipeToDelete(ingredients[4]))
-        val resultRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+        val resultRecipeIngredientsState = getCurrentAddRecipeState().recipeIngredients
 
         verifyMocks()
         assertThat(initialRecipeIngredientsState).isEqualTo(
@@ -1516,10 +1516,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[1]))
-        val initialIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
+        val initialIngredientsState = getCurrentAddRecipeState().ingredientsToSelect
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnSwipeToDelete(ingredients[4]))
-        val resultIngredientsState = getCurrentAdRecipeState().ingredientsToSelect
+        val resultIngredientsState = getCurrentAddRecipeState().ingredientsToSelect
 
         verifyMocks()
         assertThat(initialIngredientsState).isEqualTo(emptyList<Ingredient>())
@@ -1532,10 +1532,10 @@ class AddRecipeViewModelTest {
     fun `onReorder - initially false`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialReorderModeState = getCurrentAdRecipeState().isReorderModeActivated
+        val initialReorderModeState = getCurrentAddRecipeState().isReorderModeActivated
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnReorder)
-        val resultReorderModeState = getCurrentAdRecipeState().isReorderModeActivated
+        val resultReorderModeState = getCurrentAddRecipeState().isReorderModeActivated
 
         verifyMocks()
         assertThat(initialReorderModeState).isFalse()
@@ -1547,10 +1547,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.OnReorder)
-        val initialReorderModeState = getCurrentAdRecipeState().isReorderModeActivated
+        val initialReorderModeState = getCurrentAddRecipeState().isReorderModeActivated
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnReorder)
-        val resultReorderModeState = getCurrentAdRecipeState().isReorderModeActivated
+        val resultReorderModeState = getCurrentAddRecipeState().isReorderModeActivated
 
         verifyMocks()
         assertThat(initialReorderModeState).isTrue()
@@ -1561,10 +1561,10 @@ class AddRecipeViewModelTest {
     fun `onDragIndexChange - initially not set - dragIndex`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialDragIndexState = getCurrentAdRecipeState().dragIndex
+        val initialDragIndexState = getCurrentAddRecipeState().dragIndex
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDragIndexChange(ingredients[2].ingredientId))
-        val resultDragIndexState = getCurrentAdRecipeState().dragIndex
+        val resultDragIndexState = getCurrentAddRecipeState().dragIndex
 
         verifyMocks()
         assertThat(initialDragIndexState).isEmpty()
@@ -1575,10 +1575,10 @@ class AddRecipeViewModelTest {
     fun `onDragIndexChange - initially not set - dropIndex`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialDropIndexState = getCurrentAdRecipeState().dropIndex
+        val initialDropIndexState = getCurrentAddRecipeState().dropIndex
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDragIndexChange(ingredients[2].ingredientId))
-        val resultDropIndexState = getCurrentAdRecipeState().dropIndex
+        val resultDropIndexState = getCurrentAddRecipeState().dropIndex
 
         verifyMocks()
         assertThat(initialDropIndexState).isEmpty()
@@ -1590,10 +1590,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDragIndexChange(ingredients[3].ingredientId))
-        val initialDragIndexState = getCurrentAdRecipeState().dragIndex
+        val initialDragIndexState = getCurrentAddRecipeState().dragIndex
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDragIndexChange(ingredients[2].ingredientId))
-        val resultDragIndexState = getCurrentAdRecipeState().dragIndex
+        val resultDragIndexState = getCurrentAddRecipeState().dragIndex
 
         verifyMocks()
         assertThat(initialDragIndexState).isEqualTo(ingredients[3].ingredientId)
@@ -1605,10 +1605,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDragIndexChange(ingredients[3].ingredientId))
-        val initialDropIndexState = getCurrentAdRecipeState().dropIndex
+        val initialDropIndexState = getCurrentAddRecipeState().dropIndex
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDragIndexChange(ingredients[2].ingredientId))
-        val resultDropIndexState = getCurrentAdRecipeState().dropIndex
+        val resultDropIndexState = getCurrentAddRecipeState().dropIndex
 
         verifyMocks()
         assertThat(initialDropIndexState).isEmpty()
@@ -1619,10 +1619,10 @@ class AddRecipeViewModelTest {
     fun `onDropIndexChange - initially not set - dropIndex`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialDropIndexState = getCurrentAdRecipeState().dropIndex
+        val initialDropIndexState = getCurrentAddRecipeState().dropIndex
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDropIndexChange(ingredients[2].ingredientId))
-        val resultDropIndexState = getCurrentAdRecipeState().dropIndex
+        val resultDropIndexState = getCurrentAddRecipeState().dropIndex
 
         verifyMocks()
         assertThat(initialDropIndexState).isEmpty()
@@ -1633,10 +1633,10 @@ class AddRecipeViewModelTest {
     fun `onDropIndexChange - initially not set - dragIndex`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialDragIndexState = getCurrentAdRecipeState().dragIndex
+        val initialDragIndexState = getCurrentAddRecipeState().dragIndex
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDropIndexChange(ingredients[2].ingredientId))
-        val resultDragIndexState = getCurrentAdRecipeState().dragIndex
+        val resultDragIndexState = getCurrentAddRecipeState().dragIndex
 
         verifyMocks()
         assertThat(initialDragIndexState).isEmpty()
@@ -1648,10 +1648,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDropIndexChange(ingredients[3].ingredientId))
-        val initialDropIndexState = getCurrentAdRecipeState().dropIndex
+        val initialDropIndexState = getCurrentAddRecipeState().dropIndex
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDropIndexChange(ingredients[2].ingredientId))
-        val resultDropIndexState = getCurrentAdRecipeState().dropIndex
+        val resultDropIndexState = getCurrentAddRecipeState().dropIndex
 
         verifyMocks()
         assertThat(initialDropIndexState).isEqualTo(ingredients[3].ingredientId)
@@ -1663,10 +1663,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDropIndexChange(ingredients[3].ingredientId))
-        val initialDragIndexState = getCurrentAdRecipeState().dragIndex
+        val initialDragIndexState = getCurrentAddRecipeState().dragIndex
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDropIndexChange(ingredients[2].ingredientId))
-        val resultDragIndexState = getCurrentAdRecipeState().dragIndex
+        val resultDragIndexState = getCurrentAddRecipeState().dragIndex
 
         verifyMocks()
         assertThat(initialDragIndexState).isEmpty()
@@ -1677,10 +1677,10 @@ class AddRecipeViewModelTest {
     fun `onDraggedIngredientChange - initially not set - reordered ingredient id is set correctly`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialDraggedIngredientIdState = getCurrentAdRecipeState().draggedIngredientId
+        val initialDraggedIngredientIdState = getCurrentAddRecipeState().draggedIngredientId
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDraggedIngredientChange(ingredients[2].ingredientId))
-        val resultDraggedIngredientIdState = getCurrentAdRecipeState().draggedIngredientId
+        val resultDraggedIngredientIdState = getCurrentAddRecipeState().draggedIngredientId
 
         verifyMocks()
         assertThat(initialDraggedIngredientIdState).isEmpty()
@@ -1692,10 +1692,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDraggedIngredientChange(ingredients[3].ingredientId))
-        val initialDraggedIngredientIdState = getCurrentAdRecipeState().draggedIngredientId
+        val initialDraggedIngredientIdState = getCurrentAddRecipeState().draggedIngredientId
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDraggedIngredientChange(ingredients[2].ingredientId))
-        val resultDraggedIngredientIdState = getCurrentAdRecipeState().draggedIngredientId
+        val resultDraggedIngredientIdState = getCurrentAddRecipeState().draggedIngredientId
 
         verifyMocks()
         assertThat(initialDraggedIngredientIdState).isEqualTo(ingredients[3].ingredientId)
@@ -1708,10 +1708,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDropIndexChange(ingredients[2].ingredientId))
-        val initialRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+        val initialRecipeIngredientsState = getCurrentAddRecipeState().recipeIngredients
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDraggedIngredientChange(ingredients[2].ingredientId))
-        val resultRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+        val resultRecipeIngredientsState = getCurrentAddRecipeState().recipeIngredients
 
         verifyMocks()
         assertThat(initialRecipeIngredientsState).isEqualTo(
@@ -1733,10 +1733,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDropIndexChange(ingredients[3].ingredientId))
-        val initialRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+        val initialRecipeIngredientsState = getCurrentAddRecipeState().recipeIngredients
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDraggedIngredientChange(ingredients[2].ingredientId))
-        val resultRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+        val resultRecipeIngredientsState = getCurrentAddRecipeState().recipeIngredients
 
         verifyMocks()
         assertThat(initialRecipeIngredientsState).isEqualTo(
@@ -1761,10 +1761,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDropIndexChange(ingredients[3].ingredientId))
-        val initialRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+        val initialRecipeIngredientsState = getCurrentAddRecipeState().recipeIngredients
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDraggedIngredientChange(ingredients[2].ingredientId))
-        val resultRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+        val resultRecipeIngredientsState = getCurrentAddRecipeState().recipeIngredients
 
         verifyMocks()
         assertThat(initialRecipeIngredientsState).isEqualTo(
@@ -1793,10 +1793,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDropIndexChange(ingredients[1].ingredientId))
-        val initialRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+        val initialRecipeIngredientsState = getCurrentAddRecipeState().recipeIngredients
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDraggedIngredientChange(ingredients[2].ingredientId))
-        val resultRecipeIngredientsState = getCurrentAdRecipeState().recipeIngredients
+        val resultRecipeIngredientsState = getCurrentAddRecipeState().recipeIngredients
 
         verifyMocks()
         assertThat(initialRecipeIngredientsState).isEqualTo(
@@ -1823,10 +1823,10 @@ class AddRecipeViewModelTest {
     fun `onIngredientClicked - initially not selected - selected ingredient`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialSelectedIngredientIdState = getCurrentAdRecipeState().selectedIngredientId
+        val initialSelectedIngredientIdState = getCurrentAddRecipeState().selectedIngredientId
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
-        val resultSelectedIngredientIdState = getCurrentAdRecipeState().selectedIngredientId
+        val resultSelectedIngredientIdState = getCurrentAddRecipeState().selectedIngredientId
 
         verifyMocks()
         assertThat(initialSelectedIngredientIdState).isEqualTo("")
@@ -1838,10 +1838,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[1].ingredientId))
-        val initialSelectedIngredientIdState = getCurrentAdRecipeState().selectedIngredientId
+        val initialSelectedIngredientIdState = getCurrentAddRecipeState().selectedIngredientId
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
-        val resultSelectedIngredientIdState = getCurrentAdRecipeState().selectedIngredientId
+        val resultSelectedIngredientIdState = getCurrentAddRecipeState().selectedIngredientId
 
         verifyMocks()
         assertThat(initialSelectedIngredientIdState).isEqualTo(ingredients[1].ingredientId)
@@ -1852,10 +1852,10 @@ class AddRecipeViewModelTest {
     fun `onIngredientClicked - is quantity bottom sheet opened after click`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialQuantityBottomSheetState = getCurrentAdRecipeState().isQuantityBottomSheetOpened
+        val initialQuantityBottomSheetState = getCurrentAddRecipeState().isQuantityBottomSheetOpened
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
-        val resultQuantityBottomSheetState = getCurrentAdRecipeState().isQuantityBottomSheetOpened
+        val resultQuantityBottomSheetState = getCurrentAddRecipeState().isQuantityBottomSheetOpened
 
         verifyMocks()
         assertThat(initialQuantityBottomSheetState).isFalse()
@@ -1866,10 +1866,10 @@ class AddRecipeViewModelTest {
     fun `selectedWholeQuantity - initially empty`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialWholeQuantityState = getCurrentAdRecipeState().selectedWholeQuantity
+        val initialWholeQuantityState = getCurrentAddRecipeState().selectedWholeQuantity
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("350"))
-        val resultWholeQuantityState = getCurrentAdRecipeState().selectedWholeQuantity
+        val resultWholeQuantityState = getCurrentAddRecipeState().selectedWholeQuantity
 
         verifyMocks()
         assertThat(initialWholeQuantityState).isEqualTo("")
@@ -1881,10 +1881,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("350"))
-        val initialWholeQuantityState = getCurrentAdRecipeState().selectedWholeQuantity
+        val initialWholeQuantityState = getCurrentAddRecipeState().selectedWholeQuantity
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("45"))
-        val resultWholeQuantityState = getCurrentAdRecipeState().selectedWholeQuantity
+        val resultWholeQuantityState = getCurrentAddRecipeState().selectedWholeQuantity
 
         verifyMocks()
         assertThat(initialWholeQuantityState).isEqualTo("350")
@@ -1896,10 +1896,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("350"))
-        val initialWholeQuantityState = getCurrentAdRecipeState().selectedWholeQuantity
+        val initialWholeQuantityState = getCurrentAddRecipeState().selectedWholeQuantity
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("0"))
-        val resultWholeQuantityState = getCurrentAdRecipeState().selectedWholeQuantity
+        val resultWholeQuantityState = getCurrentAddRecipeState().selectedWholeQuantity
 
         verifyMocks()
         assertThat(initialWholeQuantityState).isEqualTo("350")
@@ -1910,10 +1910,10 @@ class AddRecipeViewModelTest {
     fun `selectedDecimalQuantity - initially empty`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialDecimalQuantityState = getCurrentAdRecipeState().selectedDecimalQuantity
+        val initialDecimalQuantityState = getCurrentAddRecipeState().selectedDecimalQuantity
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".7"))
-        val resultDecimalQuantityState = getCurrentAdRecipeState().selectedDecimalQuantity
+        val resultDecimalQuantityState = getCurrentAddRecipeState().selectedDecimalQuantity
 
         verifyMocks()
         assertThat(initialDecimalQuantityState).isEqualTo("")
@@ -1925,10 +1925,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".7"))
-        val initialDecimalQuantityState = getCurrentAdRecipeState().selectedDecimalQuantity
+        val initialDecimalQuantityState = getCurrentAddRecipeState().selectedDecimalQuantity
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".3"))
-        val resultDecimalQuantityState = getCurrentAdRecipeState().selectedDecimalQuantity
+        val resultDecimalQuantityState = getCurrentAddRecipeState().selectedDecimalQuantity
 
         verifyMocks()
         assertThat(initialDecimalQuantityState).isEqualTo(".7")
@@ -1940,10 +1940,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".7"))
-        val initialDecimalQuantityState = getCurrentAdRecipeState().selectedDecimalQuantity
+        val initialDecimalQuantityState = getCurrentAddRecipeState().selectedDecimalQuantity
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".0"))
-        val resultDecimalQuantityState = getCurrentAdRecipeState().selectedDecimalQuantity
+        val resultDecimalQuantityState = getCurrentAddRecipeState().selectedDecimalQuantity
 
         verifyMocks()
         assertThat(initialDecimalQuantityState).isEqualTo(".7")
@@ -1954,10 +1954,10 @@ class AddRecipeViewModelTest {
     fun `selectedTypeQuantity - initially empty`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialTypeQuantityState = getCurrentAdRecipeState().selectedTypeQuantity
+        val initialTypeQuantityState = getCurrentAddRecipeState().selectedTypeQuantity
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("bowl"))
-        val resultTypeQuantityState = getCurrentAdRecipeState().selectedTypeQuantity
+        val resultTypeQuantityState = getCurrentAddRecipeState().selectedTypeQuantity
 
         verifyMocks()
         assertThat(initialTypeQuantityState).isEqualTo("")
@@ -1969,10 +1969,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("bowl"))
-        val initialTypeQuantityState = getCurrentAdRecipeState().selectedTypeQuantity
+        val initialTypeQuantityState = getCurrentAddRecipeState().selectedTypeQuantity
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("handful"))
-        val resultTypeQuantityState = getCurrentAdRecipeState().selectedTypeQuantity
+        val resultTypeQuantityState = getCurrentAddRecipeState().selectedTypeQuantity
 
         verifyMocks()
         assertThat(initialTypeQuantityState).isEqualTo("bowl")
@@ -1984,10 +1984,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("bowl"))
-        val initialTypeQuantityState = getCurrentAdRecipeState().selectedTypeQuantity
+        val initialTypeQuantityState = getCurrentAddRecipeState().selectedTypeQuantity
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("-"))
-        val resultTypeQuantityState = getCurrentAdRecipeState().selectedTypeQuantity
+        val resultTypeQuantityState = getCurrentAddRecipeState().selectedTypeQuantity
 
         verifyMocks()
         assertThat(initialTypeQuantityState).isEqualTo("bowl")
@@ -1999,10 +1999,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
-        val initialQuantityBottomSheetState = getCurrentAdRecipeState().isQuantityBottomSheetOpened
+        val initialQuantityBottomSheetState = getCurrentAddRecipeState().isQuantityBottomSheetOpened
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val resultQuantityBottomSheetState = getCurrentAdRecipeState().isQuantityBottomSheetOpened
+        val resultQuantityBottomSheetState = getCurrentAddRecipeState().isQuantityBottomSheetOpened
 
         verifyMocks()
         assertThat(initialQuantityBottomSheetState).isTrue()
@@ -2014,10 +2014,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
-        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val initialIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val resultIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         verifyMocks()
         assertThat(initialIngredientQuantityState).isEqualTo("")
@@ -2033,10 +2033,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("30"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
-        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val initialIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val resultIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         verifyMocks()
         assertThat(initialIngredientQuantityState).isEqualTo("")
@@ -2051,10 +2051,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("30"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
-        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val initialIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val resultIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         verifyMocks()
         assertThat(initialIngredientQuantityState).isEqualTo("")
@@ -2069,10 +2069,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("30"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
-        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val initialIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val resultIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         verifyMocks()
         assertThat(initialIngredientQuantityState).isEqualTo("")
@@ -2087,10 +2087,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
-        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val initialIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val resultIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         verifyMocks()
         assertThat(initialIngredientQuantityState).isEqualTo("")
@@ -2104,10 +2104,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("30"))
-        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val initialIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val resultIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         verifyMocks()
         assertThat(initialIngredientQuantityState).isEqualTo("")
@@ -2121,10 +2121,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
-        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val initialIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val resultIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         verifyMocks()
         assertThat(initialIngredientQuantityState).isEqualTo("")
@@ -2138,10 +2138,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
-        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val initialIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val resultIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         verifyMocks()
         assertThat(initialIngredientQuantityState).isEqualTo("")
@@ -2158,14 +2158,14 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val initialIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("12"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".0"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("kg"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val resultIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         verifyMocks()
         assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
@@ -2182,13 +2182,13 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val initialIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("12"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".0"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val resultIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         verifyMocks()
         assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
@@ -2205,13 +2205,13 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val initialIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("12"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("kg"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val resultIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         verifyMocks()
         assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
@@ -2228,13 +2228,13 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val initialIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".0"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("kg"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val resultIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         verifyMocks()
         assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
@@ -2251,12 +2251,12 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val initialIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("12"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val resultIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         verifyMocks()
         assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
@@ -2273,12 +2273,12 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val initialIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".0"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val resultIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         verifyMocks()
         assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
@@ -2295,12 +2295,12 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val initialIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("kg"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val resultIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         verifyMocks()
         assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
@@ -2317,14 +2317,14 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val initialIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity(""))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(""))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity(""))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val resultIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         verifyMocks()
         assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
@@ -2337,10 +2337,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
-        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val initialIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerDismissed)
-        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val resultIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         verifyMocks()
         assertThat(initialIngredientQuantityState).isEqualTo("")
@@ -2357,10 +2357,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val initialIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerDismissed)
-        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val resultIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         verifyMocks()
         assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
@@ -2373,14 +2373,14 @@ class AddRecipeViewModelTest {
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
-        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val initialIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("15"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".0"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("kg"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerDismissed)
-        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val resultIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         verifyMocks()
         assertThat(initialIngredientQuantityState).isEqualTo("")
@@ -2397,14 +2397,14 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".5"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("g"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerSaved)
-        val initialIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val initialIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedWholeQuantity("15"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedDecimalQuantity(".0"))
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedTypeQuantity("kg"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerDismissed)
-        val resultIngredientQuantityState = getCurrentAdRecipeState().recipeIngredients[ingredients[2]]
+        val resultIngredientQuantityState = getCurrentAddRecipeState().recipeIngredients[ingredients[2]]
 
         verifyMocks()
         assertThat(initialIngredientQuantityState).isEqualTo("30.5 g")
@@ -2417,10 +2417,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.SelectedIngredient(ingredients[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnIngredientClicked(ingredients[2].ingredientId))
-        val initialQuantityBottomSheetState = getCurrentAdRecipeState().isQuantityBottomSheetOpened
+        val initialQuantityBottomSheetState = getCurrentAddRecipeState().isQuantityBottomSheetOpened
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnQuantityPickerDismissed)
-        val resultIngredientQuantityState = getCurrentAdRecipeState().isQuantityBottomSheetOpened
+        val resultIngredientQuantityState = getCurrentAddRecipeState().isQuantityBottomSheetOpened
 
         verifyMocks()
         assertThat(initialQuantityBottomSheetState).isTrue()
@@ -2431,10 +2431,10 @@ class AddRecipeViewModelTest {
     fun `onCategoriesButtonClicked - categories dialog is state is set correctly`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialCategoriesDialogState = getCurrentAdRecipeState().isCategoriesDialogActivated
+        val initialCategoriesDialogState = getCurrentAddRecipeState().isCategoriesDialogActivated
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCategoriesButtonClicked)
-        val resultCategoriesDialogState = getCurrentAdRecipeState().isCategoriesDialogActivated
+        val resultCategoriesDialogState = getCurrentAddRecipeState().isCategoriesDialogActivated
 
         verifyMocks()
         assertThat(initialCategoriesDialogState).isFalse()
@@ -2445,10 +2445,10 @@ class AddRecipeViewModelTest {
     fun `onCheckBoxToggled - toggled one category - categories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
@@ -2468,10 +2468,10 @@ class AddRecipeViewModelTest {
     fun `onCheckBoxToggled - toggled one category - lastSavedCategories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
@@ -2482,11 +2482,11 @@ class AddRecipeViewModelTest {
     fun `onCheckBoxToggled - toggled 2 out of 6 categories - categories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
@@ -2506,11 +2506,11 @@ class AddRecipeViewModelTest {
     fun `onCheckBoxToggled - toggled 2 out of 6 categories - lastSavedCategories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
@@ -2521,14 +2521,14 @@ class AddRecipeViewModelTest {
     fun `onCheckBoxToggled - toggled all categories - categories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
@@ -2539,7 +2539,7 @@ class AddRecipeViewModelTest {
     fun `onCheckBoxToggled - toggled all categories - lastSavedCategories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
@@ -2547,7 +2547,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
@@ -2565,10 +2565,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { true })
@@ -2595,10 +2595,10 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { true })
@@ -2616,11 +2616,11 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { true })
@@ -2647,11 +2647,11 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { true })
@@ -2669,7 +2669,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
@@ -2677,7 +2677,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { true })
@@ -2695,7 +2695,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
@@ -2703,7 +2703,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { true })
@@ -2714,11 +2714,11 @@ class AddRecipeViewModelTest {
     fun `onDialogSave - initially empty - selected one - categories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
@@ -2738,11 +2738,11 @@ class AddRecipeViewModelTest {
     fun `onDialogSave - initially empty - selected one - lastSavedCategories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
@@ -2762,13 +2762,13 @@ class AddRecipeViewModelTest {
     fun `onDialogSave - initially empty - selected three - categories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
@@ -2788,13 +2788,13 @@ class AddRecipeViewModelTest {
     fun `onDialogSave - initially empty - selected three - lastSavedCategories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
@@ -2814,7 +2814,7 @@ class AddRecipeViewModelTest {
     fun `onDialogSave - initially empty - selected all - categories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
@@ -2823,7 +2823,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
@@ -2834,7 +2834,7 @@ class AddRecipeViewModelTest {
     fun `onDialogSave - initially empty - selected all - lastSavedCategories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
@@ -2843,7 +2843,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
@@ -2858,11 +2858,11 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(
@@ -2895,11 +2895,11 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(
@@ -2932,12 +2932,12 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(
@@ -2970,12 +2970,12 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(
@@ -3008,13 +3008,13 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(
@@ -3047,13 +3047,13 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(
@@ -3082,12 +3082,12 @@ class AddRecipeViewModelTest {
     fun `onDialogSave - initially empty - selected and unselected one - categories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3098,12 +3098,12 @@ class AddRecipeViewModelTest {
     fun `onDialogSave - initially empty - selected and unselected one - lastSavedCategories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3114,7 +3114,7 @@ class AddRecipeViewModelTest {
     fun `onDialogSave - initially empty - selected and unselected three - categories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
@@ -3123,7 +3123,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3134,7 +3134,7 @@ class AddRecipeViewModelTest {
     fun `onDialogSave - initially empty - selected and unselected three - lastSavedCategories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
@@ -3143,7 +3143,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3154,14 +3154,14 @@ class AddRecipeViewModelTest {
     fun `onDialogSave - initially empty - selected two unselect one - categories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3181,13 +3181,13 @@ class AddRecipeViewModelTest {
     fun `onDialogSave - initially empty - selected two unselect one - lastSavedCategories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3207,7 +3207,7 @@ class AddRecipeViewModelTest {
     fun `onDialogSave - initially empty - selected three unselect two - categories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
@@ -3215,7 +3215,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3235,7 +3235,7 @@ class AddRecipeViewModelTest {
     fun `onDialogSave - initially empty - selected three unselected two - lastSavedCategories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
@@ -3243,7 +3243,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3267,11 +3267,11 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(
@@ -3304,11 +3304,11 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(
@@ -3341,12 +3341,12 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(
@@ -3379,12 +3379,12 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(
@@ -3417,13 +3417,13 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(
@@ -3447,13 +3447,13 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(
@@ -3480,7 +3480,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
@@ -3489,7 +3489,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { true })
@@ -3507,7 +3507,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
@@ -3516,7 +3516,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { true })
@@ -3528,10 +3528,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCategoriesButtonClicked)
-        val initialCategoriesDialogActivatedState = getCurrentAdRecipeState().isCategoriesDialogActivated
+        val initialCategoriesDialogActivatedState = getCurrentAddRecipeState().isCategoriesDialogActivated
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val resultCategoriesDialogActivatedState = getCurrentAdRecipeState().isCategoriesDialogActivated
+        val resultCategoriesDialogActivatedState = getCurrentAddRecipeState().isCategoriesDialogActivated
 
         verifyMocks()
         assertThat(initialCategoriesDialogActivatedState).isTrue()
@@ -3542,11 +3542,11 @@ class AddRecipeViewModelTest {
     fun `onDialogDismiss - initially empty - selected one - categories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3557,11 +3557,11 @@ class AddRecipeViewModelTest {
     fun `onDialogDismiss - initially empty - selected one - lastSavedCategories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3572,13 +3572,13 @@ class AddRecipeViewModelTest {
     fun `onDialogDismiss - initially empty - selected three - categories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3589,13 +3589,13 @@ class AddRecipeViewModelTest {
     fun `onDialogDismiss - initially empty - selected three - lastSavedCategories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3606,7 +3606,7 @@ class AddRecipeViewModelTest {
     fun `onDialogDismiss - initially empty - selected all - categories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
@@ -3615,7 +3615,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3626,7 +3626,7 @@ class AddRecipeViewModelTest {
     fun `onDialogDismiss - initially empty - selected all - lastSavedCategories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
@@ -3635,7 +3635,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3659,11 +3659,11 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(recipeCategories)
@@ -3687,11 +3687,11 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(recipeCategories)
@@ -3715,12 +3715,12 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(recipeCategories)
@@ -3743,12 +3743,12 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(recipeCategories)
@@ -3772,13 +3772,13 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(recipeCategories)
@@ -3801,13 +3801,13 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(recipeCategories)
@@ -3818,12 +3818,12 @@ class AddRecipeViewModelTest {
     fun `onDialogDismiss - initially empty - selected and unselected one - categories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3834,12 +3834,12 @@ class AddRecipeViewModelTest {
     fun `onDialogDismiss - initially empty - selected and unselected one - lastSavedCategories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3850,7 +3850,7 @@ class AddRecipeViewModelTest {
     fun `onDialogDismiss - initially empty - selected and unselected three - categories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
@@ -3859,7 +3859,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3870,7 +3870,7 @@ class AddRecipeViewModelTest {
     fun `onDialogDismiss - initially empty - selected and unselected three - lastSavedCategories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
@@ -3879,7 +3879,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3890,13 +3890,13 @@ class AddRecipeViewModelTest {
     fun `onDialogDismiss - initially empty - selected two unselect one - categories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3907,13 +3907,13 @@ class AddRecipeViewModelTest {
     fun `onDialogDismiss - initially empty - selected two unselect one - lastSavedCategories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3924,7 +3924,7 @@ class AddRecipeViewModelTest {
     fun `onDialogDismiss - initially empty - selected three unselect two - categories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
@@ -3932,7 +3932,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3943,7 +3943,7 @@ class AddRecipeViewModelTest {
     fun `onDialogDismiss - initially empty - selected three unselected two - lastSavedCategories`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
@@ -3951,7 +3951,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { false })
@@ -3975,11 +3975,11 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(recipeCategories)
@@ -4003,11 +4003,11 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(recipeCategories)
@@ -4031,12 +4031,12 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(recipeCategories)
@@ -4060,12 +4060,12 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(recipeCategories)
@@ -4089,13 +4089,13 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(recipeCategories)
@@ -4119,13 +4119,13 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[5]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(recipeCategories)
@@ -4143,7 +4143,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialCategoriesState = getCurrentAdRecipeState().categories
+        val initialCategoriesState = getCurrentAddRecipeState().categories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
@@ -4152,7 +4152,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultCategoriesState = getCurrentAdRecipeState().categories
+        val resultCategoriesState = getCurrentAddRecipeState().categories
 
         verifyMocks()
         assertThat(initialCategoriesState).isEqualTo(categories.associateWith { true })
@@ -4170,7 +4170,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[1]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
-        val initialLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val initialLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[2]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[4]))
@@ -4179,7 +4179,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[0]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCheckBoxToggled(categories[3]))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultLastSavedCategoriesState = getCurrentAdRecipeState().lastSavedCategories
+        val resultLastSavedCategoriesState = getCurrentAddRecipeState().lastSavedCategories
 
         verifyMocks()
         assertThat(initialLastSavedCategoriesState).isEqualTo(categories.associateWith { true })
@@ -4191,10 +4191,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.OnCategoriesButtonClicked)
-        val initialCategoriesDialogActivatedState = getCurrentAdRecipeState().isCategoriesDialogActivated
+        val initialCategoriesDialogActivatedState = getCurrentAddRecipeState().isCategoriesDialogActivated
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogDismiss)
-        val resultCategoriesDialogActivatedState = getCurrentAdRecipeState().isCategoriesDialogActivated
+        val resultCategoriesDialogActivatedState = getCurrentAddRecipeState().isCategoriesDialogActivated
 
         verifyMocks()
         assertThat(initialCategoriesDialogActivatedState).isTrue()
@@ -4205,10 +4205,10 @@ class AddRecipeViewModelTest {
     fun `onAddImage - image bottom sheet is opened`() {
         setMocks()
         addRecipeViewModel = setViewModel()
-        val initialImageBottomSheetState = getCurrentAdRecipeState().isImageBottomSheetOpened
+        val initialImageBottomSheetState = getCurrentAddRecipeState().isImageBottomSheetOpened
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddImage)
-        val resultImageBottomSheetState = getCurrentAdRecipeState().isImageBottomSheetOpened
+        val resultImageBottomSheetState = getCurrentAddRecipeState().isImageBottomSheetOpened
 
         verifyMocks()
         assertThat(initialImageBottomSheetState).isFalse()
@@ -4220,10 +4220,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddImage)
-        val initialImageBottomSheetState = getCurrentAdRecipeState().isImageBottomSheetOpened
+        val initialImageBottomSheetState = getCurrentAddRecipeState().isImageBottomSheetOpened
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnTakePhoto)
-        val resultImageBottomSheetState = getCurrentAdRecipeState().isImageBottomSheetOpened
+        val resultImageBottomSheetState = getCurrentAddRecipeState().isImageBottomSheetOpened
 
         verifyMocks()
         assertThat(initialImageBottomSheetState).isTrue()
@@ -4235,10 +4235,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddImage)
-        val initialImageBottomSheetState = getCurrentAdRecipeState().isImageBottomSheetOpened
+        val initialImageBottomSheetState = getCurrentAddRecipeState().isImageBottomSheetOpened
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnSelectImage)
-        val resultImageBottomSheetState = getCurrentAdRecipeState().isImageBottomSheetOpened
+        val resultImageBottomSheetState = getCurrentAddRecipeState().isImageBottomSheetOpened
 
         verifyMocks()
         assertThat(initialImageBottomSheetState).isTrue()
@@ -4250,10 +4250,10 @@ class AddRecipeViewModelTest {
         setMocks()
         addRecipeViewModel = setViewModel()
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddImage)
-        val initialImageBottomSheetState = getCurrentAdRecipeState().isImageBottomSheetOpened
+        val initialImageBottomSheetState = getCurrentAddRecipeState().isImageBottomSheetOpened
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddImageDismiss)
-        val resultImageBottomSheetState = getCurrentAdRecipeState().isImageBottomSheetOpened
+        val resultImageBottomSheetState = getCurrentAddRecipeState().isImageBottomSheetOpened
 
         verifyMocks()
         assertThat(initialImageBottomSheetState).isTrue()
@@ -4269,7 +4269,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("Recipe Name"))
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("Recipe description"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddRecipe)
-        val isLoading = getCurrentAdRecipeState().isLoading
+        val isLoading = getCurrentAddRecipeState().isLoading
 
         coVerifySequence {
             getIngredientsUseCase()
@@ -4290,7 +4290,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("Recipe Name"))
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("Recipe description"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddRecipe)
-        val isLoading = getCurrentAdRecipeState().isLoading
+        val isLoading = getCurrentAddRecipeState().isLoading
 
         coVerifySequence {
             getIngredientsUseCase()
@@ -4311,7 +4311,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredTitle("Recipe Name"))
         addRecipeViewModel.onEvent(AddRecipeEvent.EnteredDescription("Recipe description"))
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddRecipe)
-        val isLoading = getCurrentAdRecipeState().isLoading
+        val isLoading = getCurrentAddRecipeState().isLoading
 
         coVerifySequence {
             getIngredientsUseCase()
@@ -4355,7 +4355,7 @@ class AddRecipeViewModelTest {
         addRecipeViewModel.onEvent(AddRecipeEvent.OnDialogSave)
 
         addRecipeViewModel.onEvent(AddRecipeEvent.OnAddRecipe)
-        val isLoading = getCurrentAdRecipeState().isLoading
+        val isLoading = getCurrentAddRecipeState().isLoading
 
         coVerifySequence {
             getIngredientsUseCase()

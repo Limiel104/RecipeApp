@@ -31,13 +31,15 @@ class ShoppingListMapperTest {
         shoppingList = ShoppingList(
             shoppingListId = "shoppingListId",
             name = "Shopping List Name",
-            createdBy = "userId"
+            createdBy = "userId",
+            date = 1234324354
         )
 
         shoppingListEntity = ShoppingListEntity(
             shoppingListId = "shoppingListId",
             name = "Shopping List Name",
-            createdBy = "userId"
+            createdBy = "userId",
+            date = 1234324354
         )
 
         shoppingListDto = ShoppingListDto(
@@ -47,21 +49,28 @@ class ShoppingListMapperTest {
             ingredientMap = mapOf(
                 "ingredientId" to "3 g",
                 "ingredient2Id" to "5 g"
-            )
+            ),
+            checkedIngredientMap = mapOf(
+                "ingredientId" to false,
+                "ingredient2Id" to true
+            ),
+            date = 1234324354
         )
 
         shoppingListIngredientEntity = ShoppingListIngredientEntity(
             shoppingListIngredientId = 0,
             ingredientId = "ingredientId",
             shoppingListId = "shoppingListId",
-            quantity = "3 g"
+            quantity = "3 g",
+            isChecked = false
         )
 
         shoppingListIngredientEntity2 = ShoppingListIngredientEntity(
             shoppingListIngredientId = 0,
             ingredientId = "ingredient2Id",
             shoppingListId = "shoppingListId",
-            quantity = "5 g"
+            quantity = "5 g",
+            isChecked = true
         )
 
         ingredientEntity = IngredientEntity(
@@ -104,7 +113,12 @@ class ShoppingListMapperTest {
             ingredients = mapOf(
                 ingredient to "3 g",
                 ingredient2 to "5 g"
-            )
+            ),
+            checkedIngredients = mapOf(
+                ingredient to false,
+                ingredient2 to true
+            ),
+            date = 1234324354
         )
     }
 
@@ -124,7 +138,7 @@ class ShoppingListMapperTest {
 
     @Test
     fun `get list of ShoppingListIngredientEntity from ShoppingListDto`() {
-        val mappedList = shoppingListDto.getShoppingListIngredientsList()
+        val mappedList = shoppingListDto.getShoppingListIngredientsEntityList()
 
         assertThat(mappedList).containsExactlyElementsIn(listOf(shoppingListIngredientEntity, shoppingListIngredientEntity2))
     }
