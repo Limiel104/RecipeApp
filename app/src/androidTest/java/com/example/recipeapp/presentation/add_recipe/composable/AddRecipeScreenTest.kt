@@ -685,7 +685,7 @@ class AddRecipeScreenTest {
         setScreen()
 
         composeRule.onNodeWithTag("Autocomplete DDM").isNotDisplayed()
-        composeRule.onNodeWithTag("Add recipe type ingredient name EDDM").performClick()
+        composeRule.onNodeWithTag("Add ingredient name EDDM").performClick()
         composeRule.onNodeWithTag("Autocomplete DDM").isDisplayed()
     }
 
@@ -693,7 +693,7 @@ class AddRecipeScreenTest {
     fun autoComplete_isClosedAfterClickOnTF() {
         setScreen()
 
-        composeRule.onNodeWithTag("Add recipe type ingredient name EDDM").performClick()
+        composeRule.onNodeWithTag("Add ingredient name EDDM").performClick()
         composeRule.onNodeWithTag("Autocomplete DDM").isDisplayed()
         composeRule.onNodeWithTag("Autocomplete TF").performClick()
         composeRule.onNodeWithTag("Autocomplete DDM").isNotDisplayed()
@@ -703,7 +703,7 @@ class AddRecipeScreenTest {
     fun autoComplete_isClosedAfterClosingKeyboard() {
         setScreen()
 
-        composeRule.onNodeWithTag("Add recipe type ingredient name EDDM").performClick()
+        composeRule.onNodeWithTag("Add ingredient name EDDM").performClick()
         composeRule.onNodeWithTag("Autocomplete DDM").isDisplayed()
         Espresso.closeSoftKeyboard()
         composeRule.onNodeWithTag("Autocomplete DDM").isNotDisplayed()
@@ -713,7 +713,7 @@ class AddRecipeScreenTest {
     fun autoComplete_isClosedAfterClickOnOutsideElement() {
         setScreen()
 
-        composeRule.onNodeWithTag("Add recipe type ingredient name EDDM").performClick()
+        composeRule.onNodeWithTag("Add ingredient name EDDM").performClick()
         composeRule.onNodeWithTag("Autocomplete DDM").isDisplayed()
         composeRule.onNodeWithTag("Description").performClick()
         composeRule.onNodeWithTag("Autocomplete DDM").isNotDisplayed()

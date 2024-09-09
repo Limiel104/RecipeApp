@@ -7,6 +7,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertHasClickAction
@@ -17,6 +18,8 @@ import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.assertIsToggleable
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.isDisplayed
+import androidx.compose.ui.test.isNotDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
@@ -518,7 +521,7 @@ class ShoppingListScreenTest {
             ShoppingListState(
                 isOtherShoppingListsMenuOpened = true,
                 userShoppingLists = listOf(shoppingList,shoppingList2,shoppingList3)
-            ))
+        ))
 
         composeRule.onNodeWithTag("Other shopping lists menu").assertIsDisplayed()
 
@@ -530,6 +533,115 @@ class ShoppingListScreenTest {
 
         composeRule.onNode(hasText(shoppingList3.name)).assertIsDisplayed()
         composeRule.onNode(hasText(shoppingList3.name)).assertHasClickAction()
+    }
+
+    @Test
+    fun renameDialog_isDisplayedCorrectly() {
+        setScreenState(
+            ShoppingListState(
+                isRenameShoppingListDialogOpened = true,
+                shoppingListName = "Shopping List name"
+        ))
+
+        composeRule.onNode(hasText("Rename list")).isDisplayed()
+        composeRule.onNodeWithTag("Rename shopping list TF").isDisplayed()
+
+        composeRule.onNode(hasText("Dismiss")).isDisplayed()
+        composeRule.onNode(hasText("Dismiss")).assertHasClickAction()
+
+        composeRule.onNode(hasText("Confirm")).isDisplayed()
+        composeRule.onNode(hasText("Confirm")).assertHasClickAction()
+    }
+
+    @Test
+    fun renameDialog_shoppingListNameIsDisplayedCorrectly() {
+        setScreenState(
+            ShoppingListState(
+                isRenameShoppingListDialogOpened = true,
+                shoppingListName = "Shopping List name"
+        ))
+
+        val initialShoppingListName = composeRule.onNodeWithTag("Rename shopping list TF")
+            .fetchSemanticsNode()
+            .config
+            .getOrNull(SemanticsProperties.EditableText)
+            .toString()
+
+        Truth.assertThat(initialShoppingListName).isEqualTo("Shopping List name")
+    }
+
+    @Test
+    fun addIngredientDialog_isDisplayedCorrectly_noIngredientsSelected() {
+        setScreenState(
+            ShoppingListState(
+                isAddIngredientsDialogOpened = true,
+                allIngredients = allIngredients
+        ))
+
+        composeRule.onNode(hasText("Select Ingredients")).isDisplayed()
+        composeRule.onNodeWithContentDescription("Clear button").isDisplayed()
+        composeRule.onNodeWithContentDescription("Save button").isDisplayed()
+        composeRule.onNodeWithTag("Add ingredient name EDDM").isDisplayed()
+        composeRule.onNode(hasText("Selected ingredients list")).isNotDisplayed()
+    }
+
+    @Test
+    fun addIngredientDialog_isDisplayedCorrectly_ingredientsSelected() {
+        setScreenState(
+            ShoppingListState(
+                isAddIngredientsDialogOpened = true,
+                allIngredients = allIngredients,
+                selectedIngredients = shoppingListIngredients
+        ))
+
+        composeRule.onNode(hasText("Selected ingredients list")).isDisplayed()
+        var numberOfIngredients = 0
+        val children = composeRule.onNodeWithTag("Selected ingredients list")
+            .fetchSemanticsNode()
+            .children
+
+        for(child in children) {
+            val testTag = child.config.getOrElse(SemanticsProperties.TestTag) { "" }
+            if(testTag.contains("Ingredient Item"))
+                numberOfIngredients += 1
+        }
+
+        Truth.assertThat(numberOfIngredients).isEqualTo(10)
+    }
+
+    @Test
+    fun addIngredientDialog_ingredientsImageIsDisplayedCorrectly() {
+        setScreenState(
+            ShoppingListState(
+                isAddIngredientsDialogOpened = true,
+                allIngredients = allIngredients,
+                selectedIngredients = shoppingListIngredients
+        ))
+
+        var numberOfImages = 0
+        val children = composeRule.onNodeWithTag("Selected ingredients list")
+            .fetchSemanticsNode()
+            .children
+
+        for(child in children) {
+            val contentDescription = child.config.getOrElse(SemanticsProperties.ContentDescription) { emptyList() }
+            if(contentDescription == listOf("IMAGE"))
+                numberOfImages += 1
+        }
+
+        Truth.assertThat(numberOfImages).isEqualTo(10)
+    }
+
+    @Test
+    fun addIngredientDialog_ingredientsNameIsDisplayedCorrectly() {
+        setScreenState(
+            ShoppingListState(
+                isAddIngredientsDialogOpened = true,
+                allIngredients = allIngredients,
+                selectedIngredients = shoppingListIngredientsWithOneItem
+        ))
+
+        composeRule.onNode(hasText("Ingredient2 Name")).assertIsDisplayed()
     }
 
     private fun menuButtonIsDisplayed() = composeRule

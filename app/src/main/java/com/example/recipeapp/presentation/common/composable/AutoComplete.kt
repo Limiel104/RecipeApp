@@ -42,7 +42,7 @@ fun AutoComplete(
         onExpandedChange = { onExpandedChange() },
         modifier = modifier
             .padding(bottom = 24.dp)
-            .testTag("Add recipe type ingredient name EDDM")
+            .testTag("Add ingredient name EDDM")
     ) {
         OutlinedTextField(
             value = ingredient,

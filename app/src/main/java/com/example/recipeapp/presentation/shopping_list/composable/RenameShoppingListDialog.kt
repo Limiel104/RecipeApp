@@ -70,7 +70,7 @@ fun RenameShoppingListDialog(
                     singleLine = true,
                     modifier = modifier
                         .fillMaxWidth()
-                        .testTag("Add recipe description TF")
+                        .testTag("Rename shopping list TF")
                 )
 
                 Row(

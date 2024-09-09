@@ -3,7 +3,6 @@
 package com.example.recipeapp.presentation.shopping_list.composable
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -103,8 +102,6 @@ fun ShoppingListCategoryItem(
                                 }
                             },
                             content = {
-                                Log.i("TAG","Swipe $ingredient")
-
                                 IngredientItem(
                                     ingredient = ingredient.key,
                                     quantity = ingredient.value,
