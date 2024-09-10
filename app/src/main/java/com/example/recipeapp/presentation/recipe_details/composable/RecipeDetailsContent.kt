@@ -27,7 +27,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.recipeapp.domain.model.RecipeWithIngredients
 import com.example.recipeapp.presentation.common.composable.ImageItem
+import com.example.recipeapp.presentation.common.getIngredientsWithQuantity
+import com.example.recipeapp.presentation.recipe_details.RecipeDetailsState
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,9 +38,8 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 fun RecipeDetailsContent(
     modifier: Modifier = Modifier,
     scrollState: ScrollState,
-    secondaryTabState: Int,
-    tabTitleList: List<String>,
-    onTabChanged: () -> Unit
+    uiState: RecipeDetailsState,
+    onTabChanged: (Int) -> Unit
 ) {
     Scaffold(
         modifier = modifier
@@ -72,7 +74,7 @@ fun RecipeDetailsContent(
                 .testTag("Recipe Details Content")
         ) {
             Text(
-                text = "Recipe name that is very long long long long",
+                text = uiState.recipe.name,
                 style = MaterialTheme.typography.headlineMedium,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
@@ -86,15 +88,15 @@ fun RecipeDetailsContent(
                 modifier = modifier
                     .fillMaxWidth()
                     .height(180.dp),
-                imageUrl = ""
+                imageUrl = uiState.recipe.imageUrl
             )
 
             Column() {
-                SecondaryTabRow(selectedTabIndex = secondaryTabState) {
-                    tabTitleList.forEachIndexed { index, title ->
+                SecondaryTabRow(selectedTabIndex = uiState.secondaryTabState) {
+                    uiState.tabTitleList.forEachIndexed { index, title ->
                         Tab(
-                            selected = secondaryTabState == index,
-                            onClick = { onTabChanged() },
+                            selected = uiState.secondaryTabState == index,
+                            onClick = { onTabChanged(index) },
                             modifier = Modifier.testTag("$title Tab Title"),
                             text = {
                                 Text(
@@ -108,11 +110,14 @@ fun RecipeDetailsContent(
                 }
             }
 
-            if (secondaryTabState == 0) {
-                IngredientsTab()
+            if (uiState.secondaryTabState == 0) {
+                IngredientsTab(
+                    servings = uiState.recipe.servings,
+                    ingredients = uiState.recipe.ingredients
+                )
             }
             else {
-                DescriptionTab()
+                DescriptionTab(description = uiState.recipe.description)
             }
         }
     }
@@ -130,9 +135,24 @@ fun RecipeDetailsContent(
 fun RecipeDetailsContentPreviewIngredientsTab() {
     RecipeAppTheme {
         RecipeDetailsContent(
-            secondaryTabState = 0,
+            uiState = RecipeDetailsState(
+                recipe = RecipeWithIngredients(
+                    recipeId = "",
+                    name = "Recipe name long long long long ",
+                    ingredients = getIngredientsWithQuantity(),
+                    prepTime = "15 min",
+                    servings = 2,
+                    description = "This is recipe description",
+                    isVegetarian = false,
+                    isVegan = false,
+                    imageUrl = "",
+                    createdBy = "userUID",
+                    categories = listOf("Dinner","Chicken"),
+                    date = 1234567890
+                ),
+                secondaryTabState = 0
+            ),
             scrollState = rememberScrollState(),
-            tabTitleList = listOf("Ingredients","Description"),
             onTabChanged = {}
         )
     }
@@ -150,9 +170,24 @@ fun RecipeDetailsContentPreviewIngredientsTab() {
 fun RecipeDetailsContentPreviewDescriptionTab() {
     RecipeAppTheme {
         RecipeDetailsContent(
-            secondaryTabState = 1,
+            uiState = RecipeDetailsState(
+                recipe = RecipeWithIngredients(
+                    recipeId = "",
+                    name = "Recipe name long long long long ",
+                    ingredients = getIngredientsWithQuantity(),
+                    prepTime = "15 min",
+                    servings = 2,
+                    description = "This is recipe description",
+                    isVegetarian = false,
+                    isVegan = false,
+                    imageUrl = "",
+                    createdBy = "userUID",
+                    categories = listOf("Dinner","Chicken"),
+                    date = 1234567890
+                ),
+                secondaryTabState = 1
+            ),
             scrollState = rememberScrollState(),
-            tabTitleList = listOf("Ingredients","Description"),
             onTabChanged = {}
         )
     }

@@ -2,24 +2,21 @@ package com.example.recipeapp.presentation.recipe_details.composable
 
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.recipeapp.presentation.recipe_details.RecipeDetailsEvent
+import com.example.recipeapp.presentation.recipe_details.RecipeDetailsViewModel
 
 @Composable
 fun RecipeDetailsScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: RecipeDetailsViewModel = hiltViewModel()
 ) {
-    var secondaryTabState by remember { mutableIntStateOf(0) }
     val scrollState = rememberScrollState()
-    val tabTitleList = listOf("Ingredients", "Description")
 
     RecipeDetailsContent(
-        secondaryTabState = secondaryTabState,
         scrollState = scrollState,
-        tabTitleList = tabTitleList,
-        onTabChanged = { secondaryTabState = if(secondaryTabState == 0) 1 else 0 }
+        uiState = viewModel.recipeDetailsState.value,
+        onTabChanged = { viewModel.onEvent(RecipeDetailsEvent.OnTabChanged(it)) }
     )
 }

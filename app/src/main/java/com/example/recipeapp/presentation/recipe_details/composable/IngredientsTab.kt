@@ -23,11 +23,17 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.recipeapp.domain.model.Ingredient
+import com.example.recipeapp.domain.model.Quantity
+import com.example.recipeapp.presentation.common.composable.IngredientItem
+import com.example.recipeapp.presentation.common.getIngredientsWithQuantity
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
 fun IngredientsTab(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    servings: Int,
+    ingredients: Map<Ingredient, Quantity>
 ) {
     Column() {
         Row(
@@ -46,7 +52,7 @@ fun IngredientsTab(
             }
 
             Text(
-                text = "1234 Servings",
+                text = servings.toString(),
                 style = MaterialTheme.typography.bodySmall,
                 fontWeight = FontWeight.Light,
                 modifier = modifier
@@ -68,12 +74,17 @@ fun IngredientsTab(
                 .padding(bottom = 20.dp)
                 .padding(horizontal = 16.dp)
         ) {
-            for (i in 1..7) {
-//                RecipeIngredientItem()
+            ingredients.onEach { ingredient ->
+                IngredientItem(
+                    ingredient = ingredient.key,
+                    quantity = ingredient.value,
+                    isClickable = false,
+                    onCheckedChange = {},
+                    onClick = {}
+                )
 
-                if (i != 7) {
+                if(ingredients.keys.indexOf(ingredient.key) != ingredients.keys.toList().lastIndex)
                     HorizontalDivider()
-                }
             }
         }
     }
@@ -91,7 +102,10 @@ fun IngredientsTab(
 fun IngredientsTabPreview() {
     RecipeAppTheme {
         Surface {
-            IngredientsTab()
+            IngredientsTab(
+                servings = 4,
+                ingredients = getIngredientsWithQuantity()
+            )
         }
     }
 }

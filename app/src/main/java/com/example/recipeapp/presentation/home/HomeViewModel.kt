@@ -39,7 +39,7 @@ class HomeViewModel @Inject constructor(
         getCategories()
         getRecipes(true)
         getIngredients()
-        getShoppingLists(false)
+        getShoppingLists(true)
     }
 
     fun onEvent(event: HomeEvent) {
@@ -169,8 +169,6 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-
-
 
     private fun getShoppingLists(getShoppingListsFromRemote: Boolean) {
         viewModelScope.launch {
