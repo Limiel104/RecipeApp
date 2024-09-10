@@ -3,6 +3,7 @@ package com.example.recipeapp.presentation.recipe_details
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipeapp.domain.model.Resource
@@ -13,6 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipeDetailsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val getRecipeUseCase: GetRecipeUseCase
 ): ViewModel() {
 
@@ -21,7 +23,13 @@ class RecipeDetailsViewModel @Inject constructor(
 
     init {
         Log.i("TAG", "RecipeDetails ViewModel")
-        viewModelScope.launch { getRecipe("") }
+
+        savedStateHandle.get<String>("recipeId")?.let { recipeId ->
+            _recipeDetailsState.value = recipeDetailsState.value.copy(
+                recipeId = recipeId
+            )
+        }
+        viewModelScope.launch { getRecipe(_recipeDetailsState.value.recipeId) }
     }
 
     fun onEvent(event: RecipeDetailsEvent) {

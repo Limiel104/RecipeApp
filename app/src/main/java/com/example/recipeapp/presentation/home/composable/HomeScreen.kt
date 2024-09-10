@@ -34,7 +34,7 @@ fun HomeScreen(
                 Log.i("TAG", "HOME_SCREEN_LE")
                 when(event) {
                     is HomeUiEvent.NavigateToRecipeDetails -> {
-                        navController.navigate(Screen.RecipeDetailsScreen.route)
+                        navController.navigate(Screen.RecipeDetailsScreen.route + "recipeId=" + event.recipeId)
                     }
                 }
             }

@@ -43,7 +43,14 @@ fun NavigationGraph(
         }
 
         composable(
-            route = Screen.RecipeDetailsScreen.route
+            route = Screen.RecipeDetailsScreen.route + "recipeId={recipeId}",
+            arguments = listOf(
+                navArgument(
+                    name = "recipeId"
+                ) {
+                    type = NavType.StringType
+                }
+            )
         ) {
             RecipeDetailsScreen(navController = navController)
         }
