@@ -33,39 +33,51 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 fun IngredientsTab(
     modifier: Modifier = Modifier,
     servings: Int,
-    ingredients: Map<Ingredient, Quantity>
+    ingredients: Map<Ingredient, Quantity>,
+    onLessServings: () -> Unit,
+    onMoreServings: () -> Unit
 ) {
     Column() {
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .testTag("Ingredients Tab Content"),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = {}) {
-                Icon(
-                    imageVector = Icons.Default.HorizontalRule,
-                    contentDescription = "Less button",
-                    modifier = modifier.border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(4.dp))
-                )
-            }
-
-            Text(
-                text = servings.toString(),
-                style = MaterialTheme.typography.bodySmall,
-                fontWeight = FontWeight.Light,
+        if(ingredients.isNotEmpty()) {
+            Row(
                 modifier = modifier
-                    .padding(start = 16.dp)
-                    .padding(end = 16.dp)
-            )
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .testTag("Ingredients Tab Content"),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = { if(servings > 1) onLessServings() }) {
+                    Icon(
+                        imageVector = Icons.Default.HorizontalRule,
+                        contentDescription = "Less button",
+                        modifier = modifier.border(
+                            1.dp,
+                            MaterialTheme.colorScheme.secondary,
+                            RoundedCornerShape(4.dp)
+                        )
+                    )
+                }
 
-            IconButton(onClick = {}) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "More button",
-                    modifier = modifier.border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(4.dp))
+                Text(
+                    text = servings.toString(),
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Light,
+                    modifier = modifier
+                        .padding(start = 16.dp)
+                        .padding(end = 16.dp)
                 )
+
+                IconButton(onClick = { if(servings < 20) onMoreServings() }) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "More button",
+                        modifier = modifier.border(
+                            1.dp,
+                            MaterialTheme.colorScheme.secondary,
+                            RoundedCornerShape(4.dp)
+                        )
+                    )
+                }
             }
         }
 
@@ -104,7 +116,9 @@ fun IngredientsTabPreview() {
         Surface {
             IngredientsTab(
                 servings = 4,
-                ingredients = getIngredientsWithQuantity()
+                ingredients = getIngredientsWithQuantity(),
+                onLessServings = {},
+                onMoreServings = {}
             )
         }
     }

@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipeapp.domain.model.Ingredient
+import com.example.recipeapp.domain.model.Quantity
 import com.example.recipeapp.domain.model.Resource
 import com.example.recipeapp.domain.use_case.GetRecipeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,7 +41,50 @@ class RecipeDetailsViewModel @Inject constructor(
                     secondaryTabState = event.tabId
                 )
             }
+
+            RecipeDetailsEvent.OnLessServings -> {
+                _recipeDetailsState.value = recipeDetailsState.value.copy(
+                    displayedServings = _recipeDetailsState.value.displayedServings - 1
+                )
+
+                recalculateIngredientsQuantity(
+                    newServings = _recipeDetailsState.value.displayedServings
+                )
+            }
+
+            RecipeDetailsEvent.OnMoreServings -> {
+                _recipeDetailsState.value = recipeDetailsState.value.copy(
+                    displayedServings = _recipeDetailsState.value.displayedServings + 1
+                )
+
+                recalculateIngredientsQuantity(
+                    newServings = _recipeDetailsState.value.displayedServings
+                )
+            }
         }
+    }
+
+    private fun recalculateIngredientsQuantity(
+        newServings: Int,
+        recipeServings: Int = _recipeDetailsState.value.recipe.servings,
+        ingredients: Map<Ingredient, Quantity> = _recipeDetailsState.value.recipe.ingredients
+    ) {
+        val recalculatedIngredients = mutableMapOf<Ingredient, Quantity>()
+
+        for(ingredient in ingredients) {
+            val quantity = ingredient.value.substringBefore(" ").toDouble()
+            val type = ingredient.value.substringAfter(" ")
+
+            val quantityForOneServing = quantity / recipeServings
+            val newQuantity = quantityForOneServing * newServings
+            val newQuantityWithType = "%.2f $type".format(newQuantity)
+
+            recalculatedIngredients[ingredient.key] = newQuantityWithType
+        }
+
+        _recipeDetailsState.value = recipeDetailsState.value.copy(
+            displayedIngredients = recalculatedIngredients
+        )
     }
 
     private fun getRecipe(recipeId: String) {
@@ -59,7 +104,9 @@ class RecipeDetailsViewModel @Inject constructor(
                         Log.i("TAG",response.data.toString())
                         response.data?.let {
                             _recipeDetailsState.value = recipeDetailsState.value.copy(
-                                recipe = response.data
+                                recipe = response.data,
+                                displayedServings = response.data.servings,
+                                displayedIngredients = response.data.ingredients
                             )
                         }
                     }

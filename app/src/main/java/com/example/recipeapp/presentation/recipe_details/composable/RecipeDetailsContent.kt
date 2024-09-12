@@ -39,7 +39,9 @@ fun RecipeDetailsContent(
     modifier: Modifier = Modifier,
     scrollState: ScrollState,
     uiState: RecipeDetailsState,
-    onTabChanged: (Int) -> Unit
+    onTabChanged: (Int) -> Unit,
+    onLessServings: () -> Unit,
+    onMoreServings: () -> Unit
 ) {
     Scaffold(
         modifier = modifier
@@ -112,8 +114,10 @@ fun RecipeDetailsContent(
 
             if (uiState.secondaryTabState == 0) {
                 IngredientsTab(
-                    servings = uiState.recipe.servings,
-                    ingredients = uiState.recipe.ingredients
+                    servings = uiState.displayedServings,
+                    ingredients = uiState.displayedIngredients,
+                    onLessServings = { onLessServings() },
+                    onMoreServings = { onMoreServings() }
                 )
             }
             else {
@@ -153,7 +157,9 @@ fun RecipeDetailsContentPreviewIngredientsTab() {
                 secondaryTabState = 0
             ),
             scrollState = rememberScrollState(),
-            onTabChanged = {}
+            onTabChanged = {},
+            onLessServings = {},
+            onMoreServings = {}
         )
     }
 }
@@ -188,7 +194,9 @@ fun RecipeDetailsContentPreviewDescriptionTab() {
                 secondaryTabState = 1
             ),
             scrollState = rememberScrollState(),
-            onTabChanged = {}
+            onTabChanged = {},
+            onLessServings = {},
+            onMoreServings = {}
         )
     }
 }

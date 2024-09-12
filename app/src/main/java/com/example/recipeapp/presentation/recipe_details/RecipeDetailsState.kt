@@ -22,5 +22,7 @@ data class RecipeDetailsState(
     ),
     val secondaryTabState: Int = 0,
     val tabTitleList: List<String> = listOf("Ingredients", "Description"),
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val displayedServings: Int = 0,
+    val displayedIngredients: Map<Ingredient, Quantity> = emptyMap()
 )

@@ -17,6 +17,8 @@ fun RecipeDetailsScreen(
     RecipeDetailsContent(
         scrollState = scrollState,
         uiState = viewModel.recipeDetailsState.value,
-        onTabChanged = { viewModel.onEvent(RecipeDetailsEvent.OnTabChanged(it)) }
+        onTabChanged = { viewModel.onEvent(RecipeDetailsEvent.OnTabChanged(it)) },
+        onLessServings = { viewModel.onEvent(RecipeDetailsEvent.OnLessServings) },
+        onMoreServings = { viewModel.onEvent(RecipeDetailsEvent.OnMoreServings) }
     )
 }
