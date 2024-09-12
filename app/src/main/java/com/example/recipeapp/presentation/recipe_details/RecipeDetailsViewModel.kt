@@ -11,6 +11,8 @@ import com.example.recipeapp.domain.model.Quantity
 import com.example.recipeapp.domain.model.Resource
 import com.example.recipeapp.domain.use_case.GetRecipeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,6 +24,9 @@ class RecipeDetailsViewModel @Inject constructor(
 
     private val _recipeDetailsState = mutableStateOf(RecipeDetailsState())
     val recipeDetailsState: State<RecipeDetailsState> = _recipeDetailsState
+
+    private val _recipeDetailsUiEventChannel = Channel<RecipeDetailsUiEvent>()
+    val recipeDetailsUiEventChannelFlow = _recipeDetailsUiEventChannel.receiveAsFlow()
 
     init {
         Log.i("TAG", "RecipeDetails ViewModel")
@@ -60,6 +65,12 @@ class RecipeDetailsViewModel @Inject constructor(
                 recalculateIngredientsQuantity(
                     newServings = _recipeDetailsState.value.displayedServings
                 )
+            }
+
+            RecipeDetailsEvent.OnGoBack -> {
+                viewModelScope.launch {
+                    _recipeDetailsUiEventChannel.send(RecipeDetailsUiEvent.NavigateBack)
+                }
             }
         }
     }

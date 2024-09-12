@@ -41,7 +41,8 @@ fun RecipeDetailsContent(
     uiState: RecipeDetailsState,
     onTabChanged: (Int) -> Unit,
     onLessServings: () -> Unit,
-    onMoreServings: () -> Unit
+    onMoreServings: () -> Unit,
+    onGoBack: () -> Unit
 ) {
     Scaffold(
         modifier = modifier
@@ -50,7 +51,7 @@ fun RecipeDetailsContent(
             TopAppBar(
                 title = {},
                 navigationIcon = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = { onGoBack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back button"
@@ -159,7 +160,8 @@ fun RecipeDetailsContentPreviewIngredientsTab() {
             scrollState = rememberScrollState(),
             onTabChanged = {},
             onLessServings = {},
-            onMoreServings = {}
+            onMoreServings = {},
+            onGoBack = {}
         )
     }
 }
@@ -196,7 +198,8 @@ fun RecipeDetailsContentPreviewDescriptionTab() {
             scrollState = rememberScrollState(),
             onTabChanged = {},
             onLessServings = {},
-            onMoreServings = {}
+            onMoreServings = {},
+            onGoBack = {}
         )
     }
 }

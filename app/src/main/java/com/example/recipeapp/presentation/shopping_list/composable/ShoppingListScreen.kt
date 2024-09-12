@@ -45,6 +45,7 @@ fun ShoppingListScreen(
             }
         }
     }
+
     if(isUserLoggedIn) {
         ShoppingListContent(
             scrollBehavior = scrollBehavior,
