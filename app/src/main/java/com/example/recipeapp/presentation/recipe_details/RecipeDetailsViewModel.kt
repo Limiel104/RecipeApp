@@ -88,7 +88,7 @@ class RecipeDetailsViewModel @Inject constructor(
 
             val quantityForOneServing = quantity / recipeServings
             val newQuantity = quantityForOneServing * newServings
-            val newQuantityWithType = "%.2f $type".format(newQuantity)
+            val newQuantityWithType = "%.2f $type".format(newQuantity).replace(',','.')
 
             recalculatedIngredients[ingredient.key] = newQuantityWithType
         }
