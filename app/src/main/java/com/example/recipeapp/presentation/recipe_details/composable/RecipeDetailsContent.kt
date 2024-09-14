@@ -155,7 +155,9 @@ fun RecipeDetailsContentPreviewIngredientsTab() {
                     categories = listOf("Dinner","Chicken"),
                     date = 1234567890
                 ),
-                secondaryTabState = 0
+                secondaryTabState = 0,
+                displayedIngredients = getIngredientsWithQuantity(),
+                displayedServings = 2
             ),
             scrollState = rememberScrollState(),
             onTabChanged = {},

@@ -85,6 +85,7 @@ fun IngredientsTab(
             modifier = modifier
                 .padding(bottom = 20.dp)
                 .padding(horizontal = 16.dp)
+                .testTag("Ingredients column")
         ) {
             ingredients.onEach { ingredient ->
                 IngredientItem(

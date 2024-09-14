@@ -52,6 +52,7 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    testOptions { packagingOptions { jniLibs { useLegacyPackaging = true } } }
 }
 
 dependencies {
@@ -130,10 +131,10 @@ dependencies {
     implementation("com.chargemap.compose:numberpicker:1.0.3")
 
     //MockK
-    testImplementation("io.mockk:mockk-android:1.13.10")
-    testImplementation("io.mockk:mockk-agent:1.13.10")
-    androidTestImplementation("io.mockk:mockk-android:1.13.10")
-    androidTestImplementation("io.mockk:mockk-agent:1.13.10")
+    testImplementation("io.mockk:mockk-android:1.13.11")
+    testImplementation("io.mockk:mockk-agent:1.13.11")
+    androidTestImplementation("io.mockk:mockk-android:1.13.11")
+    androidTestImplementation("io.mockk:mockk-agent:1.13.11")
 
     //Testing coroutines
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
