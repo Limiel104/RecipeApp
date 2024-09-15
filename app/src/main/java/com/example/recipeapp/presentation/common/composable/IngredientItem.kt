@@ -45,6 +45,7 @@ fun IngredientItem(
     isReorderModeActivated: Boolean = false,
     isShoppingListModeActivated: Boolean = false,
     isChecked: Boolean = false,
+    isClickable: Boolean = true,
     onCheckedChange: (Ingredient) -> Unit,
     onClick: (String) -> Unit
 ) {
@@ -64,7 +65,7 @@ fun IngredientItem(
                         )
                     }
                 } else {
-                    if(!isChecked) modifier.clickable { onClick(ingredient.ingredientId) } else modifier
+                    if(!isChecked && isClickable) modifier.clickable { onClick(ingredient.ingredientId) } else modifier
                 }
             )
             .fillMaxWidth()

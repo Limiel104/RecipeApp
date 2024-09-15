@@ -274,7 +274,7 @@ class HomeViewModelTest {
         homeViewModel = setViewModel()
         val isLoading = getCurrentHomeState().isLoading
 
-        coVerify(exactly = 1) { getUserShoppingListsUseCase("userId",false) }
+        coVerify(exactly = 1) { getUserShoppingListsUseCase("userId",true) }
         assertThat(isLoading).isFalse()
         confirmVerified(getUserShoppingListsUseCase)
     }
@@ -286,7 +286,7 @@ class HomeViewModelTest {
         homeViewModel = setViewModel()
         val isLoading = getCurrentHomeState().isLoading
 
-        coVerify(exactly = 1) { getUserShoppingListsUseCase("userId",false) }
+        coVerify(exactly = 1) { getUserShoppingListsUseCase("userId",true) }
         assertThat(isLoading).isFalse()
         confirmVerified(getUserShoppingListsUseCase)
     }
@@ -298,7 +298,7 @@ class HomeViewModelTest {
         homeViewModel = setViewModel()
         val isLoading = getCurrentHomeState().isLoading
 
-        coVerify(exactly = 1) { getUserShoppingListsUseCase("userId",false) }
+        coVerify(exactly = 1) { getUserShoppingListsUseCase("userId",true) }
         assertThat(isLoading).isTrue()
         confirmVerified(getUserShoppingListsUseCase)
     }

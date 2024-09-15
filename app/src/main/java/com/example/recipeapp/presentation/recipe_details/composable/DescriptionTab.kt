@@ -15,10 +15,11 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
 fun DescriptionTab(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    description: String
 ) {
     Text(
-        text = "This is a description of a recipe.\nNew line\nAnother line",
+        text = description,
         style = MaterialTheme.typography.bodyLarge,
         modifier = modifier
             .fillMaxSize()
@@ -39,7 +40,9 @@ fun DescriptionTab(
 fun DescriptionTabPreview() {
     RecipeAppTheme {
         Surface {
-            DescriptionTab()
+            DescriptionTab(
+                description = "This is recipe description. \nNew line\nAnother line"
+            )
         }
     }
 }

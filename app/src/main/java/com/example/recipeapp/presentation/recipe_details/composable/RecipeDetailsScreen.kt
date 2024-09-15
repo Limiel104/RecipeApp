@@ -1,25 +1,46 @@
 package com.example.recipeapp.presentation.recipe_details.composable
 
+import android.util.Log
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
+import com.example.recipeapp.presentation.recipe_details.RecipeDetailsEvent
+import com.example.recipeapp.presentation.recipe_details.RecipeDetailsUiEvent
+import com.example.recipeapp.presentation.recipe_details.RecipeDetailsViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun RecipeDetailsScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: RecipeDetailsViewModel = hiltViewModel()
 ) {
-    var secondaryTabState by remember { mutableIntStateOf(0) }
     val scrollState = rememberScrollState()
-    val tabTitleList = listOf("Ingredients", "Description")
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    LaunchedEffect(lifecycleOwner.lifecycle) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.recipeDetailsUiEventChannelFlow.collectLatest { event ->
+                Log.i("TAG", "RecipeDetails Screen LE")
+                when (event) {
+                    RecipeDetailsUiEvent.NavigateBack -> {
+                        navController.popBackStack()
+                    }
+                }
+            }
+        }
+    }
 
     RecipeDetailsContent(
-        secondaryTabState = secondaryTabState,
         scrollState = scrollState,
-        tabTitleList = tabTitleList,
-        onTabChanged = { secondaryTabState = if(secondaryTabState == 0) 1 else 0 }
+        uiState = viewModel.recipeDetailsState.value,
+        onTabChanged = { viewModel.onEvent(RecipeDetailsEvent.OnTabChanged(it)) },
+        onLessServings = { viewModel.onEvent(RecipeDetailsEvent.OnLessServings) },
+        onMoreServings = { viewModel.onEvent(RecipeDetailsEvent.OnMoreServings) },
+        onGoBack = { viewModel.onEvent(RecipeDetailsEvent.OnGoBack) }
     )
 }
