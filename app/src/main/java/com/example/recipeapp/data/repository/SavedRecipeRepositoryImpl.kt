@@ -67,6 +67,17 @@ class SavedRecipeRepositoryImpl @Inject constructor(
         emit(Resource.Error(it.localizedMessage as String))
     }.flowOn(Dispatchers.IO)
 
+    override suspend fun getSavedRecipeId(userId: String, recipeId: String) = flow<Resource<String>> {
+        emit(Resource.Loading(true))
+
+        val savedRecipeId = dao.getSavedRecipeId(userId, recipeId).savedRecipeId
+        emit(Resource.Success(savedRecipeId))
+
+        emit(Resource.Loading(false))
+    }.catch {
+        emit(Resource.Error(it.localizedMessage as String))
+    }.flowOn(Dispatchers.IO)
+
     override suspend fun deleteSavedRecipe(savedRecipeId: String) = flow<Resource<Boolean>> {
         emit(Resource.Loading(true))
 

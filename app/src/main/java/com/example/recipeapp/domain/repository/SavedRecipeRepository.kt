@@ -8,5 +8,6 @@ interface SavedRecipeRepository {
 
     suspend fun addSavedRecipe(userId: String, recipeId: String): Flow<Resource<Boolean>>
     suspend fun getUserSavedRecipes(userId: String, getSavedRecipesFromRemote: Boolean): Flow<Resource<List<Recipe>>>
+    suspend fun getSavedRecipeId(userId: String, recipeId: String): Flow<Resource<String>>
     suspend fun deleteSavedRecipe(savedRecipeId: String): Flow<Resource<Boolean>>
 }

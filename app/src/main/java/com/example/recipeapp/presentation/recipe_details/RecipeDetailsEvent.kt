@@ -4,5 +4,6 @@ sealed class RecipeDetailsEvent {
     data class OnTabChanged(val tabId: Int): RecipeDetailsEvent()
     object OnLessServings: RecipeDetailsEvent()
     object OnMoreServings: RecipeDetailsEvent()
+    object OnSaveRecipe: RecipeDetailsEvent()
     object OnGoBack: RecipeDetailsEvent()
 }

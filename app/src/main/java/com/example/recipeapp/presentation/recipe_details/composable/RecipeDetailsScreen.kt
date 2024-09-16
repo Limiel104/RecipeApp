@@ -41,6 +41,7 @@ fun RecipeDetailsScreen(
         onTabChanged = { viewModel.onEvent(RecipeDetailsEvent.OnTabChanged(it)) },
         onLessServings = { viewModel.onEvent(RecipeDetailsEvent.OnLessServings) },
         onMoreServings = { viewModel.onEvent(RecipeDetailsEvent.OnMoreServings) },
+        onSaveRecipe = { viewModel.onEvent(RecipeDetailsEvent.OnSaveRecipe) },
         onGoBack = { viewModel.onEvent(RecipeDetailsEvent.OnGoBack) }
     )
 }

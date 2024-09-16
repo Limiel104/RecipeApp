@@ -23,6 +23,16 @@ interface SavedRecipeDao {
     )
     suspend fun getSavedRecipes(): List<RecipeWithCategory>
 
+    @Query(
+        """
+            SELECT * 
+            FROM savedrecipeentity
+            WHERE recipeId == :recipeId
+            AND userId == :userId
+        """
+    )
+    suspend fun getSavedRecipeId(userId: String, recipeId: String): SavedRecipeEntity
+
     @Query("DELETE FROM savedrecipeentity")
     suspend fun deleteSavedRecipes()
 }
