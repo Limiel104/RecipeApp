@@ -5,7 +5,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipeapp.domain.model.Resource
 import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
+import com.example.recipeapp.domain.use_case.GetUserSavedRecipesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -14,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SavedRecipesViewModel @Inject constructor(
-    private val getCurrentUserUseCase: GetCurrentUserUseCase
+    private val getCurrentUserUseCase: GetCurrentUserUseCase,
+    private val getUserSavedRecipesUseCase: GetUserSavedRecipesUseCase
 ): ViewModel() {
 
     private val _savedRecipesState = mutableStateOf(SavedRecipesState())
@@ -49,6 +52,39 @@ class SavedRecipesViewModel @Inject constructor(
             _savedRecipesState.value = savedRecipesState.value.copy(
                 isUserLoggedIn = currentUser != null
             )
+
+            currentUser?.let {
+                _savedRecipesState.value = savedRecipesState.value.copy(
+                    userUID = currentUser.uid
+                )
+                getUserSavedRecipes(currentUser.uid)
+            }
+        }
+    }
+
+    private fun getUserSavedRecipes(userUID: String) {
+        viewModelScope.launch {
+            getUserSavedRecipesUseCase(userUID, true).collect { response ->
+                when(response) {
+                    is Resource.Error -> {
+                        Log.i("TAG","Error message from get user saved recipes: ${response.message}")
+                    }
+                    is Resource.Loading -> {
+                        Log.i("TAG","Loading get user saved recipes: ${response.isLoading}")
+                        _savedRecipesState.value = savedRecipesState.value.copy(
+                            isLoading = response.isLoading,
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i("TAG",response.data.toString())
+                        response.data?.let {
+                            _savedRecipesState.value = savedRecipesState.value.copy(
+                                savedRecipes = response.data
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }

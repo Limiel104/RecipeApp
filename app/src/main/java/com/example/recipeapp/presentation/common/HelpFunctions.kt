@@ -1,7 +1,9 @@
 package com.example.recipeapp.presentation.common
 
+import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Quantity
+import com.example.recipeapp.domain.model.Recipe
 import com.example.recipeapp.domain.model.ShoppingList
 
 fun getIngredientsWithQuantity(): Map<Ingredient, Quantity> {
@@ -100,5 +102,98 @@ fun getShoppingLists(): List<ShoppingList> {
             createdBy = "userUID",
             date = 1234824354
         )
+    )
+}
+
+fun getRecipes(): List<Recipe> {
+    return listOf(
+        Recipe(
+            recipeId = "recipeId",
+            name = "Recipe Name",
+            prepTime = "40 min",
+            servings = 4,
+            description = "Recipe description",
+            isVegetarian = true,
+            isVegan = false,
+            imageUrl = "imageUrl",
+            createdBy = "userId",
+            categories = emptyList(),
+            date = 1231236
+        ),
+        Recipe(
+            recipeId = "recipe2Id",
+            name = "Recipe2 Name",
+            prepTime = "10 min",
+            servings = 3,
+            description = "Recipe2 description",
+            isVegetarian = true,
+            isVegan = false,
+            imageUrl = "imageUrl",
+            createdBy = "userId",
+            categories = emptyList(),
+            date = 1231234
+        ),
+        Recipe(
+            recipeId = "recipe3Id",
+            name = "Recipe3 Name",
+            prepTime = "25 min",
+            servings = 4,
+            description = "Recipe3 description",
+            isVegetarian = true,
+            isVegan = false,
+            imageUrl = "imageUrl",
+            createdBy = "userId",
+            categories = emptyList(),
+            date = 1231235
+        ),
+        Recipe(
+            recipeId = "recipe4Id",
+            name = "Recipe4 Name",
+            prepTime = "2 h 45 min",
+            servings = 2,
+            description = "Recipe4 description",
+            isVegetarian = true,
+            isVegan = false,
+            imageUrl = "imageUrl",
+            createdBy = "userId",
+            categories = emptyList(),
+            date = 1231237
+        ),
+        Recipe(
+            recipeId = "recipe5Id",
+            name = "Recipe5 Name",
+            prepTime = "1 h",
+            servings = 1,
+            description = "Recipe5 description",
+            isVegetarian = true,
+            isVegan = false,
+            imageUrl = "imageUrl",
+            createdBy = "userId",
+            categories = emptyList(),
+            date = 1231238
+        ),
+        Recipe(
+            recipeId = "recipe6Id",
+            name = "Recipe6 Name",
+            prepTime = "30 min",
+            servings = 1,
+            description = "Recipe6 description",
+            isVegetarian = true,
+            isVegan = false,
+            imageUrl = "imageUrl",
+            createdBy = "userId",
+            categories = emptyList(),
+            date = 1231239
+        )
+    )
+}
+
+fun getCategories(): List<Category> {
+    return listOf(
+        Category("Appetizer",""),
+        Category("Chicken",""),
+        Category("Dinner",""),
+        Category("Soup",""),
+        Category("Stew","")
     )
 }

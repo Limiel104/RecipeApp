@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -18,12 +19,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.R
+import com.example.recipeapp.presentation.common.composable.RecipeItem
 import com.example.recipeapp.presentation.common.composable.SearchBarItem
+import com.example.recipeapp.presentation.common.getRecipes
+import com.example.recipeapp.presentation.saved_recipes.SavedRecipesState
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
 fun SavedRecipesContent(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    uiState: SavedRecipesState
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize()
@@ -51,7 +56,7 @@ fun SavedRecipesContent(
                 Row(
                     modifier = modifier
                         .fillMaxWidth()
-                        .padding(16.dp,8.dp),
+                        .padding(16.dp, 8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -62,17 +67,20 @@ fun SavedRecipesContent(
 
                     Text(
                         text = stringResource(id = R.string.newest),
-                        style = MaterialTheme.typography.labelSmall
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = modifier
+                            .padding(16.dp,8.dp)
                     )
                 }
             }
 
-            items(11) {
-//                RecipeItem(
-//                    cardHorizontalPadding = 16.dp,
-//                    cardBottomPadding = 16.dp,
-//                    onClick = {}
-//                )
+            itemsIndexed(uiState.savedRecipes) { _, savedRecipe ->
+                RecipeItem(
+                    recipe = savedRecipe,
+                    cardHorizontalPadding = 16.dp,
+                    cardBottomPadding = 16.dp,
+                    onClick = {}
+                )
             }
         }
     }
@@ -89,6 +97,10 @@ fun SavedRecipesContent(
 @Composable
 fun SavedRecipesContentPreview() {
     RecipeAppTheme {
-        SavedRecipesContent()
+        SavedRecipesContent(
+            uiState = SavedRecipesState(
+                savedRecipes = getRecipes()
+            )
+        )
     }
 }

@@ -40,7 +40,9 @@ fun SavedRecipesScreen(
     }
 
     if(isUserLoggedIn) {
-        SavedRecipesContent()
+        SavedRecipesContent(
+            uiState = viewModel.savedRecipesState.value
+        )
     }
     else {
         UserNotLoggedInContent(
