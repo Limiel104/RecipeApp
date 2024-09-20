@@ -35,6 +35,8 @@ fun RecipeItem(
     recipe: Recipe,
     cardHorizontalPadding: Dp = 0.dp,
     cardBottomPadding: Dp = 0.dp,
+    isBookmarkVisible: Boolean = false,
+    onBookmark: (String) -> Unit,
     onClick: () -> Unit
 ) {
     Card(
@@ -57,11 +59,13 @@ fun RecipeItem(
                 imageUrl = recipe.imageUrl
             )
 
-            IconButton(onClick = {}) {
-                Icon(
-                    imageVector = Icons.Outlined.Bookmark,
-                    contentDescription = "Icon button"
-                )
+            if(isBookmarkVisible) {
+                IconButton(onClick = { onBookmark(recipe.recipeId) }) {
+                    Icon(
+                        imageVector = Icons.Outlined.Bookmark,
+                        contentDescription = "Icon button"
+                    )
+                }
             }
 
             Text(
@@ -108,6 +112,8 @@ fun RecipeItemPreview() {
     RecipeAppTheme {
         RecipeItem(
             recipe = getRecipe(),
+            isBookmarkVisible = true,
+            onBookmark = {},
             onClick = {}
         )
     }
@@ -126,6 +132,8 @@ fun RecipeItemPreviewLongTitle() {
     RecipeAppTheme {
         RecipeItem(
             recipe = getRecipe("Very very long title of the recipe for this composable. This is another line in the title. Let's make it even longer so it overflows"),
+            isBookmarkVisible = true,
+            onBookmark = {},
             onClick = {}
         )
     }
@@ -147,6 +155,7 @@ fun TopCategoriesSectionPreviewWithCardPadding() {
                 recipe = getRecipe(),
                 cardHorizontalPadding = 16.dp,
                 cardBottomPadding = 16.dp,
+                onBookmark = {},
                 onClick = {}
             )
         }

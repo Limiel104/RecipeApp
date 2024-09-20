@@ -143,6 +143,7 @@ fun AccountContent(
                     recipe = recipe,
                     cardHorizontalPadding = 16.dp,
                     cardBottomPadding = 16.dp,
+                    onBookmark = {},
                     onClick = { onRecipeSelected(recipe.recipeId) }
                 )
             }

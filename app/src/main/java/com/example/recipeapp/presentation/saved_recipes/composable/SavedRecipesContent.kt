@@ -28,7 +28,8 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 @Composable
 fun SavedRecipesContent(
     modifier: Modifier = Modifier,
-    uiState: SavedRecipesState
+    uiState: SavedRecipesState,
+    onRemove: (String) -> Unit
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize()
@@ -79,6 +80,8 @@ fun SavedRecipesContent(
                     recipe = savedRecipe,
                     cardHorizontalPadding = 16.dp,
                     cardBottomPadding = 16.dp,
+                    isBookmarkVisible = true,
+                    onBookmark = { onRemove(it) },
                     onClick = {}
                 )
             }
@@ -100,7 +103,8 @@ fun SavedRecipesContentPreview() {
         SavedRecipesContent(
             uiState = SavedRecipesState(
                 savedRecipes = getRecipes()
-            )
+            ),
+            onRemove = {}
         )
     }
 }

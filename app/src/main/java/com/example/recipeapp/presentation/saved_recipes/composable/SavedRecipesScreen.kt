@@ -41,7 +41,8 @@ fun SavedRecipesScreen(
 
     if(isUserLoggedIn) {
         SavedRecipesContent(
-            uiState = viewModel.savedRecipesState.value
+            uiState = viewModel.savedRecipesState.value,
+            onRemove = { viewModel.onEvent(SavedRecipesEvent.OnRemove(it)) }
         )
     }
     else {
