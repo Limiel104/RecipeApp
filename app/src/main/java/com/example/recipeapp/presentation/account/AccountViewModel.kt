@@ -78,22 +78,20 @@ class AccountViewModel @Inject constructor(
                 )
             }
 
+            is AccountEvent.OnRecipeSelected -> {
+                viewModelScope.launch { _accountUiEventChannel.send(AccountUiEvent.NavigateToRecipeDetails(event.recipeId)) }
+            }
+
             AccountEvent.OnLogin -> {
-                viewModelScope.launch {
-                    _accountUiEventChannel.send(AccountUiEvent.NavigateToLogin)
-                }
+                viewModelScope.launch { _accountUiEventChannel.send(AccountUiEvent.NavigateToLogin) }
             }
 
             AccountEvent.OnSignup -> {
-                viewModelScope.launch {
-                    _accountUiEventChannel.send(AccountUiEvent.NavigateToSignup)
-                }
+                viewModelScope.launch { _accountUiEventChannel.send(AccountUiEvent.NavigateToSignup) }
             }
 
             AccountEvent.OnLogout -> {
-                viewModelScope.launch {
-                    logout()
-                }
+                viewModelScope.launch { logout() }
             }
 
             AccountEvent.OnEditButtonClicked -> {
@@ -133,6 +131,10 @@ class AccountViewModel @Inject constructor(
                     else
                         Log.i("TAG","Password validation not successful")
                 }
+            }
+
+            AccountEvent.OnAddRecipeButtonClicked -> {
+                viewModelScope.launch { _accountUiEventChannel.send(AccountUiEvent.NavigateToAddRecipe) }
             }
         }
     }
