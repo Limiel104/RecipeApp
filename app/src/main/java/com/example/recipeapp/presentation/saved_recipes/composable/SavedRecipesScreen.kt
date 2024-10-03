@@ -42,7 +42,12 @@ fun SavedRecipesScreen(
     if(isUserLoggedIn) {
         SavedRecipesContent(
             uiState = viewModel.savedRecipesState.value,
-            onRemove = { viewModel.onEvent(SavedRecipesEvent.OnRemove(it)) }
+            onRemove = { viewModel.onEvent(SavedRecipesEvent.OnRemove(it)) },
+            onQueryChange = { viewModel.onEvent(SavedRecipesEvent.OnQueryChange(it)) },
+            onActiveChange = { viewModel.onEvent(SavedRecipesEvent.OnActiveChange) },
+            onSearchClicked = { viewModel.onEvent(SavedRecipesEvent.OnSearchClicked) },
+            onClearClicked = { viewModel.onEvent(SavedRecipesEvent.OnClearClicked) },
+            onSearchSuggestionClicked = { viewModel.onEvent(SavedRecipesEvent.OnSearchSuggestionClicked(it)) },
         )
     }
     else {

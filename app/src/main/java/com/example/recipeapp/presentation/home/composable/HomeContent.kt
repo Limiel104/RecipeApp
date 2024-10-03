@@ -95,7 +95,6 @@ fun HomeContent(
                         recipe = recipe,
                         cardHorizontalPadding = 16.dp,
                         cardBottomPadding = 16.dp,
-                        isBookmarkVisible = true,
                         onBookmark = {},
                         onClick = { onRecipeSelected(recipe.recipeId) }
                     )

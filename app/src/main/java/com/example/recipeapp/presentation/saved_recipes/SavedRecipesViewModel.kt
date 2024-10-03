@@ -6,9 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipeapp.domain.model.Resource
+import com.example.recipeapp.domain.model.SearchSuggestion
+import com.example.recipeapp.domain.use_case.AddSearchSuggestionUseCase
 import com.example.recipeapp.domain.use_case.DeleteSavedRecipeUseCase
 import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
 import com.example.recipeapp.domain.use_case.GetSavedRecipeIdUseCase
+import com.example.recipeapp.domain.use_case.GetSearchSuggestionsUseCase
 import com.example.recipeapp.domain.use_case.GetUserSavedRecipesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -21,8 +24,10 @@ class SavedRecipesViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getUserSavedRecipesUseCase: GetUserSavedRecipesUseCase,
     private val deleteSavedRecipeUseCase: DeleteSavedRecipeUseCase,
-    private val getSavedRecipeIdUseCase: GetSavedRecipeIdUseCase
-): ViewModel() {
+    private val getSavedRecipeIdUseCase: GetSavedRecipeIdUseCase,
+    private val addSearchSuggestionUseCase: AddSearchSuggestionUseCase,
+    private val getSearchSuggestionsUseCase: GetSearchSuggestionsUseCase
+    ): ViewModel() {
 
     private val _savedRecipesState = mutableStateOf(SavedRecipesState())
     val savedRecipesState: State<SavedRecipesState> = _savedRecipesState
@@ -39,6 +44,53 @@ class SavedRecipesViewModel @Inject constructor(
         when(event) {
             is SavedRecipesEvent.OnRemove -> {
                 getSavedRecipeId(recipeId = event.recipeId)
+            }
+
+            is SavedRecipesEvent.OnQueryChange -> {
+                Log.i("TAG","New query: ${event.query}")
+                _savedRecipesState.value = savedRecipesState.value.copy(
+                    query = event.query
+                )
+            }
+
+            SavedRecipesEvent.OnActiveChange -> {
+                val isSearchActive = !_savedRecipesState.value.isSearchActive
+                _savedRecipesState.value = savedRecipesState.value.copy(
+                    isSearchActive = isSearchActive
+                )
+
+                if(isSearchActive) { getSearchSuggestions() }
+            }
+
+            SavedRecipesEvent.OnSearchClicked -> {
+                _savedRecipesState.value = savedRecipesState.value.copy(
+                    isSearchActive = false
+                )
+
+                addSearchSuggestion(_savedRecipesState.value.query)
+                getUserSavedRecipes()
+            }
+
+            SavedRecipesEvent.OnClearClicked -> {
+                val query = _savedRecipesState.value.query
+
+                if(query.isNotEmpty()) {
+                    _savedRecipesState.value = savedRecipesState.value.copy(
+                        query = ""
+                    )
+                }
+                else {
+                    _savedRecipesState.value = savedRecipesState.value.copy(
+                        isSearchActive = false
+                    )
+                    getUserSavedRecipes()
+                }
+            }
+
+            is SavedRecipesEvent.OnSearchSuggestionClicked -> {
+                _savedRecipesState.value = savedRecipesState.value.copy(
+                    query = event.suggestionText
+                )
             }
 
             SavedRecipesEvent.OnLogin -> {
@@ -72,10 +124,11 @@ class SavedRecipesViewModel @Inject constructor(
     }
 
     private fun getUserSavedRecipes(
-        userUID: String = _savedRecipesState.value.userUID
+        userUID: String = _savedRecipesState.value.userUID,
+        query: String = _savedRecipesState.value.query
     ) {
         viewModelScope.launch {
-            getUserSavedRecipesUseCase(userUID, true).collect { response ->
+            getUserSavedRecipesUseCase(userUID, query,true).collect { response ->
                 when(response) {
                     is Resource.Error -> {
                         Log.i("TAG","Error message from get user saved recipes: ${response.message}")
@@ -141,6 +194,58 @@ class SavedRecipesViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         getUserSavedRecipes()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun addSearchSuggestion(query: String) {
+        val searchSuggestion = SearchSuggestion(
+            searchSuggestionId = 0,
+            text = query
+        )
+
+        viewModelScope.launch {
+            addSearchSuggestionUseCase(searchSuggestion).collect { response ->
+                when(response) {
+                    is Resource.Error -> {
+                        Log.i("TAG","Error message from addSearchSuggestion: ${response.message}")
+                    }
+                    is Resource.Loading -> {
+                        Log.i("TAG","Loading add search suggestion: ${response.isLoading}")
+                        _savedRecipesState.value = savedRecipesState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i("TAG","Search suggestion added")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getSearchSuggestions() {
+        viewModelScope.launch {
+            getSearchSuggestionsUseCase().collect { response ->
+                when(response) {
+                    is Resource.Error -> {
+                        Log.i("TAG","Error message from getSearchSuggestions: ${response.message}")
+                    }
+                    is Resource.Loading -> {
+                        Log.i("TAG","Loading search suggestions: ${response.isLoading}")
+                        _savedRecipesState.value = savedRecipesState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        response.data?.let {
+                            _savedRecipesState.value = savedRecipesState.value.copy(
+                                searchSuggestions = response.data
+                            )
+                        }
+                        Log.i("TAG",_savedRecipesState.value.searchSuggestions.toString())
                     }
                 }
             }

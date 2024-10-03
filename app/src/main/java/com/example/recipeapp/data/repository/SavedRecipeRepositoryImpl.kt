@@ -38,10 +38,10 @@ class SavedRecipeRepositoryImpl @Inject constructor(
         emit(Resource.Error(it.localizedMessage as String))
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun getUserSavedRecipes(userId: String, getSavedRecipesFromRemote: Boolean) = flow<Resource<List<Recipe>>> {
+    override suspend fun getUserSavedRecipes(userId: String, query: String, getSavedRecipesFromRemote: Boolean) = flow<Resource<List<Recipe>>> {
         emit(Resource.Loading(true))
 
-        val savedRecipes = dao.getSavedRecipes()
+        val savedRecipes = dao.getSavedRecipes(query)
         val loadFromCache = savedRecipes.isNotEmpty() && !getSavedRecipesFromRemote
 
         if(loadFromCache) {
@@ -59,7 +59,7 @@ class SavedRecipeRepositoryImpl @Inject constructor(
             dao.insertSavedRecipes(savedRecipeList.map { it.toSavedRecipeEntity() })
         }
 
-        emit(Resource.Success(dao.getSavedRecipes().map { it.toRecipe() }))
+        emit(Resource.Success(dao.getSavedRecipes(query).map { it.toRecipe() }))
         Log.i("TAG","Saved Recipes from remote")
         emit(Resource.Loading(false))
 

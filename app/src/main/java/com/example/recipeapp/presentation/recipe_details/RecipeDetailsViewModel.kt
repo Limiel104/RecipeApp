@@ -166,7 +166,7 @@ class RecipeDetailsViewModel @Inject constructor(
         userUID: String = _recipeDetailsState.value.userUID
     ) {
         viewModelScope.launch {
-            getUserSavedRecipesUseCase(userUID, true).collect { response ->
+            getUserSavedRecipesUseCase(userUID, "", true).collect { response ->
                 when(response) {
                     is Resource.Error -> {
                         Log.i("TAG","Error message from get user saved recipes: ${response.message}")

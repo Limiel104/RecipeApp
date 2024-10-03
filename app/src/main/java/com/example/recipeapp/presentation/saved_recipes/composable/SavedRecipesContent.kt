@@ -2,7 +2,9 @@ package com.example.recipeapp.presentation.saved_recipes.composable
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,61 +31,71 @@ import com.example.recipeapp.ui.theme.RecipeAppTheme
 fun SavedRecipesContent(
     modifier: Modifier = Modifier,
     uiState: SavedRecipesState,
-    onRemove: (String) -> Unit
+    onRemove: (String) -> Unit,
+    onQueryChange: (String) -> Unit,
+    onActiveChange: () -> Unit,
+    onSearchClicked: () -> Unit,
+    onClearClicked: () -> Unit,
+    onSearchSuggestionClicked: (String) -> Unit
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize()
     ) { paddingValues ->
-        LazyColumn(
+        Column(
             modifier = modifier
-                .fillMaxSize()
                 .padding(paddingValues)
                 .testTag("Saved Recipes Content")
         ) {
-            item {
-                SearchBarItem(
-                    query = "",
-                    searchSuggestions = emptyList(),
-                    isSearchActive = false,
-                    onQueryChange = {},
-                    onActiveChange = {},
-                    onSearchClicked = {},
-                    onClear = {},
-                    onSearchSuggestionClicked = {}
-                )
+            SearchBarItem(
+                query = uiState.query,
+                searchSuggestions = uiState.searchSuggestions,
+                isSearchActive = uiState.isSearchActive,
+                onQueryChange = { onQueryChange(it) },
+                onActiveChange = { onActiveChange() },
+                onSearchClicked = { onSearchClicked() },
+                onClear = { onClearClicked() },
+                onSearchSuggestionClicked = { onSearchSuggestionClicked(it) }
+            )
+
+            if (!uiState.isSearchActive) {
+                Spacer(modifier = modifier.padding(bottom = 12.dp))
             }
 
-            item {
-                Row(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(16.dp, 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.recipes),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-
-                    Text(
-                        text = stringResource(id = R.string.newest),
-                        style = MaterialTheme.typography.labelSmall,
+            LazyColumn(
+                modifier = modifier.testTag("Saved Recipes Lazy Column")
+            ) {
+                item {
+                    Row(
                         modifier = modifier
-                            .padding(16.dp,8.dp)
+                            .fillMaxWidth()
+                            .padding(16.dp, 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.recipes),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+
+                        Text(
+                            text = stringResource(id = R.string.newest),
+                            style = MaterialTheme.typography.labelSmall,
+                            modifier = modifier
+                                .padding(16.dp, 8.dp)
+                        )
+                    }
+                }
+
+                itemsIndexed(uiState.savedRecipes) { _, savedRecipe ->
+                    RecipeItem(
+                        recipe = savedRecipe,
+                        cardHorizontalPadding = 16.dp,
+                        cardBottomPadding = 16.dp,
+                        isBookmarkVisible = true,
+                        onBookmark = { onRemove(it) },
+                        onClick = {}
                     )
                 }
-            }
-
-            itemsIndexed(uiState.savedRecipes) { _, savedRecipe ->
-                RecipeItem(
-                    recipe = savedRecipe,
-                    cardHorizontalPadding = 16.dp,
-                    cardBottomPadding = 16.dp,
-                    isBookmarkVisible = true,
-                    onBookmark = { onRemove(it) },
-                    onClick = {}
-                )
             }
         }
     }
@@ -104,7 +116,12 @@ fun SavedRecipesContentPreview() {
             uiState = SavedRecipesState(
                 savedRecipes = getRecipes()
             ),
-            onRemove = {}
+            onRemove = {},
+            onQueryChange = {},
+            onActiveChange = {},
+            onSearchClicked = {},
+            onClearClicked = {},
+            onSearchSuggestionClicked = {},
         )
     }
 }

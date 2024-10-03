@@ -19,9 +19,11 @@ interface SavedRecipeDao {
             SELECT * 
             FROM recipeentity
             JOIN savedrecipeentity ON recipeentity.recipeId = savedrecipeentity.recipeId
+            WHERE LOWER(name) 
+            LIKE '%' || LOWER(:query) || '%'
         """
     )
-    suspend fun getSavedRecipes(): List<RecipeWithCategory>
+    suspend fun getSavedRecipes(query: String): List<RecipeWithCategory>
 
     @Query(
         """
