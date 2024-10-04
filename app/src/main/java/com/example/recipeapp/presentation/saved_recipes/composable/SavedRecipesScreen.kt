@@ -28,6 +28,9 @@ fun SavedRecipesScreen(
             viewModel.savedRecipesUiEventChannelFlow.collectLatest { event ->
                 Log.i("TAG", "Saved Recipes Screen LE")
                 when (event) {
+                    is SavedRecipesUiEvent.NavigateToRecipeDetails -> {
+                        navController.navigate(Screen.RecipeDetailsScreen.route + "recipeId=" + event.recipeId)
+                    }
                     SavedRecipesUiEvent.NavigateToLogin -> {
                         navController.navigate(Screen.LoginScreen.route + "lastDestination=" + Screen.SavedRecipesScreen.route)
                     }
@@ -43,6 +46,7 @@ fun SavedRecipesScreen(
         SavedRecipesContent(
             uiState = viewModel.savedRecipesState.value,
             onRemove = { viewModel.onEvent(SavedRecipesEvent.OnRemove(it)) },
+            onRecipeSelected = { viewModel.onEvent(SavedRecipesEvent.OnRecipeSelected(it)) },
             onQueryChange = { viewModel.onEvent(SavedRecipesEvent.OnQueryChange(it)) },
             onActiveChange = { viewModel.onEvent(SavedRecipesEvent.OnActiveChange) },
             onSearchClicked = { viewModel.onEvent(SavedRecipesEvent.OnSearchClicked) },

@@ -4,6 +4,7 @@ sealed class SavedRecipesEvent {
     data class OnRemove(val recipeId: String): SavedRecipesEvent()
     data class OnQueryChange(val query: String): SavedRecipesEvent()
     data class OnSearchSuggestionClicked(val suggestionText: String): SavedRecipesEvent()
+    data class OnRecipeSelected(val recipeId: String): SavedRecipesEvent()
     object OnActiveChange: SavedRecipesEvent()
     object OnSearchClicked: SavedRecipesEvent()
     object OnClearClicked: SavedRecipesEvent()

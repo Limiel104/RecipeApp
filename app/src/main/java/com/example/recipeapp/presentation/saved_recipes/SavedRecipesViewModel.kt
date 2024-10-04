@@ -93,6 +93,10 @@ class SavedRecipesViewModel @Inject constructor(
                 )
             }
 
+            is SavedRecipesEvent.OnRecipeSelected -> {
+                viewModelScope.launch { _savedRecipesUiEventChannel.send(SavedRecipesUiEvent.NavigateToRecipeDetails(event.recipeId)) }
+            }
+
             SavedRecipesEvent.OnLogin -> {
                 viewModelScope.launch {
                     _savedRecipesUiEventChannel.send(SavedRecipesUiEvent.NavigateToLogin)

@@ -32,6 +32,7 @@ fun SavedRecipesContent(
     modifier: Modifier = Modifier,
     uiState: SavedRecipesState,
     onRemove: (String) -> Unit,
+    onRecipeSelected: (String) -> Unit,
     onQueryChange: (String) -> Unit,
     onActiveChange: () -> Unit,
     onSearchClicked: () -> Unit,
@@ -93,7 +94,7 @@ fun SavedRecipesContent(
                         cardBottomPadding = 16.dp,
                         isBookmarkVisible = true,
                         onBookmark = { onRemove(it) },
-                        onClick = {}
+                        onClick = { onRecipeSelected(savedRecipe.recipeId) }
                     )
                 }
             }
@@ -117,6 +118,7 @@ fun SavedRecipesContentPreview() {
                 savedRecipes = getRecipes()
             ),
             onRemove = {},
+            onRecipeSelected = {},
             onQueryChange = {},
             onActiveChange = {},
             onSearchClicked = {},
