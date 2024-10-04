@@ -47,6 +47,7 @@ fun SavedRecipesScreen(
             uiState = viewModel.savedRecipesState.value,
             onRemove = { viewModel.onEvent(SavedRecipesEvent.OnRemove(it)) },
             onRecipeSelected = { viewModel.onEvent(SavedRecipesEvent.OnRecipeSelected(it)) },
+            onSortRecipes = { viewModel.onEvent(SavedRecipesEvent.OnSortRecipes(it)) },
             onQueryChange = { viewModel.onEvent(SavedRecipesEvent.OnQueryChange(it)) },
             onActiveChange = { viewModel.onEvent(SavedRecipesEvent.OnActiveChange) },
             onSearchClicked = { viewModel.onEvent(SavedRecipesEvent.OnSearchClicked) },

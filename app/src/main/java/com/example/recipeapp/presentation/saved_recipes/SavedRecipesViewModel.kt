@@ -13,6 +13,7 @@ import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
 import com.example.recipeapp.domain.use_case.GetSavedRecipeIdUseCase
 import com.example.recipeapp.domain.use_case.GetSearchSuggestionsUseCase
 import com.example.recipeapp.domain.use_case.GetUserSavedRecipesUseCase
+import com.example.recipeapp.domain.use_case.SortRecipesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -26,7 +27,8 @@ class SavedRecipesViewModel @Inject constructor(
     private val deleteSavedRecipeUseCase: DeleteSavedRecipeUseCase,
     private val getSavedRecipeIdUseCase: GetSavedRecipeIdUseCase,
     private val addSearchSuggestionUseCase: AddSearchSuggestionUseCase,
-    private val getSearchSuggestionsUseCase: GetSearchSuggestionsUseCase
+    private val getSearchSuggestionsUseCase: GetSearchSuggestionsUseCase,
+    private val sortRecipesUseCase: SortRecipesUseCase,
     ): ViewModel() {
 
     private val _savedRecipesState = mutableStateOf(SavedRecipesState())
@@ -47,9 +49,18 @@ class SavedRecipesViewModel @Inject constructor(
             }
 
             is SavedRecipesEvent.OnQueryChange -> {
-                Log.i("TAG","New query: ${event.query}")
                 _savedRecipesState.value = savedRecipesState.value.copy(
                     query = event.query
+                )
+            }
+
+            is SavedRecipesEvent.OnSortRecipes -> {
+                _savedRecipesState.value = savedRecipesState.value.copy(
+                    recipesOrder = event.recipeOrder
+                )
+
+                _savedRecipesState.value = savedRecipesState.value.copy(
+                    savedRecipes = sortRecipesUseCase(event.recipeOrder, _savedRecipesState.value.savedRecipes)
                 )
             }
 

@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipeapp.R
+import com.example.recipeapp.domain.util.RecipeOrder
 import com.example.recipeapp.presentation.common.composable.RecipeItem
 import com.example.recipeapp.presentation.common.composable.SearchBarItem
 import com.example.recipeapp.presentation.common.getRecipes
@@ -33,6 +35,7 @@ fun SavedRecipesContent(
     uiState: SavedRecipesState,
     onRemove: (String) -> Unit,
     onRecipeSelected: (String) -> Unit,
+    onSortRecipes: (RecipeOrder) -> Unit,
     onQueryChange: (String) -> Unit,
     onActiveChange: () -> Unit,
     onSearchClicked: () -> Unit,
@@ -78,12 +81,24 @@ fun SavedRecipesContent(
                             style = MaterialTheme.typography.titleMedium
                         )
 
-                        Text(
-                            text = stringResource(id = R.string.newest),
-                            style = MaterialTheme.typography.labelSmall,
-                            modifier = modifier
-                                .padding(16.dp, 8.dp)
-                        )
+                        TextButton(
+                            onClick = {
+                                onSortRecipes(
+                                    if(uiState.recipesOrder == RecipeOrder.DateDescending)
+                                        RecipeOrder.DateAscending
+                                    else
+                                        RecipeOrder.DateDescending
+                                )
+                            }
+                        ) {
+                            Text(
+                                text = if(uiState.recipesOrder == RecipeOrder.DateDescending)
+                                    stringResource(id = R.string.newest)
+                                else
+                                    stringResource(id = R.string.oldest),
+                                style = MaterialTheme.typography.labelSmall
+                            )
+                        }
                     }
                 }
 
@@ -119,6 +134,7 @@ fun SavedRecipesContentPreview() {
             ),
             onRemove = {},
             onRecipeSelected = {},
+            onSortRecipes = {},
             onQueryChange = {},
             onActiveChange = {},
             onSearchClicked = {},
