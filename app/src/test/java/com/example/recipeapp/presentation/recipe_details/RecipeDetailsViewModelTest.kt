@@ -4,7 +4,12 @@ import androidx.lifecycle.SavedStateHandle
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.RecipeWithIngredients
 import com.example.recipeapp.domain.model.Resource
+import com.example.recipeapp.domain.use_case.AddSavedRecipeUseCase
+import com.example.recipeapp.domain.use_case.DeleteSavedRecipeUseCase
+import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
 import com.example.recipeapp.domain.use_case.GetRecipeUseCase
+import com.example.recipeapp.domain.use_case.GetSavedRecipeIdUseCase
+import com.example.recipeapp.domain.use_case.GetUserSavedRecipesUseCase
 import com.example.recipeapp.presentation.common.getIngredientsWithQuantity
 import com.example.recipeapp.util.MainDispatcherRule
 import com.google.common.truth.Truth
@@ -27,6 +32,11 @@ class RecipeDetailsViewModelTest {
 
     private lateinit var savedStateHandle: SavedStateHandle
     private lateinit var getRecipeUseCase: GetRecipeUseCase
+    private lateinit var addSavedRecipeUseCase: AddSavedRecipeUseCase
+    private lateinit var deleteSavedRecipeUseCase: DeleteSavedRecipeUseCase
+    private lateinit var getUserSavedRecipesUseCase: GetUserSavedRecipesUseCase
+    private lateinit var getCurrentUserUseCase: GetCurrentUserUseCase
+    private lateinit var getSavedRecipeIdUseCase: GetSavedRecipeIdUseCase
     private lateinit var recipeDetailsViewModel: RecipeDetailsViewModel
     private lateinit var recipeWithIngredients: RecipeWithIngredients
     private lateinit var emptyRecipeWithIngredients: RecipeWithIngredients
@@ -36,6 +46,11 @@ class RecipeDetailsViewModelTest {
     fun setUp() {
         savedStateHandle = mockk()
         getRecipeUseCase = mockk()
+        addSavedRecipeUseCase = mockk()
+        deleteSavedRecipeUseCase = mockk()
+        getUserSavedRecipesUseCase = mockk()
+        getCurrentUserUseCase = mockk()
+        getSavedRecipeIdUseCase = mockk()
 
         recipeWithIngredients = RecipeWithIngredients(
             recipeId = "recipeId",
@@ -95,13 +110,23 @@ class RecipeDetailsViewModelTest {
     fun tearDown() {
         confirmVerified(savedStateHandle)
         confirmVerified(getRecipeUseCase)
+        confirmVerified(addSavedRecipeUseCase)
+        confirmVerified(deleteSavedRecipeUseCase)
+        confirmVerified(getUserSavedRecipesUseCase)
+        confirmVerified(getCurrentUserUseCase)
+        confirmVerified(getSavedRecipeIdUseCase)
         clearAllMocks()
     }
 
     private fun setViewModel(): RecipeDetailsViewModel {
         return RecipeDetailsViewModel(
             savedStateHandle,
-            getRecipeUseCase
+            getRecipeUseCase,
+            addSavedRecipeUseCase,
+            deleteSavedRecipeUseCase,
+            getUserSavedRecipesUseCase,
+            getCurrentUserUseCase,
+            getSavedRecipeIdUseCase
         )
     }
 
