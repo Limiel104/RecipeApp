@@ -158,7 +158,7 @@ class SavedRecipesViewModel @Inject constructor(
                         Log.i("TAG",response.data.toString())
                         response.data?.let {
                             _savedRecipesState.value = savedRecipesState.value.copy(
-                                savedRecipes = response.data
+                                savedRecipes = sortRecipesUseCase(_savedRecipesState.value.recipesOrder,response.data)
                             )
                         }
                     }

@@ -4,7 +4,31 @@ import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Quantity
 import com.example.recipeapp.domain.model.Recipe
+import com.example.recipeapp.domain.model.SearchSuggestion
 import com.example.recipeapp.domain.model.ShoppingList
+
+fun getIngredients(): List<Ingredient> {
+    return listOf(
+        Ingredient(
+            ingredientId = "ingredientId",
+            name = "Ingredient Name",
+            imageUrl = "imageUrl",
+            category = "category"
+        ),
+        Ingredient(
+            ingredientId = "ingredient2Id",
+            name = "Ingredient2 Name",
+            imageUrl = "imageUrl",
+            category = "category2"
+        ),
+        Ingredient(
+            ingredientId = "ingredient3Id",
+            name = "Ingredient3 Name",
+            imageUrl = "imageUrl",
+            category = "category"
+        )
+    )
+}
 
 fun getIngredientsWithQuantity(): Map<Ingredient, Quantity> {
     return mapOf(
@@ -195,5 +219,22 @@ fun getCategories(): List<Category> {
         Category("Dinner",""),
         Category("Soup",""),
         Category("Stew","")
+    )
+}
+
+fun getSearchSuggestions(): List<SearchSuggestion> {
+    return listOf(
+        SearchSuggestion(
+            searchSuggestionId = 1,
+            text = "Search Suggestion Text"
+        ),
+        SearchSuggestion(
+            searchSuggestionId = 2,
+            text = "Search Suggestion 2 Text"
+        ),
+        SearchSuggestion(
+            searchSuggestionId = 3,
+            text = "Search Suggestion 3 Text"
+        )
     )
 }
