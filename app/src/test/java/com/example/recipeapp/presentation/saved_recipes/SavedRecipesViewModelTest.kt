@@ -20,6 +20,7 @@ import io.mockk.coVerifySequence
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.slot
 import io.mockk.verifySequence
 import kotlinx.coroutines.flow.flowOf
 import org.junit.After
@@ -181,6 +182,131 @@ class SavedRecipesViewModelTest {
     }
 
     @Test
+    fun `getSavedRecipeId is successful`() {
+        setMocks()
+        coEvery { getSavedRecipeIdUseCase(any(), any()) } returns flowOf(Resource.Success("savedRecipeId"))
+        coEvery { deleteSavedRecipeUseCase(any()) } returns flowOf(Resource.Loading(true))
+
+        savedRecipesViewModel = setViewModel()
+        savedRecipesViewModel.onEvent(SavedRecipesEvent.OnRemove("recipeId"))
+
+        verifyAllMocks()
+        coVerifyOrder {
+            getSavedRecipeIdUseCase("userUID","recipeId")
+            deleteSavedRecipeUseCase("savedRecipeId")
+        }
+    }
+
+    @Test
+    fun `getSavedRecipeId returns error`() {
+        setMocks()
+        coEvery { getSavedRecipeIdUseCase(any(), any()) } returns flowOf(Resource.Error("Error message"))
+
+        savedRecipesViewModel = setViewModel()
+        savedRecipesViewModel.onEvent(SavedRecipesEvent.OnRemove("recipeId"))
+
+        verifyAllMocks()
+        coVerifyOrder {
+            getSavedRecipeIdUseCase("userUID","recipeId")
+        }
+    }
+
+    @Test
+    fun `getSavedRecipeId is loading`() {
+        setMocks()
+        coEvery { getSavedRecipeIdUseCase(any(), any()) } returns flowOf(Resource.Loading(true))
+
+        savedRecipesViewModel = setViewModel()
+        savedRecipesViewModel.onEvent(SavedRecipesEvent.OnRemove("recipeId"))
+        val isLoading = getCurrentSavedRecipesState().isLoading
+
+        verifyAllMocks()
+        coVerifyOrder {
+            getSavedRecipeIdUseCase("userUID", "recipeId")
+        }
+        Truth.assertThat(isLoading).isTrue()
+    }
+
+    @Test
+    fun `deleteSavedRecipe is successful`() {
+        setMocks()
+        coEvery { getSavedRecipeIdUseCase(any(), any()) } returns flowOf(Resource.Success("savedRecipeId"))
+        coEvery { deleteSavedRecipeUseCase(any()) } returns flowOf(Resource.Success(true))
+
+        savedRecipesViewModel = setViewModel()
+        savedRecipesViewModel.onEvent(SavedRecipesEvent.OnRemove("recipeId"))
+
+        verifyMocks()
+        coVerifyOrder {
+            getUserSavedRecipesUseCase("userUID","",true)
+            getSavedRecipeIdUseCase("userUID","recipeId")
+            deleteSavedRecipeUseCase("savedRecipeId")
+            getUserSavedRecipesUseCase("userUID","",true)
+        }
+    }
+
+    @Test
+    fun `deleteSavedRecipe returns error`() {
+        setMocks()
+        coEvery { getSavedRecipeIdUseCase(any(), any()) } returns flowOf(Resource.Success("savedRecipeId"))
+        coEvery { deleteSavedRecipeUseCase(any()) } returns flowOf(Resource.Error("Error message"))
+
+        savedRecipesViewModel = setViewModel()
+        savedRecipesViewModel.onEvent(SavedRecipesEvent.OnRemove("recipeId"))
+
+        verifyMocks()
+        coVerifyOrder {
+            getUserSavedRecipesUseCase("userUID","",true)
+            getSavedRecipeIdUseCase("userUID","recipeId")
+            deleteSavedRecipeUseCase("savedRecipeId")
+        }
+    }
+
+    @Test
+    fun `deleteSavedRecipe is loading`() {
+        setMocks()
+        coEvery { getSavedRecipeIdUseCase(any(), any()) } returns flowOf(Resource.Success("savedRecipeId"))
+        coEvery { deleteSavedRecipeUseCase(any()) } returns flowOf(Resource.Loading(true))
+
+        savedRecipesViewModel = setViewModel()
+        savedRecipesViewModel.onEvent(SavedRecipesEvent.OnRemove("recipeId"))
+        val isLoading = getCurrentSavedRecipesState().isLoading
+
+        verifyMocks()
+        coVerifyOrder {
+            getUserSavedRecipesUseCase("userUID","",true)
+            getSavedRecipeIdUseCase("userUID","recipeId")
+            deleteSavedRecipeUseCase("savedRecipeId")
+        }
+        Truth.assertThat(isLoading).isTrue()
+    }
+
+    @Test
+    fun `onRemove - arguments passed correctly`() {
+        val userUID = slot<String>()
+        val recipeId = slot<String>()
+        val savedRecipeId = slot<String>()
+
+        setMocks()
+        coEvery { getSavedRecipeIdUseCase(capture(userUID), capture(recipeId)) } returns flowOf(Resource.Success("savedRecipeId"))
+        coEvery { deleteSavedRecipeUseCase(capture(savedRecipeId)) } returns flowOf(Resource.Success(true))
+
+        savedRecipesViewModel = setViewModel()
+        savedRecipesViewModel.onEvent(SavedRecipesEvent.OnRemove("recipeId"))
+
+        verifyMocks()
+        coVerifyOrder {
+            getUserSavedRecipesUseCase("userUID","",true)
+            getSavedRecipeIdUseCase("userUID","recipeId")
+            deleteSavedRecipeUseCase("savedRecipeId")
+            getUserSavedRecipesUseCase("userUID","",true)
+        }
+        Truth.assertThat(userUID.captured).isEqualTo("userUID")
+        Truth.assertThat(recipeId.captured).isEqualTo("recipeId")
+        Truth.assertThat(savedRecipeId.captured).isEqualTo("savedRecipeId")
+    }
+
+    @Test
     fun `onQueryChanged - initial query empty`() {
         setMocks()
         savedRecipesViewModel = setViewModel()
@@ -326,7 +452,7 @@ class SavedRecipesViewModelTest {
     }
 
     @Test
-    fun `OnClearClicked - query empty and search is active`() {
+    fun `onClearClicked - query empty and search is active`() {
         setMocks()
         coEvery { getSearchSuggestionsUseCase() } returns flowOf(Resource.Success( getSearchSuggestions()))
 
@@ -352,7 +478,7 @@ class SavedRecipesViewModelTest {
     }
 
     @Test
-    fun `OnClearClicked - query not empty`() {
+    fun `onClearClicked - query not empty`() {
         setMocks()
         savedRecipesViewModel = setViewModel()
         savedRecipesViewModel.onEvent(SavedRecipesEvent.OnQueryChange("Initial query"))
@@ -371,7 +497,7 @@ class SavedRecipesViewModelTest {
     }
 
     @Test
-    fun `OnSearchSuggestionClicked - initial query is empty`() {
+    fun `onSearchSuggestionClicked - initial query is empty`() {
         setMocks()
         savedRecipesViewModel = setViewModel()
         val initialQueryState = getCurrentSavedRecipesState().query
@@ -385,7 +511,7 @@ class SavedRecipesViewModelTest {
     }
 
     @Test
-    fun `OnSearchSuggestionClicked - initial query is not empty`() {
+    fun `onSearchSuggestionClicked - initial query is not empty`() {
         setMocks()
         savedRecipesViewModel = setViewModel()
         savedRecipesViewModel.onEvent(SavedRecipesEvent.OnQueryChange("Initial query"))
