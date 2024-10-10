@@ -103,7 +103,7 @@ class SavedRecipeDaoTest {
         recipeDao.insertRecipe(recipe)
         recipeDao.insertRecipe(recipe2)
         recipeDao.insertRecipe(recipe3)
-        val result = dao.getSavedRecipes()
+        val result = dao.getSavedRecipes("")
 
         assertThat(result).hasSize(1)
     }
@@ -115,7 +115,7 @@ class SavedRecipeDaoTest {
         recipeDao.insertRecipe(recipe)
         recipeDao.insertRecipe(recipe2)
         recipeDao.insertRecipe(recipe3)
-        val result = dao.getSavedRecipes()
+        val result = dao.getSavedRecipes("")
 
         assertThat(result).hasSize(3)
     }
@@ -127,7 +127,7 @@ class SavedRecipeDaoTest {
         recipeDao.insertRecipe(recipe)
         recipeDao.insertRecipe(recipe2)
         recipeDao.insertRecipe(recipe3)
-        val result = dao.getSavedRecipes()
+        val result = dao.getSavedRecipes("")
 
         assertThat(result).hasSize(3)
         assertThat(result).isInstanceOf(List::class.java)
@@ -138,7 +138,7 @@ class SavedRecipeDaoTest {
     fun savedRecipeDao_getSavedRecipes_noRecipesInDb() = runBlocking {
         val savedRecipes = listOf(savedRecipe, savedRecipe2, savedRecipe3)
         dao.insertSavedRecipes(savedRecipes)
-        val result = dao.getSavedRecipes()
+        val result = dao.getSavedRecipes("")
 
         assertThat(result).isEmpty()
         assertThat(result).isInstanceOf(List::class.java)
@@ -146,10 +146,37 @@ class SavedRecipeDaoTest {
 
     @Test
     fun savedRecipeDao_getSavedRecipes_emptyDb() = runBlocking {
-        val result = dao.getSavedRecipes()
+        val result = dao.getSavedRecipes("")
 
         assertThat(result).isEmpty()
         assertThat(result).isInstanceOf(List::class.java)
+    }
+
+    @Test
+    fun recipeDao_getRecipes_returnOnlyRecipesMatchingQuery() {
+        runBlocking {
+            val savedRecipes = listOf(savedRecipe, savedRecipe2, savedRecipe3)
+            dao.insertSavedRecipes(savedRecipes)
+            recipeDao.insertRecipe(recipe)
+            recipeDao.insertRecipe(recipe2)
+            recipeDao.insertRecipe(recipe3)
+            val result = dao.getSavedRecipes("3")
+
+            assertThat(result).hasSize(1)
+            assertThat(result[0].recipe).isEqualTo(recipe3)
+            assertThat(result[0].categories).isEmpty()
+        }
+    }
+
+    @Test
+    fun recipeDao_getRecipes_noRecipesMatchQuery() {
+        runBlocking {
+            val savedRecipes = listOf(savedRecipe, savedRecipe2, savedRecipe3)
+            dao.insertSavedRecipes(savedRecipes)
+            val result = dao.getSavedRecipes("query")
+
+            assertThat(result).isEmpty()
+        }
     }
 
     @Test
@@ -160,9 +187,9 @@ class SavedRecipeDaoTest {
         recipeDao.insertRecipe(recipe2)
         recipeDao.insertRecipe(recipe3)
 
-        val initialState = dao.getSavedRecipes()
+        val initialState = dao.getSavedRecipes("")
         dao.deleteSavedRecipes()
-        val result = dao.getSavedRecipes()
+        val result = dao.getSavedRecipes("")
 
         assertThat(initialState).hasSize(3)
         assertThat(result).isEmpty()

@@ -104,7 +104,7 @@ class SavedRecipesViewModelTest {
             getCurrentUserUseCase()
             firebaseUser.uid
             firebaseUser.uid
-            getUserSavedRecipesUseCase(any(),any(),any())
+            getUserSavedRecipesUseCase("userUID", "", true)
         }
     }
 
