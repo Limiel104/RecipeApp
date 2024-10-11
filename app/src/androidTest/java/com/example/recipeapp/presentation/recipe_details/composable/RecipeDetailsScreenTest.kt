@@ -18,12 +18,19 @@ import androidx.navigation.compose.rememberNavController
 import com.example.recipeapp.di.AppModule
 import com.example.recipeapp.domain.model.RecipeWithIngredients
 import com.example.recipeapp.domain.model.Resource
+import com.example.recipeapp.domain.use_case.AddSavedRecipeUseCase
+import com.example.recipeapp.domain.use_case.DeleteSavedRecipeUseCase
+import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
 import com.example.recipeapp.domain.use_case.GetRecipeUseCase
+import com.example.recipeapp.domain.use_case.GetSavedRecipeIdUseCase
+import com.example.recipeapp.domain.use_case.GetUserSavedRecipesUseCase
 import com.example.recipeapp.presentation.MainActivity
 import com.example.recipeapp.presentation.common.getIngredientsWithQuantity
+import com.example.recipeapp.presentation.common.getRecipes
 import com.example.recipeapp.presentation.recipe_details.RecipeDetailsViewModel
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 import com.google.common.truth.Truth
+import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -45,6 +52,12 @@ class RecipeDetailsScreenTest {
     private lateinit var emptyRecipeWithIngredients: RecipeWithIngredients
     private lateinit var savedStateHandle: SavedStateHandle
     private lateinit var getRecipeUseCase: GetRecipeUseCase
+    private lateinit var addSavedRecipeUseCase: AddSavedRecipeUseCase
+    private lateinit var deleteSavedRecipeUseCase: DeleteSavedRecipeUseCase
+    private lateinit var getUserSavedRecipesUseCase: GetUserSavedRecipesUseCase
+    private lateinit var getCurrentUserUseCase: GetCurrentUserUseCase
+    private lateinit var getSavedRecipeIdUseCase: GetSavedRecipeIdUseCase
+    private lateinit var firebaseUser: FirebaseUser
     private lateinit var viewModel: RecipeDetailsViewModel
 
     @get:Rule(order = 0)
@@ -59,6 +72,12 @@ class RecipeDetailsScreenTest {
         MockKAnnotations.init(this)
         savedStateHandle = mockk()
         getRecipeUseCase = mockk()
+        addSavedRecipeUseCase = mockk()
+        deleteSavedRecipeUseCase = mockk()
+        getUserSavedRecipesUseCase = mockk()
+        getCurrentUserUseCase = mockk()
+        getSavedRecipeIdUseCase = mockk()
+        firebaseUser = mockk()
 
         recipeWithIngredients = RecipeWithIngredients(
             recipeId = "recipeId",
@@ -94,7 +113,12 @@ class RecipeDetailsScreenTest {
     private fun setScreen() {
         viewModel = RecipeDetailsViewModel(
             savedStateHandle = savedStateHandle,
-            getRecipeUseCase = getRecipeUseCase
+            getRecipeUseCase = getRecipeUseCase,
+            addSavedRecipeUseCase = addSavedRecipeUseCase,
+            deleteSavedRecipeUseCase = deleteSavedRecipeUseCase,
+            getUserSavedRecipesUseCase = getUserSavedRecipesUseCase,
+            getCurrentUserUseCase = getCurrentUserUseCase,
+            getSavedRecipeIdUseCase = getSavedRecipeIdUseCase
         )
 
         composeRule.activity.setContent {
@@ -109,12 +133,18 @@ class RecipeDetailsScreenTest {
     private fun setMocks() {
         every { savedStateHandle.get<String>(any()) } returns "recipeId"
         coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Success(recipeWithIngredients))
+        coEvery { getUserSavedRecipesUseCase(any(), any(), any()) } returns flowOf(Resource.Success(getRecipes()))
+        every { getCurrentUserUseCase() } returns firebaseUser
+        every { firebaseUser.uid } returns "userUID"
     }
 
     private fun verifyMocks() {
         coVerifySequence {
             savedStateHandle.get<String>("recipeId")
             getRecipeUseCase("recipeId")
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            getUserSavedRecipesUseCase("userUID", "", true)
         }
     }
 
@@ -314,6 +344,9 @@ class RecipeDetailsScreenTest {
     fun recipeScreen_emptyIngredientList_ingredientsListIsNotDisplayed() {
         every { savedStateHandle.get<String>(any()) } returns "recipeId"
         coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Success(emptyRecipeWithIngredients))
+        coEvery { getUserSavedRecipesUseCase(any(), any(), any()) } returns flowOf(Resource.Success(getRecipes()))
+        every { getCurrentUserUseCase() } returns firebaseUser
+        every { firebaseUser.uid } returns "userUID"
         setScreen()
 
         backButtonIsDisplayed()
