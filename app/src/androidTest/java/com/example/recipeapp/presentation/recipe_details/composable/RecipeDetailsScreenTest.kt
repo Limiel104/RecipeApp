@@ -35,11 +35,14 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import io.mockk.MockKAnnotations
+import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerifySequence
+import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -108,6 +111,19 @@ class RecipeDetailsScreenTest {
             categories = emptyList(),
             date = 0
         )
+    }
+
+    @After
+    fun tearDown() {
+        confirmVerified(savedStateHandle)
+        confirmVerified(getRecipeUseCase)
+        confirmVerified(addSavedRecipeUseCase)
+        confirmVerified(deleteSavedRecipeUseCase)
+        confirmVerified(getUserSavedRecipesUseCase)
+        confirmVerified(getCurrentUserUseCase)
+        confirmVerified(getSavedRecipeIdUseCase)
+        confirmVerified(firebaseUser)
+        clearAllMocks()
     }
 
     private fun setScreen() {

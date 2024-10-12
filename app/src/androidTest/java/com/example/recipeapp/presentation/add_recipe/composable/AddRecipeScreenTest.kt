@@ -125,9 +125,10 @@ class AddRecipeScreenTest {
 
         categoryIds = listOf(
             "Appetizer", "Breakfast",
-            "Chicken", "Dinner", "Fish",
-            "Pasta", "Pork", "Pizza",
-            "Salad", "Soup", "Stew"
+            "Beef", "Chicken", "Dessert",
+            "Dinner", "Fish", "Pasta",
+            "Pork", "Pizza", "Salad",
+            "Salmon", "Soup", "Stew"
         )
 
         val categoriesMap = mutableMapOf<Category, Boolean>()
@@ -226,7 +227,7 @@ class AddRecipeScreenTest {
         titleTFIsNotDisplayed()
         addImageIsNotDisplayed()
         descriptionTextIsNotDisplayed()
-        descriptionTFIsNotDisplayed()
+        descriptionTFIsDisplayed()
         ingredientsTextIsDisplayed()
         tapOrSwipeTextIsDisplayed()
         reorderButtonIsDisplayed()

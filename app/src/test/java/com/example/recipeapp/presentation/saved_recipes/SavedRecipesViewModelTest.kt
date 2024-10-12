@@ -14,6 +14,7 @@ import com.example.recipeapp.presentation.common.getSearchSuggestions
 import com.example.recipeapp.util.MainDispatcherRule
 import com.google.common.truth.Truth
 import com.google.firebase.auth.FirebaseUser
+import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerifyOrder
 import io.mockk.coVerifySequence
@@ -67,6 +68,7 @@ class SavedRecipesViewModelTest {
         confirmVerified(addSearchSuggestionUseCase)
         confirmVerified(getSearchSuggestionsUseCase)
         confirmVerified(firebaseUser)
+        clearAllMocks()
     }
 
     private fun setViewModel(): SavedRecipesViewModel {
