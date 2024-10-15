@@ -23,9 +23,11 @@ import com.example.recipeapp.domain.repository.ShoppingListRepository
 import com.example.recipeapp.domain.repository.UserRepository
 import com.example.recipeapp.domain.use_case.AddImageUseCase
 import com.example.recipeapp.domain.use_case.AddRecipeUseCase
+import com.example.recipeapp.domain.use_case.AddSavedRecipeUseCase
 import com.example.recipeapp.domain.use_case.AddSearchSuggestionUseCase
 import com.example.recipeapp.domain.use_case.AddShoppingListUseCase
 import com.example.recipeapp.domain.use_case.AddUserUseCase
+import com.example.recipeapp.domain.use_case.DeleteSavedRecipeUseCase
 import com.example.recipeapp.domain.use_case.DeleteShoppingListUseCase
 import com.example.recipeapp.domain.use_case.GetCategoriesUseCase
 import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
@@ -33,8 +35,10 @@ import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
 import com.example.recipeapp.domain.use_case.GetRecipeUseCase
 import com.example.recipeapp.domain.use_case.GetSearchSuggestionsUseCase
 import com.example.recipeapp.domain.use_case.GetRecipesUseCase
+import com.example.recipeapp.domain.use_case.GetSavedRecipeIdUseCase
 import com.example.recipeapp.domain.use_case.GetShoppingListUseCase
 import com.example.recipeapp.domain.use_case.GetUserRecipesUseCase
+import com.example.recipeapp.domain.use_case.GetUserSavedRecipesUseCase
 import com.example.recipeapp.domain.use_case.GetUserShoppingListsUseCase
 import com.example.recipeapp.domain.use_case.GetUserUseCase
 import com.example.recipeapp.domain.use_case.LoginUseCase
@@ -252,6 +256,30 @@ object AppModule {
     @Singleton
     fun provideGetRecipeUseCase(recipeRepository: RecipeRepository): GetRecipeUseCase {
         return GetRecipeUseCase(recipeRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAddSavedRecipeUseCase(savedRecipeRepository: SavedRecipeRepository): AddSavedRecipeUseCase {
+        return AddSavedRecipeUseCase(savedRecipeRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeleteSavedRecipeUseCase(savedRecipeRepository: SavedRecipeRepository): DeleteSavedRecipeUseCase {
+        return DeleteSavedRecipeUseCase(savedRecipeRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetUserSavedRecipesUseCase(savedRecipeRepository: SavedRecipeRepository): GetUserSavedRecipesUseCase {
+        return GetUserSavedRecipesUseCase(savedRecipeRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetSavedRecipeIdUseCase(savedRecipeRepository: SavedRecipeRepository): GetSavedRecipeIdUseCase {
+        return GetSavedRecipeIdUseCase(savedRecipeRepository)
     }
 
     @Provides

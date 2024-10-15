@@ -146,6 +146,30 @@ class ShoppingListScreenTest {
                 name = "Ingredient13 Name",
                 imageUrl = "imageUrl",
                 category = "category2"
+            ),
+            Ingredient(
+                ingredientId = "ingredient14Id",
+                name = "Ingredient14 Name",
+                imageUrl = "imageUrl",
+                category = "category2"
+            ),
+            Ingredient(
+                ingredientId = "ingredient15Id",
+                name = "Ingredient15 Name",
+                imageUrl = "imageUrl",
+                category = "category2"
+            ),
+            Ingredient(
+                ingredientId = "ingredient16Id",
+                name = "Ingredient16 Name",
+                imageUrl = "imageUrl",
+                category = "category2"
+            ),
+            Ingredient(
+                ingredientId = "ingredient17Id",
+                name = "Ingredient17 Name",
+                imageUrl = "imageUrl",
+                category = "category2"
             )
 
         )
@@ -160,7 +184,11 @@ class ShoppingListScreenTest {
             allIngredients[5],
             allIngredients[9],
             allIngredients[11],
-            allIngredients[2]
+            allIngredients[2],
+            allIngredients[13],
+            allIngredients[14],
+            allIngredients[15],
+            allIngredients[16]
         )
 
         emptyShoppingListIngredients = emptyMap<Ingredient, Quantity>()
@@ -334,7 +362,7 @@ class ShoppingListScreenTest {
         composeRule.onNode(hasText(
             text = "items",
             substring = true
-        )).assert(hasText("13 items"))
+        )).assert(hasText("17 items"))
     }
 
     @Test
@@ -606,7 +634,7 @@ class ShoppingListScreenTest {
                 numberOfIngredients += 1
         }
 
-        Truth.assertThat(numberOfIngredients).isEqualTo(10)
+        Truth.assertThat(numberOfIngredients).isEqualTo(14)
     }
 
     @Test
@@ -629,7 +657,7 @@ class ShoppingListScreenTest {
                 numberOfImages += 1
         }
 
-        Truth.assertThat(numberOfImages).isEqualTo(10)
+        Truth.assertThat(numberOfImages).isEqualTo(14)
     }
 
     @Test

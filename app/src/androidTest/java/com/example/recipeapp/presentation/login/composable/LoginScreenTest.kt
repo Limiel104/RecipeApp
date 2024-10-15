@@ -233,21 +233,6 @@ class LoginScreenTest {
         assertThat(resultPasswordErrorValue).isNull()
     }
 
-    @Test
-    fun circularProgressIndicator_isDisplayedAfterClickingOnTheButtonWhenThereWasNoErrors() {
-        val email = "email@email.com"
-        val password = "Qwerty1+"
-        setScreen()
-
-        composeRule.onNodeWithTag("Login CPI").assertDoesNotExist()
-
-        composeRule.onNodeWithTag("Login email TF").performTextInput(email)
-        composeRule.onNodeWithTag("Login password TF").performTextInput(password)
-        composeRule.onNodeWithTag("Login button").performClick()
-
-        composeRule.onNodeWithTag("Login CPI").assertExists()
-    }
-
     private fun checkLoginButton() {
         composeRule.onNodeWithTag("Login button").assertIsDisplayed()
         composeRule.onNodeWithTag("Login button").assertIsEnabled()

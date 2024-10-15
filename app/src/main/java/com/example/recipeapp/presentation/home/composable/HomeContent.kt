@@ -25,6 +25,8 @@ import com.example.recipeapp.domain.model.Recipe
 import com.example.recipeapp.domain.model.SearchSuggestion
 import com.example.recipeapp.presentation.common.composable.RecipeItem
 import com.example.recipeapp.presentation.common.composable.SearchBarItem
+import com.example.recipeapp.presentation.common.getCategories
+import com.example.recipeapp.presentation.common.getRecipes
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 
 @Composable
@@ -93,6 +95,7 @@ fun HomeContent(
                         recipe = recipe,
                         cardHorizontalPadding = 16.dp,
                         cardBottomPadding = 16.dp,
+                        onBookmark = {},
                         onClick = { onRecipeSelected(recipe.recipeId) }
                     )
                 }
@@ -110,34 +113,6 @@ fun HomeContent(
             CircularProgressIndicator()
         }
     }
-}
-
-private fun getRecipes(): List<Recipe> {
-    val recipe = Recipe(
-        recipeId = "recipeId",
-        name = "Recipe Name",
-        prepTime = "40 min",
-        servings = 4,
-        description = "Recipe description",
-        isVegetarian = true,
-        isVegan = false,
-        imageUrl = "imageUrl",
-        createdBy = "userId",
-        categories = emptyList(),
-        date = 1231234
-    )
-
-    return listOf(recipe, recipe, recipe, recipe, recipe, recipe)
-}
-
-private fun getCategories(): List<Category> {
-    return listOf(
-        Category("Appetizer",""),
-        Category("Chicken",""),
-        Category("Dinner",""),
-        Category("Soup",""),
-        Category("Stew","")
-    )
 }
 
 @Preview(

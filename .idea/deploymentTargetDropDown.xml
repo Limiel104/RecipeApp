@@ -2,7 +2,22 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="RecipeDetailsScreenTest">
+        <State />
+      </entry>
       <entry key="app">
+        <State />
+      </entry>
+      <entry key="ingredientsColumn_ingredientsNamesAreDisplayedCorrectly()">
+        <State />
+      </entry>
+      <entry key="ingredientsColumn_quantityIsDisplayedCorrectly_afterIncrease()">
+        <State />
+      </entry>
+      <entry key="recipeScreen_emptyIngredientList_ingredientsListIsNotDisplayed()">
+        <State />
+      </entry>
+      <entry key="servings_cannotBeLessThanOne()">
         <State />
       </entry>
     </value>

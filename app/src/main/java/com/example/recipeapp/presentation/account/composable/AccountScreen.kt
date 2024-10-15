@@ -39,11 +39,17 @@ fun AccountScreen(
                     is AccountUiEvent.ShowErrorMessage -> {
                         Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
                     }
+                    is AccountUiEvent.NavigateToRecipeDetails -> {
+                        navController.navigate(Screen.RecipeDetailsScreen.route + "recipeId=" + event.recipeId)
+                    }
                     AccountUiEvent.NavigateToLogin -> {
                         navController.navigate(Screen.LoginScreen.route + "lastDestination=" + Screen.AccountScreen.route)
                     }
                     AccountUiEvent.NavigateToSignup -> {
                         navController.navigate(Screen.SignupScreen.route + "lastDestination=" + Screen.AccountScreen.route)
+                    }
+                    AccountUiEvent.NavigateToAddRecipe -> {
+                        navController.navigate(Screen.AddRecipeScreen.route)
                     }
                 }
             }
@@ -54,8 +60,8 @@ fun AccountScreen(
         AccountContent(
             scrollBehavior = scrollBehavior,
             uiState = viewModel.accountState.value,
-            onAddRecipe = { navController.navigate(Screen.AddRecipeScreen.route) },
-            onRecipeSelected = { navController.navigate(Screen.RecipeDetailsScreen.route) },
+            onAddRecipe = { viewModel.onEvent(AccountEvent.OnAddRecipeButtonClicked) },
+            onRecipeSelected = { viewModel.onEvent(AccountEvent.OnRecipeSelected(it)) },
             onLogout = { viewModel.onEvent(AccountEvent.OnLogout) },
             onSortRecipes = { viewModel.onEvent(AccountEvent.OnSortRecipes(it)) },
             onEditButtonClicked = { viewModel.onEvent(AccountEvent.OnEditButtonClicked) },

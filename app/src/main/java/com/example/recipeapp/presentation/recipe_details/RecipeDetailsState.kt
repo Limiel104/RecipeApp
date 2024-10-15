@@ -24,5 +24,8 @@ data class RecipeDetailsState(
     val tabTitleList: List<String> = listOf("Ingredients", "Description"),
     val isLoading: Boolean = false,
     val displayedServings: Int = 0,
-    val displayedIngredients: Map<Ingredient, Quantity> = emptyMap()
+    val displayedIngredients: Map<Ingredient, Quantity> = emptyMap(),
+    val isUserLoggedIn: Boolean = false,
+    val userUID: String = "",
+    val isRecipeSaved: Boolean = false
 )

@@ -9,7 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.Quantity
 import com.example.recipeapp.domain.model.Resource
+import com.example.recipeapp.domain.use_case.AddSavedRecipeUseCase
+import com.example.recipeapp.domain.use_case.DeleteSavedRecipeUseCase
+import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
 import com.example.recipeapp.domain.use_case.GetRecipeUseCase
+import com.example.recipeapp.domain.use_case.GetSavedRecipeIdUseCase
+import com.example.recipeapp.domain.use_case.GetUserSavedRecipesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -19,7 +24,12 @@ import javax.inject.Inject
 @HiltViewModel
 class RecipeDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val getRecipeUseCase: GetRecipeUseCase
+    private val getRecipeUseCase: GetRecipeUseCase,
+    private val addSavedRecipeUseCase: AddSavedRecipeUseCase,
+    private val deleteSavedRecipeUseCase: DeleteSavedRecipeUseCase,
+    private val getUserSavedRecipesUseCase: GetUserSavedRecipesUseCase,
+    private val getCurrentUserUseCase: GetCurrentUserUseCase,
+    private val getSavedRecipeIdUseCase: GetSavedRecipeIdUseCase
 ): ViewModel() {
 
     private val _recipeDetailsState = mutableStateOf(RecipeDetailsState())
@@ -37,6 +47,7 @@ class RecipeDetailsViewModel @Inject constructor(
             )
         }
         viewModelScope.launch { getRecipe(_recipeDetailsState.value.recipeId) }
+        checkIfUserLoggedIn()
     }
 
     fun onEvent(event: RecipeDetailsEvent) {
@@ -67,10 +78,35 @@ class RecipeDetailsViewModel @Inject constructor(
                 )
             }
 
+            RecipeDetailsEvent.OnSaveRecipe -> {
+                if(_recipeDetailsState.value.isUserLoggedIn) {
+                    if(_recipeDetailsState.value.isRecipeSaved)
+                        getSavedRecipeId()
+                    else
+                        addSavedRecipe()
+                }
+            }
+
             RecipeDetailsEvent.OnGoBack -> {
                 viewModelScope.launch {
                     _recipeDetailsUiEventChannel.send(RecipeDetailsUiEvent.NavigateBack)
                 }
+            }
+        }
+    }
+
+    private fun checkIfUserLoggedIn() {
+        viewModelScope.launch {
+            val currentUser = getCurrentUserUseCase()
+            _recipeDetailsState.value = recipeDetailsState.value.copy(
+                isUserLoggedIn = currentUser != null
+            )
+
+            currentUser?.let {
+                _recipeDetailsState.value = recipeDetailsState.value.copy(
+                    userUID = currentUser.uid
+                )
+                getUserSavedRecipes()
             }
         }
     }
@@ -120,6 +156,114 @@ class RecipeDetailsViewModel @Inject constructor(
                                 displayedIngredients = response.data.ingredients
                             )
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getUserSavedRecipes(
+        userUID: String = _recipeDetailsState.value.userUID
+    ) {
+        viewModelScope.launch {
+            getUserSavedRecipesUseCase(userUID, "", true).collect { response ->
+                when(response) {
+                    is Resource.Error -> {
+                        Log.i("TAG","Error message from get user saved recipes: ${response.message}")
+                    }
+                    is Resource.Loading -> {
+                        Log.i("TAG","Loading get user saved recipes: ${response.isLoading}")
+                        _recipeDetailsState.value = recipeDetailsState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i("TAG",response.data.toString())
+                        response.data?.let {
+                            _recipeDetailsState.value = recipeDetailsState.value.copy(
+                                isRecipeSaved = response.data.any { it.recipeId == _recipeDetailsState.value.recipe.recipeId }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getSavedRecipeId(
+        userUID: String = _recipeDetailsState.value.userUID,
+        recipeId: String = _recipeDetailsState.value.recipeId
+    ) {
+        viewModelScope.launch {
+            getSavedRecipeIdUseCase(userUID, recipeId).collect { response ->
+                when(response) {
+                    is Resource.Error -> {
+                        Log.i("TAG","Error message from get user saved recipes: ${response.message}")
+                    }
+                    is Resource.Loading -> {
+                        Log.i("TAG","Loading get user saved recipes: ${response.isLoading}")
+                        _recipeDetailsState.value = recipeDetailsState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i("TAG",response.data.toString())
+                        response.data?.let {
+                            deleteSavedRecipe(response.data)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun addSavedRecipe(
+        userUID: String = _recipeDetailsState.value.userUID,
+        recipeId: String = _recipeDetailsState.value.recipeId
+    ) {
+        viewModelScope.launch {
+            addSavedRecipeUseCase(userUID, recipeId).collect { response ->
+                when(response) {
+                    is Resource.Error -> {
+                        Log.i("TAG","Error message from add saved recipe: ${response.message}")
+                    }
+                    is Resource.Loading -> {
+                        Log.i("TAG","Loading add saved recipe: ${response.isLoading}")
+                        _recipeDetailsState.value = recipeDetailsState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i("TAG",response.data.toString())
+                        _recipeDetailsState.value = recipeDetailsState.value.copy(
+                            isRecipeSaved = true
+                        )
+                        getUserSavedRecipes()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun deleteSavedRecipe(savedRecipeId: String) {
+        viewModelScope.launch {
+            deleteSavedRecipeUseCase(savedRecipeId).collect { response ->
+                when(response) {
+                    is Resource.Error -> {
+                        Log.i("TAG","Error message delete saved recipe: ${response.message}")
+                    }
+                    is Resource.Loading -> {
+                        Log.i("TAG","Loading delete saved recipe: ${response.isLoading}")
+                        _recipeDetailsState.value = recipeDetailsState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i("TAG",response.data.toString())
+                        _recipeDetailsState.value = recipeDetailsState.value.copy(
+                            isRecipeSaved = false
+                        )
+                        getUserSavedRecipes()
                     }
                 }
             }

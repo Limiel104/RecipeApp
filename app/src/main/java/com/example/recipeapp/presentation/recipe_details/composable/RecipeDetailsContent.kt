@@ -11,7 +11,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.outlined.Bookmark
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -42,6 +43,7 @@ fun RecipeDetailsContent(
     onTabChanged: (Int) -> Unit,
     onLessServings: () -> Unit,
     onMoreServings: () -> Unit,
+    onSaveRecipe: () -> Unit,
     onGoBack: () -> Unit
 ) {
     Scaffold(
@@ -59,9 +61,10 @@ fun RecipeDetailsContent(
                     }
                 },
                 actions = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = { onSaveRecipe() }) {
                         Icon(
-                            imageVector = Icons.Outlined.Bookmark,
+                            imageVector = if(uiState.isRecipeSaved) Icons.Filled.Bookmark
+                                            else Icons.Outlined.BookmarkBorder,
                             contentDescription = "Bookmark recipe button"
                         )
                     }
@@ -163,6 +166,7 @@ fun RecipeDetailsContentPreviewIngredientsTab() {
             onTabChanged = {},
             onLessServings = {},
             onMoreServings = {},
+            onSaveRecipe = {},
             onGoBack = {}
         )
     }
@@ -195,12 +199,14 @@ fun RecipeDetailsContentPreviewDescriptionTab() {
                     categories = listOf("Dinner","Chicken"),
                     date = 1234567890
                 ),
-                secondaryTabState = 1
+                secondaryTabState = 1,
+                isRecipeSaved = true
             ),
             scrollState = rememberScrollState(),
             onTabChanged = {},
             onLessServings = {},
             onMoreServings = {},
+            onSaveRecipe = {},
             onGoBack = {}
         )
     }

@@ -1,6 +1,5 @@
 package com.example.recipeapp.presentation.account
 
-import com.example.recipeapp.domain.model.Recipe
 import com.example.recipeapp.domain.model.Resource
 import com.example.recipeapp.domain.model.User
 import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
@@ -14,6 +13,7 @@ import com.example.recipeapp.domain.use_case.ValidateConfirmPasswordUseCase
 import com.example.recipeapp.domain.use_case.ValidateNameUseCase
 import com.example.recipeapp.domain.use_case.ValidateSignupPasswordUseCase
 import com.example.recipeapp.domain.util.RecipeOrder
+import com.example.recipeapp.presentation.common.getRecipes
 import com.example.recipeapp.util.MainDispatcherRule
 import com.google.common.truth.Truth.assertThat
 import com.google.firebase.auth.FirebaseUser
@@ -49,7 +49,6 @@ class AccountViewModelTest {
     private lateinit var logoutUseCase: LogoutUseCase
     private lateinit var accountViewModel: AccountViewModel
     private lateinit var firebaseUser: FirebaseUser
-    private lateinit var recipes: List<Recipe>
     private lateinit var user: User
     private lateinit var updatedUser: User
 
@@ -79,87 +78,6 @@ class AccountViewModelTest {
 
         every { getCurrentUserUseCase() } returns firebaseUser
         every { firebaseUser.uid } returns "userUID"
-
-        recipes = listOf(
-            Recipe(
-                recipeId = "recipe2Id",
-                name = "Recipe 2 Name",
-                prepTime = "25 min",
-                servings = 1,
-                description = "Recipe 2 description",
-                isVegetarian = false,
-                isVegan = false,
-                imageUrl = "image2Url",
-                createdBy = "userId",
-                categories = listOf("Category", "Category3"),
-                date = 1234567891
-            ),
-            Recipe(
-                recipeId = "recipe5Id",
-                name = "Recipe 5 Name",
-                prepTime = "15 min",
-                servings = 1,
-                description = "Recipe 5 description",
-                isVegetarian = false,
-                isVegan = false,
-                imageUrl = "image5Url",
-                createdBy = "userId",
-                categories = listOf("Category1"),
-                date = 1234567894
-            ),
-            Recipe(
-                recipeId = "recipe4Id",
-                name = "Recipe 4 Name",
-                prepTime = "1 h 15 min",
-                servings = 4,
-                description = "Recipe 3 description",
-                isVegetarian = false,
-                isVegan = false,
-                imageUrl = "image4Url",
-                createdBy = "userId",
-                categories = listOf("Category4","Category1","Category2"),
-                date = 1234567893
-            ),
-            Recipe(
-                recipeId = "recipeId",
-                name = "Recipe Name",
-                prepTime = "40 min",
-                servings = 4,
-                description = "Recipe description",
-                isVegetarian = false,
-                isVegan = false,
-                imageUrl = "imageUrl",
-                createdBy = "userId",
-                categories = listOf("Category", "Category2", "Category3"),
-                date = 1234567890
-            ),
-            Recipe(
-                recipeId = "recipe6Id",
-                name = "Recipe 6 Name",
-                prepTime = "30 min",
-                servings = 2,
-                description = "Recipe 6 description",
-                isVegetarian = false,
-                isVegan = false,
-                imageUrl = "image6Url",
-                createdBy = "userId",
-                categories = listOf("Category2"),
-                date = 1234567895
-            ),
-            Recipe(
-                recipeId = "recipe3Id",
-                name = "Recipe 3 Name",
-                prepTime = "1 h",
-                servings = 6,
-                description = "Recipe 3 description",
-                isVegetarian = false,
-                isVegan = false,
-                imageUrl = "image3Url",
-                createdBy = "userId",
-                categories = listOf("Category4"),
-                date = 1234567892
-            )
-        )
     }
 
     @After
@@ -211,7 +129,7 @@ class AccountViewModelTest {
 
     private fun setMocks() {
         coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(user))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(getRecipes()))
     }
 
     @Test
@@ -236,7 +154,7 @@ class AccountViewModelTest {
     }
 
     @Test
-    fun `getUser sets recipes successfully`() {
+    fun `getUser sets user data successfully`() {
         setMocks()
         accountViewModel = setViewModel()
         val resultUserUID = getCurrentAccountState().userUID
@@ -268,7 +186,7 @@ class AccountViewModelTest {
     @Test
     fun `getUser is loading`() {
         coEvery { getUserUseCase(any()) } returns flowOf(Resource.Loading(true))
-        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(recipes))
+        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(getRecipes()))
 
         accountViewModel = setViewModel()
         val resultUserUID = getCurrentAccountState().userUID
@@ -289,7 +207,7 @@ class AccountViewModelTest {
         val isLoading = getCurrentAccountState().isLoading
 
         verifyAllMocks()
-        assertThat(result).containsExactlyElementsIn(recipes)
+        assertThat(result).containsExactlyElementsIn(getRecipes())
         assertThat(isLoading).isFalse()
     }
 
@@ -322,7 +240,7 @@ class AccountViewModelTest {
     }
 
     @Test
-    fun `updateUser sets recipes successfully`() {
+    fun `updateUser sets user data successfully`() {
         setMocks()
         coEvery { updateUserUseCase(any()) } returns flowOf(Resource.Success(true))
 
@@ -494,7 +412,7 @@ class AccountViewModelTest {
         val isLoading = getCurrentAccountState().isLoading
 
         verifyAllMocks()
-        assertThat(result).isEqualTo(recipes.sortedByDescending { it.date })
+        assertThat(result).isEqualTo(getRecipes().sortedByDescending { it.date })
         assertThat(isLoading).isFalse()
     }
 
@@ -506,7 +424,7 @@ class AccountViewModelTest {
         val result = getCurrentAccountState().recipes
 
         verifyAllMocks()
-        assertThat(result).isEqualTo(recipes.sortedByDescending { it.date })
+        assertThat(result).isEqualTo(getRecipes().sortedByDescending { it.date })
     }
 
     @Test
@@ -517,7 +435,7 @@ class AccountViewModelTest {
         val result = getCurrentAccountState().recipes
 
         verifyAllMocks()
-        assertThat(result).isEqualTo(recipes.sortedBy { it.date })
+        assertThat(result).isEqualTo(getRecipes().sortedBy { it.date })
     }
 
     @Test

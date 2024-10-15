@@ -4,10 +4,17 @@ import androidx.lifecycle.SavedStateHandle
 import com.example.recipeapp.domain.model.Ingredient
 import com.example.recipeapp.domain.model.RecipeWithIngredients
 import com.example.recipeapp.domain.model.Resource
+import com.example.recipeapp.domain.use_case.AddSavedRecipeUseCase
+import com.example.recipeapp.domain.use_case.DeleteSavedRecipeUseCase
+import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
 import com.example.recipeapp.domain.use_case.GetRecipeUseCase
+import com.example.recipeapp.domain.use_case.GetSavedRecipeIdUseCase
+import com.example.recipeapp.domain.use_case.GetUserSavedRecipesUseCase
 import com.example.recipeapp.presentation.common.getIngredientsWithQuantity
+import com.example.recipeapp.presentation.common.getRecipes
 import com.example.recipeapp.util.MainDispatcherRule
 import com.google.common.truth.Truth
+import com.google.firebase.auth.FirebaseUser
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerifySequence
@@ -27,15 +34,26 @@ class RecipeDetailsViewModelTest {
 
     private lateinit var savedStateHandle: SavedStateHandle
     private lateinit var getRecipeUseCase: GetRecipeUseCase
+    private lateinit var addSavedRecipeUseCase: AddSavedRecipeUseCase
+    private lateinit var deleteSavedRecipeUseCase: DeleteSavedRecipeUseCase
+    private lateinit var getUserSavedRecipesUseCase: GetUserSavedRecipesUseCase
+    private lateinit var getCurrentUserUseCase: GetCurrentUserUseCase
+    private lateinit var getSavedRecipeIdUseCase: GetSavedRecipeIdUseCase
     private lateinit var recipeDetailsViewModel: RecipeDetailsViewModel
     private lateinit var recipeWithIngredients: RecipeWithIngredients
     private lateinit var emptyRecipeWithIngredients: RecipeWithIngredients
     private lateinit var ingredients: List<Ingredient>
-
+    private lateinit var firebaseUser: FirebaseUser
     @Before
     fun setUp() {
         savedStateHandle = mockk()
         getRecipeUseCase = mockk()
+        addSavedRecipeUseCase = mockk()
+        deleteSavedRecipeUseCase = mockk()
+        getUserSavedRecipesUseCase = mockk()
+        getCurrentUserUseCase = mockk()
+        getSavedRecipeIdUseCase = mockk()
+        firebaseUser = mockk()
 
         recipeWithIngredients = RecipeWithIngredients(
             recipeId = "recipeId",
@@ -89,19 +107,32 @@ class RecipeDetailsViewModelTest {
         )
 
         every { savedStateHandle.get<String>(any()) } returns "recipeId"
+        every { getCurrentUserUseCase() } returns firebaseUser
+        every { firebaseUser.uid } returns "userUID"
     }
 
     @After
     fun tearDown() {
         confirmVerified(savedStateHandle)
         confirmVerified(getRecipeUseCase)
+        confirmVerified(addSavedRecipeUseCase)
+        confirmVerified(deleteSavedRecipeUseCase)
+        confirmVerified(getUserSavedRecipesUseCase)
+        confirmVerified(getCurrentUserUseCase)
+        confirmVerified(getSavedRecipeIdUseCase)
+        confirmVerified(firebaseUser)
         clearAllMocks()
     }
 
     private fun setViewModel(): RecipeDetailsViewModel {
         return RecipeDetailsViewModel(
             savedStateHandle,
-            getRecipeUseCase
+            getRecipeUseCase,
+            addSavedRecipeUseCase,
+            deleteSavedRecipeUseCase,
+            getUserSavedRecipesUseCase,
+            getCurrentUserUseCase,
+            getSavedRecipeIdUseCase
         )
     }
 
@@ -109,16 +140,29 @@ class RecipeDetailsViewModelTest {
         return recipeDetailsViewModel.recipeDetailsState.value
     }
 
+    private fun setMocks() {
+        coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Success(recipeWithIngredients))
+        coEvery {
+            getUserSavedRecipesUseCase(any(), any(), any())
+        } returns flowOf(Resource.Success(getRecipes()))
+    }
+
     private fun verifyMocks() {
         coVerifySequence {
             savedStateHandle.get<String>("recipeId")
             getRecipeUseCase("recipeId")
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            getUserSavedRecipesUseCase("userUID", "", true)
         }
     }
 
     @Test
     fun `saved state handle is set on init`() {
         coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Loading(true))
+        coEvery { getUserSavedRecipesUseCase(any(), any(), any())
+        } returns flowOf(Resource.Loading(true))
+
         recipeDetailsViewModel = setViewModel()
         val result = getCurrentRecipeDetailsState().recipeId
 
@@ -128,7 +172,7 @@ class RecipeDetailsViewModelTest {
 
     @Test
     fun `getRecipe runs successfully`() {
-        coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Success(recipeWithIngredients))
+        setMocks()
         recipeDetailsViewModel = setViewModel()
 
         val result = getCurrentRecipeDetailsState().recipe
@@ -142,6 +186,9 @@ class RecipeDetailsViewModelTest {
     @Test
     fun `getRecipe returns error`() {
         coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Error("Error message"))
+        coEvery { getUserSavedRecipesUseCase(any(), any(), any())
+        } returns flowOf(Resource.Success(getRecipes()))
+
         recipeDetailsViewModel = setViewModel()
 
         val result = getCurrentRecipeDetailsState().recipe
@@ -155,6 +202,9 @@ class RecipeDetailsViewModelTest {
     @Test
     fun `getRecipe is loading`() {
         coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Loading(true))
+        coEvery { getUserSavedRecipesUseCase(any(), any(), any())
+        } returns flowOf(Resource.Success(getRecipes()))
+
         recipeDetailsViewModel = setViewModel()
 
         val result = getCurrentRecipeDetailsState().recipe
@@ -167,7 +217,7 @@ class RecipeDetailsViewModelTest {
 
     @Test
     fun `getRecipe sets displayed servings correctly`() {
-        coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Success(recipeWithIngredients))
+        setMocks()
         recipeDetailsViewModel = setViewModel()
         val displayedServingsState = getCurrentRecipeDetailsState().displayedServings
 
@@ -177,7 +227,7 @@ class RecipeDetailsViewModelTest {
 
     @Test
     fun `getRecipe sets displayed ingredients correctly`() {
-        coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Success(recipeWithIngredients))
+        setMocks()
         recipeDetailsViewModel = setViewModel()
         val displayedIngredientsState = getCurrentRecipeDetailsState().displayedIngredients
 
@@ -187,7 +237,7 @@ class RecipeDetailsViewModelTest {
 
     @Test
     fun `OnTabChanged - from default tab 0 to tab 1`() {
-        coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Success(recipeWithIngredients))
+        setMocks()
         recipeDetailsViewModel = setViewModel()
         val initialTabState = getCurrentRecipeDetailsState().secondaryTabState
 
@@ -201,7 +251,7 @@ class RecipeDetailsViewModelTest {
 
     @Test
     fun `OnTabChanged - from default tab 0 to tab 0`() {
-        coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Success(recipeWithIngredients))
+        setMocks()
         recipeDetailsViewModel = setViewModel()
         val initialTabState = getCurrentRecipeDetailsState().secondaryTabState
 
@@ -215,7 +265,7 @@ class RecipeDetailsViewModelTest {
 
     @Test
     fun `OnTabChanged - from tab 1 to default tab 0`() {
-        coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Success(recipeWithIngredients))
+        setMocks()
         recipeDetailsViewModel = setViewModel()
         recipeDetailsViewModel.onEvent(RecipeDetailsEvent.OnTabChanged(1))
         val initialTabState = getCurrentRecipeDetailsState().secondaryTabState
@@ -230,7 +280,7 @@ class RecipeDetailsViewModelTest {
 
     @Test
     fun `OnLessServings - displayed servings is decreased by 1`() {
-        coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Success(recipeWithIngredients))
+        setMocks()
         recipeDetailsViewModel = setViewModel()
         val initialDisplayedServingsState = getCurrentRecipeDetailsState().displayedServings
 
@@ -244,7 +294,7 @@ class RecipeDetailsViewModelTest {
 
     @Test
     fun `OnLessServings - displayed servings is decreased by 3`() {
-        coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Success(recipeWithIngredients))
+        setMocks()
         recipeDetailsViewModel = setViewModel()
         recipeDetailsViewModel.onEvent(RecipeDetailsEvent.OnLessServings)
         val initialDisplayedServingsState = getCurrentRecipeDetailsState().displayedServings
@@ -260,7 +310,7 @@ class RecipeDetailsViewModelTest {
 
     @Test
     fun `OnLessServings - ingredients quantity is recalculated correctly`() {
-        coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Success(recipeWithIngredients))
+        setMocks()
         recipeDetailsViewModel = setViewModel()
         val initialDisplayedIngredientsState = getCurrentRecipeDetailsState().displayedIngredients
 
@@ -278,7 +328,7 @@ class RecipeDetailsViewModelTest {
 
     @Test
     fun `OnLessServings - ingredients quantity is recalculated correctly - 2 times`() {
-        coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Success(recipeWithIngredients))
+        setMocks()
         recipeDetailsViewModel = setViewModel()
         recipeDetailsViewModel.onEvent(RecipeDetailsEvent.OnLessServings)
         val initialDisplayedIngredientsState = getCurrentRecipeDetailsState().displayedIngredients
@@ -301,7 +351,7 @@ class RecipeDetailsViewModelTest {
 
     @Test
     fun `OnMoreServings - displayed servings is increased by 1`() {
-        coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Success(recipeWithIngredients))
+        setMocks()
         recipeDetailsViewModel = setViewModel()
         val initialDisplayedServingsState = getCurrentRecipeDetailsState().displayedServings
 
@@ -315,7 +365,7 @@ class RecipeDetailsViewModelTest {
 
     @Test
     fun `OnMoreServings - displayed servings is increased by 3`() {
-        coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Success(recipeWithIngredients))
+        setMocks()
         recipeDetailsViewModel = setViewModel()
         recipeDetailsViewModel.onEvent(RecipeDetailsEvent.OnMoreServings)
         val initialDisplayedServingsState = getCurrentRecipeDetailsState().displayedServings
@@ -331,7 +381,7 @@ class RecipeDetailsViewModelTest {
 
     @Test
     fun `OnMoreServings - ingredients quantity is recalculated correctly`() {
-        coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Success(recipeWithIngredients))
+        setMocks()
         recipeDetailsViewModel = setViewModel()
         val initialDisplayedIngredientsState = getCurrentRecipeDetailsState().displayedIngredients
 
@@ -349,7 +399,7 @@ class RecipeDetailsViewModelTest {
 
     @Test
     fun `OnMoreServings - ingredients quantity is recalculated correctly - 2 times`() {
-        coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Success(recipeWithIngredients))
+        setMocks()
         recipeDetailsViewModel = setViewModel()
         recipeDetailsViewModel.onEvent(RecipeDetailsEvent.OnMoreServings)
         val initialDisplayedIngredientsState = getCurrentRecipeDetailsState().displayedIngredients
