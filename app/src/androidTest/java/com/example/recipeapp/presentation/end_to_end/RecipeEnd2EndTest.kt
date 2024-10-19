@@ -3,6 +3,9 @@ package com.example.recipeapp.presentation.end_to_end
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasSetTextAction
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.isNotDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -10,7 +13,10 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performScrollToNode
+import androidx.compose.ui.test.performTextInput
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -52,6 +58,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.coVerifySequence
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
@@ -128,22 +135,35 @@ class RecipeEnd2EndTest {
 
     @After
     fun tearDown() {
-        confirmVerified(getIngredientsUseCase)
-        confirmVerified(getRecipesUseCase)
-        confirmVerified(getUserShoppingListsUseCase)
-        confirmVerified(addSearchSuggestionUseCase)
-        confirmVerified(getSearchSuggestionsUseCase)
-        confirmVerified(getCategoriesUseCase)
-
-        confirmVerified(savedStateHandle)
-        confirmVerified(getRecipeUseCase)
-        confirmVerified(addSavedRecipeUseCase)
-        confirmVerified(deleteSavedRecipeUseCase)
-        confirmVerified(getUserSavedRecipesUseCase)
-        confirmVerified(getCurrentUserUseCase)
-        confirmVerified(getSavedRecipeIdUseCase)
-        confirmVerified(firebaseUser)
         clearAllMocks()
+    }
+
+    private fun setOnlyHomeScreen() {
+        homeViewModel = HomeViewModel(
+            getIngredientsUseCase = getIngredientsUseCase,
+            getRecipesUseCase = getRecipesUseCase,
+            getUserShoppingListsUseCase = getUserShoppingListsUseCase,
+            addSearchSuggestionUseCase = addSearchSuggestionUseCase,
+            getSearchSuggestionsUseCase = getSearchSuggestionsUseCase,
+            getCategoriesUseCase = getCategoriesUseCase
+        )
+
+        composeRule.activity.setContent {
+            val navController = rememberNavController()
+            NavHost(
+                navController = navController,
+                startDestination = Screen.HomeScreen.route
+            ) {
+                composable(
+                    route = Screen.HomeScreen.route
+                ) {
+                    HomeScreen(
+                        navController = navController,
+                        viewModel = homeViewModel
+                    )
+                }
+            }
+        }
     }
 
     private fun setScreen() {
@@ -215,21 +235,6 @@ class RecipeEnd2EndTest {
         every { firebaseUser.uid } returns "userUID"
     }
 
-    private fun verifyMocks() {
-        coVerify {
-            getCategoriesUseCase()
-            getRecipesUseCase(any(), any(), any())
-            getIngredientsUseCase()
-            getUserShoppingListsUseCase(any(), any())
-
-            savedStateHandle.get<String>("recipeId")
-            getRecipeUseCase("recipeId")
-            getCurrentUserUseCase()
-            firebaseUser.uid
-            getUserSavedRecipesUseCase("userUID", "", true)
-        }
-    }
-
     @Test
     fun clickOnRecipe_navigateToRecipeDetails_andBackToHome() {
         setMocks()
@@ -260,6 +265,113 @@ class RecipeEnd2EndTest {
         composeRule.onNodeWithTag("Home Content").isDisplayed()
         composeRule.onNodeWithTag("Recipe Details Content").assertIsNotDisplayed()
 
-        verifyMocks()
+        coVerify {
+            getCategoriesUseCase()
+            getRecipesUseCase(any(), any(), any())
+            getIngredientsUseCase()
+            getUserShoppingListsUseCase(any(), any())
+
+            savedStateHandle.get<String>("recipeId")
+            getRecipeUseCase("recipeId")
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            getUserSavedRecipesUseCase("userUID", "", true)
+        }
+        confirmVerified()
+    }
+
+    @Test
+    fun clickOnSearchBar_searchViewIsVisible_textInput() {
+        setMocks()
+        setOnlyHomeScreen()
+
+        composeRule.onNodeWithTag("Home Lazy Column").assertIsDisplayed()
+        composeRule.onNodeWithTag("Search Bar").performClick()
+        composeRule.onNodeWithTag("Home Lazy Column").assertIsNotDisplayed()
+
+        composeRule.onAllNodes(hasSetTextAction())[0].performTextInput("Recipe") //finds search view editable text
+        composeRule.onNodeWithText("Recipe").assertIsDisplayed()
+        composeRule.onNodeWithContentDescription("Clear").performClick() //clears text
+        composeRule.onNodeWithText("Recipe").assertIsNotDisplayed()
+        composeRule.onNodeWithContentDescription("Clear").performClick() //closes search view
+
+        composeRule.onNodeWithTag("Home Lazy Column").assertIsDisplayed()
+        composeRule.onNodeWithTag("Search Bar").performClick()
+        composeRule.onNodeWithTag("Home Lazy Column").assertIsNotDisplayed()
+
+        composeRule.onNodeWithText("Search Suggestion Text").performClick()
+        composeRule.onNodeWithContentDescription("Clear").performClick()
+        composeRule.onNodeWithContentDescription("Clear").performClick()
+
+        composeRule.onNodeWithTag("Home Lazy Column").assertIsDisplayed()
+        composeRule.onNodeWithTag("Search Bar").performClick()
+
+        composeRule.onAllNodes(hasSetTextAction())[0].performTextInput("Recipe")
+        composeRule.onNodeWithText("Recipe").performImeAction()
+        composeRule.onNodeWithTag("Home Lazy Column").assertIsDisplayed()
+        composeRule.onNodeWithText("Recipe").assertIsDisplayed()
+
+        coVerifySequence {
+            getCategoriesUseCase()
+            getRecipesUseCase(any(), "", any())
+            getIngredientsUseCase()
+            getUserShoppingListsUseCase(any(), any())
+            getSearchSuggestionsUseCase()
+            getRecipesUseCase(any(), "", any())
+            getSearchSuggestionsUseCase()
+            getRecipesUseCase(any(), "", any())
+            getSearchSuggestionsUseCase()
+            addSearchSuggestionUseCase(any())
+            getRecipesUseCase(any(), "Recipe", any())
+        }
+        confirmVerified()
+    }
+
+    @Test
+    fun categoriesSection_categoriesAreClickable_namesAreVisible() {
+        setMocks()
+        setOnlyHomeScreen()
+
+        composeRule.onNodeWithTag("Home Lazy Column").assertIsDisplayed()
+        composeRule.onNodeWithTag("Categories Section").assertIsDisplayed()
+
+        val categories = homeViewModel.homeState.value.categories
+        for(category in categories) {
+            composeRule
+                .onNodeWithTag("Categories Section Lazy Row")
+                .performScrollToNode(
+                    hasTestTag("${category.categoryId} category")
+                )
+            composeRule.onNodeWithTag("${category.categoryId} category").assertIsDisplayed()
+            composeRule.onNodeWithTag("${category.categoryId} category").assertTextEquals(category.categoryId)
+            composeRule.onNodeWithTag("${category.categoryId} category").performClick()
+        }
+
+        composeRule.onNodeWithTag("Stew category").performClick()
+
+        for(category in categories.reversed()) {
+            composeRule
+                .onNodeWithTag("Categories Section Lazy Row")
+                .performScrollToNode(
+                    hasTestTag("${category.categoryId} category")
+                )
+            composeRule.onNodeWithTag("${category.categoryId} category").assertIsDisplayed()
+            composeRule.onNodeWithTag("${category.categoryId} category").performClick()
+        }
+
+        coVerifySequence {
+            getCategoriesUseCase()
+            getRecipesUseCase(any(), "", any())
+            getIngredientsUseCase()
+            getUserShoppingListsUseCase(any(), any())
+            for(category in categories) {
+                getRecipesUseCase(any(), "", category.categoryId)
+            }
+            getRecipesUseCase(any(), "", any())
+            for(category in categories.reversed()) {
+                getRecipesUseCase(any(), "", category.categoryId)
+            }
+        }
+        confirmVerified()
     }
 }

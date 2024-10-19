@@ -50,10 +50,12 @@ fun CategoriesSection(
             )
 
             LazyRow(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("Categories Section Lazy Row"),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                itemsIndexed(categories) { index, item ->
+                itemsIndexed(categories) { index, _ ->
                     when (index) {
                         0 -> {
                             HomeCategoryItem(
