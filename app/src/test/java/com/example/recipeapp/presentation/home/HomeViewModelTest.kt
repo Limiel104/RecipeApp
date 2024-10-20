@@ -7,13 +7,15 @@ import com.example.recipeapp.domain.use_case.GetIngredientsUseCase
 import com.example.recipeapp.domain.use_case.GetRecipesUseCase
 import com.example.recipeapp.domain.use_case.GetSearchSuggestionsUseCase
 import com.example.recipeapp.domain.use_case.GetUserShoppingListsUseCase
+import com.example.recipeapp.domain.use_case.SortRecipesUseCase
+import com.example.recipeapp.domain.util.RecipeOrder
 import com.example.recipeapp.presentation.common.getCategories
 import com.example.recipeapp.presentation.common.getIngredients
 import com.example.recipeapp.presentation.common.getRecipes
 import com.example.recipeapp.presentation.common.getSearchSuggestions
 import com.example.recipeapp.presentation.common.getShoppingLists
 import com.example.recipeapp.util.MainDispatcherRule
-import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -21,7 +23,6 @@ import io.mockk.coVerifyOrder
 import io.mockk.confirmVerified
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
-
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -39,6 +40,7 @@ class HomeViewModelTest {
     private lateinit var addSearchSuggestionUseCase: AddSearchSuggestionUseCase
     private lateinit var getSearchSuggestionsUseCase: GetSearchSuggestionsUseCase
     private lateinit var getCategoriesUseCase: GetCategoriesUseCase
+    private lateinit var sortRecipesUseCase: SortRecipesUseCase
     private lateinit var homeViewModel: HomeViewModel
 
     @Before
@@ -49,6 +51,7 @@ class HomeViewModelTest {
         addSearchSuggestionUseCase = mockk(relaxed = true)
         getSearchSuggestionsUseCase= mockk(relaxed = true)
         getCategoriesUseCase = mockk(relaxed = true)
+        sortRecipesUseCase = SortRecipesUseCase()
     }
 
     @After
@@ -63,7 +66,8 @@ class HomeViewModelTest {
             getUserShoppingListsUseCase,
             addSearchSuggestionUseCase,
             getSearchSuggestionsUseCase,
-            getCategoriesUseCase
+            getCategoriesUseCase,
+            sortRecipesUseCase
         )
     }
 
@@ -80,9 +84,20 @@ class HomeViewModelTest {
         val isLoading = getCurrentHomeState().isLoading
 
         coVerify(exactly = 1) { getRecipesUseCase(true,"","") }
-        assertThat(result).isEqualTo(getRecipes())
-        assertThat(isLoading).isFalse()
+        Truth.assertThat(result).containsExactlyElementsIn(getRecipes())
+        Truth.assertThat(isLoading).isFalse()
         confirmVerified(getRecipesUseCase)
+    }
+
+    @Test
+    fun `getRecipes - recipes are sorted correctly`() {
+        coEvery { getRecipesUseCase(any(),any(),any()) } returns flowOf(Resource.Success(getRecipes()))
+
+        homeViewModel = setViewModel()
+        val result = getCurrentHomeState().recipes
+
+        coVerify(exactly = 1) { getRecipesUseCase(true,"","") }
+        Truth.assertThat(result).isEqualTo(getRecipes().sortedByDescending { it.date })
     }
 
     @Test
@@ -94,8 +109,8 @@ class HomeViewModelTest {
         val isLoading = getCurrentHomeState().isLoading
 
         coVerify(exactly = 1) { getRecipesUseCase(true,"","") }
-        assertThat(result).isEmpty()
-        assertThat(isLoading).isFalse()
+        Truth.assertThat(result).isEmpty()
+        Truth.assertThat(isLoading).isFalse()
         confirmVerified(getRecipesUseCase)
     }
 
@@ -108,8 +123,8 @@ class HomeViewModelTest {
         val isLoading = getCurrentHomeState().isLoading
 
         coVerify(exactly = 1) { getRecipesUseCase(true,"","") }
-        assertThat(result).isEmpty()
-        assertThat(isLoading).isTrue()
+        Truth.assertThat(result).isEmpty()
+        Truth.assertThat(isLoading).isTrue()
         confirmVerified(getRecipesUseCase)
     }
 
@@ -121,7 +136,7 @@ class HomeViewModelTest {
         val isLoading = getCurrentHomeState().isLoading
 
         coVerify(exactly = 1) { getIngredientsUseCase() }
-        assertThat(isLoading).isFalse()
+        Truth.assertThat(isLoading).isFalse()
         confirmVerified(getIngredientsUseCase)
     }
 
@@ -133,7 +148,7 @@ class HomeViewModelTest {
         val isLoading = getCurrentHomeState().isLoading
 
         coVerify(exactly = 1) { getIngredientsUseCase() }
-        assertThat(isLoading).isFalse()
+        Truth.assertThat(isLoading).isFalse()
         confirmVerified(getIngredientsUseCase)
     }
 
@@ -145,7 +160,7 @@ class HomeViewModelTest {
         val isLoading = getCurrentHomeState().isLoading
 
         coVerify(exactly = 1) { getIngredientsUseCase() }
-        assertThat(isLoading).isTrue()
+        Truth.assertThat(isLoading).isTrue()
         confirmVerified(getIngredientsUseCase)
     }
 
@@ -159,7 +174,7 @@ class HomeViewModelTest {
         val isLoading = getCurrentHomeState().isLoading
 
         coVerify(exactly = 1) { getUserShoppingListsUseCase("userId",true) }
-        assertThat(isLoading).isFalse()
+        Truth.assertThat(isLoading).isFalse()
         confirmVerified(getUserShoppingListsUseCase)
     }
 
@@ -171,7 +186,7 @@ class HomeViewModelTest {
         val isLoading = getCurrentHomeState().isLoading
 
         coVerify(exactly = 1) { getUserShoppingListsUseCase("userId",true) }
-        assertThat(isLoading).isFalse()
+        Truth.assertThat(isLoading).isFalse()
         confirmVerified(getUserShoppingListsUseCase)
     }
 
@@ -183,7 +198,7 @@ class HomeViewModelTest {
         val isLoading = getCurrentHomeState().isLoading
 
         coVerify(exactly = 1) { getUserShoppingListsUseCase("userId",true) }
-        assertThat(isLoading).isTrue()
+        Truth.assertThat(isLoading).isTrue()
         confirmVerified(getUserShoppingListsUseCase)
     }
 
@@ -196,8 +211,8 @@ class HomeViewModelTest {
         val isLoading = getCurrentHomeState().isLoading
 
         coVerify(exactly = 1) { getCategoriesUseCase() }
-        assertThat(result).isEqualTo(getCategories())
-        assertThat(isLoading).isFalse()
+        Truth.assertThat(result).isEqualTo(getCategories())
+        Truth.assertThat(isLoading).isFalse()
         confirmVerified(getCategoriesUseCase)
     }
 
@@ -210,8 +225,8 @@ class HomeViewModelTest {
         val isLoading = getCurrentHomeState().isLoading
 
         coVerify(exactly = 1) { getCategoriesUseCase() }
-        assertThat(result).isEmpty()
-        assertThat(isLoading).isFalse()
+        Truth.assertThat(result).isEmpty()
+        Truth.assertThat(isLoading).isFalse()
         confirmVerified(getCategoriesUseCase)
     }
 
@@ -224,8 +239,8 @@ class HomeViewModelTest {
         val isLoading = getCurrentHomeState().isLoading
 
         coVerify(exactly = 1) { getCategoriesUseCase() }
-        assertThat(result).isEmpty()
-        assertThat(isLoading).isTrue()
+        Truth.assertThat(result).isEmpty()
+        Truth.assertThat(isLoading).isTrue()
         confirmVerified(getCategoriesUseCase)
     }
 
@@ -237,8 +252,8 @@ class HomeViewModelTest {
         homeViewModel.onEvent(HomeEvent.OnQueryChange("New Query"))
         val resultQueryState = getCurrentHomeState().query
 
-        assertThat(initialQueryState).isEmpty()
-        assertThat(resultQueryState).isEqualTo("New Query")
+        Truth.assertThat(initialQueryState).isEmpty()
+        Truth.assertThat(resultQueryState).isEqualTo("New Query")
     }
 
     @Test
@@ -250,8 +265,8 @@ class HomeViewModelTest {
         homeViewModel.onEvent(HomeEvent.OnQueryChange("New Query"))
         val resultQueryState = getCurrentHomeState().query
 
-        assertThat(initialQueryState).isEqualTo("Old Query")
-        assertThat(resultQueryState).isEqualTo("New Query")
+        Truth.assertThat(initialQueryState).isEqualTo("Old Query")
+        Truth.assertThat(resultQueryState).isEqualTo("New Query")
     }
 
     @Test
@@ -267,10 +282,10 @@ class HomeViewModelTest {
         val resultSearchSuggestions = getCurrentHomeState().searchSuggestions
 
         coVerify { getSearchSuggestionsUseCase() }
-        assertThat(initialActiveState).isFalse()
-        assertThat(initialSearchSuggestions).isEmpty()
-        assertThat(resultActiveState).isTrue()
-        assertThat(resultSearchSuggestions).isEqualTo(getSearchSuggestions())
+        Truth.assertThat(initialActiveState).isFalse()
+        Truth.assertThat(initialSearchSuggestions).isEmpty()
+        Truth.assertThat(resultActiveState).isTrue()
+        Truth.assertThat(resultSearchSuggestions).isEqualTo(getSearchSuggestions())
         confirmVerified(getSearchSuggestionsUseCase)
     }
 
@@ -283,8 +298,8 @@ class HomeViewModelTest {
         homeViewModel.onEvent(HomeEvent.OnActiveChange)
         val resultActiveState = getCurrentHomeState().isSearchActive
 
-        assertThat(initialActiveState).isTrue()
-        assertThat(resultActiveState).isFalse()
+        Truth.assertThat(initialActiveState).isTrue()
+        Truth.assertThat(resultActiveState).isFalse()
     }
 
     @Test
@@ -305,8 +320,8 @@ class HomeViewModelTest {
             addSearchSuggestionUseCase(any())
             getRecipesUseCase(false,"","")
         }
-        assertThat(initialActiveState).isFalse()
-        assertThat(resultActiveState).isFalse()
+        Truth.assertThat(initialActiveState).isFalse()
+        Truth.assertThat(resultActiveState).isFalse()
         confirmVerified(
             addSearchSuggestionUseCase,
             getRecipesUseCase
@@ -332,8 +347,8 @@ class HomeViewModelTest {
             addSearchSuggestionUseCase(any())
             getRecipesUseCase(false,"","")
         }
-        assertThat(initialActiveState).isTrue()
-        assertThat(resultActiveState).isFalse()
+        Truth.assertThat(initialActiveState).isTrue()
+        Truth.assertThat(resultActiveState).isFalse()
         confirmVerified(
             addSearchSuggestionUseCase,
             getRecipesUseCase
@@ -359,10 +374,10 @@ class HomeViewModelTest {
             getRecipesUseCase(true,"","") //init
             getRecipesUseCase(false,"","")
         }
-        assertThat(initialQueryState).isEmpty()
-        assertThat(initialActiveState).isTrue()
-        assertThat(resultQueryState).isEmpty()
-        assertThat(resultActiveState).isFalse()
+        Truth.assertThat(initialQueryState).isEmpty()
+        Truth.assertThat(initialActiveState).isTrue()
+        Truth.assertThat(resultQueryState).isEmpty()
+        Truth.assertThat(resultActiveState).isFalse()
         confirmVerified(getRecipesUseCase)
     }
 
@@ -377,10 +392,10 @@ class HomeViewModelTest {
         val resultQueryState = getCurrentHomeState().query
         val resultActiveState = getCurrentHomeState().isSearchActive
 
-        assertThat(initialQueryState).isEqualTo("Initial query")
-        assertThat(initialActiveState).isFalse()
-        assertThat(resultQueryState).isEmpty()
-        assertThat(resultActiveState).isFalse()
+        Truth.assertThat(initialQueryState).isEqualTo("Initial query")
+        Truth.assertThat(initialActiveState).isFalse()
+        Truth.assertThat(resultQueryState).isEmpty()
+        Truth.assertThat(resultActiveState).isFalse()
     }
 
     @Test
@@ -391,8 +406,8 @@ class HomeViewModelTest {
         homeViewModel.onEvent(HomeEvent.OnSearchSuggestionClicked("Suggestion Text"))
         val resultQueryState = getCurrentHomeState().query
 
-        assertThat(initialQueryState).isEmpty()
-        assertThat(resultQueryState).isEqualTo("Suggestion Text")
+        Truth.assertThat(initialQueryState).isEmpty()
+        Truth.assertThat(resultQueryState).isEqualTo("Suggestion Text")
     }
 
     @Test
@@ -404,8 +419,8 @@ class HomeViewModelTest {
         homeViewModel.onEvent(HomeEvent.OnSearchSuggestionClicked("Suggestion Text"))
         val resultQueryState = getCurrentHomeState().query
 
-        assertThat(initialQueryState).isEqualTo("Initial query")
-        assertThat(resultQueryState).isEqualTo("Suggestion Text")
+        Truth.assertThat(initialQueryState).isEqualTo("Initial query")
+        Truth.assertThat(resultQueryState).isEqualTo("Suggestion Text")
     }
 
     @Test
@@ -424,8 +439,8 @@ class HomeViewModelTest {
             getRecipesUseCase(true,"","") //init
             getRecipesUseCase(false,"","CategoryId")
         }
-        assertThat(initialCategoryState).isEmpty()
-        assertThat(resultCategoryState).isEqualTo("CategoryId")
+        Truth.assertThat(initialCategoryState).isEmpty()
+        Truth.assertThat(resultCategoryState).isEqualTo("CategoryId")
         confirmVerified(getRecipesUseCase)
     }
 
@@ -447,8 +462,36 @@ class HomeViewModelTest {
             getRecipesUseCase(false,"","OldCategoryId")
             getRecipesUseCase(false,"","NewCategoryId")
         }
-        assertThat(initialCategoryState).isEqualTo("OldCategoryId")
-        assertThat(resultCategoryState).isEqualTo("NewCategoryId")
+        Truth.assertThat(initialCategoryState).isEqualTo("OldCategoryId")
+        Truth.assertThat(resultCategoryState).isEqualTo("NewCategoryId")
         confirmVerified(getRecipesUseCase)
+    }
+
+    @Test
+    fun `onSortRecipes - recipes are sorted in descending order`() {
+        coEvery {
+            getRecipesUseCase(any(), any(), any())
+        } returns flowOf(Resource.Success(getRecipes()))
+
+        homeViewModel = setViewModel()
+        homeViewModel.onEvent(HomeEvent.OnSortRecipes(RecipeOrder.DateDescending))
+        val result = getCurrentHomeState().recipes
+
+        coVerify { getRecipesUseCase(true,"","") }
+        Truth.assertThat(result).isEqualTo(getRecipes().sortedByDescending { it.date })
+    }
+
+    @Test
+    fun `onSortRecipes - recipes are sorted in ascending order`() {
+        coEvery {
+            getRecipesUseCase(any(), any(), any())
+        } returns flowOf(Resource.Success(getRecipes()))
+
+        homeViewModel = setViewModel()
+        homeViewModel.onEvent(HomeEvent.OnSortRecipes(RecipeOrder.DateAscending))
+        val result = getCurrentHomeState().recipes
+
+        coVerify { getRecipesUseCase(true,"","") }
+        Truth.assertThat(result).isEqualTo(getRecipes().sortedBy { it.date })
     }
 }

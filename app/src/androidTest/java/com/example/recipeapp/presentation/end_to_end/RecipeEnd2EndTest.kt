@@ -38,6 +38,7 @@ import com.example.recipeapp.domain.use_case.GetSavedRecipeIdUseCase
 import com.example.recipeapp.domain.use_case.GetSearchSuggestionsUseCase
 import com.example.recipeapp.domain.use_case.GetUserSavedRecipesUseCase
 import com.example.recipeapp.domain.use_case.GetUserShoppingListsUseCase
+import com.example.recipeapp.domain.use_case.SortRecipesUseCase
 import com.example.recipeapp.presentation.MainActivity
 import com.example.recipeapp.presentation.common.getCategories
 import com.example.recipeapp.presentation.common.getIngredients
@@ -145,7 +146,8 @@ class RecipeEnd2EndTest {
             getUserShoppingListsUseCase = getUserShoppingListsUseCase,
             addSearchSuggestionUseCase = addSearchSuggestionUseCase,
             getSearchSuggestionsUseCase = getSearchSuggestionsUseCase,
-            getCategoriesUseCase = getCategoriesUseCase
+            getCategoriesUseCase = getCategoriesUseCase,
+            sortRecipesUseCase = SortRecipesUseCase()
         )
 
         composeRule.activity.setContent {
@@ -173,7 +175,8 @@ class RecipeEnd2EndTest {
             getUserShoppingListsUseCase = getUserShoppingListsUseCase,
             addSearchSuggestionUseCase = addSearchSuggestionUseCase,
             getSearchSuggestionsUseCase = getSearchSuggestionsUseCase,
-            getCategoriesUseCase = getCategoriesUseCase
+            getCategoriesUseCase = getCategoriesUseCase,
+            sortRecipesUseCase = SortRecipesUseCase()
         )
 
         recipeDetailsViewModel = RecipeDetailsViewModel(
@@ -371,6 +374,42 @@ class RecipeEnd2EndTest {
             for(category in categories.reversed()) {
                 getRecipesUseCase(any(), "", category.categoryId)
             }
+        }
+        confirmVerified()
+    }
+
+    @Test
+    fun sortRecipesByDate() {
+        setMocks()
+        setOnlyHomeScreen()
+
+        composeRule.onNodeWithText("Newest").assertIsDisplayed()
+        composeRule.onNodeWithText("Oldest").assertIsNotDisplayed()
+
+        composeRule.onNodeWithTag("Recipe recipe2Id").assertIsNotDisplayed()
+        composeRule.onNodeWithTag("Recipe recipe6Id").assertIsDisplayed()
+
+        composeRule.onNodeWithText("Newest").performClick()
+
+        composeRule.onNodeWithText("Newest").assertIsNotDisplayed()
+        composeRule.onNodeWithText("Oldest").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Recipe recipe2Id").assertIsDisplayed()
+        composeRule.onNodeWithTag("Recipe recipe6Id").assertIsNotDisplayed()
+
+        composeRule.onNodeWithText("Oldest").performClick()
+
+        composeRule.onNodeWithText("Newest").assertIsDisplayed()
+        composeRule.onNodeWithText("Oldest").assertIsNotDisplayed()
+
+        composeRule.onNodeWithTag("Recipe recipe2Id").assertIsNotDisplayed()
+        composeRule.onNodeWithTag("Recipe recipe6Id").assertIsDisplayed()
+
+        coVerifySequence {
+            getCategoriesUseCase()
+            getRecipesUseCase(any(), "", any())
+            getIngredientsUseCase()
+            getUserShoppingListsUseCase(any(), any())
         }
         confirmVerified()
     }
