@@ -1,6 +1,8 @@
 package com.example.recipeapp.presentation.end_to_end
 
 import androidx.activity.compose.setContent
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertTextEquals
@@ -28,6 +30,7 @@ import com.example.recipeapp.domain.model.RecipeWithIngredients
 import com.example.recipeapp.domain.model.Resource
 import com.example.recipeapp.domain.use_case.AddSavedRecipeUseCase
 import com.example.recipeapp.domain.use_case.AddSearchSuggestionUseCase
+import com.example.recipeapp.domain.use_case.AddUserUseCase
 import com.example.recipeapp.domain.use_case.DeleteSavedRecipeUseCase
 import com.example.recipeapp.domain.use_case.GetCategoriesUseCase
 import com.example.recipeapp.domain.use_case.GetCurrentUserUseCase
@@ -38,7 +41,14 @@ import com.example.recipeapp.domain.use_case.GetSavedRecipeIdUseCase
 import com.example.recipeapp.domain.use_case.GetSearchSuggestionsUseCase
 import com.example.recipeapp.domain.use_case.GetUserSavedRecipesUseCase
 import com.example.recipeapp.domain.use_case.GetUserShoppingListsUseCase
+import com.example.recipeapp.domain.use_case.LoginUseCase
+import com.example.recipeapp.domain.use_case.SignupUseCase
 import com.example.recipeapp.domain.use_case.SortRecipesUseCase
+import com.example.recipeapp.domain.use_case.ValidateConfirmPasswordUseCase
+import com.example.recipeapp.domain.use_case.ValidateEmailUseCase
+import com.example.recipeapp.domain.use_case.ValidateLoginPasswordUseCase
+import com.example.recipeapp.domain.use_case.ValidateNameUseCase
+import com.example.recipeapp.domain.use_case.ValidateSignupPasswordUseCase
 import com.example.recipeapp.presentation.MainActivity
 import com.example.recipeapp.presentation.common.getCategories
 import com.example.recipeapp.presentation.common.getIngredients
@@ -48,9 +58,16 @@ import com.example.recipeapp.presentation.common.getSearchSuggestions
 import com.example.recipeapp.presentation.common.getShoppingLists
 import com.example.recipeapp.presentation.home.HomeViewModel
 import com.example.recipeapp.presentation.home.composable.HomeScreen
+import com.example.recipeapp.presentation.login.LoginViewModel
+import com.example.recipeapp.presentation.login.composable.LoginScreen
 import com.example.recipeapp.presentation.navigation.Screen
 import com.example.recipeapp.presentation.recipe_details.RecipeDetailsViewModel
 import com.example.recipeapp.presentation.recipe_details.composable.RecipeDetailsScreen
+import com.example.recipeapp.presentation.saved_recipes.SavedRecipesViewModel
+import com.example.recipeapp.presentation.saved_recipes.composable.SavedRecipesScreen
+import com.example.recipeapp.presentation.signup.SignupViewModel
+import com.example.recipeapp.presentation.signup.composable.SignupScreen
+import com.google.common.truth.Truth
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -92,6 +109,15 @@ class RecipeEnd2EndTest {
     private lateinit var firebaseUser: FirebaseUser
     private lateinit var recipeDetailsViewModel: RecipeDetailsViewModel
 
+    private lateinit var savedRecipesViewModel: SavedRecipesViewModel
+
+    private lateinit var loginUseCase: LoginUseCase
+    private lateinit var loginViewModel: LoginViewModel
+
+    private lateinit var signupUseCase: SignupUseCase
+    private lateinit var addUserUseCase: AddUserUseCase
+    private lateinit var signupViewModel: SignupViewModel
+
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
     @get:Rule(order = 1)
@@ -117,6 +143,10 @@ class RecipeEnd2EndTest {
         getCurrentUserUseCase = mockk()
         getSavedRecipeIdUseCase = mockk()
         firebaseUser = mockk()
+
+        loginUseCase = mockk()
+        signupUseCase = mockk()
+        addUserUseCase = mockk()
 
         recipeWithIngredients = RecipeWithIngredients(
             recipeId = "recipeId",
@@ -168,7 +198,7 @@ class RecipeEnd2EndTest {
         }
     }
 
-    private fun setScreen() {
+    private fun setHomeAndRecipeDetailsScreens() {
         homeViewModel = HomeViewModel(
             getIngredientsUseCase = getIngredientsUseCase,
             getRecipesUseCase = getRecipesUseCase,
@@ -223,6 +253,85 @@ class RecipeEnd2EndTest {
         }
     }
 
+    private fun setSavedRecipesLoginAndSignupScreens() {
+        savedRecipesViewModel = SavedRecipesViewModel(
+            getCurrentUserUseCase = getCurrentUserUseCase,
+            getSavedRecipeIdUseCase = getSavedRecipeIdUseCase,
+            deleteSavedRecipeUseCase = deleteSavedRecipeUseCase,
+            getUserSavedRecipesUseCase = getUserSavedRecipesUseCase,
+            addSearchSuggestionUseCase = addSearchSuggestionUseCase,
+            getSearchSuggestionsUseCase = getSearchSuggestionsUseCase,
+            sortRecipesUseCase = SortRecipesUseCase()
+        )
+
+        loginViewModel = LoginViewModel(
+            savedStateHandle = savedStateHandle,
+            loginUseCase = loginUseCase,
+            validateEmailUseCase = ValidateEmailUseCase(),
+            validateLoginPasswordUseCase = ValidateLoginPasswordUseCase()
+        )
+
+        signupViewModel = SignupViewModel(
+            savedStateHandle = savedStateHandle,
+            signupUseCase = signupUseCase,
+            validateEmailUseCase = ValidateEmailUseCase(),
+            validateSignupPasswordUseCase = ValidateSignupPasswordUseCase(),
+            validateConfirmPasswordUseCase = ValidateConfirmPasswordUseCase(),
+            validateNameUseCase = ValidateNameUseCase(),
+            getCurrentUserUseCase = getCurrentUserUseCase,
+            addUserUseCase = addUserUseCase
+        )
+
+        composeRule.activity.setContent {
+            val navController = rememberNavController()
+            NavHost(
+                navController = navController,
+                startDestination = Screen.SavedRecipesScreen.route
+            ) {
+                composable(
+                    route = Screen.SavedRecipesScreen.route
+                ) {
+                    SavedRecipesScreen(
+                        navController = navController,
+                        viewModel = savedRecipesViewModel
+                    )
+                }
+
+                composable(
+                    route = Screen.LoginScreen.route + "lastDestination={lastDestination}",
+                    arguments = listOf(
+                        navArgument(
+                            name = "lastDestination"
+                        ) {
+                            type = NavType.StringType
+                        }
+                    )
+                ) {
+                    LoginScreen(
+                        navController = navController,
+                        viewModel = loginViewModel
+                    )
+                }
+
+                composable(
+                    route = Screen.SignupScreen.route + "lastDestination={lastDestination}",
+                    arguments = listOf(
+                        navArgument(
+                            name = "lastDestination"
+                        ) {
+                            type = NavType.StringType
+                        }
+                    )
+                ) {
+                    SignupScreen(
+                        navController = navController,
+                        viewModel = signupViewModel
+                    )
+                }
+            }
+        }
+    }
+
     private fun setMocks() {
         coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(getIngredients()))
         coEvery { getRecipesUseCase(any(), any(), any()) } returns flowOf(Resource.Success(getRecipes()))
@@ -231,17 +340,30 @@ class RecipeEnd2EndTest {
         coEvery { getSearchSuggestionsUseCase() } returns flowOf(Resource.Success(getSearchSuggestions()))
         coEvery { getCategoriesUseCase() } returns flowOf(Resource.Success(getCategories()))
 
-        every { savedStateHandle.get<String>(any()) } returns "recipeId"
+        every { savedStateHandle.get<String>("recipeId") } returns "recipeId"
         coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Success(recipeWithIngredients))
         coEvery { getUserSavedRecipesUseCase(any(), any(), any()) } returns flowOf(Resource.Success(getRecipes()))
-        every { getCurrentUserUseCase() } returns firebaseUser
         every { firebaseUser.uid } returns "userUID"
+
+        every { savedStateHandle.get<String>("lastDestination") } returns "saved_recipes_screen"
+        coEvery { loginUseCase(any(), any()) } returns flowOf(Resource.Success(firebaseUser))
+        coEvery { signupUseCase(any(), any()) } returns flowOf(Resource.Success(firebaseUser))
+        coEvery { addUserUseCase(any()) } returns flowOf(Resource.Success(true))
+    }
+
+    private fun setUserIsNotLoggedInInitiallyMock() {
+        every { getCurrentUserUseCase() } returns null andThen firebaseUser
+    }
+
+    private fun setUserIsLoggedInMock() {
+        every { getCurrentUserUseCase() } returns firebaseUser
     }
 
     @Test
     fun clickOnRecipe_navigateToRecipeDetails_andBackToHome() {
         setMocks()
-        setScreen()
+        setUserIsLoggedInMock()
+        setHomeAndRecipeDetailsScreens()
 
         composeRule.onNodeWithTag("Home Content").isDisplayed()
         composeRule.onNodeWithTag("Recipe recipeId").performScrollTo()
@@ -286,6 +408,7 @@ class RecipeEnd2EndTest {
     @Test
     fun clickOnSearchBar_searchViewIsVisible_textInput() {
         setMocks()
+        setUserIsLoggedInMock()
         setOnlyHomeScreen()
 
         composeRule.onNodeWithTag("Home Lazy Column").assertIsDisplayed()
@@ -333,6 +456,7 @@ class RecipeEnd2EndTest {
     @Test
     fun categoriesSection_categoriesAreClickable_namesAreVisible() {
         setMocks()
+        setUserIsLoggedInMock()
         setOnlyHomeScreen()
 
         composeRule.onNodeWithTag("Home Lazy Column").assertIsDisplayed()
@@ -381,6 +505,7 @@ class RecipeEnd2EndTest {
     @Test
     fun sortRecipesByDate() {
         setMocks()
+        setUserIsLoggedInMock()
         setOnlyHomeScreen()
 
         composeRule.onNodeWithText("Newest").assertIsDisplayed()
@@ -410,6 +535,135 @@ class RecipeEnd2EndTest {
             getRecipesUseCase(any(), "", any())
             getIngredientsUseCase()
             getUserShoppingListsUseCase(any(), any())
+        }
+        confirmVerified()
+    }
+
+    @Test
+    fun savedRecipesShowingUserNotLoggedInScreen_navigateToLoginScreen_thenNavigateBackToSavedRecipes() {
+        setMocks()
+        setUserIsNotLoggedInInitiallyMock()
+        setSavedRecipesLoginAndSignupScreens()
+
+        composeRule.onNodeWithTag("User not logged in Content").assertIsDisplayed()
+        composeRule.onNodeWithText("You are not logged in").assertIsDisplayed()
+        composeRule.onNodeWithText("Login or Signup").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Login button").assertIsDisplayed()
+        composeRule.onNodeWithTag("Login button").performClick()
+        composeRule.onNodeWithTag("Login Content").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Login email TF").performTextInput("email@test.com")
+        composeRule.onNodeWithText("email@test.com").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Login password TF").performTextInput("Password1+")
+        val passwordNode = composeRule.onNodeWithTag("Login password TF").fetchSemanticsNode()
+        val textInput = passwordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
+        Truth.assertThat(textInput).isEqualTo("••••••••••")
+
+        composeRule.onNodeWithTag("Login button").performClick()
+        composeRule.onNodeWithTag("User not logged in Content").assertIsDisplayed()
+
+        coVerifySequence {
+            getCurrentUserUseCase()
+            savedStateHandle.get<String>("lastDestination")
+            savedStateHandle.get<String>("lastDestination")
+            loginUseCase("email@test.com", "Password1+")
+        }
+        confirmVerified()
+    }
+
+    @Test
+    fun savedRecipesShowingUserNotLoggedInScreen_navigateToSignupScreen_thenNavigateBackToSavedRecipes() {
+        setMocks()
+        setUserIsNotLoggedInInitiallyMock()
+        setSavedRecipesLoginAndSignupScreens()
+
+        composeRule.onNodeWithTag("User not logged in Content").assertIsDisplayed()
+        composeRule.onNodeWithText("You are not logged in").assertIsDisplayed()
+        composeRule.onNodeWithText("Login or Signup").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Signup button").assertIsDisplayed()
+        composeRule.onNodeWithTag("Signup button").performClick()
+        composeRule.onNodeWithTag("Signup Content").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Signup email TF").performTextInput("email@test.com")
+        composeRule.onNodeWithText("email@test.com").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Signup password TF").performTextInput("Password1+")
+        val passwordNode = composeRule.onNodeWithTag("Signup password TF").fetchSemanticsNode()
+        val textInput = passwordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
+        Truth.assertThat(textInput).isEqualTo("Password1+")
+
+        composeRule.onNodeWithTag("Signup confirm password TF").performTextInput("Password1+")
+        val confirmPasswordNode = composeRule.onNodeWithTag("Signup confirm password TF").fetchSemanticsNode()
+        val textInput2 = confirmPasswordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
+        Truth.assertThat(textInput2).isEqualTo("Password1+")
+
+        composeRule.onNodeWithTag("Signup name TF").performTextInput("John Smith")
+        composeRule.onNodeWithText("John Smith").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Signup button").performClick()
+        composeRule.onNodeWithTag("User not logged in Content").assertIsDisplayed()
+
+
+        coVerifySequence {
+            getCurrentUserUseCase()
+            savedStateHandle.get<String>("lastDestination")
+            savedStateHandle.get<String>("lastDestination")
+            signupUseCase("email@test.com", "Password1+")
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            addUserUseCase(any())
+        }
+        confirmVerified()
+    }
+
+    @Test
+    fun savedRecipesShowingUserNotLoggedInScreen_navigateToSignupFromLoginScreen_thenNavigateBackToSavedRecipes() {
+        setMocks()
+        setUserIsNotLoggedInInitiallyMock()
+        setSavedRecipesLoginAndSignupScreens()
+
+        composeRule.onNodeWithTag("User not logged in Content").assertIsDisplayed()
+        composeRule.onNodeWithText("You are not logged in").assertIsDisplayed()
+        composeRule.onNodeWithText("Login or Signup").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Login button").assertIsDisplayed()
+        composeRule.onNodeWithTag("Login button").performClick()
+        composeRule.onNodeWithTag("Login Content").assertIsDisplayed()
+
+        composeRule.onNodeWithText("Don't have an account?").assertIsDisplayed()
+        composeRule.onNodeWithText("Signup").performClick()
+        composeRule.onNodeWithTag("Signup Content").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Signup email TF").performTextInput("email@test.com")
+        composeRule.onNodeWithText("email@test.com").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Signup password TF").performTextInput("Password1+")
+        val passwordNode = composeRule.onNodeWithTag("Signup password TF").fetchSemanticsNode()
+        val textInput = passwordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
+        Truth.assertThat(textInput).isEqualTo("Password1+")
+
+        composeRule.onNodeWithTag("Signup confirm password TF").performTextInput("Password1+")
+        val confirmPasswordNode = composeRule.onNodeWithTag("Signup confirm password TF").fetchSemanticsNode()
+        val textInput2 = confirmPasswordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
+        Truth.assertThat(textInput2).isEqualTo("Password1+")
+
+        composeRule.onNodeWithTag("Signup name TF").performTextInput("John Smith")
+        composeRule.onNodeWithText("John Smith").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Signup button").performClick()
+        composeRule.onNodeWithTag("User not logged in Content").assertIsDisplayed()
+
+        coVerifySequence {
+            getCurrentUserUseCase()
+            savedStateHandle.get<String>("lastDestination")
+            savedStateHandle.get<String>("lastDestination")
+            signupUseCase("email@test.com", "Password1+")
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            addUserUseCase(any())
         }
         confirmVerified()
     }
