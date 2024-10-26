@@ -129,8 +129,6 @@ class SavedRecipesViewModel @Inject constructor(
                 isUserLoggedIn = currentUser != null
             )
 
-            Log.i("TAG456","ELEOELEOEKENEN")
-
             currentUser?.let {
                 _savedRecipesState.value = savedRecipesState.value.copy(
                     userUID = currentUser.uid

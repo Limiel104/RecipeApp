@@ -164,22 +164,78 @@ class RecipeEnd2EndTest {
         )
     }
 
+    private fun setViewModels(
+        setHomeVM: Boolean = false,
+        setRecipeDetailsVM: Boolean = false,
+        setSavedRecipesVM: Boolean = false,
+        setLoginVM: Boolean = false,
+        setSignupVM: Boolean = false
+    ) {
+        if(setHomeVM) {
+            homeViewModel = HomeViewModel(
+                getIngredientsUseCase = getIngredientsUseCase,
+                getRecipesUseCase = getRecipesUseCase,
+                getUserShoppingListsUseCase = getUserShoppingListsUseCase,
+                addSearchSuggestionUseCase = addSearchSuggestionUseCase,
+                getSearchSuggestionsUseCase = getSearchSuggestionsUseCase,
+                getCategoriesUseCase = getCategoriesUseCase,
+                sortRecipesUseCase = SortRecipesUseCase()
+            )
+        }
+
+        if(setRecipeDetailsVM) {
+            recipeDetailsViewModel = RecipeDetailsViewModel(
+                savedStateHandle = savedStateHandle,
+                getRecipeUseCase = getRecipeUseCase,
+                addSavedRecipeUseCase = addSavedRecipeUseCase,
+                deleteSavedRecipeUseCase = deleteSavedRecipeUseCase,
+                getUserSavedRecipesUseCase = getUserSavedRecipesUseCase,
+                getCurrentUserUseCase = getCurrentUserUseCase,
+                getSavedRecipeIdUseCase = getSavedRecipeIdUseCase
+            )
+        }
+
+        if(setSavedRecipesVM) {
+            savedRecipesViewModel = SavedRecipesViewModel(
+                getCurrentUserUseCase = getCurrentUserUseCase,
+                getSavedRecipeIdUseCase = getSavedRecipeIdUseCase,
+                deleteSavedRecipeUseCase = deleteSavedRecipeUseCase,
+                getUserSavedRecipesUseCase = getUserSavedRecipesUseCase,
+                addSearchSuggestionUseCase = addSearchSuggestionUseCase,
+                getSearchSuggestionsUseCase = getSearchSuggestionsUseCase,
+                sortRecipesUseCase = SortRecipesUseCase()
+            )
+        }
+
+        if(setLoginVM) {
+            loginViewModel = LoginViewModel(
+                savedStateHandle = savedStateHandle,
+                loginUseCase = loginUseCase,
+                validateEmailUseCase = ValidateEmailUseCase(),
+                validateLoginPasswordUseCase = ValidateLoginPasswordUseCase()
+            )
+        }
+
+        if(setSignupVM) {
+            signupViewModel = SignupViewModel(
+                savedStateHandle = savedStateHandle,
+                signupUseCase = signupUseCase,
+                validateEmailUseCase = ValidateEmailUseCase(),
+                validateSignupPasswordUseCase = ValidateSignupPasswordUseCase(),
+                validateConfirmPasswordUseCase = ValidateConfirmPasswordUseCase(),
+                validateNameUseCase = ValidateNameUseCase(),
+                getCurrentUserUseCase = getCurrentUserUseCase,
+                addUserUseCase = addUserUseCase
+            )
+        }
+    }
+
     @After
     fun tearDown() {
         clearAllMocks()
     }
 
     private fun setOnlyHomeScreen() {
-        homeViewModel = HomeViewModel(
-            getIngredientsUseCase = getIngredientsUseCase,
-            getRecipesUseCase = getRecipesUseCase,
-            getUserShoppingListsUseCase = getUserShoppingListsUseCase,
-            addSearchSuggestionUseCase = addSearchSuggestionUseCase,
-            getSearchSuggestionsUseCase = getSearchSuggestionsUseCase,
-            getCategoriesUseCase = getCategoriesUseCase,
-            sortRecipesUseCase = SortRecipesUseCase()
-        )
-
         composeRule.activity.setContent {
             val navController = rememberNavController()
             NavHost(
@@ -199,26 +255,6 @@ class RecipeEnd2EndTest {
     }
 
     private fun setHomeAndRecipeDetailsScreens() {
-        homeViewModel = HomeViewModel(
-            getIngredientsUseCase = getIngredientsUseCase,
-            getRecipesUseCase = getRecipesUseCase,
-            getUserShoppingListsUseCase = getUserShoppingListsUseCase,
-            addSearchSuggestionUseCase = addSearchSuggestionUseCase,
-            getSearchSuggestionsUseCase = getSearchSuggestionsUseCase,
-            getCategoriesUseCase = getCategoriesUseCase,
-            sortRecipesUseCase = SortRecipesUseCase()
-        )
-
-        recipeDetailsViewModel = RecipeDetailsViewModel(
-            savedStateHandle = savedStateHandle,
-            getRecipeUseCase = getRecipeUseCase,
-            addSavedRecipeUseCase = addSavedRecipeUseCase,
-            deleteSavedRecipeUseCase = deleteSavedRecipeUseCase,
-            getUserSavedRecipesUseCase = getUserSavedRecipesUseCase,
-            getCurrentUserUseCase = getCurrentUserUseCase,
-            getSavedRecipeIdUseCase = getSavedRecipeIdUseCase
-        )
-
         composeRule.activity.setContent {
             val navController = rememberNavController()
             NavHost(
@@ -254,34 +290,6 @@ class RecipeEnd2EndTest {
     }
 
     private fun setSavedRecipesLoginAndSignupScreens() {
-        savedRecipesViewModel = SavedRecipesViewModel(
-            getCurrentUserUseCase = getCurrentUserUseCase,
-            getSavedRecipeIdUseCase = getSavedRecipeIdUseCase,
-            deleteSavedRecipeUseCase = deleteSavedRecipeUseCase,
-            getUserSavedRecipesUseCase = getUserSavedRecipesUseCase,
-            addSearchSuggestionUseCase = addSearchSuggestionUseCase,
-            getSearchSuggestionsUseCase = getSearchSuggestionsUseCase,
-            sortRecipesUseCase = SortRecipesUseCase()
-        )
-
-        loginViewModel = LoginViewModel(
-            savedStateHandle = savedStateHandle,
-            loginUseCase = loginUseCase,
-            validateEmailUseCase = ValidateEmailUseCase(),
-            validateLoginPasswordUseCase = ValidateLoginPasswordUseCase()
-        )
-
-        signupViewModel = SignupViewModel(
-            savedStateHandle = savedStateHandle,
-            signupUseCase = signupUseCase,
-            validateEmailUseCase = ValidateEmailUseCase(),
-            validateSignupPasswordUseCase = ValidateSignupPasswordUseCase(),
-            validateConfirmPasswordUseCase = ValidateConfirmPasswordUseCase(),
-            validateNameUseCase = ValidateNameUseCase(),
-            getCurrentUserUseCase = getCurrentUserUseCase,
-            addUserUseCase = addUserUseCase
-        )
-
         composeRule.activity.setContent {
             val navController = rememberNavController()
             NavHost(
@@ -363,6 +371,10 @@ class RecipeEnd2EndTest {
     fun clickOnRecipe_navigateToRecipeDetails_andBackToHome() {
         setMocks()
         setUserIsLoggedInMock()
+        setViewModels(
+            setHomeVM = true,
+            setRecipeDetailsVM = true
+        )
         setHomeAndRecipeDetailsScreens()
 
         composeRule.onNodeWithTag("Home Content").isDisplayed()
@@ -409,6 +421,7 @@ class RecipeEnd2EndTest {
     fun clickOnSearchBar_searchViewIsVisible_textInput() {
         setMocks()
         setUserIsLoggedInMock()
+        setViewModels(setHomeVM = true)
         setOnlyHomeScreen()
 
         composeRule.onNodeWithTag("Home Lazy Column").assertIsDisplayed()
@@ -457,6 +470,7 @@ class RecipeEnd2EndTest {
     fun categoriesSection_categoriesAreClickable_namesAreVisible() {
         setMocks()
         setUserIsLoggedInMock()
+        setViewModels(setHomeVM = true)
         setOnlyHomeScreen()
 
         composeRule.onNodeWithTag("Home Lazy Column").assertIsDisplayed()
@@ -506,6 +520,7 @@ class RecipeEnd2EndTest {
     fun sortRecipesByDate() {
         setMocks()
         setUserIsLoggedInMock()
+        setViewModels(setHomeVM = true)
         setOnlyHomeScreen()
 
         composeRule.onNodeWithText("Newest").assertIsDisplayed()
@@ -543,6 +558,10 @@ class RecipeEnd2EndTest {
     fun savedRecipesShowingUserNotLoggedInScreen_navigateToLoginScreen_thenNavigateBackToSavedRecipes() {
         setMocks()
         setUserIsNotLoggedInInitiallyMock()
+        setViewModels(
+            setSavedRecipesVM = true,
+            setLoginVM = true
+        )
         setSavedRecipesLoginAndSignupScreens()
 
         composeRule.onNodeWithTag("User not logged in Content").assertIsDisplayed()
@@ -567,7 +586,6 @@ class RecipeEnd2EndTest {
         coVerifySequence {
             getCurrentUserUseCase()
             savedStateHandle.get<String>("lastDestination")
-            savedStateHandle.get<String>("lastDestination")
             loginUseCase("email@test.com", "Password1+")
         }
         confirmVerified()
@@ -577,6 +595,10 @@ class RecipeEnd2EndTest {
     fun savedRecipesShowingUserNotLoggedInScreen_navigateToSignupScreen_thenNavigateBackToSavedRecipes() {
         setMocks()
         setUserIsNotLoggedInInitiallyMock()
+        setViewModels(
+            setSavedRecipesVM = true,
+            setSignupVM = true
+        )
         setSavedRecipesLoginAndSignupScreens()
 
         composeRule.onNodeWithTag("User not logged in Content").assertIsDisplayed()
@@ -610,7 +632,6 @@ class RecipeEnd2EndTest {
         coVerifySequence {
             getCurrentUserUseCase()
             savedStateHandle.get<String>("lastDestination")
-            savedStateHandle.get<String>("lastDestination")
             signupUseCase("email@test.com", "Password1+")
             getCurrentUserUseCase()
             firebaseUser.uid
@@ -623,6 +644,11 @@ class RecipeEnd2EndTest {
     fun savedRecipesShowingUserNotLoggedInScreen_navigateToSignupFromLoginScreen_thenNavigateBackToSavedRecipes() {
         setMocks()
         setUserIsNotLoggedInInitiallyMock()
+        setViewModels(
+            setSavedRecipesVM = true,
+            setLoginVM = true,
+            setSignupVM = true
+        )
         setSavedRecipesLoginAndSignupScreens()
 
         composeRule.onNodeWithTag("User not logged in Content").assertIsDisplayed()
