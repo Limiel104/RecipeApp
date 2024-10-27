@@ -6,11 +6,14 @@ import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.filterToOne
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.isNotDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -120,6 +123,7 @@ class RecipeEnd2EndTest {
 
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
+
     @get:Rule(order = 1)
     val composeRule = createAndroidComposeRule<MainActivity>()
 
@@ -340,7 +344,61 @@ class RecipeEnd2EndTest {
         }
     }
 
-    private fun setMocks() {
+    private fun setSavedRecipesAndRecipeDetailsScreens() {
+        composeRule.activity.setContent {
+            val navController = rememberNavController()
+            NavHost(
+                navController = navController,
+                startDestination = Screen.SavedRecipesScreen.route
+            ) {
+                composable(
+                    route = Screen.SavedRecipesScreen.route
+                ) {
+                    SavedRecipesScreen(
+                        navController = navController,
+                        viewModel = savedRecipesViewModel
+                    )
+                }
+
+                composable(
+                    route = Screen.RecipeDetailsScreen.route + "recipeId={recipeId}",
+                    arguments = listOf(
+                        navArgument(
+                            name = "recipeId"
+                        ) {
+                            type = NavType.StringType
+                        }
+                    )
+                ) {
+                    RecipeDetailsScreen(
+                        navController = navController,
+                        viewModel = recipeDetailsViewModel
+                    )
+                }
+            }
+        }
+    }
+
+    private fun setOnlySavedRecipesScreen() {
+        composeRule.activity.setContent {
+            val navController = rememberNavController()
+            NavHost(
+                navController = navController,
+                startDestination = Screen.SavedRecipesScreen.route
+            ) {
+                composable(
+                    route = Screen.SavedRecipesScreen.route
+                ) {
+                    SavedRecipesScreen(
+                        navController = navController,
+                        viewModel = savedRecipesViewModel
+                    )
+                }
+            }
+        }
+    }
+
+    private fun setMocks(userRecipesMultipleReturns: Boolean = false) {
         coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(getIngredients()))
         coEvery { getRecipesUseCase(any(), any(), any()) } returns flowOf(Resource.Success(getRecipes()))
         coEvery { getUserShoppingListsUseCase(any(), any()) } returns flowOf(Resource.Success(getShoppingLists()))
@@ -350,13 +408,26 @@ class RecipeEnd2EndTest {
 
         every { savedStateHandle.get<String>("recipeId") } returns "recipeId"
         coEvery { getRecipeUseCase(any()) } returns flowOf(Resource.Success(recipeWithIngredients))
-        coEvery { getUserSavedRecipesUseCase(any(), any(), any()) } returns flowOf(Resource.Success(getRecipes()))
+
+        if(userRecipesMultipleReturns) {
+            coEvery { getUserSavedRecipesUseCase(any(), any(), any())
+            } returns flowOf(Resource.Success(getRecipes())) andThen flowOf(Resource.Success(getRecipes().filter { recipe ->
+                recipe.recipeId != "recipeId"
+            }))
+        }
+        else {
+            coEvery { getUserSavedRecipesUseCase(any(), any(), any())
+            } returns flowOf(Resource.Success(getRecipes()))
+        }
+
         every { firebaseUser.uid } returns "userUID"
 
         every { savedStateHandle.get<String>("lastDestination") } returns "saved_recipes_screen"
         coEvery { loginUseCase(any(), any()) } returns flowOf(Resource.Success(firebaseUser))
         coEvery { signupUseCase(any(), any()) } returns flowOf(Resource.Success(firebaseUser))
         coEvery { addUserUseCase(any()) } returns flowOf(Resource.Success(true))
+        coEvery { getSavedRecipeIdUseCase(any(), any()) } returns flowOf(Resource.Success("savedRecipeId"))
+        coEvery { deleteSavedRecipeUseCase(any()) } returns flowOf(Resource.Success(true))
     }
 
     private fun setUserIsNotLoggedInInitiallyMock() {
@@ -526,7 +597,7 @@ class RecipeEnd2EndTest {
         composeRule.onNodeWithText("Newest").assertIsDisplayed()
         composeRule.onNodeWithText("Oldest").assertIsNotDisplayed()
 
-        composeRule.onNodeWithTag("Recipe recipe2Id").assertIsNotDisplayed()
+        composeRule.onNodeWithTag("Recipe recipe7Id").assertIsNotDisplayed()
         composeRule.onNodeWithTag("Recipe recipe6Id").assertIsDisplayed()
 
         composeRule.onNodeWithText("Newest").performClick()
@@ -534,7 +605,7 @@ class RecipeEnd2EndTest {
         composeRule.onNodeWithText("Newest").assertIsNotDisplayed()
         composeRule.onNodeWithText("Oldest").assertIsDisplayed()
 
-        composeRule.onNodeWithTag("Recipe recipe2Id").assertIsDisplayed()
+        composeRule.onNodeWithTag("Recipe recipe7Id").assertIsDisplayed()
         composeRule.onNodeWithTag("Recipe recipe6Id").assertIsNotDisplayed()
 
         composeRule.onNodeWithText("Oldest").performClick()
@@ -542,7 +613,7 @@ class RecipeEnd2EndTest {
         composeRule.onNodeWithText("Newest").assertIsDisplayed()
         composeRule.onNodeWithText("Oldest").assertIsNotDisplayed()
 
-        composeRule.onNodeWithTag("Recipe recipe2Id").assertIsNotDisplayed()
+        composeRule.onNodeWithTag("Recipe recipe7Id").assertIsNotDisplayed()
         composeRule.onNodeWithTag("Recipe recipe6Id").assertIsDisplayed()
 
         coVerifySequence {
@@ -692,5 +763,166 @@ class RecipeEnd2EndTest {
             addUserUseCase(any())
         }
         confirmVerified()
+    }
+
+    @Test
+    fun clickOnSavedRecipe_navigateToRecipeDetails_andBackToSavedRecipes() {
+        setMocks()
+        setUserIsLoggedInMock()
+        setViewModels(
+            setSavedRecipesVM = true,
+            setRecipeDetailsVM = true
+        )
+        setSavedRecipesAndRecipeDetailsScreens()
+
+        composeRule.onNodeWithTag("Saved Recipes Content").assertIsDisplayed()
+        composeRule.onNodeWithTag("Recipe recipeId").performScrollTo()
+        composeRule.onNodeWithTag("Recipe recipeId").performClick()
+
+        composeRule.onNodeWithTag("Recipe Details Content").assertIsDisplayed()
+        composeRule.onNodeWithText("Ingredients").isDisplayed()
+        composeRule.onNodeWithText("Description").isDisplayed()
+        composeRule.onNodeWithTag("Ingredients Tab Content").isDisplayed()
+        composeRule.onNodeWithTag("Description Tab Content").isNotDisplayed()
+
+        composeRule.onNodeWithText(recipeWithIngredients.name).isDisplayed()
+        composeRule.onNodeWithText(recipeWithIngredients.ingredients.keys.size.toString()).isDisplayed()
+        for(ingredient in recipeWithIngredients.ingredients) {
+            composeRule.onNodeWithText(ingredient.value).isDisplayed()
+            composeRule.onNodeWithText(ingredient.key.name).isDisplayed()
+        }
+
+        composeRule.onNodeWithTag("Description Tab Title").performClick()
+        composeRule.onNodeWithTag("Ingredients Tab Content").isNotDisplayed()
+        composeRule.onNodeWithTag("Description Tab Content").isDisplayed()
+
+        composeRule.onNodeWithContentDescription("Back button").performClick()
+        composeRule.onNodeWithTag("Saved Recipes Content").isDisplayed()
+        composeRule.onNodeWithTag("Recipe Details Content").assertIsNotDisplayed()
+
+        coVerifySequence {
+            savedStateHandle.get<String>("recipeId")
+            getRecipeUseCase(any())
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            getUserSavedRecipesUseCase(any(), "", any())
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            firebaseUser.uid
+            getUserSavedRecipesUseCase(any(), "", any())
+        }
+        confirmVerified()
+    }
+
+    @Test
+    fun clickOnSavedRecipesSearchBar_searchViewIsVisible_textInput() {
+        setMocks()
+        setUserIsLoggedInMock()
+        setViewModels(setSavedRecipesVM = true)
+        setOnlySavedRecipesScreen()
+
+        composeRule.onNodeWithTag("Saved Recipes Lazy Column").assertIsDisplayed()
+        composeRule.onNodeWithTag("Search Bar").performClick()
+        composeRule.onNodeWithTag("Saved Recipes Lazy Column").assertIsNotDisplayed()
+
+        composeRule.onAllNodes(hasSetTextAction())[0].performTextInput("Recipe") //finds search view editable text
+        composeRule.onNodeWithText("Recipe").assertIsDisplayed()
+        composeRule.onNodeWithContentDescription("Clear").performClick() //clears text
+        composeRule.onNodeWithText("Recipe").assertIsNotDisplayed()
+        composeRule.onNodeWithContentDescription("Clear").performClick() //closes search view
+
+        composeRule.onNodeWithTag("Saved Recipes Lazy Column").assertIsDisplayed()
+        composeRule.onNodeWithTag("Search Bar").performClick()
+        composeRule.onNodeWithTag("Saved Recipes Lazy Column").assertIsNotDisplayed()
+
+        composeRule.onNodeWithText("Search Suggestion Text").performClick()
+        composeRule.onNodeWithContentDescription("Clear").performClick()
+        composeRule.onNodeWithContentDescription("Clear").performClick()
+
+        composeRule.onNodeWithTag("Saved Recipes Lazy Column").assertIsDisplayed()
+        composeRule.onNodeWithTag("Search Bar").performClick()
+
+        composeRule.onAllNodes(hasSetTextAction())[0].performTextInput("Recipe")
+        composeRule.onNodeWithText("Recipe").performImeAction()
+        composeRule.onNodeWithTag("Saved Recipes Lazy Column").assertIsDisplayed()
+        composeRule.onNodeWithText("Recipe").assertIsDisplayed()
+
+        coVerifySequence {
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            firebaseUser.uid
+            getUserSavedRecipesUseCase(any(), "", any())
+            getSearchSuggestionsUseCase()
+            getUserSavedRecipesUseCase(any(), "", any())
+            getSearchSuggestionsUseCase()
+            getUserSavedRecipesUseCase(any(), "", any())
+            getSearchSuggestionsUseCase()
+            addSearchSuggestionUseCase(any())
+            getUserSavedRecipesUseCase(any(), "Recipe", any())
+        }
+        confirmVerified()
+    }
+
+    @Test
+    fun sortSavedRecipesByDate() {
+        setMocks()
+        setUserIsLoggedInMock()
+        setViewModels(setSavedRecipesVM = true)
+        setOnlySavedRecipesScreen()
+
+        composeRule.onNodeWithText("Newest").assertIsDisplayed()
+        composeRule.onNodeWithText("Oldest").assertIsNotDisplayed()
+
+        composeRule.onNodeWithTag("Recipe recipe7Id").assertIsNotDisplayed()
+        composeRule.onNodeWithTag("Recipe recipe6Id").assertIsDisplayed()
+
+        composeRule.onNodeWithText("Newest").performClick()
+
+        composeRule.onNodeWithText("Newest").assertIsNotDisplayed()
+        composeRule.onNodeWithText("Oldest").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Recipe recipe7Id").assertIsDisplayed()
+        composeRule.onNodeWithTag("Recipe recipe6Id").assertIsNotDisplayed()
+
+        composeRule.onNodeWithText("Oldest").performClick()
+
+        composeRule.onNodeWithText("Newest").assertIsDisplayed()
+        composeRule.onNodeWithText("Oldest").assertIsNotDisplayed()
+
+        composeRule.onNodeWithTag("Recipe recipe7Id").assertIsNotDisplayed()
+        composeRule.onNodeWithTag("Recipe recipe6Id").assertIsDisplayed()
+
+        coVerifySequence {
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            firebaseUser.uid
+            getUserSavedRecipesUseCase(any(), "", any())
+        }
+        confirmVerified()
+    }
+
+    @Test
+    fun clickOnSavedRecipeBookmarkIcon_removeItFromUserSavedRecipes() {
+        setMocks(userRecipesMultipleReturns = true)
+        setUserIsLoggedInMock()
+        setViewModels(setSavedRecipesVM = true)
+        setOnlySavedRecipesScreen()
+
+        composeRule.onNodeWithTag("Recipe recipeId")
+            .onChildren()
+            .filterToOne(hasContentDescription("Icon button"))
+            .performClick() //find bookmark icon and perform click
+
+        coVerifySequence {
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            firebaseUser.uid
+            getUserSavedRecipesUseCase(any(), "", any())
+            getSavedRecipeIdUseCase(any(), any())
+            deleteSavedRecipeUseCase(any())
+            getUserSavedRecipesUseCase(any(), "", any())
+        }
+        confirmVerified()
+        Truth.assertThat(savedRecipesViewModel.savedRecipesState.value.savedRecipes.size).isEqualTo(6)
     }
 }

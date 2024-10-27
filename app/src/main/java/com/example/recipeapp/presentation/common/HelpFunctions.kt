@@ -212,6 +212,19 @@ fun getRecipes(): List<Recipe> {
             createdBy = "userId",
             categories = listOf("Stew"),
             date = 1231239
+        ),
+        Recipe(
+            recipeId = "recipe7Id",
+            name = "Recipe7 Name",
+            prepTime = "45 min",
+            servings = 4,
+            description = "Recipe7 description",
+            isVegetarian = true,
+            isVegan = false,
+            imageUrl = "imageUrl",
+            createdBy = "userId",
+            categories = listOf("Dinner"),
+            date = 1231224
         )
     )
 }

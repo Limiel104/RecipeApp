@@ -47,7 +47,7 @@ class GetUserSavedRecipesUseCaseTest {
         Truth.assertThat(response).isEqualTo(result)
         Truth.assertThat(response).isInstanceOf(Resource.Success::class.java)
         Truth.assertThat(response.data).isInstanceOf(List::class.java)
-        Truth.assertThat(response.data).hasSize(6)
+        Truth.assertThat(response.data).hasSize(7)
         Truth.assertThat(response.message).isNull()
     }
 
