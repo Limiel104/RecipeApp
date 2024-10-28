@@ -31,6 +31,7 @@ import androidx.navigation.navArgument
 import com.example.recipeapp.di.AppModule
 import com.example.recipeapp.domain.model.RecipeWithIngredients
 import com.example.recipeapp.domain.model.Resource
+import com.example.recipeapp.domain.model.User
 import com.example.recipeapp.domain.use_case.AddSavedRecipeUseCase
 import com.example.recipeapp.domain.use_case.AddSearchSuggestionUseCase
 import com.example.recipeapp.domain.use_case.AddUserUseCase
@@ -42,17 +43,24 @@ import com.example.recipeapp.domain.use_case.GetRecipeUseCase
 import com.example.recipeapp.domain.use_case.GetRecipesUseCase
 import com.example.recipeapp.domain.use_case.GetSavedRecipeIdUseCase
 import com.example.recipeapp.domain.use_case.GetSearchSuggestionsUseCase
+import com.example.recipeapp.domain.use_case.GetUserRecipesUseCase
 import com.example.recipeapp.domain.use_case.GetUserSavedRecipesUseCase
 import com.example.recipeapp.domain.use_case.GetUserShoppingListsUseCase
+import com.example.recipeapp.domain.use_case.GetUserUseCase
 import com.example.recipeapp.domain.use_case.LoginUseCase
+import com.example.recipeapp.domain.use_case.LogoutUseCase
 import com.example.recipeapp.domain.use_case.SignupUseCase
 import com.example.recipeapp.domain.use_case.SortRecipesUseCase
+import com.example.recipeapp.domain.use_case.UpdateUserPasswordUseCase
+import com.example.recipeapp.domain.use_case.UpdateUserUseCase
 import com.example.recipeapp.domain.use_case.ValidateConfirmPasswordUseCase
 import com.example.recipeapp.domain.use_case.ValidateEmailUseCase
 import com.example.recipeapp.domain.use_case.ValidateLoginPasswordUseCase
 import com.example.recipeapp.domain.use_case.ValidateNameUseCase
 import com.example.recipeapp.domain.use_case.ValidateSignupPasswordUseCase
 import com.example.recipeapp.presentation.MainActivity
+import com.example.recipeapp.presentation.account.AccountViewModel
+import com.example.recipeapp.presentation.account.composable.AccountScreen
 import com.example.recipeapp.presentation.common.getCategories
 import com.example.recipeapp.presentation.common.getIngredients
 import com.example.recipeapp.presentation.common.getIngredientsWithQuantity
@@ -82,7 +90,9 @@ import io.mockk.coVerify
 import io.mockk.coVerifySequence
 import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
 import kotlinx.coroutines.flow.flowOf
 import org.junit.After
 import org.junit.Before
@@ -121,6 +131,13 @@ class RecipeEnd2EndTest {
     private lateinit var addUserUseCase: AddUserUseCase
     private lateinit var signupViewModel: SignupViewModel
 
+    private lateinit var updateUserPasswordUseCase: UpdateUserPasswordUseCase
+    private lateinit var getUserRecipesUseCase: GetUserRecipesUseCase
+    private lateinit var updateUserUseCase: UpdateUserUseCase
+    private lateinit var getUserUseCase: GetUserUseCase
+    private lateinit var logoutUseCase: LogoutUseCase
+    private lateinit var accountViewModel: AccountViewModel
+
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
@@ -152,6 +169,12 @@ class RecipeEnd2EndTest {
         signupUseCase = mockk()
         addUserUseCase = mockk()
 
+        updateUserPasswordUseCase = mockk()
+        getUserRecipesUseCase = mockk()
+        updateUserUseCase = mockk()
+        getUserUseCase = mockk()
+        logoutUseCase = mockk()
+
         recipeWithIngredients = RecipeWithIngredients(
             recipeId = "recipeId",
             name = "Recipe Name",
@@ -173,7 +196,8 @@ class RecipeEnd2EndTest {
         setRecipeDetailsVM: Boolean = false,
         setSavedRecipesVM: Boolean = false,
         setLoginVM: Boolean = false,
-        setSignupVM: Boolean = false
+        setSignupVM: Boolean = false,
+        setAccountVM: Boolean = false
     ) {
         if(setHomeVM) {
             homeViewModel = HomeViewModel(
@@ -230,6 +254,21 @@ class RecipeEnd2EndTest {
                 validateNameUseCase = ValidateNameUseCase(),
                 getCurrentUserUseCase = getCurrentUserUseCase,
                 addUserUseCase = addUserUseCase
+            )
+        }
+
+        if(setAccountVM) {
+            accountViewModel = AccountViewModel(
+                updateUserPasswordUseCase = updateUserPasswordUseCase,
+                getCurrentUserUseCase = getCurrentUserUseCase,
+                getUserRecipesUseCase = getUserRecipesUseCase,
+                sortRecipesUseCase = SortRecipesUseCase(),
+                updateUserUseCase = updateUserUseCase,
+                validateSignupPasswordUseCase = ValidateSignupPasswordUseCase(),
+                validateConfirmPasswordUseCase = ValidateConfirmPasswordUseCase(),
+                validateNameUseCase = ValidateNameUseCase(),
+                getUserUseCase = getUserUseCase,
+                logoutUseCase = logoutUseCase
             )
         }
     }
@@ -398,7 +437,115 @@ class RecipeEnd2EndTest {
         }
     }
 
-    private fun setMocks(userRecipesMultipleReturns: Boolean = false) {
+    private fun setAccountLoginAndSignupScreens() {
+        composeRule.activity.setContent {
+            val navController = rememberNavController()
+            NavHost(
+                navController = navController,
+                startDestination = Screen.AccountScreen.route
+            ) {
+                composable(
+                    route = Screen.AccountScreen.route
+                ) {
+                    AccountScreen(
+                        navController = navController,
+                        viewModel = accountViewModel
+                    )
+                }
+
+                composable(
+                    route = Screen.LoginScreen.route + "lastDestination={lastDestination}",
+                    arguments = listOf(
+                        navArgument(
+                            name = "lastDestination"
+                        ) {
+                            type = NavType.StringType
+                        }
+                    )
+                ) {
+                    LoginScreen(
+                        navController = navController,
+                        viewModel = loginViewModel
+                    )
+                }
+
+                composable(
+                    route = Screen.SignupScreen.route + "lastDestination={lastDestination}",
+                    arguments = listOf(
+                        navArgument(
+                            name = "lastDestination"
+                        ) {
+                            type = NavType.StringType
+                        }
+                    )
+                ) {
+                    SignupScreen(
+                        navController = navController,
+                        viewModel = signupViewModel
+                    )
+                }
+            }
+        }
+    }
+
+    private fun setAccountAndRecipeDetailsScreens() {
+        composeRule.activity.setContent {
+            val navController = rememberNavController()
+            NavHost(
+                navController = navController,
+                startDestination = Screen.AccountScreen.route
+            ) {
+                composable(
+                    route = Screen.AccountScreen.route
+                ) {
+                    AccountScreen(
+                        navController = navController,
+                        viewModel = accountViewModel
+                    )
+                }
+
+                composable(
+                    route = Screen.RecipeDetailsScreen.route + "recipeId={recipeId}",
+                    arguments = listOf(
+                        navArgument(
+                            name = "recipeId"
+                        ) {
+                            type = NavType.StringType
+                        }
+                    )
+                ) {
+                    RecipeDetailsScreen(
+                        navController = navController,
+                        viewModel = recipeDetailsViewModel
+                    )
+                }
+            }
+        }
+    }
+
+    private fun setOnlyAccountScreen() {
+        composeRule.activity.setContent {
+            val navController = rememberNavController()
+            NavHost(
+                navController = navController,
+                startDestination = Screen.AccountScreen.route
+            ) {
+                composable(
+                    route = Screen.AccountScreen.route
+                ) {
+                    AccountScreen(
+                        navController = navController,
+                        viewModel = accountViewModel
+                    )
+                }
+            }
+        }
+    }
+
+    private fun setMocks(
+        userRecipesMultipleReturns: Boolean = false,
+        lastDestinationValue: String = ""
+    ) {
         coEvery { getIngredientsUseCase() } returns flowOf(Resource.Success(getIngredients()))
         coEvery { getRecipesUseCase(any(), any(), any()) } returns flowOf(Resource.Success(getRecipes()))
         coEvery { getUserShoppingListsUseCase(any(), any()) } returns flowOf(Resource.Success(getShoppingLists()))
@@ -422,12 +569,18 @@ class RecipeEnd2EndTest {
 
         every { firebaseUser.uid } returns "userUID"
 
-        every { savedStateHandle.get<String>("lastDestination") } returns "saved_recipes_screen"
+        every { savedStateHandle.get<String>("lastDestination") } returns lastDestinationValue
         coEvery { loginUseCase(any(), any()) } returns flowOf(Resource.Success(firebaseUser))
         coEvery { signupUseCase(any(), any()) } returns flowOf(Resource.Success(firebaseUser))
         coEvery { addUserUseCase(any()) } returns flowOf(Resource.Success(true))
         coEvery { getSavedRecipeIdUseCase(any(), any()) } returns flowOf(Resource.Success("savedRecipeId"))
         coEvery { deleteSavedRecipeUseCase(any()) } returns flowOf(Resource.Success(true))
+
+        coEvery { updateUserPasswordUseCase(any()) } returns flowOf(Resource.Success(true))
+        coEvery { getUserRecipesUseCase(any()) } returns flowOf(Resource.Success(getRecipes()))
+        coEvery { updateUserUseCase(any()) } returns flowOf(Resource.Success(true))
+        coEvery { getUserUseCase(any()) } returns flowOf(Resource.Success(User("userUID", "UserName")))
+        every { logoutUseCase() } just runs
     }
 
     private fun setUserIsNotLoggedInInitiallyMock() {
@@ -627,7 +780,7 @@ class RecipeEnd2EndTest {
 
     @Test
     fun savedRecipesShowingUserNotLoggedInScreen_navigateToLoginScreen_thenNavigateBackToSavedRecipes() {
-        setMocks()
+        setMocks(lastDestinationValue = Screen.SavedRecipesScreen.route)
         setUserIsNotLoggedInInitiallyMock()
         setViewModels(
             setSavedRecipesVM = true,
@@ -664,7 +817,7 @@ class RecipeEnd2EndTest {
 
     @Test
     fun savedRecipesShowingUserNotLoggedInScreen_navigateToSignupScreen_thenNavigateBackToSavedRecipes() {
-        setMocks()
+        setMocks(lastDestinationValue = Screen.SavedRecipesScreen.route)
         setUserIsNotLoggedInInitiallyMock()
         setViewModels(
             setSavedRecipesVM = true,
@@ -713,7 +866,7 @@ class RecipeEnd2EndTest {
 
     @Test
     fun savedRecipesShowingUserNotLoggedInScreen_navigateToSignupFromLoginScreen_thenNavigateBackToSavedRecipes() {
-        setMocks()
+        setMocks(lastDestinationValue = Screen.SavedRecipesScreen.route)
         setUserIsNotLoggedInInitiallyMock()
         setViewModels(
             setSavedRecipesVM = true,
@@ -924,5 +1077,195 @@ class RecipeEnd2EndTest {
         }
         confirmVerified()
         Truth.assertThat(savedRecipesViewModel.savedRecipesState.value.savedRecipes.size).isEqualTo(6)
+    }
+
+    @Test
+    fun accountShowingUserNotLoggedInScreen_navigateToLoginScreen_thenNavigateBackToAccount() {
+        setMocks(lastDestinationValue = Screen.AccountScreen.route)
+        setUserIsNotLoggedInInitiallyMock()
+        setViewModels(
+            setLoginVM = true,
+            setAccountVM = true
+        )
+        setAccountLoginAndSignupScreens()
+
+        composeRule.onNodeWithTag("User not logged in Content").assertIsDisplayed()
+        composeRule.onNodeWithText("You are not logged in").assertIsDisplayed()
+        composeRule.onNodeWithText("Login or Signup").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Login button").assertIsDisplayed()
+        composeRule.onNodeWithTag("Login button").performClick()
+        composeRule.onNodeWithTag("Login Content").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Login email TF").performTextInput("email@test.com")
+        composeRule.onNodeWithText("email@test.com").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Login password TF").performTextInput("Password1+")
+        val passwordNode = composeRule.onNodeWithTag("Login password TF").fetchSemanticsNode()
+        val textInput = passwordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
+        Truth.assertThat(textInput).isEqualTo("••••••••••")
+
+        composeRule.onNodeWithTag("Login button").performClick()
+        composeRule.onNodeWithTag("User not logged in Content").assertIsDisplayed()
+
+        coVerifySequence {
+            savedStateHandle.get<String>("lastDestination")
+            getCurrentUserUseCase()
+            loginUseCase("email@test.com", "Password1+")
+        }
+        confirmVerified()
+    }
+
+    @Test
+    fun accountShowingUserNotLoggedInScreen_navigateToSignupScreen_thenNavigateBackToAccount() {
+        setMocks(lastDestinationValue = Screen.AccountScreen.route)
+        setUserIsNotLoggedInInitiallyMock()
+        setViewModels(
+            setSignupVM = true,
+            setAccountVM = true
+        )
+        setAccountLoginAndSignupScreens()
+
+        composeRule.onNodeWithTag("User not logged in Content").assertIsDisplayed()
+        composeRule.onNodeWithText("You are not logged in").assertIsDisplayed()
+        composeRule.onNodeWithText("Login or Signup").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Signup button").assertIsDisplayed()
+        composeRule.onNodeWithTag("Signup button").performClick()
+        composeRule.onNodeWithTag("Signup Content").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Signup email TF").performTextInput("email@test.com")
+        composeRule.onNodeWithText("email@test.com").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Signup password TF").performTextInput("Password1+")
+        val passwordNode = composeRule.onNodeWithTag("Signup password TF").fetchSemanticsNode()
+        val textInput = passwordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
+        Truth.assertThat(textInput).isEqualTo("Password1+")
+
+        composeRule.onNodeWithTag("Signup confirm password TF").performTextInput("Password1+")
+        val confirmPasswordNode = composeRule.onNodeWithTag("Signup confirm password TF").fetchSemanticsNode()
+        val textInput2 = confirmPasswordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
+        Truth.assertThat(textInput2).isEqualTo("Password1+")
+
+        composeRule.onNodeWithTag("Signup name TF").performTextInput("John Smith")
+        composeRule.onNodeWithText("John Smith").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Signup button").performClick()
+        composeRule.onNodeWithTag("User not logged in Content").assertIsDisplayed()
+
+
+        coVerifySequence {
+            savedStateHandle.get<String>("lastDestination")
+            getCurrentUserUseCase()
+            signupUseCase("email@test.com", "Password1+")
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            addUserUseCase(any())
+        }
+        confirmVerified()
+    }
+
+    @Test
+    fun accountShowingUserNotLoggedInScreen_navigateToSignupFromLoginScreen_thenNavigateBackToAccount() {
+        setMocks(lastDestinationValue = Screen.AccountScreen.route)
+        setUserIsNotLoggedInInitiallyMock()
+        setViewModels(
+            setLoginVM = true,
+            setSignupVM = true,
+            setAccountVM = true
+        )
+        setAccountLoginAndSignupScreens()
+
+        composeRule.onNodeWithTag("User not logged in Content").assertIsDisplayed()
+        composeRule.onNodeWithText("You are not logged in").assertIsDisplayed()
+        composeRule.onNodeWithText("Login or Signup").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Login button").assertIsDisplayed()
+        composeRule.onNodeWithTag("Login button").performClick()
+        composeRule.onNodeWithTag("Login Content").assertIsDisplayed()
+
+        composeRule.onNodeWithText("Don't have an account?").assertIsDisplayed()
+        composeRule.onNodeWithText("Signup").performClick()
+        composeRule.onNodeWithTag("Signup Content").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Signup email TF").performTextInput("email@test.com")
+        composeRule.onNodeWithText("email@test.com").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Signup password TF").performTextInput("Password1+")
+        val passwordNode = composeRule.onNodeWithTag("Signup password TF").fetchSemanticsNode()
+        val textInput = passwordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
+        Truth.assertThat(textInput).isEqualTo("Password1+")
+
+        composeRule.onNodeWithTag("Signup confirm password TF").performTextInput("Password1+")
+        val confirmPasswordNode = composeRule.onNodeWithTag("Signup confirm password TF").fetchSemanticsNode()
+        val textInput2 = confirmPasswordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
+        Truth.assertThat(textInput2).isEqualTo("Password1+")
+
+        composeRule.onNodeWithTag("Signup name TF").performTextInput("John Smith")
+        composeRule.onNodeWithText("John Smith").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Signup button").performClick()
+        composeRule.onNodeWithTag("User not logged in Content").assertIsDisplayed()
+
+        coVerifySequence {
+            savedStateHandle.get<String>("lastDestination")
+            savedStateHandle.get<String>("lastDestination")
+            getCurrentUserUseCase()
+            signupUseCase("email@test.com", "Password1+")
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            addUserUseCase(any())
+        }
+        confirmVerified()
+    }
+
+    @Test
+    fun clickOnUserRecipe_navigateToRecipeDetails_andBackToAccount() {
+        setMocks()
+        setUserIsLoggedInMock()
+        setViewModels(
+            setRecipeDetailsVM = true,
+            setAccountVM = true
+        )
+        setAccountAndRecipeDetailsScreens()
+
+        composeRule.onNodeWithTag("Account Content").assertIsDisplayed()
+        composeRule.onNodeWithTag("Recipe recipeId").performScrollTo()
+        composeRule.onNodeWithTag("Recipe recipeId").performClick()
+
+        composeRule.onNodeWithTag("Recipe Details Content").assertIsDisplayed()
+        composeRule.onNodeWithText("Ingredients").isDisplayed()
+        composeRule.onNodeWithText("Description").isDisplayed()
+        composeRule.onNodeWithTag("Ingredients Tab Content").isDisplayed()
+        composeRule.onNodeWithTag("Description Tab Content").isNotDisplayed()
+
+        composeRule.onNodeWithText(recipeWithIngredients.name).isDisplayed()
+        composeRule.onNodeWithText(recipeWithIngredients.ingredients.keys.size.toString()).isDisplayed()
+        for(ingredient in recipeWithIngredients.ingredients) {
+            composeRule.onNodeWithText(ingredient.value).isDisplayed()
+            composeRule.onNodeWithText(ingredient.key.name).isDisplayed()
+        }
+
+        composeRule.onNodeWithTag("Description Tab Title").performClick()
+        composeRule.onNodeWithTag("Ingredients Tab Content").isNotDisplayed()
+        composeRule.onNodeWithTag("Description Tab Content").isDisplayed()
+
+        composeRule.onNodeWithContentDescription("Back button").performClick()
+        composeRule.onNodeWithTag("Account Content").isDisplayed()
+        composeRule.onNodeWithTag("Recipe Details Content").assertIsNotDisplayed()
+
+        coVerifySequence {
+            savedStateHandle.get<String>("recipeId")
+            getRecipeUseCase(any())
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            getUserSavedRecipesUseCase(any(), any(), any())
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            getUserUseCase(any())
+            firebaseUser.uid
+            getUserRecipesUseCase(any())
+        }
+        confirmVerified()
     }
 }

@@ -181,7 +181,7 @@ fun AccountContentPreview() {
     RecipeAppTheme {
         AccountContent(
             scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState()),
-            uiState = AccountState(),
+            uiState = AccountState(name = "User Name"),
             onAddRecipe = {},
             onRecipeSelected = {},
             onLogout = {},
