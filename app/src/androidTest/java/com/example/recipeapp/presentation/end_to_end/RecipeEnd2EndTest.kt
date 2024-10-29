@@ -1268,4 +1268,108 @@ class RecipeEnd2EndTest {
         }
         confirmVerified()
     }
+
+    @Test
+    fun sortUserRecipesByDate() {
+        setMocks()
+        setUserIsLoggedInMock()
+        setViewModels(setAccountVM = true)
+        setOnlyAccountScreen()
+
+        composeRule.onNodeWithText("Newest").assertIsDisplayed()
+        composeRule.onNodeWithText("Oldest").assertIsNotDisplayed()
+
+        composeRule.onNodeWithTag("Recipe recipe7Id").assertIsNotDisplayed()
+        composeRule.onNodeWithTag("Recipe recipe6Id").assertIsDisplayed()
+
+        composeRule.onNodeWithText("Newest").performClick()
+
+        composeRule.onNodeWithText("Newest").assertIsNotDisplayed()
+        composeRule.onNodeWithText("Oldest").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("Recipe recipe7Id").assertIsDisplayed()
+        composeRule.onNodeWithTag("Recipe recipe6Id").assertIsNotDisplayed()
+
+        composeRule.onNodeWithText("Oldest").performClick()
+
+        composeRule.onNodeWithText("Newest").assertIsDisplayed()
+        composeRule.onNodeWithText("Oldest").assertIsNotDisplayed()
+
+        composeRule.onNodeWithTag("Recipe recipe7Id").assertIsNotDisplayed()
+        composeRule.onNodeWithTag("Recipe recipe6Id").assertIsDisplayed()
+
+        coVerifySequence {
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            getUserUseCase(any())
+            firebaseUser.uid
+            getUserRecipesUseCase(any())
+        }
+        confirmVerified()
+    }
+
+    @Test
+    fun editUserDialog_nameTextInput_SaveButtonClosesDialog() {
+        setMocks()
+        setUserIsLoggedInMock()
+        setViewModels(setAccountVM = true)
+        setOnlyAccountScreen()
+
+        composeRule.onNodeWithText("UserName").assertIsDisplayed()
+        composeRule.onNodeWithTag("Edit dialog").assertIsNotDisplayed()
+
+        composeRule.onNodeWithContentDescription("Edit button").performClick()
+        composeRule.onNodeWithTag("Edit dialog").assertIsDisplayed()
+
+        composeRule.onNodeWithContentDescription("Clear button").performClick()
+        composeRule.onNodeWithTag("Edit dialog").assertIsNotDisplayed()
+
+        composeRule.onNodeWithContentDescription("Edit button").performClick()
+        composeRule.onNodeWithTag("Account name TF").performTextInput("New User Name")
+
+        composeRule.onNodeWithTag("Save button").performClick()
+        composeRule.onNodeWithTag("Edit dialog").assertIsNotDisplayed()
+
+        coVerifySequence {
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            getUserUseCase(any())
+            firebaseUser.uid
+            getUserRecipesUseCase(any())
+            updateUserUseCase(any())
+        }
+        confirmVerified()
+    }
+
+    @Test
+    fun editUserDialog_noTextInput_saveButtonIsNotClosingDialog() {
+        setMocks()
+        setUserIsLoggedInMock()
+        setViewModels(setAccountVM = true)
+        setOnlyAccountScreen()
+
+        composeRule.onNodeWithTag("Edit dialog").assertIsNotDisplayed()
+
+        composeRule.onNodeWithContentDescription("Edit button").performClick()
+        composeRule.onNodeWithTag("Edit dialog").assertIsDisplayed()
+
+        composeRule.onNodeWithContentDescription("Clear button").performClick()
+        composeRule.onNodeWithTag("Edit dialog").assertIsNotDisplayed()
+
+        composeRule.onNodeWithContentDescription("Edit button").performClick()
+        composeRule.onNodeWithTag("Save button").performClick()
+        composeRule.onNodeWithTag("Edit dialog").assertIsDisplayed()
+
+        composeRule.onNodeWithContentDescription("Clear button").performClick()
+        composeRule.onNodeWithTag("Edit dialog").assertIsNotDisplayed()
+
+        coVerifySequence {
+            getCurrentUserUseCase()
+            firebaseUser.uid
+            getUserUseCase(any())
+            firebaseUser.uid
+            getUserRecipesUseCase(any())
+        }
+        confirmVerified()
+    }
 }
