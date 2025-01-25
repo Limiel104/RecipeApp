@@ -203,7 +203,7 @@ class SavedRecipesScreenTest {
 
         for(child in children) {
             val testTag = child.config.getOrElse(SemanticsProperties.TestTag) { "" }
-            if(testTag.contains("Name"))
+            if(testTag.contains("Recipe "))
                 numberOfRecipes += 1
         }
 

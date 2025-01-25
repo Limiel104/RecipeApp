@@ -46,7 +46,7 @@ fun RecipeItem(
             .padding(horizontal = cardHorizontalPadding)
             .padding(bottom = cardBottomPadding)
             .clickable { onClick() }
-            .testTag("Recipe ${recipe.name}"),
+            .testTag("Recipe ${recipe.recipeId}"),
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary)
     ) {

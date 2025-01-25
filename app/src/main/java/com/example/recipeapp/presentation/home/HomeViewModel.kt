@@ -13,6 +13,7 @@ import com.example.recipeapp.domain.use_case.GetSearchSuggestionsUseCase
 import com.example.recipeapp.domain.use_case.GetRecipesUseCase
 import com.example.recipeapp.domain.use_case.GetUserShoppingListsUseCase
 import com.example.recipeapp.domain.model.Resource
+import com.example.recipeapp.domain.use_case.SortRecipesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -26,7 +27,8 @@ class HomeViewModel @Inject constructor(
     private val getUserShoppingListsUseCase: GetUserShoppingListsUseCase,
     private val addSearchSuggestionUseCase: AddSearchSuggestionUseCase,
     private val getSearchSuggestionsUseCase: GetSearchSuggestionsUseCase,
-    private val getCategoriesUseCase: GetCategoriesUseCase
+    private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val sortRecipesUseCase: SortRecipesUseCase
 ): ViewModel() {
 
     private val _homeState = mutableStateOf(HomeState())
@@ -55,6 +57,38 @@ class HomeViewModel @Inject constructor(
                 Log.i("TAG","New query: ${event.query}")
                 _homeState.value = homeState.value.copy(
                     query = event.query
+                )
+            }
+
+            is HomeEvent.OnSearchSuggestionClicked -> {
+                _homeState.value = homeState.value.copy(
+                    query = event.suggestionText
+                )
+            }
+
+            is HomeEvent.OnCategoryClicked -> {
+                if(_homeState.value.selectedCategory == event.categoryId) {
+                    _homeState.value = homeState.value.copy(
+                        selectedCategory = ""
+                    )
+                    getRecipes(false)
+                }
+                else {
+                    _homeState.value = homeState.value.copy(
+                        selectedCategory = event.categoryId
+                    )
+                    getRecipes(false)
+                }
+                Log.i("TAG",_homeState.value.selectedCategory)
+            }
+
+            is HomeEvent.OnSortRecipes -> {
+                _homeState.value = homeState.value.copy(
+                    recipesOrder = event.recipeOrder
+                )
+
+                _homeState.value = homeState.value.copy(
+                    recipes = sortRecipesUseCase(event.recipeOrder, _homeState.value.recipes)
                 )
             }
 
@@ -94,28 +128,6 @@ class HomeViewModel @Inject constructor(
                     getRecipes(false)
                 }
             }
-
-            is HomeEvent.OnSearchSuggestionClicked -> {
-                _homeState.value = homeState.value.copy(
-                    query = event.suggestionText
-                )
-            }
-
-            is HomeEvent.OnCategoryClicked -> {
-                if(_homeState.value.selectedCategory == event.categoryId) {
-                    _homeState.value = homeState.value.copy(
-                        selectedCategory = ""
-                    )
-                    getRecipes(false)
-                }
-                else {
-                    _homeState.value = homeState.value.copy(
-                        selectedCategory = event.categoryId
-                    )
-                    getRecipes(false)
-                }
-                Log.i("TAG",_homeState.value.selectedCategory)
-            }
         }
     }
 
@@ -140,7 +152,7 @@ class HomeViewModel @Inject constructor(
                         Log.i("TAG2",response.data.toString())
                         response.data?.let {
                             _homeState.value = homeState.value.copy(
-                                recipes = response.data
+                                recipes = sortRecipesUseCase(_homeState.value.recipesOrder, response.data)
                             )
                         }
                     }

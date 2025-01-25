@@ -77,25 +77,25 @@ object TestAppModule {
 
     @Provides
     fun provideRecipeRepository(db: RecipeDatabase): RecipeRepository {
-        val recipesRef = Firebase.firestore.collection("recipes")
+        val recipesRef = Firebase.firestore.collection("x")
         return RecipeRepositoryImpl(recipesRef, db.recipeDao)
     }
 
     @Provides
     fun provideIngredientRepository(db: RecipeDatabase): IngredientRepository {
-        val ingredientsRef = Firebase.firestore.collection("ingredients")
+        val ingredientsRef = Firebase.firestore.collection("x")
         return IngredientRepositoryImpl(ingredientsRef, db.ingredientDao)
     }
 
     @Provides
     fun provideShoppingListRepository(db: RecipeDatabase): ShoppingListRepository {
-        val shoppingListsRef = Firebase.firestore.collection("shoppingLists")
+        val shoppingListsRef = Firebase.firestore.collection("x")
         return ShoppingListRepositoryImpl(shoppingListsRef, db.shoppingListDao)
     }
 
     @Provides
     fun provideSavedRecipeRepository(db: RecipeDatabase): SavedRecipeRepository {
-        val savedRecipesRef = Firebase.firestore.collection("savedRecipes")
+        val savedRecipesRef = Firebase.firestore.collection("x")
         return SavedRecipeRepositoryImpl(savedRecipesRef, db.savedRecipeDao)
     }
 

@@ -7,23 +7,27 @@ import com.example.recipeapp.domain.model.Recipe
 import com.example.recipeapp.domain.model.SearchSuggestion
 import com.example.recipeapp.domain.model.ShoppingList
 
+const val ingredient = "Ingredient Name"
+const val ingredient2 = "Ingredient2 Name"
+const val ingredient3 = "Ingredient3 Name"
+
 fun getIngredients(): List<Ingredient> {
     return listOf(
         Ingredient(
             ingredientId = "ingredientId",
-            name = "Ingredient Name",
+            name = ingredient,
             imageUrl = "imageUrl",
             category = "category"
         ),
         Ingredient(
             ingredientId = "ingredient2Id",
-            name = "Ingredient2 Name",
+            name = ingredient2,
             imageUrl = "imageUrl",
             category = "category2"
         ),
         Ingredient(
             ingredientId = "ingredient3Id",
-            name = "Ingredient3 Name",
+            name = ingredient3,
             imageUrl = "imageUrl",
             category = "category"
         )
@@ -35,7 +39,7 @@ fun getIngredientsWithQuantity(): Map<Ingredient, Quantity> {
         Pair(
             Ingredient(
                 ingredientId = "ingredientId",
-                name = "Ingredient Name",
+                name = ingredient,
                 imageUrl = "imageUrl",
                 category = "category"
             ),
@@ -44,7 +48,7 @@ fun getIngredientsWithQuantity(): Map<Ingredient, Quantity> {
         Pair(
             Ingredient(
                 ingredientId = "ingredient2Id",
-                name = "Ingredient2 Name",
+                name = ingredient2,
                 imageUrl = "imageUrl",
                 category = "category2"
             ),
@@ -53,7 +57,7 @@ fun getIngredientsWithQuantity(): Map<Ingredient, Quantity> {
         Pair(
             Ingredient(
                 ingredientId = "ingredient3Id",
-                name = "Ingredient3 Name",
+                name = ingredient3,
                 imageUrl = "imageUrl",
                 category = "category"
             ),
@@ -67,7 +71,7 @@ fun getIngredientsWithBoolean(): Map<Ingredient, Boolean> {
         Pair(
             Ingredient(
                 ingredientId = "ingredientId",
-                name = "Ingredient Name",
+                name = ingredient,
                 imageUrl = "imageUrl",
                 category = "category"
             ),
@@ -76,7 +80,7 @@ fun getIngredientsWithBoolean(): Map<Ingredient, Boolean> {
         Pair(
             Ingredient(
                 ingredientId = "ingredient2Id",
-                name = "Ingredient2 Name",
+                name = ingredient2,
                 imageUrl = "imageUrl",
                 category = "category2"
             ),
@@ -85,7 +89,7 @@ fun getIngredientsWithBoolean(): Map<Ingredient, Boolean> {
         Pair(
             Ingredient(
                 ingredientId = "ingredient3Id",
-                name = "Ingredient3 Name",
+                name = ingredient3,
                 imageUrl = "imageUrl",
                 category = "category"
             ),
@@ -141,7 +145,7 @@ fun getRecipes(): List<Recipe> {
             isVegan = false,
             imageUrl = "imageUrl",
             createdBy = "userId",
-            categories = emptyList(),
+            categories = listOf("Chicken"),
             date = 1231236
         ),
         Recipe(
@@ -154,7 +158,7 @@ fun getRecipes(): List<Recipe> {
             isVegan = false,
             imageUrl = "imageUrl",
             createdBy = "userId",
-            categories = emptyList(),
+            categories = listOf("Soup","Chicken"),
             date = 1231234
         ),
         Recipe(
@@ -167,7 +171,7 @@ fun getRecipes(): List<Recipe> {
             isVegan = false,
             imageUrl = "imageUrl",
             createdBy = "userId",
-            categories = emptyList(),
+            categories = listOf("Soup"),
             date = 1231235
         ),
         Recipe(
@@ -180,7 +184,7 @@ fun getRecipes(): List<Recipe> {
             isVegan = false,
             imageUrl = "imageUrl",
             createdBy = "userId",
-            categories = emptyList(),
+            categories = listOf("Appetizer"),
             date = 1231237
         ),
         Recipe(
@@ -193,7 +197,7 @@ fun getRecipes(): List<Recipe> {
             isVegan = false,
             imageUrl = "imageUrl",
             createdBy = "userId",
-            categories = emptyList(),
+            categories = listOf("Stew","Dinner"),
             date = 1231238
         ),
         Recipe(
@@ -206,8 +210,21 @@ fun getRecipes(): List<Recipe> {
             isVegan = false,
             imageUrl = "imageUrl",
             createdBy = "userId",
-            categories = emptyList(),
+            categories = listOf("Stew"),
             date = 1231239
+        ),
+        Recipe(
+            recipeId = "recipe7Id",
+            name = "Recipe7 Name",
+            prepTime = "45 min",
+            servings = 4,
+            description = "Recipe7 description",
+            isVegetarian = true,
+            isVegan = false,
+            imageUrl = "imageUrl",
+            createdBy = "userId",
+            categories = listOf("Dinner"),
+            date = 1231224
         )
     )
 }

@@ -9,6 +9,7 @@ import com.example.recipeapp.domain.model.Category
 import com.example.recipeapp.domain.model.Recipe
 import com.example.recipeapp.domain.model.SearchSuggestion
 import com.example.recipeapp.presentation.MainActivity
+import com.example.recipeapp.presentation.home.HomeState
 import com.example.recipeapp.ui.theme.RecipeAppTheme
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -195,20 +196,23 @@ class HomeScreenTest {
         composeRule.activity.setContent {
             RecipeAppTheme() {
                 HomeContent(
-                    recipes = recipes,
-                    query = query,
-                    searchSuggestions = searchSuggestions,
-                    categories = categories,
-                    selectedCategory = selectedCategory,
-                    isSearchActive = isSearchActive,
-                    isLoading = isLoading,
+                    uiState = HomeState(
+                        recipes = recipes,
+                        query = query,
+                        searchSuggestions = searchSuggestions,
+                        categories = categories,
+                        selectedCategory = selectedCategory,
+                        isSearchActive = isSearchActive,
+                        isLoading = isLoading
+                    ),
                     onRecipeSelected = {},
                     onQueryChange = onQueryChange,
                     onActiveChange = {},
                     onSearchClicked = {},
                     onClearClicked = {},
                     onSearchSuggestionClicked = {},
-                    onSelectedCategory = {}
+                    onSelectedCategory = {},
+                    onSortRecipes = {}
                 )
             }
         }

@@ -19,13 +19,6 @@ fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val recipes = viewModel.homeState.value.recipes
-    val query = viewModel.homeState.value.query
-    val searchSuggestions = viewModel.homeState.value.searchSuggestions
-    val categories = viewModel.homeState.value.categories
-    val selectedCategory = viewModel.homeState.value.selectedCategory
-    val isSearchActive = viewModel.homeState.value.isSearchActive
-    val isLoading = viewModel.homeState.value.isLoading
     val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(lifecycleOwner.lifecycle) {
@@ -42,19 +35,14 @@ fun HomeScreen(
     }
 
     HomeContent(
-        recipes = recipes,
-        query = query,
-        searchSuggestions = searchSuggestions,
-        categories = categories,
-        selectedCategory = selectedCategory,
-        isSearchActive = isSearchActive,
-        isLoading = isLoading,
+        uiState = viewModel.homeState.value,
         onRecipeSelected = { viewModel.onEvent(HomeEvent.OnRecipeSelected(it)) },
         onQueryChange = { viewModel.onEvent(HomeEvent.OnQueryChange(it)) },
         onActiveChange = { viewModel.onEvent(HomeEvent.OnActiveChange) },
         onSearchClicked = { viewModel.onEvent(HomeEvent.OnSearchClicked) },
         onClearClicked = { viewModel.onEvent(HomeEvent.OnClearClicked) },
         onSearchSuggestionClicked = { viewModel.onEvent(HomeEvent.OnSearchSuggestionClicked(it)) },
-        onSelectedCategory = { viewModel.onEvent(HomeEvent.OnCategoryClicked(it)) }
+        onSelectedCategory = { viewModel.onEvent(HomeEvent.OnCategoryClicked(it)) },
+        onSortRecipes = { viewModel.onEvent(HomeEvent.OnSortRecipes(it)) }
     )
 }
